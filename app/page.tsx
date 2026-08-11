@@ -21,6 +21,8 @@ type Variant = {
   name: string;
   stock: number;
   color: string;
+  sku: string;
+  image: string;
   secondary?: string;
   note?: string;
 };
@@ -240,87 +242,88 @@ const categories = [
 
 const variantsByProduct: Record<number, Variant[]> = {
   1: [
-    { name: "Черная", stock: 2, color: "#161616" },
-    { name: "Красная", stock: 1, color: "#c92e29" },
-    { name: "Санбёрст", stock: 1, color: "#e47a24", secondary: "#291811" },
-    { name: "Белая", stock: 1, color: "#f4f2e9" },
-    { name: "Синяя", stock: 1, color: "#246bb3" },
-    { name: "Черно-белая", stock: 1, color: "#f5f4ef", secondary: "#171717" },
+    { name: "Черная", stock: 2, color: "#161616", sku: "EG-ST20-BLK", image: "/product-variants/eg-st20-blk.jpg" },
+    { name: "Красная", stock: 1, color: "#c92e29", sku: "EG-ST20-RED", image: "/product-variants/eg-st20-red.jpg" },
+    { name: "Санбёрст", stock: 1, color: "#e47a24", secondary: "#291811", sku: "EG-ST20-SNB", image: "/product-variants/eg-st20-snb.jpg" },
+    { name: "Белая", stock: 1, color: "#f4f2e9", sku: "EG-ST20-WHT", image: "/product-variants/eg-st20-wht.jpg" },
+    { name: "Синяя", stock: 1, color: "#246bb3", sku: "EG-ST20-BLU", image: "/product-variants/eg-st20-blu.jpg" },
+    { name: "Черно-белая", stock: 1, color: "#f5f4ef", secondary: "#171717", sku: "EG-ST20-BW", image: "/product-variants/eg-st20-bw.jpg" },
   ],
   2: [
-    { name: "Серебристо-фиолетовый градиент", stock: 1, color: "#bbb7c1", secondary: "#493665" },
-    { name: "Серебристо-черный металлик", stock: 2, color: "#c8c9c7", secondary: "#222222" },
-    { name: "Серо-серебристый градиент", stock: 1, color: "#6d6d70", secondary: "#d3d2ce" },
-    { name: "Сине-черный градиент", stock: 2, color: "#2377a8", secondary: "#101820" },
+    { name: "Серебристо-фиолетовый градиент", stock: 1, color: "#bbb7c1", secondary: "#493665", sku: "EG-39GR-PUR", image: "/product-variants/eg-39gr-pur.jpg" },
+    { name: "Серебристо-черный металлик", stock: 2, color: "#c8c9c7", secondary: "#222222", sku: "EG-39GR-BLK", image: "/product-variants/eg-39gr-blk.jpg" },
+    { name: "Серо-серебристый градиент", stock: 1, color: "#6d6d70", secondary: "#d3d2ce", sku: "EG-39GR-GRY", image: "/product-variants/eg-39gr-gry.jpg" },
+    { name: "Сине-черный градиент", stock: 2, color: "#2377a8", secondary: "#101820", sku: "EG-39GR-BLU", image: "/product-variants/eg-39gr-blu.jpg" },
   ],
   3: [
-    { name: "Черная", stock: 4, color: "#171717" },
-    { name: "Розовая", stock: 2, color: "#e8a7bd" },
-    { name: "Белая", stock: 2, color: "#f5f3eb" },
-    { name: "Голубая", stock: 1, color: "#9fd4e5" },
-    { name: "Желтая", stock: 1, color: "#e8d66b" },
+    { name: "Черная", stock: 4, color: "#171717", sku: "UK-KLH23-BLK", image: "/product-variants/uk-klh23-blk.jpg" },
+    { name: "Розовая", stock: 2, color: "#e8a7bd", sku: "UK-KLH23-PNK", image: "/product-variants/uk-klh23-pnk.jpg" },
+    { name: "Белая", stock: 2, color: "#f5f3eb", sku: "UK-KLH23-WHT", image: "/product-variants/uk-klh23-wht.jpg" },
+    { name: "Голубая", stock: 1, color: "#9fd4e5", sku: "UK-KLH23-LBL", image: "/product-variants/uk-klh23-lbl.jpg" },
+    { name: "Желтая", stock: 1, color: "#e8d66b", sku: "UK-KLH23-YEL", image: "/product-variants/uk-klh23-yel.jpg" },
   ],
   4: [
-    { name: "Черная", stock: 2, color: "#171717" },
-    { name: "Натуральное дерево", stock: 1, color: "#d4aa68" },
-    { name: "Санбёрст", stock: 1, color: "#ec7921", secondary: "#211712" },
-    { name: "Кофейная", stock: 1, color: "#8c5637" },
-    { name: "Синяя", stock: 1, color: "#236c90", secondary: "#17202a" },
+    { name: "Черная", stock: 2, color: "#171717", sku: "AG-41GL-BLK", image: "/product-variants/ag-41gl-blk.jpg" },
+    { name: "Натуральное дерево", stock: 1, color: "#d4aa68", sku: "AG-41GL-NAT", image: "/product-variants/ag-41gl-nat.jpg" },
+    { name: "Санбёрст", stock: 1, color: "#ec7921", secondary: "#211712", sku: "AG-41GL-SNB", image: "/product-variants/ag-41gl-snb.jpg" },
+    { name: "Кофейная", stock: 1, color: "#8c5637", sku: "AG-41GL-CFE", image: "/product-variants/ag-41gl-cfe.jpg" },
+    { name: "Синяя", stock: 1, color: "#236c90", secondary: "#17202a", sku: "AG-41GL-BLU", image: "/product-variants/ag-41gl-blu.jpg" },
   ],
   5: [
-    { name: "Черная · 38″", stock: 4, color: "#171717" },
-    { name: "Натуральная · 39″", stock: 1, color: "#d8b572" },
-    { name: "Оранжевая · 39″", stock: 1, color: "#e0a23e" },
+    { name: "Черная · 38″", stock: 1, color: "#171717", sku: "CG-38-BLK", image: "/product-variants/cg-38-blk.jpg" },
+    { name: "Черная · 39″", stock: 3, color: "#171717", sku: "CG-39-BLK", image: "/product-variants/cg-39-blk.jpg" },
+    { name: "Натуральная · 39″", stock: 1, color: "#d8b572", sku: "CG-39-NAT", image: "/product-variants/cg-39-nat.jpg" },
+    { name: "Оранжевая · 39″", stock: 1, color: "#e0a23e", sku: "CG-39-ORG", image: "/product-variants/cg-39-org.jpg" },
   ],
   6: [
-    { name: "Зеленая", stock: 1, color: "#18835e", secondary: "#151515" },
-    { name: "Синяя", stock: 1, color: "#244c9a", secondary: "#10151d" },
-    { name: "Фиолетовая", stock: 2, color: "#583a78", secondary: "#161318" },
-    { name: "Красная", stock: 2, color: "#a31e28", secondary: "#171313" },
-    { name: "Тигровый санбёрст", stock: 2, color: "#e07a26", secondary: "#21150f" },
+    { name: "Зеленая", stock: 1, color: "#18835e", secondary: "#151515", sku: "AG-40TG-GRN", image: "/product-variants/ag-40tg-grn.jpg" },
+    { name: "Синяя", stock: 1, color: "#244c9a", secondary: "#10151d", sku: "AG-40TG-BLU", image: "/product-variants/ag-40tg-blu.jpg" },
+    { name: "Фиолетовая", stock: 2, color: "#583a78", secondary: "#161318", sku: "AG-40TG-PUR", image: "/product-variants/ag-40tg-pur.jpg" },
+    { name: "Красная", stock: 2, color: "#a31e28", secondary: "#171313", sku: "AG-40TG-RED", image: "/product-variants/ag-40tg-red.jpg" },
+    { name: "Тигровый санбёрст", stock: 2, color: "#e07a26", secondary: "#21150f", sku: "AG-40TG-ORG", image: "/product-variants/ag-40tg-org.jpg" },
   ],
   7: [
-    { name: "Черная", stock: 4, color: "#171717" },
-    { name: "Натуральная", stock: 1, color: "#d8b577" },
-    { name: "Санбёрст", stock: 1, color: "#e87623", secondary: "#381b13" },
+    { name: "Черная", stock: 4, color: "#171717", sku: "AG-38VN-BLK", image: "/product-variants/ag-38vn-blk.jpg" },
+    { name: "Натуральная", stock: 1, color: "#d8b577", sku: "AG-38VN-NAT", image: "/product-variants/ag-38vn-nat.jpg" },
+    { name: "Санбёрст", stock: 1, color: "#e87623", secondary: "#381b13", sku: "AG-38VN-SNB", image: "/product-variants/ag-38vn-snb.jpg" },
   ],
   8: [
-    { name: "Черная · 3 сингла", stock: 1, color: "#171717", note: "Конфигурация SSS" },
+    { name: "Черная · 3 сингла", stock: 1, color: "#171717", sku: "EG-ST10-SSS-BLK", image: "/product-variants/eg-st10-sss-blk.jpg", note: "Конфигурация SSS" },
   ],
   9: [
-    { name: "Цветная оплетка", stock: 5, color: "#c3564f", secondary: "#2f7693" },
-    { name: "Латунные", stock: 5, color: "#c7a653" },
+    { name: "Цветная оплетка", stock: 5, color: "#c3564f", secondary: "#2f7693", sku: "STR-FOLK-COLOR", image: "/product-variants/str-folk-color.jpg" },
+    { name: "Латунные", stock: 5, color: "#c7a653", sku: "STR-FOLK-BRASS", image: "/product-variants/str-folk-brass.jpg" },
   ],
   10: [
-    { name: "Золотой", stock: 2, color: "#c7a053" },
-    { name: "Бронзовый", stock: 2, color: "#756f68" },
-    { name: "Розовое золото", stock: 1, color: "#c9877e" },
+    { name: "Золотой", stock: 2, color: "#c7a053", sku: "CAPO-ALLOY-GOLD", image: "/product-variants/capo-alloy-gold.jpg" },
+    { name: "Бронзовый", stock: 2, color: "#756f68", sku: "CAPO-ALLOY-BRZ", image: "/product-variants/capo-alloy-brz.jpg" },
+    { name: "Розовое золото", stock: 1, color: "#c9877e", sku: "CAPO-ALLOY-RGD", image: "/product-variants/capo-alloy-rgd.jpg" },
   ],
   11: [
-    { name: "Синяя молния", stock: 1, color: "#17479d", secondary: "#171717" },
-    { name: "Цветочный", stock: 1, color: "#9c526d", secondary: "#2b2526" },
-    { name: "Черно-белая клетка", stock: 1, color: "#f2f2ef", secondary: "#171717" },
-    { name: "Английский алфавит", stock: 2, color: "#d19a24", secondary: "#171717" },
-    { name: "Британский флаг", stock: 1, color: "#274d91", secondary: "#b92c32" },
+    { name: "Синяя молния", stock: 1, color: "#17479d", secondary: "#171717", sku: "STRAP-LIGHTNING", image: "/product-variants/strap-lightning.jpg" },
+    { name: "Цветочный", stock: 1, color: "#9c526d", secondary: "#2b2526", sku: "STRAP-FLORAL", image: "/product-variants/strap-floral.jpg" },
+    { name: "Черно-белая клетка", stock: 1, color: "#f2f2ef", secondary: "#171717", sku: "STRAP-CHECK", image: "/product-variants/strap-check.jpg" },
+    { name: "Английский алфавит", stock: 2, color: "#d19a24", secondary: "#171717", sku: "STRAP-ALPHABET", image: "/product-variants/strap-alphabet.jpg" },
+    { name: "Британский флаг", stock: 1, color: "#274d91", secondary: "#b92c32", sku: "STRAP-UK", image: "/product-variants/strap-uk.jpg" },
   ],
   12: [
-    { name: "14777 · бас", stock: 1, color: "#3f765c" },
-    { name: "11002 · 010", stock: 2, color: "#6b3769" },
-    { name: "11025 · 011", stock: 1, color: "#56366c" },
-    { name: "16052 · 012", stock: 1, color: "#724168" },
-    { name: "12002 · 009", stock: 1, color: "#28476e" },
+    { name: "14777 · бас", stock: 1, color: "#3f765c", sku: "STR-PKG-BASS-14777", image: "/product-variants/str-pkg-bass-14777.jpg" },
+    { name: "11002 · 010", stock: 2, color: "#6b3769", sku: "STR-PKG-11002-010", image: "/product-variants/str-pkg-11002-010.jpg" },
+    { name: "11025 · 011", stock: 1, color: "#56366c", sku: "STR-PKG-11025-011", image: "/product-variants/str-pkg-11025-011.jpg" },
+    { name: "16052 · 012", stock: 1, color: "#724168", sku: "STR-PKG-16052-012", image: "/product-variants/str-pkg-16052-012.jpg" },
+    { name: "12002 · 009", stock: 1, color: "#28476e", sku: "STR-PKG-12002-09", image: "/product-variants/str-pkg-12002-09.jpg" },
   ],
   13: [
-    { name: "Черный · Guitar", stock: 1, color: "#171717" },
-    { name: "Золотой · Acoustic", stock: 1, color: "#d99b4f" },
-    { name: "Синий · Bass", stock: 1, color: "#285a91" },
+    { name: "Черный · Guitar", stock: 1, color: "#171717", sku: "FX-CB-GTR-BLK", image: "/product-variants/fx-cb-gtr-blk.jpg" },
+    { name: "Золотой · Acoustic", stock: 1, color: "#d99b4f", sku: "FX-CB-AC-GLD", image: "/product-variants/fx-cb-ac-gld.jpg" },
+    { name: "Синий · Bass", stock: 1, color: "#285a91", sku: "FX-CB-BASS-BLU", image: "/product-variants/fx-cb-bass-blu.jpg" },
   ],
   14: [
-    { name: "Черный", stock: 1, color: "#171717" },
-    { name: "Серый", stock: 1, color: "#666a6c" },
-    { name: "Оранжевый", stock: 1, color: "#e56d24" },
-    { name: "Фиолетовый", stock: 1, color: "#875194" },
-    { name: "Серый узор", stock: 1, color: "#b9b5aa", secondary: "#5d5d5b" },
+    { name: "Черный", stock: 1, color: "#171717", sku: "AMP-GA20-BLK", image: "/product-variants/amp-ga20-blk.jpg" },
+    { name: "Серый", stock: 1, color: "#666a6c", sku: "AMP-GA20-PAT", image: "/product-variants/amp-ga20-pat.jpg" },
+    { name: "Оранжевый", stock: 1, color: "#e56d24", sku: "AMP-GA20-ORG", image: "/product-variants/amp-ga20-org.jpg" },
+    { name: "Фиолетовый", stock: 1, color: "#875194", sku: "AMP-GA20-PUR", image: "/product-variants/amp-ga20-pur.jpg" },
+    { name: "Синий", stock: 1, color: "#285a91", sku: "AMP-GA20-BLU", image: "/product-variants/amp-ga20-blu.jpg" },
   ],
 };
 
@@ -379,6 +382,7 @@ export default function Home() {
   const profit = retail - landedCost;
   const margin = retail ? (profit / retail) * 100 : 0;
   const cartCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+  const selectedImage = selectedVariant?.image ?? selected?.image ?? "";
 
   const openProduct = (product: Product) => {
     setSelected(product);
@@ -412,8 +416,8 @@ export default function Home() {
           productId: product.id,
           name: product.name,
           variantName: variant.name,
-          sku: product.sku,
-          image: product.image,
+          sku: variant.sku,
+          image: variant.image,
           quantity: requestedQuantity,
           maxQuantity: variant.stock,
         },
@@ -836,7 +840,14 @@ export default function Home() {
           <article className="product-modal" role="dialog" aria-modal="true" onMouseDown={(e) => e.stopPropagation()}>
             <button className="modal-close" onClick={() => setSelected(null)} aria-label="Закрыть">×</button>
             <div className="modal-image">
-              <Image src={selected.image} alt={selected.name} fill unoptimized sizes="(max-width: 800px) 90vw, 48vw" />
+              <Image
+                key={selectedImage}
+                src={selectedImage}
+                alt={`${selected.name} — ${selectedVariant?.name ?? "вариант"}`}
+                fill
+                unoptimized
+                sizes="(max-width: 800px) 90vw, 48vw"
+              />
             </div>
             <div className="modal-copy">
               <p className="eyebrow">{selected.category}</p>
@@ -846,7 +857,7 @@ export default function Home() {
                 {selected.features.map((feature) => <li key={feature}>✓ {feature}</li>)}
               </ul>
               <div className="modal-meta">
-                <span>Артикул <strong>{selected.sku}</strong></span>
+                <span>Артикул <strong>{selectedVariant?.sku ?? selected.sku}</strong></span>
                 <span>Всего в наличии <strong>{selected.quantity} шт.</strong></span>
               </div>
               {mode === "buyer" ? (
