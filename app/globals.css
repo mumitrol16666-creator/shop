@@ -853,7 +853,8 @@ footer p {
 }
 
 .rate-row,
-.form-grid {
+.form-grid,
+.item-entry-grid {
   display: grid;
   gap: 14px;
 }
@@ -869,6 +870,19 @@ footer p {
   grid-template-columns: repeat(3, 1fr);
 }
 
+.form-grid.compact {
+  grid-template-columns: repeat(6, 1fr);
+}
+
+.item-entry-grid {
+  grid-template-columns: 1.2fr 0.8fr 1fr;
+  margin-top: 30px;
+}
+
+.wide-field {
+  grid-column: 1 / -1;
+}
+
 .calculator-card label {
   display: grid;
   gap: 8px;
@@ -880,9 +894,9 @@ footer p {
 }
 
 .calculator-card input,
-.calculator-card select {
+.calculator-card select,
+.calculator-card textarea {
   min-width: 0;
-  height: 45px;
   padding: 0 12px;
   border: 1px solid var(--line);
   border-radius: 0;
@@ -893,9 +907,129 @@ footer p {
   font-weight: 800;
 }
 
+.calculator-card input,
+.calculator-card select {
+  height: 45px;
+}
+
+.calculator-card textarea {
+  min-height: 86px;
+  padding: 12px;
+  resize: vertical;
+  font: 700 13px/1.5 var(--font-manrope), Arial, sans-serif;
+  text-transform: none;
+}
+
 .calculator-card input:focus,
-.calculator-card select:focus {
+.calculator-card select:focus,
+.calculator-card textarea:focus {
   border-color: var(--amber);
+}
+
+.calc-group-title {
+  margin: 24px 0 12px;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 18px;
+  border-top: 1px solid var(--line);
+  padding-top: 20px;
+}
+
+.calc-group-title strong {
+  font-size: 13px;
+}
+
+.calc-group-title span {
+  color: var(--muted);
+  font-size: 10px;
+  text-align: right;
+}
+
+.toggle-label .toggle-button {
+  height: 45px;
+  border: 1px solid var(--line);
+  background: white;
+  font-size: 12px;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.toggle-label .toggle-button.active {
+  border-color: var(--amber-dark);
+  background: var(--ink);
+  color: white;
+}
+
+.product-profit-card {
+  margin-top: 24px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 280px;
+  gap: 1px;
+  border: 1px solid var(--line);
+  background: var(--line);
+}
+
+.profit-preview,
+.price-hero {
+  background: white;
+}
+
+.profit-preview {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: 132px 1fr;
+  gap: 18px;
+  padding: 18px;
+  align-items: center;
+}
+
+.profit-image {
+  position: relative;
+  width: 132px;
+  height: 132px;
+  background: #f4f0e7;
+}
+
+.profit-image img {
+  object-fit: cover;
+}
+
+.profit-preview small,
+.price-hero span,
+.price-hero small {
+  color: var(--muted);
+  font-size: 9px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.profit-preview strong {
+  display: block;
+  margin: 7px 0 8px;
+  font-size: 18px;
+}
+
+.profit-preview p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.55;
+}
+
+.price-hero {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.price-hero strong {
+  display: block;
+  margin: 9px 0;
+  font-size: clamp(28px, 3vw, 42px);
+  line-height: 1;
 }
 
 .calculation-summary {
@@ -908,7 +1042,7 @@ footer p {
 }
 
 .calculation-summary div {
-  min-height: 94px;
+  min-height: 88px;
   padding: 18px;
   display: flex;
   flex-direction: column;
@@ -1662,8 +1796,14 @@ footer p {
     border-bottom: 1px solid var(--line);
   }
 
-  .form-grid {
+  .form-grid,
+  .form-grid.compact,
+  .item-entry-grid {
     grid-template-columns: 1fr 1fr;
+  }
+
+  .product-profit-card {
+    grid-template-columns: 1fr;
   }
 
   .calculation-summary {
@@ -1809,8 +1949,28 @@ footer p {
 
   .rate-row,
   .form-grid,
+  .form-grid.compact,
+  .item-entry-grid,
   .calculation-summary {
     grid-template-columns: 1fr;
+  }
+
+  .calc-group-title {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .calc-group-title span {
+    text-align: left;
+  }
+
+  .profit-preview {
+    grid-template-columns: 92px 1fr;
+  }
+
+  .profit-image {
+    width: 92px;
+    height: 92px;
   }
 
   .shipment-card {

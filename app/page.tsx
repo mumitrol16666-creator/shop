@@ -361,7 +361,21 @@ export default function Home() {
   const [delivery, setDelivery] = useState(1200);
   const [cargo, setCargo] = useState(2800);
   const [other, setOther] = useState(300);
+  const [packaging, setPackaging] = useState(700);
+  const [setupCost, setSetupCost] = useState(2500);
+  const [marketingCost, setMarketingCost] = useState(1200);
+  const [taxPercent, setTaxPercent] = useState(3);
+  const [bankPercent, setBankPercent] = useState(11);
+  const [sellerPercent, setSellerPercent] = useState(5);
   const [markup, setMarkup] = useState(35);
+  const [manualPrice, setManualPrice] = useState(56000);
+  const [manualPricing, setManualPricing] = useState(false);
+  const [internalName, setInternalName] = useState("Электрогитара ST-20 Blue");
+  const [internalSku, setInternalSku] = useState("EG-ST20-BLU");
+  const [internalPhoto, setInternalPhoto] = useState("/product-variants/eg-st20-blu.jpg");
+  const [internalDescription, setInternalDescription] = useState(
+    "Электрогитара для начинающих: HSS-схема, чехол в подарок, 3 медиатора, базовая отстройка мастером.",
+  );
 
   const filteredProducts = useMemo(() => {
     const normalized = query.trim().toLowerCase();
@@ -377,10 +391,21 @@ export default function Home() {
 
   const rate = currency === "CNY" ? cnyRate : currency === "USD" ? usdRate : 1;
   const purchaseKzt = purchase * rate;
-  const landedCost = purchaseKzt + delivery + cargo + other;
-  const retail = landedCost * (1 + markup / 100);
-  const profit = retail - landedCost;
+  const fixedCost = purchaseKzt + delivery + cargo + other + packaging + setupCost + marketingCost;
+  const percentExpenses = taxPercent + bankPercent + sellerPercent;
+  const targetProfit = fixedCost * (markup / 100);
+  const recommendedPrice =
+    percentExpenses >= 100 ? fixedCost + targetProfit : (fixedCost + targetProfit) / (1 - percentExpenses / 100);
+  const retail = manualPricing ? manualPrice : recommendedPrice;
+  const taxAmount = retail * (taxPercent / 100);
+  const bankAmount = retail * (bankPercent / 100);
+  const sellerAmount = retail * (sellerPercent / 100);
+  const variableExpenses = taxAmount + bankAmount + sellerAmount;
+  const netRevenue = retail - variableExpenses;
+  const profit = netRevenue - fixedCost;
   const margin = retail ? (profit / retail) * 100 : 0;
+  const markupOnCost = fixedCost ? (profit / fixedCost) * 100 : 0;
+  const breakEvenPrice = percentExpenses >= 100 ? fixedCost : fixedCost / (1 - percentExpenses / 100);
   const cartCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
   const selectedImage = selectedVariant?.image ?? selected?.image ?? "";
 
@@ -723,10 +748,35 @@ export default function Home() {
             <section className="calculator-card">
               <div className="card-heading">
                 <div>
-                  <p className="eyebrow">Внутренний калькулятор</p>
-                  <h2>Себестоимость и маржа</h2>
+                  <p className="eyebrow">Экран заноса товара</p>
+                  <h2>Цена продажи из полной себестоимости</h2>
                 </div>
-                <span className="demo-pill">Демо-расчет</span>
+                <span className="demo-pill">{manualPricing ? "Ручная цена" : "Автоцена"}</span>
+              </div>
+
+              <div className="item-entry-grid">
+                <label>
+                  Название товара
+                  <input value={internalName} onChange={(e) => setInternalName(e.target.value)} />
+                </label>
+                <label>
+                  SKU / артикул
+                  <input value={internalSku} onChange={(e) => setInternalSku(e.target.value)} />
+                </label>
+                <label>
+                  Фото товара
+                  <select value={internalPhoto} onChange={(e) => setInternalPhoto(e.target.value)}>
+                    <option value="/product-variants/eg-st20-blu.jpg">ST-20 · синяя</option>
+                    <option value="/product-variants/eg-st20-red.jpg">ST-20 · красная</option>
+                    <option value="/product-variants/ag-41gl-snb.jpg">Акустика 41″ · санбёрст</option>
+                    <option value="/product-variants/uk-klh23-pnk.jpg">Укулеле · розовая</option>
+                    <option value="/product-variants/fx-cb-ac-gld.jpg">Cube Baby · Acoustic</option>
+                  </select>
+                </label>
+                <label className="wide-field">
+                  Описание / офер
+                  <textarea value={internalDescription} onChange={(e) => setInternalDescription(e.target.value)} />
+                </label>
               </div>
 
               <div className="rate-row">
@@ -738,6 +788,11 @@ export default function Home() {
                   Курс USD → KZT
                   <input type="number" value={usdRate} onChange={(e) => setUsdRate(+e.target.value)} />
                 </label>
+              </div>
+
+              <div className="calc-group-title">
+                <strong>Себестоимость на 1 единицу</strong>
+                <span>Фиксированные расходы, которые уже должны быть покрыты ценой.</span>
               </div>
 
               <div className="form-grid">
@@ -766,21 +821,100 @@ export default function Home() {
                   <input type="number" value={other} onChange={(e) => setOther(+e.target.value)} />
                 </label>
                 <label>
-                  Наценка, %
+                  Упаковка / выдача, ₸
+                  <input type="number" value={packaging} onChange={(e) => setPackaging(+e.target.value)} />
+                </label>
+                <label>
+                  Отстройка мастером, ₸
+                  <input type="number" value={setupCost} onChange={(e) => setSetupCost(+e.target.value)} />
+                </label>
+                <label>
+                  Реклама / карточка, ₸
+                  <input type="number" value={marketingCost} onChange={(e) => setMarketingCost(+e.target.value)} />
+                </label>
+              </div>
+
+              <div className="calc-group-title">
+                <strong>Проценты от цены продажи</strong>
+                <span>Налог, банк за рассрочку и продавец уменьшают выручку после продажи.</span>
+              </div>
+
+              <div className="form-grid compact">
+                <label>
+                  Налог, %
+                  <input type="number" value={taxPercent} onChange={(e) => setTaxPercent(+e.target.value)} />
+                </label>
+                <label>
+                  Банк / рассрочка, %
+                  <input type="number" value={bankPercent} onChange={(e) => setBankPercent(+e.target.value)} />
+                </label>
+                <label>
+                  Продавец, %
+                  <input type="number" value={sellerPercent} onChange={(e) => setSellerPercent(+e.target.value)} />
+                </label>
+                <label>
+                  Желаемая прибыль от себестоимости, %
                   <input type="number" value={markup} onChange={(e) => setMarkup(+e.target.value)} />
                 </label>
+                <label>
+                  Итоговая цена, ₸
+                  <input
+                    type="number"
+                    value={Math.round(retail)}
+                    onChange={(e) => {
+                      setManualPricing(true);
+                      setManualPrice(+e.target.value);
+                    }}
+                  />
+                </label>
+                <label className="toggle-label">
+                  Режим цены
+                  <button
+                    type="button"
+                    className={manualPricing ? "toggle-button active" : "toggle-button"}
+                    onClick={() => {
+                      setManualPricing((value) => !value);
+                      setManualPrice(Math.round(recommendedPrice));
+                    }}
+                  >
+                    {manualPricing ? "Ручная" : "Авто"}
+                  </button>
+                </label>
+              </div>
+
+              <div className="product-profit-card">
+                <div className="profit-preview">
+                  <span className="profit-image">
+                    <Image src={internalPhoto} alt="" fill unoptimized sizes="140px" />
+                  </span>
+                  <div>
+                    <small>{internalSku}</small>
+                    <strong>{internalName}</strong>
+                    <p>{internalDescription}</p>
+                  </div>
+                </div>
+                <div className="price-hero">
+                  <span>Цена продажи</span>
+                  <strong>{money(retail)} ₸</strong>
+                  <small>Авто-рекомендация: {money(recommendedPrice)} ₸</small>
+                </div>
               </div>
 
               <div className="calculation-summary">
                 <div><span>Закупка в тенге</span><strong>{money(purchaseKzt)} ₸</strong></div>
-                <div><span>Полная себестоимость</span><strong>{money(landedCost)} ₸</strong></div>
-                <div className="accent-result"><span>Рекомендуемая цена</span><strong>{money(retail)} ₸</strong></div>
-                <div><span>Прибыль с единицы</span><strong>{money(profit)} ₸</strong></div>
-                <div><span>Маржинальность</span><strong>{margin.toFixed(1)}%</strong></div>
+                <div><span>Фикс. себестоимость</span><strong>{money(fixedCost)} ₸</strong></div>
+                <div><span>Точка безубыточности</span><strong>{money(breakEvenPrice)} ₸</strong></div>
+                <div><span>Налог</span><strong>{money(taxAmount)} ₸</strong></div>
+                <div><span>Банк / рассрочка</span><strong>{money(bankAmount)} ₸</strong></div>
+                <div><span>Продавец</span><strong>{money(sellerAmount)} ₸</strong></div>
+                <div><span>Чистая выручка</span><strong>{money(netRevenue)} ₸</strong></div>
+                <div className="accent-result"><span>Прибыль с единицы</span><strong>{money(profit)} ₸</strong></div>
+                <div><span>Маржа / прибыль к цене</span><strong>{margin.toFixed(1)}%</strong></div>
+                <div><span>Наценка к себестоимости</span><strong>{markupOnCost.toFixed(1)}%</strong></div>
               </div>
               <p className="formula-note">
-                Себестоимость = закупка по курсу + доставка + карго + прочие расходы.
-                Расчет пока не сохраняется.
+                Автоцена = (фиксированная себестоимость + желаемая прибыль) / (1 − налог − банк − продавец).
+                Если изменить итоговую цену вручную, прибыль, маржа и фактическая наценка пересчитаются обратно.
               </p>
             </section>
 
