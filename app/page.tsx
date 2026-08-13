@@ -929,13 +929,16 @@ export default function Home() {
                 <li><span>Штрихкоды</span><strong>Ожидаются</strong></li>
                 <li><span>Розничные цены</span><strong>Не заданы</strong></li>
               </ul>
-              <button className="primary-button" onClick={() => setNotice("Следующий шаг: добавить штрихкоды")}>
-                Продолжить заполнение
+              <button
+                className="primary-button"
+                onClick={() => document.getElementById("inventory")?.scrollIntoView({ behavior: "smooth" })}
+              >
+                Перейти к товарам
               </button>
             </aside>
           </div>
 
-          <section className="inventory-card">
+          <section className="inventory-card" id="inventory">
             <div className="card-heading">
               <div>
                 <p className="eyebrow">Склад</p>
