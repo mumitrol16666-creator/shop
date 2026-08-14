@@ -1,10 +1,32 @@
 "use client";
 
 import Image from "next/image";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { calculateProductPricing } from "../lib/product-pricing";
+
+type AdminPricing = {
+  purchaseCurrency: "CNY" | "USD" | "KZT";
+  purchasePrice: number;
+  currencyRate: number;
+  chinaDeliveryKzt: number;
+  cargoKzt: number;
+  customsKzt: number;
+  packagingKzt: number;
+  setupKzt: number;
+  marketingKzt: number;
+  otherCostsKzt: number;
+  taxPercent: number;
+  bankInstallmentPercent: number;
+  installmentMonths: number;
+  sellerPercent: number;
+  targetProfitPercent: number;
+  pricingMode: "auto" | "manual";
+  manualPriceKzt?: number | null;
+};
 
 type Product = {
-  id: number;
+  id: number | string;
+  databaseId?: string;
   name: string;
   shortName: string;
   category: string;
@@ -15,9 +37,15 @@ type Product = {
   badge?: string;
   description: string;
   features: string[];
+  price?: number;
+  publicationStatus?: "draft" | "review" | "published" | "hidden" | "out_of_stock" | "archived";
+  isStored?: boolean;
+  variantItems?: Variant[];
+  adminPricing?: AdminPricing;
 };
 
 type Variant = {
+  id?: string;
   name: string;
   stock: number;
   color: string;
@@ -25,11 +53,16 @@ type Variant = {
   image: string;
   secondary?: string;
   note?: string;
+  barcode?: string;
+  colorName?: string;
+  size?: string;
+  price?: number;
+  adminPricing?: AdminPricing;
 };
 
 type CartItem = {
   key: string;
-  productId: number;
+  productId: number | string;
   name: string;
   variantName: string;
   sku: string;
@@ -238,9 +271,11 @@ const categories = [
   "Укулеле",
   "Аксессуары",
   "Звук и эффекты",
+  "Струны",
+  "Усилители",
 ];
 
-const variantsByProduct: Record<number, Variant[]> = {
+const variantsByProduct: Record<string, Variant[]> = {
   1: [
     { name: "Черная", stock: 2, color: "#161616", sku: "EG-ST20-BLK", image: "/product-variants/eg-st20-blk.jpg" },
     { name: "Красная", stock: 1, color: "#c92e29", sku: "EG-ST20-RED", image: "/product-variants/eg-st20-red.jpg" },
@@ -339,6 +374,15 @@ const money = (value: number) =>
     maximumFractionDigits: 0,
   }).format(Math.round(value));
 
+const variantsFor = (product: Product) =>
+  product.variantItems ?? variantsByProduct[String(product.id)] ?? [];
+
+const mergeBySku = (base: Product[], stored: Product[]) => {
+  const merged = new Map(base.map((product) => [product.sku, product]));
+  stored.forEach((product) => merged.set(product.sku, product));
+  return [...merged.values()];
+};
+
 export default function Home() {
   const [mode, setMode] = useState<"buyer" | "purchaser">("buyer");
   const [category, setCategory] = useState("Все");
@@ -353,6 +397,7 @@ export default function Home() {
   const [customerPhone, setCustomerPhone] = useState("");
   const [customerCity, setCustomerCity] = useState("");
   const [customerComment, setCustomerComment] = useState("");
+  const [storedProducts, setStoredProducts] = useState<Product[]>([]);
 
   const [currency, setCurrency] = useState<"CNY" | "USD" | "KZT">("CNY");
   const [purchase, setPurchase] = useState(220);
@@ -360,26 +405,68 @@ export default function Home() {
   const [usdRate, setUsdRate] = useState(540);
   const [delivery, setDelivery] = useState(1200);
   const [cargo, setCargo] = useState(2800);
+  const [customs, setCustoms] = useState(0);
   const [other, setOther] = useState(300);
   const [packaging, setPackaging] = useState(700);
   const [setupCost, setSetupCost] = useState(2500);
   const [marketingCost, setMarketingCost] = useState(1200);
   const [taxPercent, setTaxPercent] = useState(3);
   const [bankPercent, setBankPercent] = useState(11);
+  const [installmentMonths, setInstallmentMonths] = useState(12);
   const [sellerPercent, setSellerPercent] = useState(5);
   const [markup, setMarkup] = useState(35);
   const [manualPrice, setManualPrice] = useState(56000);
   const [manualPricing, setManualPricing] = useState(false);
   const [internalName, setInternalName] = useState("Электрогитара ST-20 Blue");
-  const [internalSku, setInternalSku] = useState("EG-ST20-BLU");
+  const [internalSku, setInternalSku] = useState("EG-ST20-2026");
+  const [internalCategory, setInternalCategory] = useState("Электрогитары");
   const [internalPhoto, setInternalPhoto] = useState("/product-variants/eg-st20-blu.jpg");
   const [internalDescription, setInternalDescription] = useState(
     "Электрогитара для начинающих: HSS-схема, чехол в подарок, 3 медиатора, базовая отстройка мастером.",
   );
+  const [featuresText, setFeaturesText] = useState("HSS-схема, Чехол в подарок, 3 медиатора, Отстройка мастером");
+  const [targetAudience, setTargetAudience] = useState("Для начинающих");
+  const [variantName, setVariantName] = useState("Синяя");
+  const [variantSku, setVariantSku] = useState("EG-ST20-2026-BLU");
+  const [variantBarcode, setVariantBarcode] = useState("");
+  const [variantColorName, setVariantColorName] = useState("Синий");
+  const [variantColorHex, setVariantColorHex] = useState("#246bb3");
+  const [variantSize, setVariantSize] = useState("38″");
+  const [variantStock, setVariantStock] = useState(1);
+  const [editingProductId, setEditingProductId] = useState<string | undefined>();
+  const [editingVariantId, setEditingVariantId] = useState<string | undefined>();
+  const [saveState, setSaveState] = useState<"idle" | "saving" | "saved" | "error">("idle");
+  const [saveMessage, setSaveMessage] = useState("");
+
+  useEffect(() => {
+    let cancelled = false;
+    fetch("/api/products?scope=all")
+      .then(async (response) => {
+        if (!response.ok) throw new Error("Не удалось загрузить сохранённые карточки");
+        return response.json() as Promise<{ products: Product[] }>;
+      })
+      .then((data) => {
+        if (!cancelled) setStoredProducts(data.products);
+      })
+      .catch(() => undefined);
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const buyerProducts = useMemo(
+    () => mergeBySku(products, storedProducts.filter((product) => product.publicationStatus === "published")),
+    [storedProducts],
+  );
+  const adminProducts = useMemo(
+    () => mergeBySku(products, storedProducts),
+    [storedProducts],
+  );
 
   const filteredProducts = useMemo(() => {
     const normalized = query.trim().toLowerCase();
-    return products.filter((product) => {
+    const source = mode === "buyer" ? buyerProducts : adminProducts;
+    return source.filter((product) => {
       const matchesCategory = category === "Все" || product.category === category;
       const matchesSearch =
         !normalized ||
@@ -387,31 +474,61 @@ export default function Home() {
         product.sku.toLowerCase().includes(normalized);
       return matchesCategory && matchesSearch;
     });
-  }, [category, query]);
+  }, [adminProducts, buyerProducts, category, mode, query]);
 
   const rate = currency === "CNY" ? cnyRate : currency === "USD" ? usdRate : 1;
-  const purchaseKzt = purchase * rate;
-  const fixedCost = purchaseKzt + delivery + cargo + other + packaging + setupCost + marketingCost;
   const percentExpenses = taxPercent + bankPercent + sellerPercent;
-  const targetProfit = fixedCost * (markup / 100);
-  const recommendedPrice =
-    percentExpenses >= 100 ? fixedCost + targetProfit : (fixedCost + targetProfit) / (1 - percentExpenses / 100);
-  const retail = manualPricing ? manualPrice : recommendedPrice;
-  const taxAmount = retail * (taxPercent / 100);
-  const bankAmount = retail * (bankPercent / 100);
-  const sellerAmount = retail * (sellerPercent / 100);
-  const variableExpenses = taxAmount + bankAmount + sellerAmount;
-  const netRevenue = retail - variableExpenses;
-  const profit = netRevenue - fixedCost;
-  const margin = retail ? (profit / retail) * 100 : 0;
-  const markupOnCost = fixedCost ? (profit / fixedCost) * 100 : 0;
-  const breakEvenPrice = percentExpenses >= 100 ? fixedCost : fixedCost / (1 - percentExpenses / 100);
+  const pricingCalculation = useMemo(() => {
+    const input = {
+      purchasePrice: purchase,
+      currencyRate: rate,
+      chinaDeliveryKzt: delivery,
+      cargoKzt: cargo,
+      customsKzt: customs,
+      packagingKzt: packaging,
+      setupKzt: setupCost,
+      marketingKzt: marketingCost,
+      otherCostsKzt: other,
+      taxPercent,
+      bankInstallmentPercent: bankPercent,
+      sellerPercent,
+      targetProfitPercent: markup,
+      pricingMode: manualPricing ? ("manual" as const) : ("auto" as const),
+      manualPriceKzt: manualPrice,
+    };
+    try {
+      return calculateProductPricing(input);
+    } catch {
+      return calculateProductPricing({
+        ...input,
+        taxPercent: 0,
+        bankInstallmentPercent: 0,
+        sellerPercent: 0,
+      });
+    }
+  }, [bankPercent, cargo, customs, delivery, manualPrice, manualPricing, marketingCost, markup, other, packaging, purchase, rate, sellerPercent, setupCost, taxPercent]);
+  const purchaseKzt = pricingCalculation.purchasePriceKzt;
+  const fixedCost = pricingCalculation.fixedCostKzt;
+  const recommendedPrice = pricingCalculation.recommendedPriceKzt;
+  const retail = pricingCalculation.finalPriceKzt;
+  const taxAmount = pricingCalculation.taxAmountKzt;
+  const bankAmount = pricingCalculation.bankAmountKzt;
+  const sellerAmount = pricingCalculation.sellerAmountKzt;
+  const netRevenue = pricingCalculation.netRevenueKzt;
+  const profit = pricingCalculation.profitKzt;
+  const margin = pricingCalculation.marginPercent;
+  const markupOnCost = pricingCalculation.markupOnCostPercent;
+  const breakEvenPrice = pricingCalculation.breakEvenPriceKzt;
   const cartCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
   const selectedImage = selectedVariant?.image ?? selected?.image ?? "";
+  const editingProduct = storedProducts.find(
+    (product) => product.databaseId === editingProductId,
+  );
 
   const openProduct = (product: Product) => {
+    const variants = variantsFor(product);
     setSelected(product);
-    setSelectedVariant(variantsByProduct[product.id][0]);
+    setSelectedVariant(variants[0] ?? null);
     setRequestedQuantity(1);
   };
 
@@ -423,7 +540,12 @@ export default function Home() {
   };
 
   const addToCart = (product: Product) => {
-    const variant = selectedVariant ?? variantsByProduct[product.id][0];
+    const variant = selectedVariant ?? variantsFor(product)[0];
+    if (!variant) {
+      setNotice("Для товара пока не добавлен доступный вариант");
+      window.setTimeout(() => setNotice(""), 2400);
+      return;
+    }
     const key = `${product.id}:${variant.name}`;
     setCartItems((current) => {
       const existing = current.find((item) => item.key === key);
@@ -485,6 +607,178 @@ export default function Home() {
     setNotice("Заявка собрана. Следующий шаг — подключить отправку в CRM или WhatsApp");
     setCartOpen(false);
     window.setTimeout(() => setNotice(""), 3600);
+  };
+
+  const putPricingInForm = (pricing: AdminPricing, productPrice = 0) => {
+    setCurrency(pricing.purchaseCurrency);
+    setPurchase(pricing.purchasePrice);
+    if (pricing.purchaseCurrency === "CNY") setCnyRate(pricing.currencyRate);
+    if (pricing.purchaseCurrency === "USD") setUsdRate(pricing.currencyRate);
+    setDelivery(pricing.chinaDeliveryKzt);
+    setCargo(pricing.cargoKzt);
+    setCustoms(pricing.customsKzt);
+    setPackaging(pricing.packagingKzt);
+    setSetupCost(pricing.setupKzt);
+    setMarketingCost(pricing.marketingKzt);
+    setOther(pricing.otherCostsKzt);
+    setTaxPercent(pricing.taxPercent);
+    setBankPercent(pricing.bankInstallmentPercent);
+    setInstallmentMonths(pricing.installmentMonths);
+    setSellerPercent(pricing.sellerPercent);
+    setMarkup(pricing.targetProfitPercent);
+    setManualPricing(pricing.pricingMode === "manual");
+    setManualPrice(pricing.manualPriceKzt ?? productPrice);
+  };
+
+  const putVariantInForm = (variant: Variant, productPrice = 0) => {
+    setEditingVariantId(variant.id);
+    setVariantName(variant.name);
+    setVariantSku(variant.sku);
+    setVariantBarcode(variant.barcode ?? "");
+    setVariantColorName(variant.colorName ?? "");
+    setVariantColorHex(variant.color || "#8a8175");
+    setVariantSize(variant.size ?? "");
+    setVariantStock(variant.stock);
+    setInternalPhoto(variant.image);
+    if (variant.adminPricing) putPricingInForm(variant.adminPricing, productPrice);
+  };
+
+  const editStoredProduct = (product: Product) => {
+    if (!product.isStored || !product.databaseId) {
+      openProduct(product);
+      return;
+    }
+    setEditingProductId(product.databaseId);
+    setInternalName(product.name);
+    setInternalSku(product.sku);
+    setInternalCategory(product.category);
+    setInternalPhoto(product.image);
+    setInternalDescription(product.description);
+    setFeaturesText(product.features.join(", "));
+    setTargetAudience(product.badge ?? "");
+    const firstVariant = variantsFor(product)[0];
+    if (firstVariant) putVariantInForm(firstVariant, product.price ?? 0);
+    const pricing = product.adminPricing;
+    if (pricing && !firstVariant?.adminPricing) putPricingInForm(pricing, product.price ?? 0);
+    setSaveState("idle");
+    setSaveMessage(`Редактируется карточка ${product.sku}`);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const prepareNewVariant = () => {
+    setEditingVariantId(undefined);
+    setVariantName("");
+    setVariantSku(`${internalSku}-NEW`);
+    setVariantBarcode("");
+    setVariantColorName("");
+    setVariantColorHex("#8a8175");
+    setVariantSize("");
+    setVariantStock(0);
+    setSaveState("idle");
+    setSaveMessage("Новый вариант будет добавлен к текущей карточке");
+  };
+
+  const saveProduct = async (publish: boolean) => {
+    if (!internalName.trim() || !internalSku.trim() || !internalDescription.trim()) {
+      setSaveState("error");
+      setSaveMessage("Заполните название, SKU и описание товара.");
+      return;
+    }
+    if (!variantName.trim() || !variantSku.trim()) {
+      setSaveState("error");
+      setSaveMessage("Заполните название и SKU варианта.");
+      return;
+    }
+    if (percentExpenses >= 100) {
+      setSaveState("error");
+      setSaveMessage("Сумма налога, банка и продавца должна быть меньше 100%.");
+      return;
+    }
+
+    setSaveState("saving");
+    setSaveMessage(publish ? "Публикуем карточку…" : "Сохраняем черновик…");
+    try {
+      const response = await fetch("/api/products", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          productId: editingProductId,
+          variantId: editingVariantId,
+          name: internalName,
+          sku: internalSku,
+          category: internalCategory,
+          photoUrl: internalPhoto,
+          description: internalDescription,
+          features: featuresText
+            .split(",")
+            .map((feature) => feature.trim())
+            .filter(Boolean),
+          targetAudience,
+          variant: {
+            name: variantName,
+            sku: variantSku,
+            barcode: variantBarcode,
+            colorName: variantColorName,
+            colorHex: variantColorHex,
+            size: variantSize,
+            stockQuantity: variantStock,
+          },
+          pricing: {
+            purchaseCurrency: currency,
+            purchasePrice: purchase,
+            currencyRate: rate,
+            chinaDeliveryKzt: delivery,
+            cargoKzt: cargo,
+            customsKzt: customs,
+            packagingKzt: packaging,
+            setupKzt: setupCost,
+            marketingKzt: marketingCost,
+            otherCostsKzt: other,
+            taxPercent,
+            bankInstallmentPercent: bankPercent,
+            installmentMonths,
+            sellerPercent,
+            targetProfitPercent: markup,
+            pricingMode: manualPricing ? "manual" : "auto",
+            manualPriceKzt: manualPricing ? manualPrice : null,
+          },
+          publish,
+        }),
+      });
+      const data = (await response.json()) as { product?: Product; error?: string };
+      if (!response.ok || !data.product) {
+        throw new Error(data.error || "Карточка не сохранилась");
+      }
+
+      setStoredProducts((current) => {
+        const withoutSaved = current.filter((product) => product.id !== data.product?.id);
+        return [...withoutSaved, data.product as Product];
+      });
+      setEditingProductId(data.product.databaseId);
+      const savedVariant = data.product.variantItems?.find(
+        (variant) => variant.sku === variantSku.trim().toUpperCase(),
+      );
+      if (savedVariant) setEditingVariantId(savedVariant.id);
+      setSaveState("saved");
+      setSaveMessage(
+        publish
+          ? "Карточка опубликована и уже доступна на витрине."
+          : "Черновик сохранён. Он пока не виден покупателям.",
+      );
+      setNotice(publish ? "Товар появился на витрине" : "Черновик сохранён");
+      window.setTimeout(() => setNotice(""), 2800);
+      if (publish) {
+        setMode("buyer");
+        setCategory("Все");
+        window.setTimeout(
+          () => document.getElementById("catalog")?.scrollIntoView({ behavior: "smooth" }),
+          80,
+        );
+      }
+    } catch (error) {
+      setSaveState("error");
+      setSaveMessage(error instanceof Error ? error.message : "Карточка не сохранилась");
+    }
   };
 
   return (
@@ -572,15 +866,15 @@ export default function Home() {
 
           <section className="trust-strip">
             <div>
-              <strong>14</strong>
+              <strong>{buyerProducts.length}</strong>
               <span>товарных карточек</span>
             </div>
             <div>
-              <strong>56</strong>
+              <strong>{buyerProducts.reduce((sum, product) => sum + variantsFor(product).length, 0)}</strong>
               <span>вариантов</span>
             </div>
             <div>
-              <strong>85</strong>
+              <strong>{buyerProducts.reduce((sum, product) => sum + product.quantity, 0)}</strong>
               <span>единиц в поставке</span>
             </div>
             <div>
@@ -665,9 +959,9 @@ export default function Home() {
                       В наличии: {product.quantity} шт.
                     </div>
                     <div className="card-variants" aria-label={`Варианты ${product.name}`}>
-                      <span>{variantsByProduct[product.id].length} вариантов</span>
+                      <span>{variantsFor(product).length} вариантов</span>
                       <span className="mini-swatches">
-                        {variantsByProduct[product.id].slice(0, 5).map((variant) => (
+                        {variantsFor(product).slice(0, 5).map((variant) => (
                           <i
                             key={variant.name}
                             title={variant.name}
@@ -681,7 +975,11 @@ export default function Home() {
                       </span>
                     </div>
                     <div className="product-footer">
-                      <span className="price-placeholder">Цена уточняется</span>
+                      <span className="price-placeholder">
+                        {product.price
+                          ? `${variantsFor(product).length > 1 ? "от " : ""}${money(product.price)} ₸`
+                          : "Цена уточняется"}
+                      </span>
                       <button onClick={() => openProduct(product)} aria-label={`Открыть ${product.name}`}>
                         ↗
                       </button>
@@ -738,9 +1036,9 @@ export default function Home() {
           </div>
 
           <div className="kpi-grid">
-            <article><span>Товарных карточек</span><strong>14</strong><small>Каталог собран</small></article>
-            <article><span>Вариантов товара</span><strong>56</strong><small>По цветам и моделям</small></article>
-            <article><span>Всего в поставке</span><strong>85</strong><small>Подтвержденных единиц</small></article>
+            <article><span>Товарных карточек</span><strong>{adminProducts.length}</strong><small>Вместе с черновиками</small></article>
+            <article><span>Вариантов товара</span><strong>{adminProducts.reduce((sum, product) => sum + variantsFor(product).length, 0)}</strong><small>По цветам и моделям</small></article>
+            <article><span>Всего в поставке</span><strong>{adminProducts.reduce((sum, product) => sum + product.quantity, 0)}</strong><small>Подтвержденных единиц</small></article>
             <article><span>Валюты</span><strong>3</strong><small>CNY · USD · KZT</small></article>
           </div>
 
@@ -760,8 +1058,16 @@ export default function Home() {
                   <input value={internalName} onChange={(e) => setInternalName(e.target.value)} />
                 </label>
                 <label>
-                  SKU / артикул
+                  SKU карточки
                   <input value={internalSku} onChange={(e) => setInternalSku(e.target.value)} />
+                </label>
+                <label>
+                  Категория
+                  <select value={internalCategory} onChange={(e) => setInternalCategory(e.target.value)}>
+                    {categories.filter((item) => item !== "Все").map((item) => (
+                      <option key={item} value={item}>{item}</option>
+                    ))}
+                  </select>
                 </label>
                 <label>
                   Фото товара
@@ -776,6 +1082,79 @@ export default function Home() {
                 <label className="wide-field">
                   Описание / офер
                   <textarea value={internalDescription} onChange={(e) => setInternalDescription(e.target.value)} />
+                </label>
+                <label className="wide-field">
+                  Преимущества через запятую
+                  <input value={featuresText} onChange={(e) => setFeaturesText(e.target.value)} />
+                </label>
+                <label>
+                  Метка для покупателя
+                  <input value={targetAudience} onChange={(e) => setTargetAudience(e.target.value)} placeholder="Для начинающих" />
+                </label>
+              </div>
+
+              <div className="calc-group-title">
+                <strong>Вариант и склад</strong>
+                <span>Цвет, размер, штрихкод и фактический остаток конкретной позиции.</span>
+              </div>
+
+              {editingProduct && variantsFor(editingProduct).length > 0 && (
+                <div className="variant-toolbar">
+                  <label>
+                    Редактируемый вариант
+                    <select
+                      value={editingVariantId ?? ""}
+                      onChange={(event) => {
+                        const variant = variantsFor(editingProduct).find(
+                          (item) => item.id === event.target.value,
+                        );
+                        if (variant) putVariantInForm(variant, editingProduct.price ?? 0);
+                      }}
+                    >
+                      {variantsFor(editingProduct).map((variant) => (
+                        <option key={variant.id ?? variant.sku} value={variant.id}>
+                          {variant.name} · {variant.sku}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+                  <button type="button" className="outline-button" onClick={prepareNewVariant}>
+                    Добавить вариант
+                  </button>
+                </div>
+              )}
+
+              <div className="form-grid variant-entry-grid">
+                <label>
+                  Название варианта
+                  <input value={variantName} onChange={(e) => setVariantName(e.target.value)} placeholder="Синяя" />
+                </label>
+                <label>
+                  SKU варианта
+                  <input value={variantSku} onChange={(e) => setVariantSku(e.target.value)} />
+                </label>
+                <label>
+                  Штрихкод
+                  <input value={variantBarcode} onChange={(e) => setVariantBarcode(e.target.value)} placeholder="Можно добавить позже" />
+                </label>
+                <label>
+                  Цвет
+                  <input value={variantColorName} onChange={(e) => setVariantColorName(e.target.value)} placeholder="Синий" />
+                </label>
+                <label>
+                  Образец цвета
+                  <span className="color-input-wrap">
+                    <input type="color" value={variantColorHex} onChange={(e) => setVariantColorHex(e.target.value)} aria-label="Цвет варианта" />
+                    <input value={variantColorHex} onChange={(e) => setVariantColorHex(e.target.value)} />
+                  </span>
+                </label>
+                <label>
+                  Размер
+                  <input value={variantSize} onChange={(e) => setVariantSize(e.target.value)} placeholder="38″" />
+                </label>
+                <label>
+                  Остаток, шт.
+                  <input type="number" min="0" value={variantStock} onChange={(e) => setVariantStock(Math.max(0, +e.target.value))} />
                 </label>
               </div>
 
@@ -817,6 +1196,10 @@ export default function Home() {
                   <input type="number" value={cargo} onChange={(e) => setCargo(+e.target.value)} />
                 </label>
                 <label>
+                  Таможня / оформление, ₸
+                  <input type="number" value={customs} onChange={(e) => setCustoms(+e.target.value)} />
+                </label>
+                <label>
                   Прочие расходы, ₸
                   <input type="number" value={other} onChange={(e) => setOther(+e.target.value)} />
                 </label>
@@ -847,6 +1230,10 @@ export default function Home() {
                 <label>
                   Банк / рассрочка, %
                   <input type="number" value={bankPercent} onChange={(e) => setBankPercent(+e.target.value)} />
+                </label>
+                <label>
+                  Срок рассрочки, мес.
+                  <input type="number" min="0" value={installmentMonths} onChange={(e) => setInstallmentMonths(Math.max(0, +e.target.value))} />
                 </label>
                 <label>
                   Продавец, %
@@ -916,6 +1303,28 @@ export default function Home() {
                 Автоцена = (фиксированная себестоимость + желаемая прибыль) / (1 − налог − банк − продавец).
                 Если изменить итоговую цену вручную, прибыль, маржа и фактическая наценка пересчитаются обратно.
               </p>
+              <div className="save-actions">
+                <div className={`save-feedback ${saveState}`} aria-live="polite">
+                  <strong>{editingProductId ? "Карточка в базе" : "Новая карточка"}</strong>
+                  <span>{saveMessage || "Можно сохранить черновик или сразу показать товар покупателям."}</span>
+                </div>
+                <button
+                  type="button"
+                  className="outline-button"
+                  disabled={saveState === "saving"}
+                  onClick={() => saveProduct(false)}
+                >
+                  Сохранить черновик
+                </button>
+                <button
+                  type="button"
+                  className="primary-button"
+                  disabled={saveState === "saving"}
+                  onClick={() => saveProduct(true)}
+                >
+                  Сохранить и показать на витрине
+                </button>
+              </div>
             </section>
 
             <aside className="shipment-card">
@@ -954,7 +1363,7 @@ export default function Home() {
                 <span>Товар</span><span>Артикул</span><span>Варианты</span><span>Количество</span><span>Статус</span>
               </div>
               {filteredProducts.map((product) => (
-                <button className="inventory-row" key={product.id} onClick={() => openProduct(product)}>
+                <button className="inventory-row" key={product.id} onClick={() => editStoredProduct(product)}>
                   <span className="inventory-product">
                     <span className="inventory-thumb">
                       <Image src={product.image} alt="" fill unoptimized sizes="56px" />
@@ -964,7 +1373,13 @@ export default function Home() {
                   <span>{product.sku}</span>
                   <span>{product.variants}</span>
                   <span><strong>{product.quantity} шт.</strong></span>
-                  <span className="status-chip">Карточка готова</span>
+                  <span className={`status-chip ${product.publicationStatus ?? "static"}`}>
+                    {product.publicationStatus === "published"
+                      ? "На витрине"
+                      : product.publicationStatus === "draft"
+                        ? "Черновик"
+                        : "Карточка готова"}
+                  </span>
                 </button>
               ))}
             </div>
@@ -1005,7 +1420,7 @@ export default function Home() {
                       <strong>{selectedVariant?.name}</strong>
                     </div>
                     <div className="variant-options">
-                      {variantsByProduct[selected.id].map((variant) => (
+                      {variantsFor(selected).map((variant) => (
                         <button
                           key={variant.name}
                           className={selectedVariant?.name === variant.name ? "active" : ""}
@@ -1031,7 +1446,14 @@ export default function Home() {
                   </div>
 
                   <div className="modal-action">
-                    <div className="price-block"><small>Розничная цена</small><strong>Уточняется</strong></div>
+                    <div className="price-block">
+                      <small>Розничная цена</small>
+                      <strong>
+                        {selectedVariant?.price || selected.price
+                          ? `${money(selectedVariant?.price ?? selected.price ?? 0)} ₸`
+                          : "Уточняется"}
+                      </strong>
+                    </div>
                     <div className="quantity-picker" aria-label="Количество">
                       <button
                         onClick={() => setRequestedQuantity((value) => Math.max(1, value - 1))}
