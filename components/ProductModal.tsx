@@ -36,6 +36,7 @@ export function ProductModal({
   const [installmentMonths, setInstallmentMonths] = useState<number>(12);
   const [isPlayingSound, setIsPlayingSound] = useState(false);
   const [selectedBundle, setSelectedBundle] = useState<"base" | "gift_course" | "pro_pack">("gift_course");
+  const [selectedStrings, setSelectedStrings] = useState<"elixir" | "daddario" | null>(null);
 
   if (!selected) return null;
 
@@ -43,7 +44,8 @@ export function ProductModal({
   const selectedImage = selectedVariant?.image || selected.image;
   const basePrice = selectedVariant?.price || selected.price || 0;
   const bundleDelta = selectedBundle === "pro_pack" ? 8900 : 0;
-  const currentPrice = basePrice + bundleDelta;
+  const stringsDelta = selectedStrings === "elixir" ? 4950 : selectedStrings === "daddario" ? 2450 : 0;
+  const currentPrice = basePrice + bundleDelta + stringsDelta;
 
   const hasDiscount = Boolean(
     (selected.originalPrice && currentPrice && selected.originalPrice > currentPrice) ||
@@ -198,6 +200,60 @@ export function ProductModal({
                 </div>
               </div>
 
+              {/* Exclusive Strings Order Bump (-50%) */}
+              <div className="order-bump-box">
+                <div className="bump-box-header">
+                  <span className="bump-tag-gold">⚡ СПЕЦПРЕДЛОЖЕНИЕ (-50%)</span>
+                  <p>Запасной комплект премиум-струн со скидкой 50% к этой гитаре</p>
+                </div>
+
+                <div className="bump-options-list">
+                  <div
+                    className={`bump-option-row ${selectedStrings === "elixir" ? "active" : ""}`}
+                    onClick={() => setSelectedStrings(selectedStrings === "elixir" ? null : "elixir")}
+                    role="button"
+                    tabIndex={0}
+                  >
+                    <div className="bump-checkbox-visual">
+                      {selectedStrings === "elixir" ? "✓" : ""}
+                    </div>
+                    <div className="bump-option-text">
+                      <div className="bump-title-row">
+                        <strong>👑 Струны Elixir Nanoweb (США)</strong>
+                        <span className="bump-badge-usa">-50%</span>
+                      </div>
+                      <small>Служат до 6 месяцев · Полимерная нано-защита от коррозии · Звонкий тон</small>
+                    </div>
+                    <div className="bump-option-pricing">
+                      <span className="bump-price-old">9 900 ₸</span>
+                      <strong className="bump-price-new">+4 950 ₸</strong>
+                    </div>
+                  </div>
+
+                  <div
+                    className={`bump-option-row ${selectedStrings === "daddario" ? "active" : ""}`}
+                    onClick={() => setSelectedStrings(selectedStrings === "daddario" ? null : "daddario")}
+                    role="button"
+                    tabIndex={0}
+                  >
+                    <div className="bump-checkbox-visual">
+                      {selectedStrings === "daddario" ? "✓" : ""}
+                    </div>
+                    <div className="bump-option-text">
+                      <div className="bump-title-row">
+                        <strong>🎸 Струны D'Addario / Alice Pro</strong>
+                        <span className="bump-badge-usa">-50%</span>
+                      </div>
+                      <small>Мягкое натяжение для легких аккордов · Сбалансированный чистый звук</small>
+                    </div>
+                    <div className="bump-option-pricing">
+                      <span className="bump-price-old">4 900 ₸</span>
+                      <strong className="bump-price-new">+2 450 ₸</strong>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
               {currentPrice > 0 && (
                 <div className="modal-installment-card">
                   <div className="installment-header">
@@ -272,15 +328,25 @@ export function ProductModal({
                 </div>
                 <button
                   className="primary-button"
-                  onClick={() =>
+                  onClick={() => {
+                    const stringsNote = selectedStrings === "elixir"
+                      ? " + Струны Elixir Nanoweb (-50%)"
+                      : selectedStrings === "daddario"
+                      ? " + Струны D'Addario Pro (-50%)"
+                      : "";
+                    const modifiedVariant = selectedVariant ? {
+                      ...selectedVariant,
+                      name: `${selectedVariant.name}${stringsNote}`
+                    } : null;
+
                     onAddToCart(
                       selected,
-                      selectedVariant,
+                      modifiedVariant,
                       selectedBundle,
                       currentPrice,
                       selectedBundle === "gift_course" ? attachedCourse?.title : undefined
-                    )
-                  }
+                    );
+                  }}
                 >
                   Добавить в заявку
                 </button>

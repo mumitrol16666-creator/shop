@@ -618,6 +618,103 @@ export function Storefront({
         </div>
       </section>
 
+      {/* Customer Reviews & Social Proof */}
+      <section className="reviews-section" id="reviews">
+        <div className="section-head text-center">
+          <p className="eyebrow">ОТЗЫВЫ ПОКУПАТЕЛЕЙ</p>
+          <h2>Что говорят музыканты и родители</h2>
+          <p className="reviews-subtitle">Более 1 400 довольных клиентов по всему Казахстану</p>
+        </div>
+
+        <div className="reviews-grid">
+          <article className="review-card">
+            <div className="review-rating">★★★★★ <span className="verified-badge">✓ Проверенный заказ</span></div>
+            <p className="review-quote">
+              «Заказывала гитару 41″ дочке в подарок. Пришла уже идеально настроенная, струны мягкие, пальцы не режет. По подарочному курсу за 4 дня выучили первую песню!»
+            </p>
+            <div className="reviewer-meta">
+              <span className="reviewer-avatar">👩🏻‍💼</span>
+              <div>
+                <strong>Айгерим С.</strong>
+                <small>г. Астана · Акустическая гитара 41″</small>
+              </div>
+            </div>
+          </article>
+
+          <article className="review-card">
+            <div className="review-rating">★★★★★ <span className="verified-badge">✓ Проверенный заказ</span></div>
+            <p className="review-quote">
+              «Электрогитара ST-20 превзошла ожидания. Дерево плотное, звукосниматели без фона, гриф отстроен мастером на 10/10. Отдельное спасибо за комплект струн Elixir со скидкой 50%!»
+            </p>
+            <div className="reviewer-meta">
+              <span className="reviewer-avatar">🎸</span>
+              <div>
+                <strong>Данияр К.</strong>
+                <small>г. Алматы · ST-20 + Струны Elixir</small>
+              </div>
+            </div>
+          </article>
+
+          <article className="review-card">
+            <div className="review-rating">★★★★★ <span className="verified-badge">✓ Проверенный заказ</span></div>
+            <p className="review-quote">
+              «Купил укулеле сыну. Доставили в Шымкент за 2 дня в бронебойной упаковке. Очень доволен сервисом, быстрой консультацией в WhatsApp и подарочными видеоуроками!»
+            </p>
+            <div className="reviewer-meta">
+              <span className="reviewer-avatar">👨🏻‍💻</span>
+              <div>
+                <strong>Нурлан М.</strong>
+                <small>г. Шымкент · Укулеле 21″ Pastel</small>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      {/* Interactive FAQ Accordion */}
+      <section className="faq-section" id="faq">
+        <div className="section-head text-center">
+          <p className="eyebrow">ЧАСТЫЕ ВОПРОСЫ</p>
+          <h2>Ответы на популярные вопросы</h2>
+          <p className="faq-subtitle">Всё о доставке, настройке, гарантии и подарочных курсах</p>
+        </div>
+
+        <div className="faq-accordion-list">
+          {[
+            {
+              q: "Больно ли зажимать струны в начале обучения?",
+              a: "Нет! В отличие от обычных магазинов, наш мастер вручную отстраивает высоту струн до 1.5–2 мм над ладами. Зажимать аккорды легко и комфортно даже детям и нежным рукам с первого дня."
+            },
+            {
+              q: "Не разобьется ли гитара при доставке курьером по Казахстану?",
+              a: "Мы упаковываем каждый инструмент в 3 слоя защитной воздушно-пузырчатой пленки и жесткий пятислойный картонный транспортировочный короб. Все отправления застрахованы на 100% стоимости."
+            },
+            {
+              q: "Как получить обещанный онлайн-курс в подарок?",
+              a: "Сразу после подтверждения заказа в WhatsApp менеджер отправит вам персональный доступ к кабинету ученика. Доступ бессрочный навсегда с любого телефона или компьютера."
+            },
+            {
+              q: "Как работает рассрочка Kaspi 0-0-12 / 0-0-24?",
+              a: "Вы оформляете покупку в приложении Kaspi QR за 1 минуту. Сумма делится ровно на выбранный срок (3, 6, 12 или 24 мес) без скрытых комиссий, процентов и переплат."
+            },
+            {
+              q: "Почему струны Elixir со скидкой 50% выгоднее взять сразу?",
+              a: "Струны Elixir Nanoweb имеют фирменное полимерное нано-покрытие и служат в 3–5 раз дольше обычных (до 6 месяцев). Добавить их к заказу по спеццене -50% — самая выгодная возможность для покупателя."
+            }
+          ].map((item, idx) => (
+            <details className="faq-item" key={item.q} open={idx === 0}>
+              <summary className="faq-summary">
+                <span>{item.q}</span>
+                <span className="faq-chevron">▼</span>
+              </summary>
+              <div className="faq-answer">
+                <p>{item.a}</p>
+              </div>
+            </details>
+          ))}
+        </div>
+      </section>
+
       <section className="delivery-section" id="delivery">
         <div className="section-head">
           <div>

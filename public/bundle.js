@@ -14382,12 +14382,14 @@ function ProductModal({
   const [installmentMonths, setInstallmentMonths] = (0, import_react4.useState)(12);
   const [isPlayingSound, setIsPlayingSound] = (0, import_react4.useState)(false);
   const [selectedBundle, setSelectedBundle] = (0, import_react4.useState)("gift_course");
+  const [selectedStrings, setSelectedStrings] = (0, import_react4.useState)(null);
   if (!selected) return null;
   const attachedCourse = resolveAttachedCourse(selected);
   const selectedImage = selectedVariant?.image || selected.image;
   const basePrice = selectedVariant?.price || selected.price || 0;
   const bundleDelta = selectedBundle === "pro_pack" ? 8900 : 0;
-  const currentPrice = basePrice + bundleDelta;
+  const stringsDelta = selectedStrings === "elixir" ? 4950 : selectedStrings === "daddario" ? 2450 : 0;
+  const currentPrice = basePrice + bundleDelta + stringsDelta;
   const hasDiscount = Boolean(
     selected.originalPrice && currentPrice && selected.originalPrice > currentPrice || selected.discountPercent && selected.discountPercent > 0
   );
@@ -14570,6 +14572,60 @@ function ProductModal({
             )
           ] })
         ] }),
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "order-bump-box", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "bump-box-header", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "bump-tag-gold", children: "\u26A1 \u0421\u041F\u0415\u0426\u041F\u0420\u0415\u0414\u041B\u041E\u0416\u0415\u041D\u0418\u0415 (-50%)" }),
+            /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { children: "\u0417\u0430\u043F\u0430\u0441\u043D\u043E\u0439 \u043A\u043E\u043C\u043F\u043B\u0435\u043A\u0442 \u043F\u0440\u0435\u043C\u0438\u0443\u043C-\u0441\u0442\u0440\u0443\u043D \u0441\u043E \u0441\u043A\u0438\u0434\u043A\u043E\u0439 50% \u043A \u044D\u0442\u043E\u0439 \u0433\u0438\u0442\u0430\u0440\u0435" })
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "bump-options-list", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)(
+              "div",
+              {
+                className: `bump-option-row ${selectedStrings === "elixir" ? "active" : ""}`,
+                onClick: () => setSelectedStrings(selectedStrings === "elixir" ? null : "elixir"),
+                role: "button",
+                tabIndex: 0,
+                children: [
+                  /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "bump-checkbox-visual", children: selectedStrings === "elixir" ? "\u2713" : "" }),
+                  /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "bump-option-text", children: [
+                    /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "bump-title-row", children: [
+                      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("strong", { children: "\u{1F451} \u0421\u0442\u0440\u0443\u043D\u044B Elixir Nanoweb (\u0421\u0428\u0410)" }),
+                      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "bump-badge-usa", children: "-50%" })
+                    ] }),
+                    /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("small", { children: "\u0421\u043B\u0443\u0436\u0430\u0442 \u0434\u043E 6 \u043C\u0435\u0441\u044F\u0446\u0435\u0432 \xB7 \u041F\u043E\u043B\u0438\u043C\u0435\u0440\u043D\u0430\u044F \u043D\u0430\u043D\u043E-\u0437\u0430\u0449\u0438\u0442\u0430 \u043E\u0442 \u043A\u043E\u0440\u0440\u043E\u0437\u0438\u0438 \xB7 \u0417\u0432\u043E\u043D\u043A\u0438\u0439 \u0442\u043E\u043D" })
+                  ] }),
+                  /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "bump-option-pricing", children: [
+                    /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "bump-price-old", children: "9 900 \u20B8" }),
+                    /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("strong", { className: "bump-price-new", children: "+4 950 \u20B8" })
+                  ] })
+                ]
+              }
+            ),
+            /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)(
+              "div",
+              {
+                className: `bump-option-row ${selectedStrings === "daddario" ? "active" : ""}`,
+                onClick: () => setSelectedStrings(selectedStrings === "daddario" ? null : "daddario"),
+                role: "button",
+                tabIndex: 0,
+                children: [
+                  /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "bump-checkbox-visual", children: selectedStrings === "daddario" ? "\u2713" : "" }),
+                  /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "bump-option-text", children: [
+                    /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "bump-title-row", children: [
+                      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("strong", { children: "\u{1F3B8} \u0421\u0442\u0440\u0443\u043D\u044B D'Addario / Alice Pro" }),
+                      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "bump-badge-usa", children: "-50%" })
+                    ] }),
+                    /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("small", { children: "\u041C\u044F\u0433\u043A\u043E\u0435 \u043D\u0430\u0442\u044F\u0436\u0435\u043D\u0438\u0435 \u0434\u043B\u044F \u043B\u0435\u0433\u043A\u0438\u0445 \u0430\u043A\u043A\u043E\u0440\u0434\u043E\u0432 \xB7 \u0421\u0431\u0430\u043B\u0430\u043D\u0441\u0438\u0440\u043E\u0432\u0430\u043D\u043D\u044B\u0439 \u0447\u0438\u0441\u0442\u044B\u0439 \u0437\u0432\u0443\u043A" })
+                  ] }),
+                  /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "bump-option-pricing", children: [
+                    /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "bump-price-old", children: "4 900 \u20B8" }),
+                    /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("strong", { className: "bump-price-new", children: "+2 450 \u20B8" })
+                  ] })
+                ]
+              }
+            )
+          ] })
+        ] }),
         currentPrice > 0 && /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "modal-installment-card", children: [
           /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "installment-header", children: [
             /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { children: [
@@ -14654,13 +14710,20 @@ function ProductModal({
             "button",
             {
               className: "primary-button",
-              onClick: () => onAddToCart(
-                selected,
-                selectedVariant,
-                selectedBundle,
-                currentPrice,
-                selectedBundle === "gift_course" ? attachedCourse?.title : void 0
-              ),
+              onClick: () => {
+                const stringsNote = selectedStrings === "elixir" ? " + \u0421\u0442\u0440\u0443\u043D\u044B Elixir Nanoweb (-50%)" : selectedStrings === "daddario" ? " + \u0421\u0442\u0440\u0443\u043D\u044B D'Addario Pro (-50%)" : "";
+                const modifiedVariant = selectedVariant ? {
+                  ...selectedVariant,
+                  name: `${selectedVariant.name}${stringsNote}`
+                } : null;
+                onAddToCart(
+                  selected,
+                  modifiedVariant,
+                  selectedBundle,
+                  currentPrice,
+                  selectedBundle === "gift_course" ? attachedCourse?.title : void 0
+                );
+              },
               children: "\u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u0432 \u0437\u0430\u044F\u0432\u043A\u0443"
             }
           )
@@ -15244,6 +15307,92 @@ function Storefront({
         )
       ] })
     ] }) }),
+    /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("section", { className: "reviews-section", id: "reviews", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "section-head text-center", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "eyebrow", children: "\u041E\u0422\u0417\u042B\u0412\u042B \u041F\u041E\u041A\u0423\u041F\u0410\u0422\u0415\u041B\u0415\u0419" }),
+        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("h2", { children: "\u0427\u0442\u043E \u0433\u043E\u0432\u043E\u0440\u044F\u0442 \u043C\u0443\u0437\u044B\u043A\u0430\u043D\u0442\u044B \u0438 \u0440\u043E\u0434\u0438\u0442\u0435\u043B\u0438" }),
+        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "reviews-subtitle", children: "\u0411\u043E\u043B\u0435\u0435 1 400 \u0434\u043E\u0432\u043E\u043B\u044C\u043D\u044B\u0445 \u043A\u043B\u0438\u0435\u043D\u0442\u043E\u0432 \u043F\u043E \u0432\u0441\u0435\u043C\u0443 \u041A\u0430\u0437\u0430\u0445\u0441\u0442\u0430\u043D\u0443" })
+      ] }),
+      /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "reviews-grid", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("article", { className: "review-card", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "review-rating", children: [
+            "\u2605\u2605\u2605\u2605\u2605 ",
+            /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { className: "verified-badge", children: "\u2713 \u041F\u0440\u043E\u0432\u0435\u0440\u0435\u043D\u043D\u044B\u0439 \u0437\u0430\u043A\u0430\u0437" })
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "review-quote", children: "\xAB\u0417\u0430\u043A\u0430\u0437\u044B\u0432\u0430\u043B\u0430 \u0433\u0438\u0442\u0430\u0440\u0443 41\u2033 \u0434\u043E\u0447\u043A\u0435 \u0432 \u043F\u043E\u0434\u0430\u0440\u043E\u043A. \u041F\u0440\u0438\u0448\u043B\u0430 \u0443\u0436\u0435 \u0438\u0434\u0435\u0430\u043B\u044C\u043D\u043E \u043D\u0430\u0441\u0442\u0440\u043E\u0435\u043D\u043D\u0430\u044F, \u0441\u0442\u0440\u0443\u043D\u044B \u043C\u044F\u0433\u043A\u0438\u0435, \u043F\u0430\u043B\u044C\u0446\u044B \u043D\u0435 \u0440\u0435\u0436\u0435\u0442. \u041F\u043E \u043F\u043E\u0434\u0430\u0440\u043E\u0447\u043D\u043E\u043C\u0443 \u043A\u0443\u0440\u0441\u0443 \u0437\u0430 4 \u0434\u043D\u044F \u0432\u044B\u0443\u0447\u0438\u043B\u0438 \u043F\u0435\u0440\u0432\u0443\u044E \u043F\u0435\u0441\u043D\u044E!\xBB" }),
+          /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "reviewer-meta", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { className: "reviewer-avatar", children: "\u{1F469}\u{1F3FB}\u200D\u{1F4BC}" }),
+            /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { children: [
+              /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("strong", { children: "\u0410\u0439\u0433\u0435\u0440\u0438\u043C \u0421." }),
+              /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("small", { children: "\u0433. \u0410\u0441\u0442\u0430\u043D\u0430 \xB7 \u0410\u043A\u0443\u0441\u0442\u0438\u0447\u0435\u0441\u043A\u0430\u044F \u0433\u0438\u0442\u0430\u0440\u0430 41\u2033" })
+            ] })
+          ] })
+        ] }),
+        /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("article", { className: "review-card", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "review-rating", children: [
+            "\u2605\u2605\u2605\u2605\u2605 ",
+            /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { className: "verified-badge", children: "\u2713 \u041F\u0440\u043E\u0432\u0435\u0440\u0435\u043D\u043D\u044B\u0439 \u0437\u0430\u043A\u0430\u0437" })
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "review-quote", children: "\xAB\u042D\u043B\u0435\u043A\u0442\u0440\u043E\u0433\u0438\u0442\u0430\u0440\u0430 ST-20 \u043F\u0440\u0435\u0432\u0437\u043E\u0448\u043B\u0430 \u043E\u0436\u0438\u0434\u0430\u043D\u0438\u044F. \u0414\u0435\u0440\u0435\u0432\u043E \u043F\u043B\u043E\u0442\u043D\u043E\u0435, \u0437\u0432\u0443\u043A\u043E\u0441\u043D\u0438\u043C\u0430\u0442\u0435\u043B\u0438 \u0431\u0435\u0437 \u0444\u043E\u043D\u0430, \u0433\u0440\u0438\u0444 \u043E\u0442\u0441\u0442\u0440\u043E\u0435\u043D \u043C\u0430\u0441\u0442\u0435\u0440\u043E\u043C \u043D\u0430 10/10. \u041E\u0442\u0434\u0435\u043B\u044C\u043D\u043E\u0435 \u0441\u043F\u0430\u0441\u0438\u0431\u043E \u0437\u0430 \u043A\u043E\u043C\u043F\u043B\u0435\u043A\u0442 \u0441\u0442\u0440\u0443\u043D Elixir \u0441\u043E \u0441\u043A\u0438\u0434\u043A\u043E\u0439 50%!\xBB" }),
+          /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "reviewer-meta", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { className: "reviewer-avatar", children: "\u{1F3B8}" }),
+            /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { children: [
+              /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("strong", { children: "\u0414\u0430\u043D\u0438\u044F\u0440 \u041A." }),
+              /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("small", { children: "\u0433. \u0410\u043B\u043C\u0430\u0442\u044B \xB7 ST-20 + \u0421\u0442\u0440\u0443\u043D\u044B Elixir" })
+            ] })
+          ] })
+        ] }),
+        /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("article", { className: "review-card", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "review-rating", children: [
+            "\u2605\u2605\u2605\u2605\u2605 ",
+            /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { className: "verified-badge", children: "\u2713 \u041F\u0440\u043E\u0432\u0435\u0440\u0435\u043D\u043D\u044B\u0439 \u0437\u0430\u043A\u0430\u0437" })
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "review-quote", children: "\xAB\u041A\u0443\u043F\u0438\u043B \u0443\u043A\u0443\u043B\u0435\u043B\u0435 \u0441\u044B\u043D\u0443. \u0414\u043E\u0441\u0442\u0430\u0432\u0438\u043B\u0438 \u0432 \u0428\u044B\u043C\u043A\u0435\u043D\u0442 \u0437\u0430 2 \u0434\u043D\u044F \u0432 \u0431\u0440\u043E\u043D\u0435\u0431\u043E\u0439\u043D\u043E\u0439 \u0443\u043F\u0430\u043A\u043E\u0432\u043A\u0435. \u041E\u0447\u0435\u043D\u044C \u0434\u043E\u0432\u043E\u043B\u0435\u043D \u0441\u0435\u0440\u0432\u0438\u0441\u043E\u043C, \u0431\u044B\u0441\u0442\u0440\u043E\u0439 \u043A\u043E\u043D\u0441\u0443\u043B\u044C\u0442\u0430\u0446\u0438\u0435\u0439 \u0432 WhatsApp \u0438 \u043F\u043E\u0434\u0430\u0440\u043E\u0447\u043D\u044B\u043C\u0438 \u0432\u0438\u0434\u0435\u043E\u0443\u0440\u043E\u043A\u0430\u043C\u0438!\xBB" }),
+          /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "reviewer-meta", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { className: "reviewer-avatar", children: "\u{1F468}\u{1F3FB}\u200D\u{1F4BB}" }),
+            /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { children: [
+              /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("strong", { children: "\u041D\u0443\u0440\u043B\u0430\u043D \u041C." }),
+              /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("small", { children: "\u0433. \u0428\u044B\u043C\u043A\u0435\u043D\u0442 \xB7 \u0423\u043A\u0443\u043B\u0435\u043B\u0435 21\u2033 Pastel" })
+            ] })
+          ] })
+        ] })
+      ] })
+    ] }),
+    /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("section", { className: "faq-section", id: "faq", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "section-head text-center", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "eyebrow", children: "\u0427\u0410\u0421\u0422\u042B\u0415 \u0412\u041E\u041F\u0420\u041E\u0421\u042B" }),
+        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("h2", { children: "\u041E\u0442\u0432\u0435\u0442\u044B \u043D\u0430 \u043F\u043E\u043F\u0443\u043B\u044F\u0440\u043D\u044B\u0435 \u0432\u043E\u043F\u0440\u043E\u0441\u044B" }),
+        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "faq-subtitle", children: "\u0412\u0441\u0451 \u043E \u0434\u043E\u0441\u0442\u0430\u0432\u043A\u0435, \u043D\u0430\u0441\u0442\u0440\u043E\u0439\u043A\u0435, \u0433\u0430\u0440\u0430\u043D\u0442\u0438\u0438 \u0438 \u043F\u043E\u0434\u0430\u0440\u043E\u0447\u043D\u044B\u0445 \u043A\u0443\u0440\u0441\u0430\u0445" })
+      ] }),
+      /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("div", { className: "faq-accordion-list", children: [
+        {
+          q: "\u0411\u043E\u043B\u044C\u043D\u043E \u043B\u0438 \u0437\u0430\u0436\u0438\u043C\u0430\u0442\u044C \u0441\u0442\u0440\u0443\u043D\u044B \u0432 \u043D\u0430\u0447\u0430\u043B\u0435 \u043E\u0431\u0443\u0447\u0435\u043D\u0438\u044F?",
+          a: "\u041D\u0435\u0442! \u0412 \u043E\u0442\u043B\u0438\u0447\u0438\u0435 \u043E\u0442 \u043E\u0431\u044B\u0447\u043D\u044B\u0445 \u043C\u0430\u0433\u0430\u0437\u0438\u043D\u043E\u0432, \u043D\u0430\u0448 \u043C\u0430\u0441\u0442\u0435\u0440 \u0432\u0440\u0443\u0447\u043D\u0443\u044E \u043E\u0442\u0441\u0442\u0440\u0430\u0438\u0432\u0430\u0435\u0442 \u0432\u044B\u0441\u043E\u0442\u0443 \u0441\u0442\u0440\u0443\u043D \u0434\u043E 1.5\u20132 \u043C\u043C \u043D\u0430\u0434 \u043B\u0430\u0434\u0430\u043C\u0438. \u0417\u0430\u0436\u0438\u043C\u0430\u0442\u044C \u0430\u043A\u043A\u043E\u0440\u0434\u044B \u043B\u0435\u0433\u043A\u043E \u0438 \u043A\u043E\u043C\u0444\u043E\u0440\u0442\u043D\u043E \u0434\u0430\u0436\u0435 \u0434\u0435\u0442\u044F\u043C \u0438 \u043D\u0435\u0436\u043D\u044B\u043C \u0440\u0443\u043A\u0430\u043C \u0441 \u043F\u0435\u0440\u0432\u043E\u0433\u043E \u0434\u043D\u044F."
+        },
+        {
+          q: "\u041D\u0435 \u0440\u0430\u0437\u043E\u0431\u044C\u0435\u0442\u0441\u044F \u043B\u0438 \u0433\u0438\u0442\u0430\u0440\u0430 \u043F\u0440\u0438 \u0434\u043E\u0441\u0442\u0430\u0432\u043A\u0435 \u043A\u0443\u0440\u044C\u0435\u0440\u043E\u043C \u043F\u043E \u041A\u0430\u0437\u0430\u0445\u0441\u0442\u0430\u043D\u0443?",
+          a: "\u041C\u044B \u0443\u043F\u0430\u043A\u043E\u0432\u044B\u0432\u0430\u0435\u043C \u043A\u0430\u0436\u0434\u044B\u0439 \u0438\u043D\u0441\u0442\u0440\u0443\u043C\u0435\u043D\u0442 \u0432 3 \u0441\u043B\u043E\u044F \u0437\u0430\u0449\u0438\u0442\u043D\u043E\u0439 \u0432\u043E\u0437\u0434\u0443\u0448\u043D\u043E-\u043F\u0443\u0437\u044B\u0440\u0447\u0430\u0442\u043E\u0439 \u043F\u043B\u0435\u043D\u043A\u0438 \u0438 \u0436\u0435\u0441\u0442\u043A\u0438\u0439 \u043F\u044F\u0442\u0438\u0441\u043B\u043E\u0439\u043D\u044B\u0439 \u043A\u0430\u0440\u0442\u043E\u043D\u043D\u044B\u0439 \u0442\u0440\u0430\u043D\u0441\u043F\u043E\u0440\u0442\u0438\u0440\u043E\u0432\u043E\u0447\u043D\u044B\u0439 \u043A\u043E\u0440\u043E\u0431. \u0412\u0441\u0435 \u043E\u0442\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F \u0437\u0430\u0441\u0442\u0440\u0430\u0445\u043E\u0432\u0430\u043D\u044B \u043D\u0430 100% \u0441\u0442\u043E\u0438\u043C\u043E\u0441\u0442\u0438."
+        },
+        {
+          q: "\u041A\u0430\u043A \u043F\u043E\u043B\u0443\u0447\u0438\u0442\u044C \u043E\u0431\u0435\u0449\u0430\u043D\u043D\u044B\u0439 \u043E\u043D\u043B\u0430\u0439\u043D-\u043A\u0443\u0440\u0441 \u0432 \u043F\u043E\u0434\u0430\u0440\u043E\u043A?",
+          a: "\u0421\u0440\u0430\u0437\u0443 \u043F\u043E\u0441\u043B\u0435 \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0435\u043D\u0438\u044F \u0437\u0430\u043A\u0430\u0437\u0430 \u0432 WhatsApp \u043C\u0435\u043D\u0435\u0434\u0436\u0435\u0440 \u043E\u0442\u043F\u0440\u0430\u0432\u0438\u0442 \u0432\u0430\u043C \u043F\u0435\u0440\u0441\u043E\u043D\u0430\u043B\u044C\u043D\u044B\u0439 \u0434\u043E\u0441\u0442\u0443\u043F \u043A \u043A\u0430\u0431\u0438\u043D\u0435\u0442\u0443 \u0443\u0447\u0435\u043D\u0438\u043A\u0430. \u0414\u043E\u0441\u0442\u0443\u043F \u0431\u0435\u0441\u0441\u0440\u043E\u0447\u043D\u044B\u0439 \u043D\u0430\u0432\u0441\u0435\u0433\u0434\u0430 \u0441 \u043B\u044E\u0431\u043E\u0433\u043E \u0442\u0435\u043B\u0435\u0444\u043E\u043D\u0430 \u0438\u043B\u0438 \u043A\u043E\u043C\u043F\u044C\u044E\u0442\u0435\u0440\u0430."
+        },
+        {
+          q: "\u041A\u0430\u043A \u0440\u0430\u0431\u043E\u0442\u0430\u0435\u0442 \u0440\u0430\u0441\u0441\u0440\u043E\u0447\u043A\u0430 Kaspi 0-0-12 / 0-0-24?",
+          a: "\u0412\u044B \u043E\u0444\u043E\u0440\u043C\u043B\u044F\u0435\u0442\u0435 \u043F\u043E\u043A\u0443\u043F\u043A\u0443 \u0432 \u043F\u0440\u0438\u043B\u043E\u0436\u0435\u043D\u0438\u0438 Kaspi QR \u0437\u0430 1 \u043C\u0438\u043D\u0443\u0442\u0443. \u0421\u0443\u043C\u043C\u0430 \u0434\u0435\u043B\u0438\u0442\u0441\u044F \u0440\u043E\u0432\u043D\u043E \u043D\u0430 \u0432\u044B\u0431\u0440\u0430\u043D\u043D\u044B\u0439 \u0441\u0440\u043E\u043A (3, 6, 12 \u0438\u043B\u0438 24 \u043C\u0435\u0441) \u0431\u0435\u0437 \u0441\u043A\u0440\u044B\u0442\u044B\u0445 \u043A\u043E\u043C\u0438\u0441\u0441\u0438\u0439, \u043F\u0440\u043E\u0446\u0435\u043D\u0442\u043E\u0432 \u0438 \u043F\u0435\u0440\u0435\u043F\u043B\u0430\u0442."
+        },
+        {
+          q: "\u041F\u043E\u0447\u0435\u043C\u0443 \u0441\u0442\u0440\u0443\u043D\u044B Elixir \u0441\u043E \u0441\u043A\u0438\u0434\u043A\u043E\u0439 50% \u0432\u044B\u0433\u043E\u0434\u043D\u0435\u0435 \u0432\u0437\u044F\u0442\u044C \u0441\u0440\u0430\u0437\u0443?",
+          a: "\u0421\u0442\u0440\u0443\u043D\u044B Elixir Nanoweb \u0438\u043C\u0435\u044E\u0442 \u0444\u0438\u0440\u043C\u0435\u043D\u043D\u043E\u0435 \u043F\u043E\u043B\u0438\u043C\u0435\u0440\u043D\u043E\u0435 \u043D\u0430\u043D\u043E-\u043F\u043E\u043A\u0440\u044B\u0442\u0438\u0435 \u0438 \u0441\u043B\u0443\u0436\u0430\u0442 \u0432 3\u20135 \u0440\u0430\u0437 \u0434\u043E\u043B\u044C\u0448\u0435 \u043E\u0431\u044B\u0447\u043D\u044B\u0445 (\u0434\u043E 6 \u043C\u0435\u0441\u044F\u0446\u0435\u0432). \u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u0438\u0445 \u043A \u0437\u0430\u043A\u0430\u0437\u0443 \u043F\u043E \u0441\u043F\u0435\u0446\u0446\u0435\u043D\u0435 -50% \u2014 \u0441\u0430\u043C\u0430\u044F \u0432\u044B\u0433\u043E\u0434\u043D\u0430\u044F \u0432\u043E\u0437\u043C\u043E\u0436\u043D\u043E\u0441\u0442\u044C \u0434\u043B\u044F \u043F\u043E\u043A\u0443\u043F\u0430\u0442\u0435\u043B\u044F."
+        }
+      ].map((item, idx) => /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("details", { className: "faq-item", open: idx === 0, children: [
+        /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("summary", { className: "faq-summary", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { children: item.q }),
+          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { className: "faq-chevron", children: "\u25BC" })
+        ] }),
+        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("div", { className: "faq-answer", children: /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { children: item.a }) })
+      ] }, item.q)) })
+    ] }),
     /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("section", { className: "delivery-section", id: "delivery", children: [
       /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("div", { className: "section-head", children: /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { children: [
         /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "eyebrow", children: "\u0421\u0415\u0420\u0412\u0418\u0421" }),
