@@ -1,0 +1,320 @@
+[
+  {
+    "id": 1,
+    "name": "Электрогитара ST-20 HSS",
+    "shortName": "ST-20",
+    "category": "Электрогитары",
+    "image": "/products/01_st20_electric.png",
+    "quantity": 7,
+    "variants": 6,
+    "sku": "EG-ST20",
+    "badge": "Для начинающих",
+    "price": 41000,
+    "description": "Универсальная электрогитара формы ST для первых занятий и домашней практики.",
+    "features": [
+      "Форма корпуса ST",
+      "Конфигурация HSS",
+      "6 цветов",
+      "Стандартная мензура"
+    ],
+    "adminPricing": {
+      "purchaseCurrency": "CNY",
+      "purchasePrice": 220,
+      "currencyRate": 80,
+      "chinaDeliveryKzt": 1200,
+      "cargoKzt": 8000,
+      "customsKzt": 500,
+      "packagingKzt": 700,
+      "setupKzt": 2500,
+      "marketingKzt": 1200,
+      "otherCostsKzt": 300,
+      "taxPercent": 3,
+      "bankInstallmentPercent": 14,
+      "installmentMonths": 12,
+      "sellerPercent": 5,
+      "targetProfitPercent": 25,
+      "pricingMode": "auto",
+      "manualPriceKzt": null
+    },
+    "publicationStatus": "published",
+    "updatedAt": "2026-08-16T15:45:57.968Z",
+    "originalPrice": 48000,
+    "discountPercent": 15,
+    "isDiscountActive": true
+  },
+  {
+    "id": 2,
+    "name": "Электрогитара 39″ Gradient",
+    "shortName": "Gradient 39″",
+    "category": "Электрогитары",
+    "image": "/products/02_39_gradient_electric.png",
+    "quantity": 6,
+    "variants": 4,
+    "sku": "EG-GR39",
+    "badge": "Выбор магазина",
+    "price": 67846,
+    "description": "Полноразмерная электрогитара с эффектной металлической градиентной отделкой и универсальной схемой звукоснимателей.",
+    "features": [
+      "Размер 39 дюймов",
+      "Конфигурация HSS",
+      "Градиентная отделка",
+      "4 варианта цвета"
+    ],
+    "adminPricing": {
+      "purchaseCurrency": "CNY",
+      "purchasePrice": 300,
+      "currencyRate": 80,
+      "chinaDeliveryKzt": 2000,
+      "cargoKzt": 8000,
+      "customsKzt": 500,
+      "packagingKzt": 700,
+      "setupKzt": 2500,
+      "marketingKzt": 1200,
+      "otherCostsKzt": 300,
+      "taxPercent": 3,
+      "bankInstallmentPercent": 14,
+      "installmentMonths": 12,
+      "sellerPercent": 5,
+      "targetProfitPercent": 35,
+      "pricingMode": "auto",
+      "manualPriceKzt": null
+    },
+    "publicationStatus": "published",
+    "updatedAt": "2026-08-16T15:46:14.003Z"
+  },
+  {
+    "id": 3,
+    "name": "Укулеле KLH-23",
+    "shortName": "KLH-23",
+    "category": "Укулеле",
+    "image": "/products/03_23_ukulele.png",
+    "quantity": 10,
+    "variants": 5,
+    "sku": "UK-KLH23",
+    "badge": "Комплект",
+    "price": 18000,
+    "description": "Яркая укулеле концертного формата в комплекте с чехлом и полезными аксессуарами для начала занятий.",
+    "features": [
+      "Размер 23 дюйма",
+      "Чехол в комплекте",
+      "Каподастр и ремень",
+      "5 цветов"
+    ],
+    "originalPrice": 22500,
+    "discountPercent": 20,
+    "isDiscountActive": true,
+    "publicationStatus": "published"
+  },
+  {
+    "id": 4,
+    "name": "Акустическая гитара 41″",
+    "shortName": "Acoustic 41″",
+    "category": "Акустические",
+    "image": "/products/04_41_acoustic.png",
+    "quantity": 6,
+    "variants": 5,
+    "sku": "AG-AC41",
+    "price": 36000,
+    "description": "Полноразмерная акустическая гитара с вырезом корпуса. Подходит для аккомпанемента, обучения и домашней игры.",
+    "features": [
+      "Размер 41 дюйм",
+      "Корпус с вырезом",
+      "Стальные струны",
+      "Глянцевая отделка"
+    ],
+    "publicationStatus": "published"
+  },
+  {
+    "id": 5,
+    "name": "Классическая гитара 38/39″",
+    "shortName": "Classic 38/39″",
+    "category": "Классические",
+    "image": "/products/05_classical_38_39.png",
+    "quantity": 6,
+    "variants": 4,
+    "sku": "CG-CL39",
+    "badge": "Мягкие струны",
+    "price": 34000,
+    "description": "Классическая гитара с нейлоновыми струнами. Идеальный выбор для музыкальной школы и комфортного старта.",
+    "features": [
+      "Нейлоновые струны",
+      "Размеры 38″ и 39″",
+      "Широкий гриф",
+      "4 расцветки"
+    ],
+    "publicationStatus": "published"
+  },
+  {
+    "id": 6,
+    "name": "Акустическая гитара Tiger 40″",
+    "shortName": "Tiger 40″",
+    "category": "Акустические",
+    "image": "/products/06_40_tiger_acoustic.png",
+    "quantity": 8,
+    "variants": 5,
+    "sku": "AG-TG40",
+    "badge": "Выбор магазина",
+    "price": 39000,
+    "description": "Эффектная акустическая гитара с выразительной текстурой верхней деки и сбалансированным громким звучанием.",
+    "features": [
+      "Размер 40 дюймов",
+      "Текстура Tiger Flame",
+      "5 цветов",
+      "Вырез корпуса"
+    ],
+    "publicationStatus": "published"
+  },
+  {
+    "id": 7,
+    "name": "Акустическая гитара 38″",
+    "shortName": "Acoustic 38″",
+    "category": "Акустические",
+    "image": "/products/07_38_acoustic.png",
+    "quantity": 6,
+    "variants": 3,
+    "sku": "AG-AC38",
+    "price": 29000,
+    "description": "Компактная акустическая гитара для подростков, путешествий и комфортной ежедневной практики дома.",
+    "features": [
+      "Размер 38 дюймов",
+      "Легкий корпус",
+      "3 цвета",
+      "Удобный профиль грифа"
+    ],
+    "publicationStatus": "published"
+  },
+  {
+    "id": 8,
+    "name": "Электрогитара ST-10 SSS",
+    "shortName": "ST-10 SSS",
+    "category": "Электрогитары",
+    "image": "/products/08_st10_sss.png",
+    "quantity": 1,
+    "variants": 1,
+    "sku": "EG-ST10-BK",
+    "price": 39000,
+    "description": "Классический стратокастер в полностью черном исполнении с тремя сингловыми звукоснимателями для чистого и читаемого звука.",
+    "features": [
+      "3 сингла (SSS)",
+      "Черная глянцевая отделка",
+      "Винтажное тремоло",
+      "Кленовый гриф"
+    ],
+    "publicationStatus": "published"
+  },
+  {
+    "id": 9,
+    "name": "Струны для акустической гитары",
+    "shortName": "Folk Strings",
+    "category": "Струны",
+    "image": "/products/09_folk_strings.png",
+    "quantity": 10,
+    "variants": 2,
+    "sku": "ST-FOLK",
+    "price": 3500,
+    "description": "Комплекты качественных металлических струн для акустических и фолк-гитар с ярким и звонким тембром.",
+    "features": [
+      "Калибр 10-47 и 11-52",
+      "Фосфорная бронза",
+      "Антикоррозийное покрытие",
+      "10 комплектов"
+    ],
+    "publicationStatus": "published"
+  },
+  {
+    "id": 10,
+    "name": "Каподастр для гитары",
+    "shortName": "Capo Metal",
+    "category": "Аксессуары",
+    "image": "/products/10_capos.png",
+    "quantity": 5,
+    "variants": 3,
+    "sku": "AC-CAPO",
+    "price": 2900,
+    "description": "Надежный металлический каподастр с мягкой силиконовой накладкой для быстрой смены тональности без расстройки.",
+    "features": [
+      "Прочный сплав",
+      "Силиконовая защита ладов",
+      "Быстрый зажим",
+      "3 цвета"
+    ],
+    "publicationStatus": "published"
+  },
+  {
+    "id": 11,
+    "name": "Ремень для гитары 41″",
+    "shortName": "Guitar Strap",
+    "category": "Аксессуары",
+    "image": "/products/11_guitar_straps.png",
+    "quantity": 6,
+    "variants": 5,
+    "sku": "AC-STRAP",
+    "price": 3800,
+    "description": "Широкие текстильные ремни с яркими принтами и кожаными наконечниками для акустических и электрогитар.",
+    "features": [
+      "Регулируемая длина",
+      "Ширина 5 см",
+      "Усиленные наконечники",
+      "5 принтов"
+    ],
+    "publicationStatus": "published"
+  },
+  {
+    "id": 12,
+    "name": "Комплект струн в упаковке",
+    "shortName": "Packaged Strings",
+    "category": "Струны",
+    "image": "/products/12_packaged_strings.png",
+    "quantity": 6,
+    "variants": 5,
+    "sku": "ST-PKG",
+    "price": 4200,
+    "description": "Фирменные комплекты струн в индивидуальных герметичных упаковках для электро-, бас- и акустических гитар.",
+    "features": [
+      "Разные калибры",
+      "Герметичная упаковка",
+      "Для гитары и баса",
+      "5 вариантов"
+    ],
+    "publicationStatus": "published"
+  },
+  {
+    "id": 13,
+    "name": "Процессор M-VAVE Cube Baby",
+    "shortName": "Cube Baby",
+    "category": "Оборудование",
+    "image": "/products/13_cube_baby.png",
+    "quantity": 3,
+    "variants": 3,
+    "sku": "EQ-CBABY",
+    "badge": "Хит",
+    "price": 24000,
+    "description": "Компактный многофункциональный процессор эффектов со встроенным аккумулятором, IR-кабинетами и Bluetooth.",
+    "features": [
+      "Встроенный аккумулятор",
+      "Поддержка IR-импульсов",
+      "Bluetooth-аудио",
+      "Версии Guitar / AC / Bass"
+    ],
+    "publicationStatus": "published"
+  },
+  {
+    "id": 14,
+    "name": "Комбоусилитель GA-20",
+    "shortName": "Amp GA-20",
+    "category": "Оборудование",
+    "image": "/products/14_ga20.png",
+    "quantity": 5,
+    "variants": 5,
+    "sku": "EQ-GA20",
+    "price": 28000,
+    "description": "Домашний комбоусилитель мощностью 20 Вт с каналом перегруза, эквалайзером и выходом на наушники.",
+    "features": [
+      "Мощность 20 Вт",
+      "Встроенный Overdrive",
+      "Выход на наушники",
+      "5 расцветок корпуса"
+    ],
+    "publicationStatus": "published"
+  }
+]

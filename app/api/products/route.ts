@@ -1,3 +1,5 @@
+import fs from "node:fs";
+import path from "node:path";
 import { and, eq, inArray } from "drizzle-orm";
 import { getDb } from "../../../db";
 import {
@@ -6,14 +8,16 @@ import {
   productPublications,
   products,
   productVariants,
+  ProductPricing,
   PURCHASE_CURRENCIES,
 } from "../../../db/schema";
 import { calculateProductPricing } from "../../../lib/product-pricing";
+import { products as defaultProducts } from "../../../lib/catalog-data";
 
 export const dynamic = "force-dynamic";
 
 type ProductPayload = {
-  productId?: string;
+  productId?: string | number;
   variantId?: string;
   name?: string;
   sku?: string;
@@ -22,6 +26,7 @@ type ProductPayload = {
   description?: string;
   features?: string[];
   targetAudience?: string;
+  attachedCourseId?: string;
   variant?: {
     name?: string;
     sku?: string;
@@ -32,6 +37,20 @@ type ProductPayload = {
     size?: string;
     stockQuantity?: number;
   };
+  variants?: Array<{
+    id?: string;
+    name: string;
+    stock: number;
+    color: string;
+    sku: string;
+    image: string;
+    secondary?: string;
+    note?: string;
+    barcode?: string;
+    colorName?: string;
+    size?: string;
+    price?: number;
+  }>;
   pricing?: {
     purchaseCurrency?: string;
     purchasePrice?: number;
@@ -50,6 +69,9 @@ type ProductPayload = {
     targetProfitPercent?: number;
     pricingMode?: "auto" | "manual";
     manualPriceKzt?: number | null;
+    hasDiscount?: boolean;
+    discountPercent?: number;
+    originalPriceKzt?: number | null;
   };
   publish?: boolean;
 };
@@ -80,6 +102,40 @@ const slugFromSku = (sku: string) =>
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-+|-+$/g, "");
 
+function getDataFilePath(): string {
+  const p1 = path.join(process.cwd(), "data", "products.json");
+  if (fs.existsSync(p1)) return p1;
+  const p2 = path.join(process.cwd(), "site", "data", "products.json");
+  if (fs.existsSync(p2)) return p2;
+  return p1;
+}
+
+function readLocalProducts(): any[] {
+  try {
+    const targetFile = getDataFilePath();
+    if (fs.existsSync(targetFile)) {
+      const data = fs.readFileSync(targetFile, "utf-8");
+      const parsed = JSON.parse(data);
+      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+    }
+  } catch (err) {
+    console.error("Failed to read local products.json:", err);
+  }
+  return defaultProducts;
+}
+
+function writeLocalProducts(items: any[]) {
+  try {
+    const targetFile = getDataFilePath();
+    fs.mkdirSync(path.dirname(targetFile), { recursive: true });
+    fs.writeFileSync(targetFile, JSON.stringify(items, null, 2), "utf-8");
+    return true;
+  } catch (err) {
+    console.error("Failed to write local products.json:", err);
+    return false;
+  }
+}
+
 function routeError(error: unknown) {
   const message = error instanceof Error ? error.message : "Неизвестная ошибка";
   const cause =
@@ -98,130 +154,143 @@ function routeError(error: unknown) {
 
 async function readCatalog(includeDrafts: boolean) {
   const db = getDb();
-  const baseQuery = db
-    .select({ product: products, publication: productPublications })
-    .from(products)
-    .innerJoin(
-      productPublications,
-      eq(productPublications.productId, products.id),
-    );
-  const productRows = includeDrafts
-    ? await baseQuery
-    : await baseQuery.where(
-        and(
-          eq(productPublications.status, "published"),
-          eq(productPublications.storefrontVisible, true),
-        ),
-      );
-  const ids = productRows.map((row) => row.product.id);
+  if (db) {
+    try {
+      const baseQuery = db
+        .select({ product: products, publication: productPublications })
+        .from(products)
+        .innerJoin(
+          productPublications,
+          eq(productPublications.productId, products.id),
+        );
+      const productRows = includeDrafts
+        ? await baseQuery
+        : await baseQuery.where(
+            and(
+              eq(productPublications.status, "published"),
+              eq(productPublications.storefrontVisible, true),
+            ),
+          );
+      const ids = productRows.map((row) => row.product.id);
 
-  if (!ids.length) {
-    return [];
+      if (ids.length > 0) {
+        const [variantRows, pricingRows] = await Promise.all([
+          db
+            .select()
+            .from(productVariants)
+            .where(inArray(productVariants.productId, ids)),
+          db
+            .select()
+            .from(productPricing)
+            .where(inArray(productPricing.productId, ids)),
+        ]);
+
+        return productRows.map(({ product, publication }) => {
+          const variants = variantRows
+            .filter((variant) => variant.productId === product.id)
+            .filter((variant) =>
+              includeDrafts
+                ? true
+                : variant.status === "active" &&
+                  variant.stockQuantity > variant.reservedQuantity,
+            );
+          const prices = pricingRows.filter(
+            (pricing) => pricing.productId === product.id,
+          );
+          const publicPrice = prices.length
+            ? Math.min(...prices.map((pricing) => pricing.finalPriceKzt))
+            : 0;
+          const firstPricing = prices[0] ?? null;
+          const toAdminPricing = (pricing: ProductPricing | null | undefined) =>
+            pricing
+              ? {
+                  purchaseCurrency: pricing.purchaseCurrency,
+                  purchasePrice: pricing.purchasePrice,
+                  currencyRate: pricing.currencyRate,
+                  chinaDeliveryKzt: pricing.chinaDeliveryKzt,
+                  cargoKzt: pricing.cargoKzt,
+                  customsKzt: pricing.customsKzt,
+                  packagingKzt: pricing.packagingKzt,
+                  setupKzt: pricing.setupKzt,
+                  marketingKzt: pricing.marketingKzt,
+                  otherCostsKzt: pricing.otherCostsKzt,
+                  taxPercent: pricing.taxPercent,
+                  bankInstallmentPercent: pricing.bankInstallmentPercent,
+                  installmentMonths: pricing.installmentMonths,
+                  sellerPercent: pricing.sellerPercent,
+                  targetProfitPercent: pricing.targetProfitPercent,
+                  pricingMode: pricing.pricingMode,
+                  manualPriceKzt: pricing.manualPriceKzt,
+                }
+              : undefined;
+
+          return {
+            id: product.id,
+            databaseId: product.id,
+            name: product.name,
+            shortName: product.shortName,
+            category: product.category,
+            image: product.mainPhotoUrl,
+            quantity: variants.reduce((sum, variant) => sum + variant.stockQuantity, 0),
+            variants: variants.length,
+            sku: product.sku,
+            badge: product.targetAudience ?? undefined,
+            description: product.description,
+            features: parseStringArray(product.featuresJson),
+            price: publicPrice || undefined,
+            publicationStatus: publication.status,
+            isStored: true,
+            variantItems: variants.map((variant) => {
+              const variantPricing = prices.find(
+                (pricing) => pricing.variantId === variant.id,
+              );
+              return {
+                id: variant.id,
+                name: variant.name,
+                stock: Math.max(
+                  0,
+                  variant.stockQuantity - variant.reservedQuantity,
+                ),
+                color: variant.colorHex ?? "#8a8175",
+                secondary: variant.secondaryColorHex ?? undefined,
+                colorName: variant.colorName ?? undefined,
+                size: variant.size ?? undefined,
+                barcode: variant.barcode ?? undefined,
+                sku: variant.sku,
+                image: variant.photoUrl,
+                price: variantPricing?.finalPriceKzt ?? undefined,
+                adminPricing: includeDrafts
+                  ? toAdminPricing(variantPricing ?? null)
+                  : undefined,
+              };
+            }),
+            adminPricing: includeDrafts ? toAdminPricing(firstPricing) : undefined,
+          };
+        });
+      }
+    } catch (e) {
+      console.warn("DB readCatalog failed, falling back to local file:", e);
+    }
   }
 
-  const [variantRows, pricingRows] = await Promise.all([
-    db
-      .select()
-      .from(productVariants)
-      .where(inArray(productVariants.productId, ids)),
-    db
-      .select()
-      .from(productPricing)
-      .where(inArray(productPricing.productId, ids)),
-  ]);
-
-  return productRows.map(({ product, publication }) => {
-    const variants = variantRows
-      .filter((variant) => variant.productId === product.id)
-      .filter((variant) =>
-        includeDrafts
-          ? true
-          : variant.status === "active" &&
-            variant.stockQuantity > variant.reservedQuantity,
-      );
-    const prices = pricingRows.filter(
-      (pricing) => pricing.productId === product.id,
+  // Fallback to local data/products.json
+  const localList = readLocalProducts();
+  if (!includeDrafts) {
+    return localList.filter(
+      (p) =>
+        !p.isStored ||
+        p.publicationStatus === "published" ||
+        !p.publicationStatus,
     );
-    const publicPrice = prices.length
-      ? Math.min(...prices.map((pricing) => pricing.finalPriceKzt))
-      : 0;
-    const firstPricing = prices[0] ?? null;
-    const toAdminPricing = (pricing: typeof firstPricing) =>
-      pricing
-        ? {
-            purchaseCurrency: pricing.purchaseCurrency,
-            purchasePrice: pricing.purchasePrice,
-            currencyRate: pricing.currencyRate,
-            chinaDeliveryKzt: pricing.chinaDeliveryKzt,
-            cargoKzt: pricing.cargoKzt,
-            customsKzt: pricing.customsKzt,
-            packagingKzt: pricing.packagingKzt,
-            setupKzt: pricing.setupKzt,
-            marketingKzt: pricing.marketingKzt,
-            otherCostsKzt: pricing.otherCostsKzt,
-            taxPercent: pricing.taxPercent,
-            bankInstallmentPercent: pricing.bankInstallmentPercent,
-            installmentMonths: pricing.installmentMonths,
-            sellerPercent: pricing.sellerPercent,
-            targetProfitPercent: pricing.targetProfitPercent,
-            pricingMode: pricing.pricingMode,
-            manualPriceKzt: pricing.manualPriceKzt,
-          }
-        : undefined;
-
-    return {
-      id: product.id,
-      databaseId: product.id,
-      name: product.name,
-      shortName: product.shortName ?? product.name,
-      category: product.category,
-      image: product.mainPhotoUrl,
-      quantity: variants.reduce(
-        (sum, variant) =>
-          sum + variant.stockQuantity - variant.reservedQuantity,
-        0,
-      ),
-      variants: variants.length,
-      sku: product.sku,
-      badge: product.targetAudience ?? undefined,
-      description: product.description,
-      features: parseStringArray(product.featuresJson),
-      price: publicPrice,
-      publicationStatus: publication.status,
-      isStored: true,
-      variantItems: variants.map((variant) => {
-        const variantPricing = prices.find(
-          (pricing) => pricing.variantId === variant.id,
-        );
-        return {
-          id: variant.id,
-          name: variant.name,
-          stock: Math.max(
-            0,
-            variant.stockQuantity - variant.reservedQuantity,
-          ),
-          color: variant.colorHex ?? "#8a8175",
-          secondary: variant.secondaryColorHex ?? undefined,
-          colorName: variant.colorName ?? undefined,
-          size: variant.size ?? undefined,
-          barcode: variant.barcode ?? undefined,
-          sku: variant.sku,
-          image: variant.photoUrl,
-          price: variantPricing?.finalPriceKzt ?? undefined,
-          adminPricing: includeDrafts
-            ? toAdminPricing(variantPricing ?? null)
-            : undefined,
-        };
-      }),
-      adminPricing: includeDrafts ? toAdminPricing(firstPricing) : undefined,
-    };
-  });
+  }
+  return localList;
 }
 
 export async function GET(request: Request) {
   try {
     const includeDrafts = new URL(request.url).searchParams.get("scope") === "all";
-    return Response.json({ products: await readCatalog(includeDrafts) });
+    const catalog = await readCatalog(includeDrafts);
+    return Response.json({ products: catalog, count: catalog.length });
   } catch (error) {
     return Response.json({ error: routeError(error) }, { status: 500 });
   }
@@ -235,18 +304,12 @@ export async function POST(request: Request) {
     const category = clean(payload.category);
     const photoUrl = clean(payload.photoUrl);
     const description = clean(payload.description);
-    const variantName = clean(payload.variant?.name);
-    const variantSku = clean(payload.variant?.sku).toUpperCase();
+    const variantName = clean(payload.variant?.name) || "Стандарт";
+    const variantSku = clean(payload.variant?.sku).toUpperCase() || sku;
 
     if (!name || !sku || !category || !photoUrl || !description) {
       return Response.json(
         { error: "Заполните название, SKU, категорию, фото и описание." },
-        { status: 400 },
-      );
-    }
-    if (!variantName || !variantSku) {
-      return Response.json(
-        { error: "Укажите название и SKU варианта." },
         { status: 400 },
       );
     }
@@ -256,10 +319,10 @@ export async function POST(request: Request) {
     )
       ? (payload.pricing?.purchaseCurrency as (typeof PURCHASE_CURRENCIES)[number])
       : "KZT";
-    const pricingMode = payload.pricing?.pricingMode === "manual" ? "manual" : "auto";
+    const pricingMode: "auto" | "manual" = payload.pricing?.pricingMode === "manual" ? "manual" : "auto";
     const pricingInput = {
       purchasePrice: nonnegative(payload.pricing?.purchasePrice),
-      currencyRate: Math.max(0.000001, numberOrZero(payload.pricing?.currencyRate)),
+      currencyRate: Math.max(0.000001, numberOrZero(payload.pricing?.currencyRate) || 1),
       chinaDeliveryKzt: nonnegative(payload.pricing?.chinaDeliveryKzt),
       cargoKzt: nonnegative(payload.pricing?.cargoKzt),
       customsKzt: nonnegative(payload.pricing?.customsKzt),
@@ -276,6 +339,7 @@ export async function POST(request: Request) {
       pricingMode,
       manualPriceKzt: payload.pricing?.manualPriceKzt,
     } as const;
+
     if (
       pricingInput.taxPercent +
         pricingInput.bankInstallmentPercent +
@@ -296,70 +360,131 @@ export async function POST(request: Request) {
       );
     }
 
+    const hasDiscount = Boolean(payload.pricing?.hasDiscount && (payload.pricing?.discountPercent ?? 0) > 0);
+    const discountPercent = hasDiscount ? payload.pricing?.discountPercent : undefined;
+    const originalPrice = hasDiscount
+      ? payload.pricing?.originalPriceKzt || Math.round(calculation.originalPriceKzt)
+      : undefined;
+
+    const totalStock = payload.variants && payload.variants.length > 0
+      ? payload.variants.reduce((sum, v) => sum + (v.stock || 0), 0)
+      : integerOrZero(payload.variant?.stockQuantity) || 1;
+
+    const variantItems = payload.variants && payload.variants.length > 0
+      ? payload.variants
+      : [
+          {
+            id: payload.variantId || variantSku,
+            name: variantName,
+            stock: integerOrZero(payload.variant?.stockQuantity) || 1,
+            color: payload.variant?.colorHex || "#8a8175",
+            sku: variantSku,
+            image: photoUrl,
+            price: calculation.finalPriceKzt,
+          },
+        ];
+
+    const localList = readLocalProducts();
+    const targetId = payload.productId ? String(payload.productId) : null;
+    let existingIndex = localList.findIndex(
+      (p) =>
+        (targetId && (String(p.id) === targetId || String(p.databaseId) === targetId)) ||
+        (p.sku && p.sku.toLowerCase() === sku.toLowerCase()),
+    );
+
+    const productId = targetId || (existingIndex >= 0 ? localList[existingIndex].id : `prod-${Date.now()}`);
+
+    const updatedProduct = {
+      ...(existingIndex >= 0 ? localList[existingIndex] : {}),
+      id: productId,
+      databaseId: productId,
+      name,
+      shortName: name,
+      category,
+      image: photoUrl,
+      quantity: totalStock,
+      variants: variantItems.length,
+      sku,
+      badge: clean(payload.targetAudience) || undefined,
+      description,
+      features: payload.features || [],
+      attachedCourseId: payload.attachedCourseId || (existingIndex >= 0 ? localList[existingIndex].attachedCourseId : undefined),
+      price: calculation.finalPriceKzt,
+      originalPrice,
+      discountPercent,
+      isDiscountActive: hasDiscount,
+      publicationStatus: payload.publish ? "published" : "draft",
+      isStored: true,
+      variantItems,
+      adminPricing: {
+        purchaseCurrency,
+        purchasePrice: pricingInput.purchasePrice,
+        currencyRate: pricingInput.currencyRate,
+        chinaDeliveryKzt: pricingInput.chinaDeliveryKzt,
+        cargoKzt: pricingInput.cargoKzt,
+        customsKzt: pricingInput.customsKzt,
+        packagingKzt: pricingInput.packagingKzt,
+        setupKzt: pricingInput.setupKzt,
+        marketingKzt: pricingInput.marketingKzt,
+        otherCostsKzt: pricingInput.otherCostsKzt,
+        taxPercent: pricingInput.taxPercent,
+        bankInstallmentPercent: pricingInput.bankInstallmentPercent,
+        installmentMonths: integerOrZero(payload.pricing?.installmentMonths) || 12,
+        sellerPercent: pricingInput.sellerPercent,
+        targetProfitPercent: pricingInput.targetProfitPercent,
+        pricingMode,
+        manualPriceKzt: payload.pricing?.manualPriceKzt ?? null,
+        hasDiscount,
+        discountPercent,
+        originalPriceKzt: originalPrice,
+      },
+      updatedAt: new Date().toISOString(),
+    };
+
+    if (existingIndex >= 0) {
+      localList[existingIndex] = updatedProduct;
+    } else {
+      localList.push(updatedProduct);
+    }
+    writeLocalProducts(localList);
+
+    // Also attempt D1 update if available
     const db = getDb();
-    const existingProduct = payload.productId
-      ? (
-          await db
-            .select()
-            .from(products)
-            .where(eq(products.id, payload.productId))
-            .limit(1)
-        )[0]
-      : (
+    if (db) {
+      try {
+        const existingDbProduct = (
           await db
             .select()
             .from(products)
             .where(eq(products.sku, sku))
             .limit(1)
         )[0];
-    const productId = existingProduct?.id ?? crypto.randomUUID();
-    const existingVariant = payload.variantId
-      ? (
-          await db
-            .select()
-            .from(productVariants)
-            .where(eq(productVariants.id, payload.variantId))
-            .limit(1)
-        )[0]
-      : (
-          await db
-            .select()
-            .from(productVariants)
-            .where(eq(productVariants.sku, variantSku))
-            .limit(1)
-        )[0];
-    const variantId = existingVariant?.id ?? crypto.randomUUID();
-    if (existingVariant && existingVariant.productId !== productId) {
-      return Response.json(
-        { error: "Выбранный вариант относится к другой карточке товара." },
-        { status: 400 },
-      );
-    }
-    const existingPricing = (
-      await db
-        .select()
-        .from(productPricing)
-        .where(eq(productPricing.variantId, variantId))
-        .limit(1)
-    )[0];
-    const existingPublication = (
-      await db
-        .select()
-        .from(productPublications)
-        .where(eq(productPublications.productId, productId))
-        .limit(1)
-    )[0];
-    const now = new Date().toISOString();
-    const publish = Boolean(payload.publish);
+        const dbProdId = existingDbProduct?.id ?? String(productId);
+        const now = new Date().toISOString();
 
-    const productStatement = existingProduct
-      ? db
-          .update(products)
-          .set({
+        if (existingDbProduct) {
+          await db
+            .update(products)
+            .set({
+              name,
+              shortName: name,
+              sku,
+              slug: slugFromSku(sku) || dbProdId,
+              category,
+              mainPhotoUrl: photoUrl,
+              description,
+              featuresJson: JSON.stringify(payload.features ?? []),
+              targetAudience: clean(payload.targetAudience) || null,
+              updatedAt: now,
+            })
+            .where(eq(products.id, dbProdId));
+        } else {
+          await db.insert(products).values({
+            id: dbProdId,
             name,
             shortName: name,
             sku,
-            slug: slugFromSku(sku) || productId,
+            slug: slugFromSku(sku) || dbProdId,
             category,
             mainPhotoUrl: photoUrl,
             description,
@@ -367,141 +492,14 @@ export async function POST(request: Request) {
             targetAudience: clean(payload.targetAudience) || null,
             seoTitle: name,
             seoDescription: description.slice(0, 160),
-            updatedAt: now,
-          })
-          .where(eq(products.id, productId))
-      : db.insert(products).values({
-          id: productId,
-          name,
-          shortName: name,
-          sku,
-          slug: slugFromSku(sku) || productId,
-          category,
-          mainPhotoUrl: photoUrl,
-          description,
-          featuresJson: JSON.stringify(payload.features ?? []),
-          targetAudience: clean(payload.targetAudience) || null,
-          seoTitle: name,
-          seoDescription: description.slice(0, 160),
-        });
-    const variantValues = {
-      productId,
-      name: variantName,
-      sku: variantSku,
-      barcode: clean(payload.variant?.barcode) || null,
-      colorName: clean(payload.variant?.colorName) || null,
-      colorHex: clean(payload.variant?.colorHex) || null,
-      secondaryColorHex: clean(payload.variant?.secondaryColorHex) || null,
-      size: clean(payload.variant?.size) || null,
-      photoUrl,
-      stockQuantity: integerOrZero(payload.variant?.stockQuantity),
-      status: "active" as const,
-      updatedAt: now,
-    };
-    const variantStatement = existingVariant
-      ? db
-          .update(productVariants)
-          .set(variantValues)
-          .where(eq(productVariants.id, variantId))
-      : db.insert(productVariants).values({ id: variantId, ...variantValues });
-    const pricingValues = {
-      productId,
-      variantId,
-      purchaseCurrency,
-      purchasePrice: pricingInput.purchasePrice,
-      currencyRate: pricingInput.currencyRate,
-      purchasePriceKzt: money(calculation.purchasePriceKzt),
-      chinaDeliveryKzt: money(pricingInput.chinaDeliveryKzt),
-      cargoKzt: money(pricingInput.cargoKzt),
-      customsKzt: money(pricingInput.customsKzt),
-      packagingKzt: money(pricingInput.packagingKzt),
-      setupKzt: money(pricingInput.setupKzt),
-      marketingKzt: money(pricingInput.marketingKzt),
-      otherCostsKzt: money(pricingInput.otherCostsKzt),
-      fixedCostKzt: money(calculation.fixedCostKzt),
-      taxPercent: pricingInput.taxPercent,
-      bankInstallmentPercent: pricingInput.bankInstallmentPercent,
-      installmentMonths: integerOrZero(payload.pricing?.installmentMonths),
-      sellerPercent: pricingInput.sellerPercent,
-      targetProfitPercent: pricingInput.targetProfitPercent,
-      pricingMode,
-      recommendedPriceKzt: money(calculation.recommendedPriceKzt),
-      manualPriceKzt:
-        pricingMode === "manual" ? money(calculation.finalPriceKzt) : null,
-      finalPriceKzt: money(calculation.finalPriceKzt),
-      taxAmountKzt: money(calculation.taxAmountKzt),
-      bankAmountKzt: money(calculation.bankAmountKzt),
-      sellerAmountKzt: money(calculation.sellerAmountKzt),
-      netRevenueKzt: money(calculation.netRevenueKzt),
-      profitKzt: money(calculation.profitKzt),
-      marginPercent: calculation.marginPercent,
-      markupOnCostPercent: calculation.markupOnCostPercent,
-      calculatedAt: now,
-      updatedAt: now,
-    };
-    const pricingStatement = existingPricing
-      ? db
-          .update(productPricing)
-          .set(pricingValues)
-          .where(eq(productPricing.id, existingPricing.id))
-      : db
-          .insert(productPricing)
-          .values({ id: crypto.randomUUID(), ...pricingValues });
-    const publicationValues = {
-      status: publish ? ("published" as const) : ("draft" as const),
-      storefrontVisible: publish,
-      installmentEnabled:
-        integerOrZero(payload.pricing?.installmentMonths) > 0 &&
-        pricingInput.bankInstallmentPercent > 0,
-      publishedAt: publish ? now : existingPublication?.publishedAt ?? null,
-      updatedAt: now,
-    };
-    const publicationStatement = existingPublication
-      ? db
-          .update(productPublications)
-          .set(publicationValues)
-          .where(eq(productPublications.id, existingPublication.id))
-      : db.insert(productPublications).values({
-          id: crypto.randomUUID(),
-          productId,
-          ...publicationValues,
-        });
-
-    if (publish) {
-      await db.batch([
-        productStatement,
-        variantStatement,
-        pricingStatement,
-        publicationStatement,
-        db.insert(crmSyncLogs).values({
-          id: crypto.randomUUID(),
-          productId,
-          variantId,
-          event: "product_approved",
-          idempotencyKey: `${productId}:approved:${Date.now()}`,
-          payloadJson: JSON.stringify({
-            source: "Maestro Admin",
-            productId,
-            variantId,
-            sku,
-            variantSku,
-            priceKzt: money(calculation.finalPriceKzt),
-            stockQuantity: integerOrZero(payload.variant?.stockQuantity),
-          }),
-        }),
-      ]);
-    } else {
-      await db.batch([
-        productStatement,
-        variantStatement,
-        pricingStatement,
-        publicationStatement,
-      ]);
+          });
+        }
+      } catch (e) {
+        console.warn("DB write warning:", e);
+      }
     }
 
-    const savedProducts = await readCatalog(true);
-    const savedProduct = savedProducts.find((product) => product.id === productId);
-    return Response.json({ product: savedProduct }, { status: existingProduct ? 200 : 201 });
+    return Response.json({ product: updatedProduct }, { status: 200 });
   } catch (error) {
     return Response.json({ error: routeError(error) }, { status: 500 });
   }

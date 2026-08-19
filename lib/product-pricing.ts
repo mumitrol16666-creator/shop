@@ -14,6 +14,9 @@ export type PricingInput = {
   targetProfitPercent: number;
   pricingMode: "auto" | "manual";
   manualPriceKzt?: number | null;
+  hasDiscount?: boolean;
+  discountPercent?: number;
+  originalPriceKzt?: number | null;
 };
 
 export type PricingResult = {
@@ -22,7 +25,12 @@ export type PricingResult = {
   variableExpensePercent: number;
   targetProfitKzt: number;
   recommendedPriceKzt: number;
+  basePriceKzt: number;
+  originalPriceKzt: number;
   finalPriceKzt: number;
+  hasDiscount: boolean;
+  discountPercent: number;
+  discountAmountKzt: number;
   breakEvenPriceKzt: number;
   taxAmountKzt: number;
   bankAmountKzt: number;
@@ -66,9 +74,29 @@ export function calculateProductPricing(input: PricingInput): PricingResult {
   const expenseFactor = 1 - variableExpensePercent / 100;
   const recommendedPriceKzt =
     (fixedCostKzt + targetProfitKzt) / expenseFactor;
+  
   const manualPriceKzt = finiteNonnegative(input.manualPriceKzt ?? 0);
-  const finalPriceKzt =
+  const basePriceKzt =
     input.pricingMode === "manual" ? manualPriceKzt : recommendedPriceKzt;
+
+  const hasDiscount = Boolean(input.hasDiscount && (input.discountPercent || 0) > 0);
+  const discountPercent = hasDiscount ? finiteNonnegative(input.discountPercent || 0) : 0;
+
+  let originalPriceKzt = basePriceKzt;
+  let finalPriceKzt = basePriceKzt;
+  let discountAmountKzt = 0;
+
+  if (hasDiscount && discountPercent > 0) {
+    if (input.originalPriceKzt && input.originalPriceKzt > 0) {
+      originalPriceKzt = input.originalPriceKzt;
+      finalPriceKzt = Math.round(originalPriceKzt * (1 - discountPercent / 100));
+    } else {
+      originalPriceKzt = Math.round(basePriceKzt / (1 - discountPercent / 100));
+      finalPriceKzt = Math.round(basePriceKzt);
+    }
+    discountAmountKzt = Math.max(0, originalPriceKzt - finalPriceKzt);
+  }
+
   const breakEvenPriceKzt = fixedCostKzt / expenseFactor;
   const taxAmountKzt = finalPriceKzt * (taxPercent / 100);
   const bankAmountKzt =
@@ -90,7 +118,12 @@ export function calculateProductPricing(input: PricingInput): PricingResult {
     variableExpensePercent,
     targetProfitKzt,
     recommendedPriceKzt,
+    basePriceKzt,
+    originalPriceKzt,
     finalPriceKzt,
+    hasDiscount,
+    discountPercent,
+    discountAmountKzt,
     breakEvenPriceKzt,
     taxAmountKzt,
     bankAmountKzt,

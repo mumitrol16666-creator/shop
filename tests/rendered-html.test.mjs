@@ -61,16 +61,19 @@ test("rejects an impossible percentage structure", () => {
 });
 
 test("wires the admin form to the persistent catalog API", async () => {
-  const [page, route, schema, hosting] = await Promise.all([
+  const [page, adminPage, purchaserView, route, schema, hosting] = await Promise.all([
     readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/admin/pricing/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../components/PurchaserView.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/api/products/route.ts", import.meta.url), "utf8"),
     readFile(new URL("../db/schema.ts", import.meta.url), "utf8"),
     readFile(new URL("../.openai/hosting.json", import.meta.url), "utf8"),
   ]);
 
   assert.match(page, /fetch\("\/api\/products\?scope=all"\)/);
-  assert.match(page, /Сохранить и показать на витрине/);
-  assert.match(page, /Добавить вариант/);
+  assert.match(adminPage, /fetch\("\/api\/products\?scope=all"\)/);
+  assert.match(purchaserView, /Сохранить и показать на витрине/);
+  assert.match(purchaserView, /Добавить вариант/);
   assert.match(route, /db\.batch\(/);
   assert.match(route, /product_approved/);
   assert.match(schema, /export const products = sqliteTable/);
