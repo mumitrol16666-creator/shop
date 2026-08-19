@@ -6,6 +6,7 @@ const PORT = 3000;
 const HOST = "0.0.0.0";
 const PUBLIC_DIR = path.join(__dirname, "public");
 const DATA_FILE = path.join(__dirname, "data/products.json");
+const COURSES_FILE = path.join(__dirname, "data/courses.json");
 
 const MIME_TYPES = {
   ".html": "text/html; charset=utf-8",
