@@ -113,6 +113,29 @@ export function CartDrawer({
           </button>
         </div>
 
+        {/* Dynamic Delivery & Gift Progress Bar */}
+        {cartItems.length > 0 && (
+          <div className="cart-progress-card">
+            {totalPrice >= 35000 ? (
+              <div className="progress-status-done">
+                <span className="progress-icon">🎉</span>
+                <span>Вам доступна <strong>БЕСПЛАТНАЯ доставка</strong> и набор медиаторов!</span>
+              </div>
+            ) : (
+              <div className="progress-status-pending">
+                <span className="progress-icon">🎁</span>
+                <span>До бесплатной доставки и подарка: <strong>{money(35000 - totalPrice)} ₸</strong></span>
+              </div>
+            )}
+            <div className="progress-bar-track">
+              <div
+                className="progress-bar-fill"
+                style={{ width: `${Math.min(100, (totalPrice / 35000) * 100)}%` }}
+              />
+            </div>
+          </div>
+        )}
+
         {cartItems.length ? (
           <div className="cart-lines">
             {cartItems.map((item) => (

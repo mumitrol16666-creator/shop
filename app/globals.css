@@ -378,6 +378,54 @@ button {
   z-index: 2;
 }
 
+.hero-eyebrow-wrap {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.hero-live-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #10b981;
+  box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+  animation: livePulse 2s infinite;
+}
+
+@keyframes livePulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 8px rgba(16, 185, 129, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+  }
+}
+
+.hero-card-badges {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.hero-master-chip {
+  background: rgba(200, 117, 49, 0.1);
+  color: var(--amber-dark);
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 20px;
+  border: 1px solid rgba(200, 117, 49, 0.25);
+  display: inline-flex;
+  align-items: center;
+}
+
 .hero-card {
   width: 100%;
   max-width: 440px;
@@ -385,14 +433,17 @@ button {
   border: 1px solid rgba(24, 21, 17, 0.08);
   border-radius: 24px;
   padding: 24px;
-  box-shadow: var(--shadow-lg);
+  box-shadow: 0 20px 45px rgba(24, 21, 17, 0.08);
   position: relative;
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
+}
+
+.hero-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 25px 55px rgba(200, 117, 49, 0.12);
 }
 
 .hero-card .badge {
-  position: absolute;
-  top: 20px;
-  left: 20px;
   background: var(--kaspi);
   color: #fff;
   font-size: 11px;
@@ -405,11 +456,12 @@ button {
 
 .hero-image-wrap {
   width: 100%;
-  height: 320px;
-  margin: 12px 0;
+  height: 300px;
+  margin: 10px 0;
   display: flex;
   align-items: center;
   justify-content: center;
+  position: relative;
   background: radial-gradient(circle, rgba(200, 117, 49, 0.08) 0%, transparent 70%);
 }
 
@@ -417,6 +469,69 @@ button {
   max-width: 100%;
   max-height: 100%;
   object-fit: contain;
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.hero-card:hover .hero-image-wrap img {
+  transform: scale(1.04);
+}
+
+.hero-color-switcher {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 14px;
+  background: #faf8f5;
+  border-radius: 12px;
+  margin: 8px 0 14px;
+  border: 1px solid rgba(24, 21, 17, 0.05);
+}
+
+.hero-color-title {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.hero-swatch-list {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.hero-swatch-dot {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  padding: 2px;
+  background: transparent;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.hero-swatch-dot span {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  display: block;
+}
+
+.hero-swatch-dot.active {
+  border-color: var(--amber);
+  transform: scale(1.15);
+}
+
+.hero-color-current {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--ink);
+  margin-left: auto;
 }
 
 .hero-card-meta {
@@ -432,6 +547,29 @@ button {
   font-size: 18px;
   font-weight: 700;
   color: var(--ink);
+  margin-bottom: 2px;
+}
+
+.hero-kaspi-installment {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.hero-kaspi-installment strong {
+  color: var(--ink);
+}
+
+.kaspi-tag {
+  background: #f14635;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 800;
+  padding: 2px 6px;
+  border-radius: 4px;
+  text-transform: uppercase;
 }
 
 .hero-detail-btn {
@@ -448,6 +586,72 @@ button {
 
 .hero-detail-btn:hover {
   background: var(--amber);
+  transform: translateY(-1px);
+}
+
+/* Soundwave Equalizer on Cards */
+.soundwave-equalizer {
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 13px;
+  margin-right: 4px;
+}
+
+.sw-bar {
+  width: 2.5px;
+  background: var(--amber);
+  border-radius: 2px;
+  animation: swBounce 0.8s ease-in-out infinite alternate;
+}
+
+.sw-1 { height: 40%; animation-delay: 0.1s; }
+.sw-2 { height: 100%; animation-delay: 0.35s; }
+.sw-3 { height: 65%; animation-delay: 0.2s; }
+.sw-4 { height: 85%; animation-delay: 0.45s; }
+
+@keyframes swBounce {
+  0% { transform: scaleY(0.25); }
+  100% { transform: scaleY(1.15); }
+}
+
+/* Cart Progress Card */
+.cart-progress-card {
+  margin: 12px 20px 0;
+  padding: 12px 16px;
+  background: #fffdf8;
+  border: 1px solid rgba(200, 117, 49, 0.25);
+  border-radius: 12px;
+}
+
+.progress-status-pending,
+.progress-status-done {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--ink);
+  margin-bottom: 8px;
+}
+
+.progress-status-done {
+  color: #065f46;
+  font-weight: 700;
+}
+
+.progress-bar-track {
+  width: 100%;
+  height: 6px;
+  background: rgba(24, 21, 17, 0.08);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #f59e0b, #d97706);
+  border-radius: 999px;
+  transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* ==========================================================================

@@ -79,12 +79,21 @@ export function Storefront({
     });
   };
 
+  const HERO_PREVIEWS = [
+    { name: "Gradient Blue", color: "#243a5e", image: "/products/02_39_gradient_electric.png", title: "Электрогитара 39″ Gradient", category: "ЭЛЕКТРОГИТАРЫ" },
+    { name: "Night Black", color: "#1c1b18", image: "/products/01_st20_electric.png", title: "Электрогитара ST-20 Black", category: "ЭЛЕКТРОГИТАРЫ" },
+    { name: "Sunburst Folk", color: "#a85421", image: "/products/04_41_acoustic.png", title: "Акустическая гитара 41″ Sunburst", category: "АКУСТИЧЕСКИЕ" },
+    { name: "Flamingo Pink", color: "#e8829c", image: "/products/03_21_soprano_ukulele.png", title: "Укулеле Сопрано 21″ Pastel", category: "УКУЛЕЛЕ" },
+  ];
+  const [heroIndex, setHeroIndex] = useState(0);
+  const currentHero = HERO_PREVIEWS[heroIndex];
+
   return (
     <>
       {/* Top Announcement Bar */}
       <div className="announcement-bar">
         <div className="announcement-inner">
-          <span>⚡ <strong>Поставка 2026:</strong> Бесплатная отстройка гитары мастером + Онлайн-курс в подарок к каждому инструменту!</span>
+          <span>⚡ <strong>Поставка 2026:</strong> Бесплатная отстройка мастером + Онлайн-курс в подарок к каждому инструменту!</span>
           <span className="announcement-sep">•</span>
           <span>🚚 Доставка по Казахстану от 1 дня</span>
           <span className="announcement-sep">•</span>
@@ -94,15 +103,23 @@ export function Storefront({
 
       <section className="hero" id="new">
         <div className="hero-copy">
-          <p className="eyebrow">ПОСТАВКА 2026 · ИНСТРУМЕНТЫ В НАЛИЧИИ</p>
+          <div className="hero-eyebrow-wrap">
+            <span className="hero-live-dot" />
+            <p className="eyebrow">ПОСТАВКА 2026 · ИНСТРУМЕНТЫ В НАЛИЧИИ</p>
+          </div>
           <h1 className="hero-headline">Музыкальные инструменты и гитары Maestro</h1>
           <p className="hero-lead">
             Электрогитары, акустика, классика, укулеле и гитарное оборудование. Все инструменты проверяются перед выдачей,
             а заявка оформляется напрямую через менеджера без лишней суеты.
           </p>
           <div className="hero-actions">
-            <a className="primary-button" href="#catalog">Открыть каталог</a>
-            <a className="secondary-button" href="#delivery">Условия доставки</a>
+            <a className="primary-button" href="#catalog">
+              <span>Открыть каталог</span>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+            <a className="secondary-button" href="#academy">
+              <span>🎓 Обучение & Курсы</span>
+            </a>
           </div>
           <div className="hero-stats">
             <div className="stat-box">
@@ -122,21 +139,51 @@ export function Storefront({
 
         <div className="hero-visual">
           <div className="hero-card">
-            <span className="badge">Выбор недели</span>
+            <div className="hero-card-badges">
+              <span className="badge">Выбор недели</span>
+              <span className="hero-master-chip">✨ Мастерская отстройка</span>
+            </div>
+            
             <div className="hero-image-wrap">
               <Image
-                src="/products/02_39_gradient_electric.png"
-                alt="Электрогитара 39″ Gradient"
+                key={currentHero.image}
+                src={currentHero.image}
+                alt={currentHero.title}
                 fill
                 unoptimized
                 priority
                 sizes="(max-width: 900px) 90vw, 420px"
               />
             </div>
+
+            {/* Quick Hero Color Switcher */}
+            <div className="hero-color-switcher">
+              <span className="hero-color-title">Оттенок:</span>
+              <div className="hero-swatch-list">
+                {HERO_PREVIEWS.map((hp, idx) => (
+                  <button
+                    key={hp.name}
+                    type="button"
+                    className={`hero-swatch-dot ${heroIndex === idx ? "active" : ""}`}
+                    onClick={() => setHeroIndex(idx)}
+                    title={hp.name}
+                    aria-label={`Выбрать ${hp.name}`}
+                  >
+                    <span style={{ backgroundColor: hp.color }} />
+                  </button>
+                ))}
+              </div>
+              <span className="hero-color-current">{currentHero.name}</span>
+            </div>
+
             <div className="hero-card-meta">
               <div>
-                <p className="eyebrow">ЭЛЕКТРОГИТАРЫ</p>
-                <h3>Электрогитара 39″ Gradient</h3>
+                <p className="eyebrow">{currentHero.category}</p>
+                <h3>{currentHero.title}</h3>
+                <div className="hero-kaspi-installment">
+                  <span className="kaspi-tag">Kaspi 0-0-12</span>
+                  <span>от <strong>4 158 ₸</strong> / мес</span>
+                </div>
               </div>
               {featuredProduct && (
                 <button className="hero-detail-btn" onClick={() => openProduct(featuredProduct)}>
@@ -315,14 +362,23 @@ export function Storefront({
                     {product.badge && <span className="product-badge">{product.badge}</span>}
                     {attachedCourse && <span className="card-gift-tag">🎁 Курс в подарок</span>}
 
-                    {/* Quick Sound preview button */}
+                    {/* Quick Sound preview button with Soundwave equalizer */}
                     <button
                       type="button"
                       className={`card-sound-pill ${isPlaying ? "playing" : ""}`}
                       onClick={(e) => handleCardSoundPlay(e, product)}
-                      title="Послушать звучание"
+                      title={isPlaying ? "Воспроизведение..." : "Послушать звучание инструмента"}
                     >
-                      <span>{isPlaying ? "🎵" : "🔊"}</span>
+                      {isPlaying ? (
+                        <span className="soundwave-equalizer" aria-hidden="true">
+                          <span className="sw-bar sw-1" />
+                          <span className="sw-bar sw-2" />
+                          <span className="sw-bar sw-3" />
+                          <span className="sw-bar sw-4" />
+                        </span>
+                      ) : (
+                        <span className="sound-icon">🔊</span>
+                      )}
                       <small>{isPlaying ? "Звучит" : "Звук"}</small>
                     </button>
                   </div>
