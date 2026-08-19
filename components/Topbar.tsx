@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { DEFAULT_WHATSAPP_PHONE, DISPLAY_WHATSAPP_PHONE } from "../lib/catalog-data";
+import { useState, useRef, useEffect } from "react";
+import { DEFAULT_WHATSAPP_PHONE, DISPLAY_WHATSAPP_PHONE, products as defaultProducts, money, type Product } from "../lib/catalog-data";
 
 type TopbarProps = {
   query: string;
@@ -10,6 +11,7 @@ type TopbarProps = {
   setCartOpen: (open: boolean) => void;
   view?: "store" | "academy";
   setView?: (view: "store" | "academy") => void;
+  onSelectProduct?: (product: Product) => void;
 };
 
 export function Topbar({
@@ -19,7 +21,32 @@ export function Topbar({
   setCartOpen,
   view = "store",
   setView,
+  onSelectProduct,
 }: TopbarProps) {
+  const [isSearchFocused, setIsSearchFocused] = useState(false);
+  const searchWrapRef = useRef<HTMLDivElement>(null);
+
+  const searchResults = query.trim().length >= 2
+    ? defaultProducts.filter((p) => {
+        const q = query.toLowerCase();
+        return (
+          p.name.toLowerCase().includes(q) ||
+          p.category.toLowerCase().includes(q) ||
+          (p.description && p.description.toLowerCase().includes(q))
+        );
+      }).slice(0, 4)
+    : [];
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (searchWrapRef.current && !searchWrapRef.current.contains(e.target as Node)) {
+        setIsSearchFocused(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
   return (
     <header className="topbar">
       <Link
@@ -62,18 +89,66 @@ export function Topbar({
         <a href="#faq" onClick={() => setView?.("store")}>❓ FAQ</a>
       </nav>
 
-      <label className="search-box">
-        <span className="search-icon">🔍</span>
-        <input
-          value={query}
-          onChange={(e) => {
-            setQuery(e.target.value);
-            if (setView && view !== "store") setView("store");
-          }}
-          placeholder="Поиск по каталогу..."
-          aria-label="Поиск по каталогу"
-        />
-      </label>
+      <div className="search-wrap-relative" ref={searchWrapRef}>
+        <label className="search-box">
+          <span className="search-icon">🔍</span>
+          <input
+            value={query}
+            onFocus={() => setIsSearchFocused(true)}
+            onChange={(e) => {
+              setQuery(e.target.value);
+              setIsSearchFocused(true);
+              if (setView && view !== "store") setView("store");
+            }}
+            placeholder="Поиск по каталогу..."
+            aria-label="Поиск по каталогу"
+          />
+          {query.trim().length > 0 && (
+            <button
+              type="button"
+              className="search-clear-btn"
+              onClick={() => setQuery("")}
+              aria-label="Очистить поиск"
+            >
+              ×
+            </button>
+          )}
+        </label>
+
+        {isSearchFocused && searchResults.length > 0 && (
+          <div className="search-live-dropdown">
+            <div className="search-dropdown-header">
+              <span>Найдено в каталоге:</span>
+            </div>
+            {searchResults.map((item) => (
+              <div
+                key={item.id}
+                className="search-dropdown-item"
+                onClick={() => {
+                  setIsSearchFocused(false);
+                  if (onSelectProduct) {
+                    onSelectProduct(item);
+                  } else {
+                    const el = document.getElementById("catalog");
+                    if (el) el.scrollIntoView({ behavior: "smooth" });
+                  }
+                }}
+              >
+                <div className="search-item-thumb">
+                  <img src={item.image} alt={item.name} />
+                </div>
+                <div className="search-item-info">
+                  <strong>{item.name}</strong>
+                  <small>{item.category}</small>
+                </div>
+                <div className="search-item-price">
+                  <span>{money(item.price)} ₸</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
 
       <div className="topbar-right-actions">
         <a

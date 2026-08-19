@@ -1,0 +1,22 @@
+{
+  "name": "Maestro — Музыкальные инструменты и Академия",
+  "short_name": "Maestro",
+  "description": "Электрогитары, акустика, укулеле и онлайн-курсы Maestro в Казахстане.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#181511",
+  "theme_color": "#181511",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/og-maestro.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

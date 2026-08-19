@@ -12747,11 +12747,11 @@ var require_jsx_runtime = __commonJS({
 });
 
 // src/main.tsx
-var import_react13 = __toESM(require_react(), 1);
+var import_react14 = __toESM(require_react(), 1);
 var import_client = __toESM(require_client(), 1);
 
 // app/page.tsx
-var import_react6 = __toESM(require_react(), 1);
+var import_react7 = __toESM(require_react(), 1);
 
 // lib/next-image-shim.tsx
 var import_jsx_runtime = __toESM(require_jsx_runtime(), 1);
@@ -15446,6 +15446,7 @@ function Link(props) {
 }
 
 // components/Topbar.tsx
+var import_react6 = __toESM(require_react(), 1);
 var import_jsx_runtime8 = __toESM(require_jsx_runtime(), 1);
 function Topbar({
   query,
@@ -15453,8 +15454,24 @@ function Topbar({
   cartCount,
   setCartOpen,
   view = "store",
-  setView
+  setView,
+  onSelectProduct
 }) {
+  const [isSearchFocused, setIsSearchFocused] = (0, import_react6.useState)(false);
+  const searchWrapRef = (0, import_react6.useRef)(null);
+  const searchResults = query.trim().length >= 2 ? products.filter((p) => {
+    const q = query.toLowerCase();
+    return p.name.toLowerCase().includes(q) || p.category.toLowerCase().includes(q) || p.description && p.description.toLowerCase().includes(q);
+  }).slice(0, 4) : [];
+  (0, import_react6.useEffect)(() => {
+    const handleClickOutside = (e) => {
+      if (searchWrapRef.current && !searchWrapRef.current.contains(e.target)) {
+        setIsSearchFocused(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
   return /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("header", { className: "topbar", children: [
     /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)(
       Link,
@@ -15500,20 +15517,64 @@ function Topbar({
       /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("a", { href: "#reviews", onClick: () => setView?.("store"), children: "\u2B50 \u041E\u0442\u0437\u044B\u0432\u044B" }),
       /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("a", { href: "#faq", onClick: () => setView?.("store"), children: "\u2753 FAQ" })
     ] }),
-    /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("label", { className: "search-box", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("span", { className: "search-icon", children: "\u{1F50D}" }),
-      /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(
-        "input",
-        {
-          value: query,
-          onChange: (e) => {
-            setQuery(e.target.value);
-            if (setView && view !== "store") setView("store");
+    /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("div", { className: "search-wrap-relative", ref: searchWrapRef, children: [
+      /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("label", { className: "search-box", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("span", { className: "search-icon", children: "\u{1F50D}" }),
+        /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(
+          "input",
+          {
+            value: query,
+            onFocus: () => setIsSearchFocused(true),
+            onChange: (e) => {
+              setQuery(e.target.value);
+              setIsSearchFocused(true);
+              if (setView && view !== "store") setView("store");
+            },
+            placeholder: "\u041F\u043E\u0438\u0441\u043A \u043F\u043E \u043A\u0430\u0442\u0430\u043B\u043E\u0433\u0443...",
+            "aria-label": "\u041F\u043E\u0438\u0441\u043A \u043F\u043E \u043A\u0430\u0442\u0430\u043B\u043E\u0433\u0443"
+          }
+        ),
+        query.trim().length > 0 && /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(
+          "button",
+          {
+            type: "button",
+            className: "search-clear-btn",
+            onClick: () => setQuery(""),
+            "aria-label": "\u041E\u0447\u0438\u0441\u0442\u0438\u0442\u044C \u043F\u043E\u0438\u0441\u043A",
+            children: "\xD7"
+          }
+        )
+      ] }),
+      isSearchFocused && searchResults.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("div", { className: "search-live-dropdown", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("div", { className: "search-dropdown-header", children: /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("span", { children: "\u041D\u0430\u0439\u0434\u0435\u043D\u043E \u0432 \u043A\u0430\u0442\u0430\u043B\u043E\u0433\u0435:" }) }),
+        searchResults.map((item) => /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)(
+          "div",
+          {
+            className: "search-dropdown-item",
+            onClick: () => {
+              setIsSearchFocused(false);
+              if (onSelectProduct) {
+                onSelectProduct(item);
+              } else {
+                const el = document.getElementById("catalog");
+                if (el) el.scrollIntoView({ behavior: "smooth" });
+              }
+            },
+            children: [
+              /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("div", { className: "search-item-thumb", children: /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("img", { src: item.image, alt: item.name }) }),
+              /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("div", { className: "search-item-info", children: [
+                /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("strong", { children: item.name }),
+                /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("small", { children: item.category })
+              ] }),
+              /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("div", { className: "search-item-price", children: /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("span", { children: [
+                money(item.price),
+                " \u20B8"
+              ] }) })
+            ]
           },
-          placeholder: "\u041F\u043E\u0438\u0441\u043A \u043F\u043E \u043A\u0430\u0442\u0430\u043B\u043E\u0433\u0443...",
-          "aria-label": "\u041F\u043E\u0438\u0441\u043A \u043F\u043E \u043A\u0430\u0442\u0430\u043B\u043E\u0433\u0443"
-        }
-      )
+          item.id
+        ))
+      ] })
     ] }),
     /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("div", { className: "topbar-right-actions", children: [
       /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)(
@@ -15598,22 +15659,22 @@ function Topbar({
 // app/page.tsx
 var import_jsx_runtime9 = __toESM(require_jsx_runtime(), 1);
 function Home() {
-  const [view, setView] = (0, import_react6.useState)("store");
-  const [query, setQuery] = (0, import_react6.useState)("");
-  const [category, setCategory] = (0, import_react6.useState)("\u0412\u0441\u0435");
-  const [selected, setSelected] = (0, import_react6.useState)(null);
-  const [selectedVariant, setSelectedVariant] = (0, import_react6.useState)(null);
-  const [requestedQuantity, setRequestedQuantity] = (0, import_react6.useState)(1);
-  const [cartOpen, setCartOpen] = (0, import_react6.useState)(false);
-  const [kaspiModalOpen, setKaspiModalOpen] = (0, import_react6.useState)(false);
-  const [cartItems, setCartItems] = (0, import_react6.useState)([]);
-  const [customerName, setCustomerName] = (0, import_react6.useState)("");
-  const [customerPhone, setCustomerPhone] = (0, import_react6.useState)("");
-  const [customerCity, setCustomerCity] = (0, import_react6.useState)("\u0410\u043A\u0442\u043E\u0431\u0435");
-  const [customerComment, setCustomerComment] = (0, import_react6.useState)("");
-  const [notice, setNotice] = (0, import_react6.useState)("");
-  const [storedProducts, setStoredProducts] = (0, import_react6.useState)([]);
-  (0, import_react6.useEffect)(() => {
+  const [view, setView] = (0, import_react7.useState)("store");
+  const [query, setQuery] = (0, import_react7.useState)("");
+  const [category, setCategory] = (0, import_react7.useState)("\u0412\u0441\u0435");
+  const [selected, setSelected] = (0, import_react7.useState)(null);
+  const [selectedVariant, setSelectedVariant] = (0, import_react7.useState)(null);
+  const [requestedQuantity, setRequestedQuantity] = (0, import_react7.useState)(1);
+  const [cartOpen, setCartOpen] = (0, import_react7.useState)(false);
+  const [kaspiModalOpen, setKaspiModalOpen] = (0, import_react7.useState)(false);
+  const [cartItems, setCartItems] = (0, import_react7.useState)([]);
+  const [customerName, setCustomerName] = (0, import_react7.useState)("");
+  const [customerPhone, setCustomerPhone] = (0, import_react7.useState)("");
+  const [customerCity, setCustomerCity] = (0, import_react7.useState)("\u0410\u043A\u0442\u043E\u0431\u0435");
+  const [customerComment, setCustomerComment] = (0, import_react7.useState)("");
+  const [notice, setNotice] = (0, import_react7.useState)("");
+  const [storedProducts, setStoredProducts] = (0, import_react7.useState)([]);
+  (0, import_react7.useEffect)(() => {
     let active = true;
     fetch("/api/products?scope=all").then((res) => res.ok ? res.json() : Promise.reject(new Error("Failed"))).then((data) => {
       if (active && Array.isArray(data.products)) {
@@ -15625,16 +15686,16 @@ function Home() {
       active = false;
     };
   }, []);
-  const mergedProducts = (0, import_react6.useMemo)(() => {
+  const mergedProducts = (0, import_react7.useMemo)(() => {
     const list = mergeBySku(products, storedProducts);
     return list.filter(
       (product) => !product.isStored || product.publicationStatus === "published" || !product.publicationStatus
     );
   }, [storedProducts]);
-  const categories = (0, import_react6.useMemo)(() => {
+  const categories = (0, import_react7.useMemo)(() => {
     return ["\u0412\u0441\u0435", ...new Set(mergedProducts.map((p) => p.category))];
   }, [mergedProducts]);
-  const filteredProducts = (0, import_react6.useMemo)(() => {
+  const filteredProducts = (0, import_react7.useMemo)(() => {
     const term = query.trim().toLowerCase();
     return mergedProducts.filter((product) => {
       const matchCategory = category === "\u0412\u0441\u0435" || product.category === category;
@@ -15651,11 +15712,11 @@ function Home() {
       return haystack.includes(term);
     });
   }, [mergedProducts, category, query]);
-  const cartCount = (0, import_react6.useMemo)(
+  const cartCount = (0, import_react7.useMemo)(
     () => cartItems.reduce((acc, item) => acc + item.quantity, 0),
     [cartItems]
   );
-  const cartTotalPrice = (0, import_react6.useMemo)(
+  const cartTotalPrice = (0, import_react7.useMemo)(
     () => cartItems.reduce((acc, item) => acc + (item.price || 0) * item.quantity, 0),
     [cartItems]
   );
@@ -15738,7 +15799,8 @@ function Home() {
         cartCount,
         setCartOpen,
         view,
-        setView
+        setView,
+        onSelectProduct: openProduct
       }
     ),
     view === "academy" ? /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(AcademyView, { onBackToStore: () => setView("store") }) : /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(
@@ -15751,6 +15813,23 @@ function Home() {
         openProduct,
         chooseCategory,
         featuredProduct: mergedProducts[1] ?? mergedProducts[0]
+      }
+    ),
+    !cartOpen && !selected && !kaspiModalOpen && /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)(
+      "a",
+      {
+        href: "https://wa.me/77775055788?text=%D0%97%D0%B4%D1%80%D0%B0%D0%B2%D1%81%D1%82%D0%B2%D1%83%D0%B9%D1%82%D0%B5!%20%D0%9F%D0%BE%D0%BC%D0%BE%D0%B3%D0%B8%D1%82%D0%B5%2C%20%D0%BF%D0%BE%D0%B6%D0%B0%D0%BB%D1%83%D0%B9%D1%81%D1%82%D0%B0%2C%20%D0%BF%D0%BE%D0%B4%D0%BE%D0%B1%D1%80%D0%B0%D1%82%D1%8C%20%D0%B3%D0%B8%D1%82%D0%B0%D1%80%D1%83.",
+        target: "_blank",
+        rel: "noopener noreferrer",
+        className: "floating-whatsapp-widget",
+        title: "\u041D\u0430\u043F\u0438\u0441\u0430\u0442\u044C \u043C\u0430\u0441\u0442\u0435\u0440\u0443 \u0432 WhatsApp",
+        children: [
+          /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)("div", { className: "floating-wa-bubble", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("span", { className: "floating-wa-dot" }),
+            /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("span", { children: "\u041C\u0430\u0441\u0442\u0435\u0440 \u043E\u043D\u043B\u0430\u0439\u043D \xB7 \u041E\u0442\u0432\u0435\u0442\u0438\u043C \u0437\u0430 1 \u043C\u0438\u043D" })
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("div", { className: "floating-wa-icon-btn", children: "\u{1F4AC}" })
+        ]
       }
     ),
     /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(
@@ -15811,10 +15890,10 @@ function Home() {
 }
 
 // app/admin/pricing/page.tsx
-var import_react12 = __toESM(require_react(), 1);
+var import_react13 = __toESM(require_react(), 1);
 
 // components/PurchaserView.tsx
-var import_react11 = __toESM(require_react(), 1);
+var import_react12 = __toESM(require_react(), 1);
 
 // lib/presets.ts
 var DEFAULT_PRESETS = [
@@ -16004,7 +16083,7 @@ function calculateProductPricing(input) {
 }
 
 // components/MergeProductsModal.tsx
-var import_react7 = __toESM(require_react(), 1);
+var import_react8 = __toESM(require_react(), 1);
 var import_jsx_runtime10 = __toESM(require_jsx_runtime(), 1);
 function MergeProductsModal({
   isOpen,
@@ -16012,7 +16091,7 @@ function MergeProductsModal({
   selectedProducts,
   onConfirmMerge
 }) {
-  const [masterIndex, setMasterIndex] = (0, import_react7.useState)(0);
+  const [masterIndex, setMasterIndex] = (0, import_react8.useState)(0);
   if (!isOpen || selectedProducts.length < 2) return null;
   const masterProduct = selectedProducts[masterIndex] || selectedProducts[0];
   const combinedVariants = selectedProducts.flatMap((p) => variantsFor(p));
@@ -16121,7 +16200,7 @@ function MergeProductsModal({
 }
 
 // components/PresetManagerModal.tsx
-var import_react8 = __toESM(require_react(), 1);
+var import_react9 = __toESM(require_react(), 1);
 var import_jsx_runtime11 = __toESM(require_jsx_runtime(), 1);
 function PresetManagerModal({
   isOpen,
@@ -16131,8 +16210,8 @@ function PresetManagerModal({
   onApplyPreset,
   currentCalculatorValues
 }) {
-  const [editingPreset, setEditingPreset] = (0, import_react8.useState)(null);
-  const [isCreating, setIsCreating] = (0, import_react8.useState)(false);
+  const [editingPreset, setEditingPreset] = (0, import_react9.useState)(null);
+  const [isCreating, setIsCreating] = (0, import_react9.useState)(false);
   if (!isOpen) return null;
   const startCreate = () => {
     const newPreset = {
@@ -16527,12 +16606,12 @@ function PresetManagerModal({
 }
 
 // components/PriceTagPrintModal.tsx
-var import_react9 = __toESM(require_react(), 1);
+var import_react10 = __toESM(require_react(), 1);
 var import_jsx_runtime12 = __toESM(require_jsx_runtime(), 1);
 function PriceTagPrintModal({ isOpen, onClose, products: products2 }) {
-  const [tagType, setTagType] = (0, import_react9.useState)("showroom");
-  const [includeKaspi, setIncludeKaspi] = (0, import_react9.useState)(true);
-  const [includeBarcode, setIncludeBarcode] = (0, import_react9.useState)(true);
+  const [tagType, setTagType] = (0, import_react10.useState)("showroom");
+  const [includeKaspi, setIncludeKaspi] = (0, import_react10.useState)(true);
+  const [includeBarcode, setIncludeBarcode] = (0, import_react10.useState)(true);
   if (!isOpen) return null;
   const handlePrint = () => {
     window.print();
@@ -16702,7 +16781,7 @@ function PriceTagPrintModal({ isOpen, onClose, products: products2 }) {
 }
 
 // components/CourseEditorModal.tsx
-var import_react10 = __toESM(require_react(), 1);
+var import_react11 = __toESM(require_react(), 1);
 var import_jsx_runtime13 = __toESM(require_jsx_runtime(), 1);
 function CourseEditorModal({
   isOpen,
@@ -16711,32 +16790,32 @@ function CourseEditorModal({
   setCourses,
   onSavedNotice
 }) {
-  const [selectedCourseId, setSelectedCourseId] = (0, import_react10.useState)(courses[0]?.id || "");
-  const [isCreatingNew, setIsCreatingNew] = (0, import_react10.useState)(false);
+  const [selectedCourseId, setSelectedCourseId] = (0, import_react11.useState)(courses[0]?.id || "");
+  const [isCreatingNew, setIsCreatingNew] = (0, import_react11.useState)(false);
   const activeCourse = isCreatingNew ? null : courses.find((c) => c.id === selectedCourseId) || courses[0];
-  const [title, setTitle] = (0, import_react10.useState)(activeCourse?.title || "");
-  const [subtitle, setSubtitle] = (0, import_react10.useState)(activeCourse?.subtitle || "");
-  const [badge, setBadge] = (0, import_react10.useState)(activeCourse?.badge || "");
-  const [courseUrl, setCourseUrl] = (0, import_react10.useState)(activeCourse?.courseUrl || "");
-  const [instrument, setInstrument] = (0, import_react10.useState)(
+  const [title, setTitle] = (0, import_react11.useState)(activeCourse?.title || "");
+  const [subtitle, setSubtitle] = (0, import_react11.useState)(activeCourse?.subtitle || "");
+  const [badge, setBadge] = (0, import_react11.useState)(activeCourse?.badge || "");
+  const [courseUrl, setCourseUrl] = (0, import_react11.useState)(activeCourse?.courseUrl || "");
+  const [instrument, setInstrument] = (0, import_react11.useState)(
     activeCourse?.instrument || "acoustic"
   );
-  const [level, setLevel] = (0, import_react10.useState)(
+  const [level, setLevel] = (0, import_react11.useState)(
     activeCourse?.level || "\u041D\u0430\u0447\u0438\u043D\u0430\u044E\u0449\u0438\u0439"
   );
-  const [price, setPrice] = (0, import_react10.useState)(activeCourse?.price || 9900);
-  const [originalPrice, setOriginalPrice] = (0, import_react10.useState)(activeCourse?.originalPrice || 19900);
-  const [description, setDescription] = (0, import_react10.useState)(activeCourse?.description || "");
-  const [highlightsText, setHighlightsText] = (0, import_react10.useState)((activeCourse?.highlights || []).join("\n"));
-  const [instructorName, setInstructorName] = (0, import_react10.useState)(activeCourse?.instructor?.name || "");
-  const [instructorRole, setInstructorRole] = (0, import_react10.useState)(activeCourse?.instructor?.role || "");
-  const [instructorExp, setInstructorExp] = (0, import_react10.useState)(activeCourse?.instructor?.experience || "");
-  const [instructorAvatar, setInstructorAvatar] = (0, import_react10.useState)(activeCourse?.instructor?.avatar || "\u{1F3B8}");
-  const [lessons, setLessons] = (0, import_react10.useState)(activeCourse?.lessons || []);
-  const [isSaving, setIsSaving] = (0, import_react10.useState)(false);
-  const [isDeleting, setIsDeleting] = (0, import_react10.useState)(false);
-  const [statusMsg, setStatusMsg] = (0, import_react10.useState)("");
-  (0, import_react10.useEffect)(() => {
+  const [price, setPrice] = (0, import_react11.useState)(activeCourse?.price || 9900);
+  const [originalPrice, setOriginalPrice] = (0, import_react11.useState)(activeCourse?.originalPrice || 19900);
+  const [description, setDescription] = (0, import_react11.useState)(activeCourse?.description || "");
+  const [highlightsText, setHighlightsText] = (0, import_react11.useState)((activeCourse?.highlights || []).join("\n"));
+  const [instructorName, setInstructorName] = (0, import_react11.useState)(activeCourse?.instructor?.name || "");
+  const [instructorRole, setInstructorRole] = (0, import_react11.useState)(activeCourse?.instructor?.role || "");
+  const [instructorExp, setInstructorExp] = (0, import_react11.useState)(activeCourse?.instructor?.experience || "");
+  const [instructorAvatar, setInstructorAvatar] = (0, import_react11.useState)(activeCourse?.instructor?.avatar || "\u{1F3B8}");
+  const [lessons, setLessons] = (0, import_react11.useState)(activeCourse?.lessons || []);
+  const [isSaving, setIsSaving] = (0, import_react11.useState)(false);
+  const [isDeleting, setIsDeleting] = (0, import_react11.useState)(false);
+  const [statusMsg, setStatusMsg] = (0, import_react11.useState)("");
+  (0, import_react11.useEffect)(() => {
     if (isOpen && (!courses || courses.length === 0)) {
       fetch("/api/courses").then((r) => r.ok ? r.json() : Promise.reject(new Error("Failed"))).then((data) => {
         if (Array.isArray(data.courses) && data.courses.length > 0) {
@@ -17187,52 +17266,52 @@ function PurchaserView({
   setQuery,
   setNotice
 }) {
-  const [presets, setPresets] = (0, import_react11.useState)([]);
-  const [selectedPresetId, setSelectedPresetId] = (0, import_react11.useState)("");
-  const [isPresetModalOpen, setIsPresetModalOpen] = (0, import_react11.useState)(false);
-  const [selectedProductIds, setSelectedProductIds] = (0, import_react11.useState)(/* @__PURE__ */ new Set());
-  const [isMergeModalOpen, setIsMergeModalOpen] = (0, import_react11.useState)(false);
-  const [isPrintModalOpen, setIsPrintModalOpen] = (0, import_react11.useState)(false);
-  const [isCourseModalOpen, setIsCourseModalOpen] = (0, import_react11.useState)(false);
-  const [adminCourses, setAdminCourses] = (0, import_react11.useState)(COURSES);
-  const [bulkPresetId, setBulkPresetId] = (0, import_react11.useState)("");
-  const [statusFilter, setStatusFilter] = (0, import_react11.useState)("all");
-  const [currency, setCurrency] = (0, import_react11.useState)("CNY");
-  const [cnyRate, setCnyRate] = (0, import_react11.useState)(70);
-  const [usdRate, setUsdRate] = (0, import_react11.useState)(500);
-  const [purchase, setPurchase] = (0, import_react11.useState)(220);
-  const [delivery, setDelivery] = (0, import_react11.useState)(1200);
-  const [cargo, setCargo] = (0, import_react11.useState)(2800);
-  const [customs, setCustoms] = (0, import_react11.useState)(500);
-  const [packaging, setPackaging] = (0, import_react11.useState)(700);
-  const [setupCost, setSetupCost] = (0, import_react11.useState)(2500);
-  const [marketingCost, setMarketingCost] = (0, import_react11.useState)(1200);
-  const [other, setOther] = (0, import_react11.useState)(300);
-  const [taxPercent, setTaxPercent] = (0, import_react11.useState)(3);
-  const [bankPercent, setBankPercent] = (0, import_react11.useState)(11);
-  const [installmentMonths, setInstallmentMonths] = (0, import_react11.useState)(12);
-  const [sellerPercent, setSellerPercent] = (0, import_react11.useState)(5);
-  const [markup, setMarkup] = (0, import_react11.useState)(35);
-  const [manualPricing, setManualPricing] = (0, import_react11.useState)(false);
-  const [manualPrice, setManualPrice] = (0, import_react11.useState)(41e3);
-  const [hasDiscount, setHasDiscount] = (0, import_react11.useState)(false);
-  const [discountPercent, setDiscountPercent] = (0, import_react11.useState)(15);
-  const [originalPriceInput, setOriginalPriceInput] = (0, import_react11.useState)(0);
-  const [editingProductId, setEditingProductId] = (0, import_react11.useState)();
-  const [currentPublicationStatus, setCurrentPublicationStatus] = (0, import_react11.useState)("draft");
-  const [internalName, setInternalName] = (0, import_react11.useState)("\u042D\u043B\u0435\u043A\u0442\u0440\u043E\u0433\u0438\u0442\u0430\u0440\u0430 ST-20 HSS");
-  const [internalSku, setInternalSku] = (0, import_react11.useState)("EG-ST20");
-  const [internalCategory, setInternalCategory] = (0, import_react11.useState)("\u042D\u043B\u0435\u043A\u0442\u0440\u043E\u0433\u0438\u0442\u0430\u0440\u044B");
-  const [internalPhoto, setInternalPhoto] = (0, import_react11.useState)("/products/01_st20_electric.png");
-  const [internalDescription, setInternalDescription] = (0, import_react11.useState)(
+  const [presets, setPresets] = (0, import_react12.useState)([]);
+  const [selectedPresetId, setSelectedPresetId] = (0, import_react12.useState)("");
+  const [isPresetModalOpen, setIsPresetModalOpen] = (0, import_react12.useState)(false);
+  const [selectedProductIds, setSelectedProductIds] = (0, import_react12.useState)(/* @__PURE__ */ new Set());
+  const [isMergeModalOpen, setIsMergeModalOpen] = (0, import_react12.useState)(false);
+  const [isPrintModalOpen, setIsPrintModalOpen] = (0, import_react12.useState)(false);
+  const [isCourseModalOpen, setIsCourseModalOpen] = (0, import_react12.useState)(false);
+  const [adminCourses, setAdminCourses] = (0, import_react12.useState)(COURSES);
+  const [bulkPresetId, setBulkPresetId] = (0, import_react12.useState)("");
+  const [statusFilter, setStatusFilter] = (0, import_react12.useState)("all");
+  const [currency, setCurrency] = (0, import_react12.useState)("CNY");
+  const [cnyRate, setCnyRate] = (0, import_react12.useState)(70);
+  const [usdRate, setUsdRate] = (0, import_react12.useState)(500);
+  const [purchase, setPurchase] = (0, import_react12.useState)(220);
+  const [delivery, setDelivery] = (0, import_react12.useState)(1200);
+  const [cargo, setCargo] = (0, import_react12.useState)(2800);
+  const [customs, setCustoms] = (0, import_react12.useState)(500);
+  const [packaging, setPackaging] = (0, import_react12.useState)(700);
+  const [setupCost, setSetupCost] = (0, import_react12.useState)(2500);
+  const [marketingCost, setMarketingCost] = (0, import_react12.useState)(1200);
+  const [other, setOther] = (0, import_react12.useState)(300);
+  const [taxPercent, setTaxPercent] = (0, import_react12.useState)(3);
+  const [bankPercent, setBankPercent] = (0, import_react12.useState)(11);
+  const [installmentMonths, setInstallmentMonths] = (0, import_react12.useState)(12);
+  const [sellerPercent, setSellerPercent] = (0, import_react12.useState)(5);
+  const [markup, setMarkup] = (0, import_react12.useState)(35);
+  const [manualPricing, setManualPricing] = (0, import_react12.useState)(false);
+  const [manualPrice, setManualPrice] = (0, import_react12.useState)(41e3);
+  const [hasDiscount, setHasDiscount] = (0, import_react12.useState)(false);
+  const [discountPercent, setDiscountPercent] = (0, import_react12.useState)(15);
+  const [originalPriceInput, setOriginalPriceInput] = (0, import_react12.useState)(0);
+  const [editingProductId, setEditingProductId] = (0, import_react12.useState)();
+  const [currentPublicationStatus, setCurrentPublicationStatus] = (0, import_react12.useState)("draft");
+  const [internalName, setInternalName] = (0, import_react12.useState)("\u042D\u043B\u0435\u043A\u0442\u0440\u043E\u0433\u0438\u0442\u0430\u0440\u0430 ST-20 HSS");
+  const [internalSku, setInternalSku] = (0, import_react12.useState)("EG-ST20");
+  const [internalCategory, setInternalCategory] = (0, import_react12.useState)("\u042D\u043B\u0435\u043A\u0442\u0440\u043E\u0433\u0438\u0442\u0430\u0440\u044B");
+  const [internalPhoto, setInternalPhoto] = (0, import_react12.useState)("/products/01_st20_electric.png");
+  const [internalDescription, setInternalDescription] = (0, import_react12.useState)(
     "\u0423\u043D\u0438\u0432\u0435\u0440\u0441\u0430\u043B\u044C\u043D\u0430\u044F \u044D\u043B\u0435\u043A\u0442\u0440\u043E\u0433\u0438\u0442\u0430\u0440\u0430 \u0444\u043E\u0440\u043C\u044B ST \u0434\u043B\u044F \u043F\u0435\u0440\u0432\u044B\u0445 \u0437\u0430\u043D\u044F\u0442\u0438\u0439 \u0438 \u0434\u043E\u043C\u0430\u0448\u043D\u0435\u0439 \u043F\u0440\u0430\u043A\u0442\u0438\u043A\u0438."
   );
-  const [featuresText, setFeaturesText] = (0, import_react11.useState)(
+  const [featuresText, setFeaturesText] = (0, import_react12.useState)(
     "\u0424\u043E\u0440\u043C\u0430 \u043A\u043E\u0440\u043F\u0443\u0441\u0430 ST, \u041A\u043E\u043D\u0444\u0438\u0433\u0443\u0440\u0430\u0446\u0438\u044F HSS, 6 \u0446\u0432\u0435\u0442\u043E\u0432, \u0421\u0442\u0430\u043D\u0434\u0430\u0440\u0442\u043D\u0430\u044F \u043C\u0435\u043D\u0437\u0443\u0440\u0430"
   );
-  const [targetAudience, setTargetAudience] = (0, import_react11.useState)("\u0414\u043B\u044F \u043D\u0430\u0447\u0438\u043D\u0430\u044E\u0449\u0438\u0445");
-  const [attachedCourseId, setAttachedCourseId] = (0, import_react11.useState)("auto");
-  const [modelVariants, setModelVariants] = (0, import_react11.useState)([
+  const [targetAudience, setTargetAudience] = (0, import_react12.useState)("\u0414\u043B\u044F \u043D\u0430\u0447\u0438\u043D\u0430\u044E\u0449\u0438\u0445");
+  const [attachedCourseId, setAttachedCourseId] = (0, import_react12.useState)("auto");
+  const [modelVariants, setModelVariants] = (0, import_react12.useState)([
     {
       id: "var-1",
       name: "\u0421\u0430\u043D\u0431\u0451\u0440\u0441\u0442",
@@ -17264,11 +17343,11 @@ function PurchaserView({
       image: "/product-variants/eg-st20-wht.jpg"
     }
   ]);
-  const [isDirty, setIsDirty] = (0, import_react11.useState)(false);
-  const [lastSavedTime, setLastSavedTime] = (0, import_react11.useState)("");
-  const [saveState, setSaveState] = (0, import_react11.useState)("idle");
-  const [saveMessage, setSaveMessage] = (0, import_react11.useState)("");
-  (0, import_react11.useEffect)(() => {
+  const [isDirty, setIsDirty] = (0, import_react12.useState)(false);
+  const [lastSavedTime, setLastSavedTime] = (0, import_react12.useState)("");
+  const [saveState, setSaveState] = (0, import_react12.useState)("idle");
+  const [saveMessage, setSaveMessage] = (0, import_react12.useState)("");
+  (0, import_react12.useEffect)(() => {
     const loaded = loadPresets();
     setPresets(loaded);
     if (loaded[0]) {
@@ -17278,7 +17357,7 @@ function PurchaserView({
   }, []);
   const rate = currency === "CNY" ? cnyRate : currency === "USD" ? usdRate : 1;
   const percentExpenses = taxPercent + bankPercent + sellerPercent;
-  const calculation = (0, import_react11.useMemo)(() => {
+  const calculation = (0, import_react12.useMemo)(() => {
     try {
       return calculateProductPricing({
         purchasePrice: purchase,
@@ -17467,7 +17546,7 @@ function PurchaserView({
     setModelVariants([...modelVariants, duplicated]);
     setIsDirty(true);
   };
-  const totalModelStock = (0, import_react11.useMemo)(() => {
+  const totalModelStock = (0, import_react12.useMemo)(() => {
     return modelVariants.reduce((acc, v) => acc + (v.stock || 0), 0);
   }, [modelVariants]);
   const saveProduct = async (publish) => {
@@ -17653,14 +17732,14 @@ function PurchaserView({
     setNotice(`\u{1F3F7} \u0428\u0430\u0431\u043B\u043E\u043D \xAB${preset.name}\xBB \u043F\u0440\u0438\u043C\u0435\u043D\u0435\u043D \u043A ${count} \u0442\u043E\u0432\u0430\u0440\u0430\u043C`);
     window.setTimeout(() => setNotice(""), 3e3);
   };
-  const displayedInventoryProducts = (0, import_react11.useMemo)(() => {
+  const displayedInventoryProducts = (0, import_react12.useMemo)(() => {
     return filteredProducts.filter((p) => {
       if (statusFilter === "published") return p.publicationStatus === "published";
       if (statusFilter === "draft") return p.publicationStatus === "draft";
       return true;
     });
   }, [filteredProducts, statusFilter]);
-  const selectedForMerge = (0, import_react11.useMemo)(() => {
+  const selectedForMerge = (0, import_react12.useMemo)(() => {
     return filteredProducts.filter((p) => selectedProductIds.has(p.id));
   }, [filteredProducts, selectedProductIds]);
   const handleConfirmMerge = (mergedMaster, obsoleteIds) => {
@@ -18848,17 +18927,17 @@ var import_jsx_runtime15 = __toESM(require_jsx_runtime(), 1);
 var AUTH_KEY = "maestro_admin_auth";
 var VALID_PASSWORDS = /* @__PURE__ */ new Set(["Anastacia123!", "maestro2026", "admin", "1234"]);
 function AdminPricingPage() {
-  const [isAuthenticated, setIsAuthenticated] = (0, import_react12.useState)(false);
-  const [passwordInput, setPasswordInput] = (0, import_react12.useState)("");
-  const [authError, setAuthError] = (0, import_react12.useState)("");
-  const [query, setQuery] = (0, import_react12.useState)("");
-  const [category, setCategory] = (0, import_react12.useState)("\u0412\u0441\u0435");
-  const [selected, setSelected] = (0, import_react12.useState)(null);
-  const [selectedVariant, setSelectedVariant] = (0, import_react12.useState)(null);
-  const [requestedQuantity, setRequestedQuantity] = (0, import_react12.useState)(1);
-  const [notice, setNotice] = (0, import_react12.useState)("");
-  const [storedProducts, setStoredProducts] = (0, import_react12.useState)([]);
-  (0, import_react12.useEffect)(() => {
+  const [isAuthenticated, setIsAuthenticated] = (0, import_react13.useState)(false);
+  const [passwordInput, setPasswordInput] = (0, import_react13.useState)("");
+  const [authError, setAuthError] = (0, import_react13.useState)("");
+  const [query, setQuery] = (0, import_react13.useState)("");
+  const [category, setCategory] = (0, import_react13.useState)("\u0412\u0441\u0435");
+  const [selected, setSelected] = (0, import_react13.useState)(null);
+  const [selectedVariant, setSelectedVariant] = (0, import_react13.useState)(null);
+  const [requestedQuantity, setRequestedQuantity] = (0, import_react13.useState)(1);
+  const [notice, setNotice] = (0, import_react13.useState)("");
+  const [storedProducts, setStoredProducts] = (0, import_react13.useState)([]);
+  (0, import_react13.useEffect)(() => {
     try {
       const stored = sessionStorage.getItem(AUTH_KEY);
       if (stored === "true") {
@@ -18867,7 +18946,7 @@ function AdminPricingPage() {
     } catch {
     }
   }, []);
-  (0, import_react12.useEffect)(() => {
+  (0, import_react13.useEffect)(() => {
     if (!isAuthenticated) return;
     let active = true;
     fetch("/api/products?scope=all").then((res) => res.ok ? res.json() : Promise.reject(new Error("Failed"))).then((data) => {
@@ -18880,13 +18959,13 @@ function AdminPricingPage() {
       active = false;
     };
   }, [isAuthenticated]);
-  const mergedProducts = (0, import_react12.useMemo)(() => {
+  const mergedProducts = (0, import_react13.useMemo)(() => {
     return mergeBySku(products, storedProducts);
   }, [storedProducts]);
-  const categories = (0, import_react12.useMemo)(() => {
+  const categories = (0, import_react13.useMemo)(() => {
     return ["\u0412\u0441\u0435", ...new Set(mergedProducts.map((p) => p.category))];
   }, [mergedProducts]);
-  const filteredProducts = (0, import_react12.useMemo)(() => {
+  const filteredProducts = (0, import_react13.useMemo)(() => {
     const term = query.trim().toLowerCase();
     return mergedProducts.filter((product) => {
       const matchCategory = category === "\u0412\u0441\u0435" || product.category === category;
@@ -19012,8 +19091,8 @@ function AdminPricingPage() {
 // src/main.tsx
 var import_jsx_runtime16 = __toESM(require_jsx_runtime(), 1);
 function App() {
-  const [pathname, setPathname] = (0, import_react13.useState)(window.location.pathname);
-  (0, import_react13.useEffect)(() => {
+  const [pathname, setPathname] = (0, import_react14.useState)(window.location.pathname);
+  (0, import_react14.useEffect)(() => {
     const handlePop = () => setPathname(window.location.pathname);
     window.addEventListener("popstate", handlePop);
     return () => window.removeEventListener("popstate", handlePop);
@@ -19026,7 +19105,7 @@ function App() {
 var rootElement = document.getElementById("root");
 if (rootElement) {
   import_client.default.createRoot(rootElement).render(
-    /* @__PURE__ */ (0, import_jsx_runtime16.jsx)(import_react13.default.StrictMode, { children: /* @__PURE__ */ (0, import_jsx_runtime16.jsx)(App, {}) })
+    /* @__PURE__ */ (0, import_jsx_runtime16.jsx)(import_react14.default.StrictMode, { children: /* @__PURE__ */ (0, import_jsx_runtime16.jsx)(App, {}) })
   );
 }
 /*! Bundled license information:

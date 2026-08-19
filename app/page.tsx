@@ -194,6 +194,7 @@ export default function Home() {
         setCartOpen={setCartOpen}
         view={view}
         setView={setView}
+        onSelectProduct={openProduct}
       />
 
       {view === "academy" ? (
@@ -208,6 +209,25 @@ export default function Home() {
           chooseCategory={chooseCategory}
           featuredProduct={mergedProducts[1] ?? mergedProducts[0]}
         />
+      )}
+
+      {/* Floating WhatsApp Master Speed Dial Widget */}
+      {!cartOpen && !selected && !kaspiModalOpen && (
+        <a
+          href="https://wa.me/77775055788?text=%D0%97%D0%B4%D1%80%D0%B0%D0%B2%D1%81%D1%82%D0%B2%D1%83%D0%B9%D1%82%D0%B5!%20%D0%9F%D0%BE%D0%BC%D0%BE%D0%B3%D0%B8%D1%82%D0%B5%2C%20%D0%BF%D0%BE%D0%B6%D0%B0%D0%BB%D1%83%D0%B9%D1%81%D1%82%D0%B0%2C%20%D0%BF%D0%BE%D0%B4%D0%BE%D0%B1%D1%80%D0%B0%D1%82%D1%8C%20%D0%B3%D0%B8%D1%82%D0%B0%D1%80%D1%83."
+          target="_blank"
+          rel="noopener noreferrer"
+          className="floating-whatsapp-widget"
+          title="Написать мастеру в WhatsApp"
+        >
+          <div className="floating-wa-bubble">
+            <span className="floating-wa-dot" />
+            <span>Мастер онлайн · Ответим за 1 мин</span>
+          </div>
+          <div className="floating-wa-icon-btn">
+            💬
+          </div>
+        </a>
       )}
 
       <ProductModal
