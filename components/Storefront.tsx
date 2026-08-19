@@ -195,6 +195,93 @@ export function Storefront({
         </div>
       </section>
 
+      {/* Quick Buyer Scenarios */}
+      <section className="scenarios-section" aria-label="Быстрый подбор инструмента">
+        <div className="section-head">
+          <p className="eyebrow">БЫСТРЫЙ ПОДБОР</p>
+          <h2>Для кого вы выбираете инструмент?</h2>
+          <p className="scenarios-lead">Нажмите подходящий сценарий — мы покажем лучшие модели с курсом в комплекте</p>
+        </div>
+
+        <div className="scenarios-grid">
+          <div
+            className="scenario-card"
+            onClick={() => {
+              chooseCategory("Акустические гитары");
+              const el = document.getElementById("catalog");
+              if (el) el.scrollIntoView({ behavior: "smooth" });
+            }}
+            role="button"
+            tabIndex={0}
+          >
+            <div className="scenario-icon-wrap" style={{ background: "rgba(245, 158, 11, 0.12)" }}>
+              <span className="scenario-emoji">🎯</span>
+            </div>
+            <div className="scenario-badge">Хит для старта</div>
+            <h3>Для новичка / С нуля</h3>
+            <p>Мягкие струны, низкая посадка для легких аккордов + видеокурс «Первая песня за 7 дней» в подарок.</p>
+            <span className="scenario-link">Смотреть варианты →</span>
+          </div>
+
+          <div
+            className="scenario-card"
+            onClick={() => {
+              chooseCategory("Электрогитары");
+              const el = document.getElementById("catalog");
+              if (el) el.scrollIntoView({ behavior: "smooth" });
+            }}
+            role="button"
+            tabIndex={0}
+          >
+            <div className="scenario-icon-wrap" style={{ background: "rgba(59, 130, 246, 0.12)" }}>
+              <span className="scenario-emoji">⚡</span>
+            </div>
+            <div className="scenario-badge blue">Драйв и соло</div>
+            <h3>Хочу рок и драйв</h3>
+            <p>Электрогитары ST-20 и Gradient с мощными звукоснимателями + онлайн-курс по соло и риффам.</p>
+            <span className="scenario-link">Смотреть электрогитары →</span>
+          </div>
+
+          <div
+            className="scenario-card"
+            onClick={() => {
+              chooseCategory("Укулеле");
+              const el = document.getElementById("catalog");
+              if (el) el.scrollIntoView({ behavior: "smooth" });
+            }}
+            role="button"
+            tabIndex={0}
+          >
+            <div className="scenario-icon-wrap" style={{ background: "rgba(236, 72, 153, 0.12)" }}>
+              <span className="scenario-emoji">🎀</span>
+            </div>
+            <div className="scenario-badge pink">Для детей и семьи</div>
+            <h3>В подарок ребенку</h3>
+            <p>Яркие укулеле и классика с нейлоновыми струнами: пальцы не болят, учиться легко и весело.</p>
+            <span className="scenario-link">Смотреть укулеле →</span>
+          </div>
+
+          <div
+            className="scenario-card"
+            onClick={() => {
+              setQuickFilter("sale");
+              const el = document.getElementById("catalog");
+              if (el) el.scrollIntoView({ behavior: "smooth" });
+            }}
+            role="button"
+            tabIndex={0}
+          >
+            <div className="scenario-icon-wrap" style={{ background: "rgba(16, 185, 129, 0.12)" }}>
+              <span className="scenario-emoji">🔥</span>
+            </div>
+            <div className="scenario-badge green">Выгода до 30%</div>
+            <h3>По акции / Sale</h3>
+            <p>Специальные предложения сезона: максимальные скидки на комплекты с подарками и чехлами.</p>
+            <span className="scenario-link">Открыть акции →</span>
+          </div>
+        </div>
+      </section>
+
       <section className="trust-strip">
         <div className="trust-item">
           <strong>Проверка каждого инструмента</strong>
@@ -476,6 +563,58 @@ export function Storefront({
               </article>
             );
           })}
+        </div>
+      </section>
+
+      {/* Workshop & Quality Assurance Section */}
+      <section className="workshop-section" id="workshop">
+        <div className="workshop-inner">
+          <div className="workshop-header">
+            <span className="eyebrow">МАСТЕРСКАЯ MAESTRO</span>
+            <h2>Каждая гитара проходит 3 этапа доводки мастером</h2>
+            <p className="workshop-subtitle">
+              Мы не отправляем запечатанные фабричные коробки вслепую. Инструмент достается, проверяется и отстраивается вручную перед отправкой.
+            </p>
+          </div>
+
+          <div className="workshop-steps-grid">
+            <div className="workshop-step-card">
+              <div className="workshop-step-num">01</div>
+              <div className="workshop-step-icon">📐</div>
+              <h3>Отстройка анкера и высоты струн</h3>
+              <p>Выставляем минимальный зазор над ладами (1.5–2 мм), чтобы аккорды зажимались легко и пальцы не болели даже у новичка.</p>
+            </div>
+
+            <div className="workshop-step-card">
+              <div className="workshop-step-num">02</div>
+              <div className="workshop-step-icon">✨</div>
+              <h3>Шлифовка и торцевание ладов</h3>
+              <p>Обрабатываем края металлического ладового профиля. Рука скользит по грифу идеально гладко, без микроцарапин и зацепов.</p>
+            </div>
+
+            <div className="workshop-step-card">
+              <div className="workshop-step-num">03</div>
+              <div className="workshop-step-icon">🎛️</div>
+              <h3>Калибровка мензуры и электроники</h3>
+              <p>Проверяем точность строя по всем ладам от 1 до 24, тестируем колки, звукосниматели и потенциометры без фона и шумов.</p>
+            </div>
+          </div>
+
+          <div className="workshop-cta-card">
+            <div className="workshop-cta-copy">
+              <span className="live-video-badge">🎥 Видео перед отправкой</span>
+              <h3>Хотите услышать звук конкретного инструмента?</h3>
+              <p>Напишите мастеру в WhatsApp — запишем персональное видео со звуком именно вашей гитары перед упаковкой!</p>
+            </div>
+            <a
+              className="workshop-wa-button"
+              href="https://wa.me/77775055788?text=%D0%97%D0%B4%D1%80%D0%B0%D0%B2%D1%81%D1%82%D0%B2%D1%83%D0%B9%D1%82%D0%B5!%20%D0%A5%D0%BE%D1%87%D1%83%20%D0%BF%D0%BE%D1%81%D0%BC%D0%BE%D1%82%D1%80%D0%B5%D1%82%D1%8C%20%D0%B8%20%D0%BF%D0%BE%D1%81%D0%BB%D1%83%D1%88%D0%B0%D1%82%D1%8C%20%D0%B3%D0%B8%D1%82%D0%B0%D1%80%D1%83%20%D0%BF%D0%B5%D1%80%D0%B5%D0%B4%20%D0%BF%D0%BE%D0%BA%D1%83%D0%BF%D0%BA%D0%BE%D0%B9"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <span>💬 Написать мастеру в WhatsApp</span>
+            </a>
+          </div>
         </div>
       </section>
 

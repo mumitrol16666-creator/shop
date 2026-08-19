@@ -14824,6 +14824,95 @@ function Storefront({
         ] })
       ] }) })
     ] }),
+    /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("section", { className: "scenarios-section", "aria-label": "\u0411\u044B\u0441\u0442\u0440\u044B\u0439 \u043F\u043E\u0434\u0431\u043E\u0440 \u0438\u043D\u0441\u0442\u0440\u0443\u043C\u0435\u043D\u0442\u0430", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "section-head", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "eyebrow", children: "\u0411\u042B\u0421\u0422\u0420\u042B\u0419 \u041F\u041E\u0414\u0411\u041E\u0420" }),
+        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("h2", { children: "\u0414\u043B\u044F \u043A\u043E\u0433\u043E \u0432\u044B \u0432\u044B\u0431\u0438\u0440\u0430\u0435\u0442\u0435 \u0438\u043D\u0441\u0442\u0440\u0443\u043C\u0435\u043D\u0442?" }),
+        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "scenarios-lead", children: "\u041D\u0430\u0436\u043C\u0438\u0442\u0435 \u043F\u043E\u0434\u0445\u043E\u0434\u044F\u0449\u0438\u0439 \u0441\u0446\u0435\u043D\u0430\u0440\u0438\u0439 \u2014 \u043C\u044B \u043F\u043E\u043A\u0430\u0436\u0435\u043C \u043B\u0443\u0447\u0448\u0438\u0435 \u043C\u043E\u0434\u0435\u043B\u0438 \u0441 \u043A\u0443\u0440\u0441\u043E\u043C \u0432 \u043A\u043E\u043C\u043F\u043B\u0435\u043A\u0442\u0435" })
+      ] }),
+      /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "scenarios-grid", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)(
+          "div",
+          {
+            className: "scenario-card",
+            onClick: () => {
+              chooseCategory("\u0410\u043A\u0443\u0441\u0442\u0438\u0447\u0435\u0441\u043A\u0438\u0435 \u0433\u0438\u0442\u0430\u0440\u044B");
+              const el = document.getElementById("catalog");
+              if (el) el.scrollIntoView({ behavior: "smooth" });
+            },
+            role: "button",
+            tabIndex: 0,
+            children: [
+              /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("div", { className: "scenario-icon-wrap", style: { background: "rgba(245, 158, 11, 0.12)" }, children: /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { className: "scenario-emoji", children: "\u{1F3AF}" }) }),
+              /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("div", { className: "scenario-badge", children: "\u0425\u0438\u0442 \u0434\u043B\u044F \u0441\u0442\u0430\u0440\u0442\u0430" }),
+              /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("h3", { children: "\u0414\u043B\u044F \u043D\u043E\u0432\u0438\u0447\u043A\u0430 / \u0421 \u043D\u0443\u043B\u044F" }),
+              /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { children: "\u041C\u044F\u0433\u043A\u0438\u0435 \u0441\u0442\u0440\u0443\u043D\u044B, \u043D\u0438\u0437\u043A\u0430\u044F \u043F\u043E\u0441\u0430\u0434\u043A\u0430 \u0434\u043B\u044F \u043B\u0435\u0433\u043A\u0438\u0445 \u0430\u043A\u043A\u043E\u0440\u0434\u043E\u0432 + \u0432\u0438\u0434\u0435\u043E\u043A\u0443\u0440\u0441 \xAB\u041F\u0435\u0440\u0432\u0430\u044F \u043F\u0435\u0441\u043D\u044F \u0437\u0430 7 \u0434\u043D\u0435\u0439\xBB \u0432 \u043F\u043E\u0434\u0430\u0440\u043E\u043A." }),
+              /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { className: "scenario-link", children: "\u0421\u043C\u043E\u0442\u0440\u0435\u0442\u044C \u0432\u0430\u0440\u0438\u0430\u043D\u0442\u044B \u2192" })
+            ]
+          }
+        ),
+        /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)(
+          "div",
+          {
+            className: "scenario-card",
+            onClick: () => {
+              chooseCategory("\u042D\u043B\u0435\u043A\u0442\u0440\u043E\u0433\u0438\u0442\u0430\u0440\u044B");
+              const el = document.getElementById("catalog");
+              if (el) el.scrollIntoView({ behavior: "smooth" });
+            },
+            role: "button",
+            tabIndex: 0,
+            children: [
+              /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("div", { className: "scenario-icon-wrap", style: { background: "rgba(59, 130, 246, 0.12)" }, children: /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { className: "scenario-emoji", children: "\u26A1" }) }),
+              /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("div", { className: "scenario-badge blue", children: "\u0414\u0440\u0430\u0439\u0432 \u0438 \u0441\u043E\u043B\u043E" }),
+              /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("h3", { children: "\u0425\u043E\u0447\u0443 \u0440\u043E\u043A \u0438 \u0434\u0440\u0430\u0439\u0432" }),
+              /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { children: "\u042D\u043B\u0435\u043A\u0442\u0440\u043E\u0433\u0438\u0442\u0430\u0440\u044B ST-20 \u0438 Gradient \u0441 \u043C\u043E\u0449\u043D\u044B\u043C\u0438 \u0437\u0432\u0443\u043A\u043E\u0441\u043D\u0438\u043C\u0430\u0442\u0435\u043B\u044F\u043C\u0438 + \u043E\u043D\u043B\u0430\u0439\u043D-\u043A\u0443\u0440\u0441 \u043F\u043E \u0441\u043E\u043B\u043E \u0438 \u0440\u0438\u0444\u0444\u0430\u043C." }),
+              /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { className: "scenario-link", children: "\u0421\u043C\u043E\u0442\u0440\u0435\u0442\u044C \u044D\u043B\u0435\u043A\u0442\u0440\u043E\u0433\u0438\u0442\u0430\u0440\u044B \u2192" })
+            ]
+          }
+        ),
+        /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)(
+          "div",
+          {
+            className: "scenario-card",
+            onClick: () => {
+              chooseCategory("\u0423\u043A\u0443\u043B\u0435\u043B\u0435");
+              const el = document.getElementById("catalog");
+              if (el) el.scrollIntoView({ behavior: "smooth" });
+            },
+            role: "button",
+            tabIndex: 0,
+            children: [
+              /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("div", { className: "scenario-icon-wrap", style: { background: "rgba(236, 72, 153, 0.12)" }, children: /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { className: "scenario-emoji", children: "\u{1F380}" }) }),
+              /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("div", { className: "scenario-badge pink", children: "\u0414\u043B\u044F \u0434\u0435\u0442\u0435\u0439 \u0438 \u0441\u0435\u043C\u044C\u0438" }),
+              /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("h3", { children: "\u0412 \u043F\u043E\u0434\u0430\u0440\u043E\u043A \u0440\u0435\u0431\u0435\u043D\u043A\u0443" }),
+              /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { children: "\u042F\u0440\u043A\u0438\u0435 \u0443\u043A\u0443\u043B\u0435\u043B\u0435 \u0438 \u043A\u043B\u0430\u0441\u0441\u0438\u043A\u0430 \u0441 \u043D\u0435\u0439\u043B\u043E\u043D\u043E\u0432\u044B\u043C\u0438 \u0441\u0442\u0440\u0443\u043D\u0430\u043C\u0438: \u043F\u0430\u043B\u044C\u0446\u044B \u043D\u0435 \u0431\u043E\u043B\u044F\u0442, \u0443\u0447\u0438\u0442\u044C\u0441\u044F \u043B\u0435\u0433\u043A\u043E \u0438 \u0432\u0435\u0441\u0435\u043B\u043E." }),
+              /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { className: "scenario-link", children: "\u0421\u043C\u043E\u0442\u0440\u0435\u0442\u044C \u0443\u043A\u0443\u043B\u0435\u043B\u0435 \u2192" })
+            ]
+          }
+        ),
+        /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)(
+          "div",
+          {
+            className: "scenario-card",
+            onClick: () => {
+              setQuickFilter("sale");
+              const el = document.getElementById("catalog");
+              if (el) el.scrollIntoView({ behavior: "smooth" });
+            },
+            role: "button",
+            tabIndex: 0,
+            children: [
+              /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("div", { className: "scenario-icon-wrap", style: { background: "rgba(16, 185, 129, 0.12)" }, children: /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { className: "scenario-emoji", children: "\u{1F525}" }) }),
+              /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("div", { className: "scenario-badge green", children: "\u0412\u044B\u0433\u043E\u0434\u0430 \u0434\u043E 30%" }),
+              /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("h3", { children: "\u041F\u043E \u0430\u043A\u0446\u0438\u0438 / Sale" }),
+              /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { children: "\u0421\u043F\u0435\u0446\u0438\u0430\u043B\u044C\u043D\u044B\u0435 \u043F\u0440\u0435\u0434\u043B\u043E\u0436\u0435\u043D\u0438\u044F \u0441\u0435\u0437\u043E\u043D\u0430: \u043C\u0430\u043A\u0441\u0438\u043C\u0430\u043B\u044C\u043D\u044B\u0435 \u0441\u043A\u0438\u0434\u043A\u0438 \u043D\u0430 \u043A\u043E\u043C\u043F\u043B\u0435\u043A\u0442\u044B \u0441 \u043F\u043E\u0434\u0430\u0440\u043A\u0430\u043C\u0438 \u0438 \u0447\u0435\u0445\u043B\u0430\u043C\u0438." }),
+              /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { className: "scenario-link", children: "\u041E\u0442\u043A\u0440\u044B\u0442\u044C \u0430\u043A\u0446\u0438\u0438 \u2192" })
+            ]
+          }
+        )
+      ] })
+    ] }),
     /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("section", { className: "trust-strip", children: [
       /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "trust-item", children: [
         /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("strong", { children: "\u041F\u0440\u043E\u0432\u0435\u0440\u043A\u0430 \u043A\u0430\u0436\u0434\u043E\u0433\u043E \u0438\u043D\u0441\u0442\u0440\u0443\u043C\u0435\u043D\u0442\u0430" }),
@@ -15111,6 +15200,50 @@ function Storefront({
         ] }, product.id);
       }) })
     ] }),
+    /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("section", { className: "workshop-section", id: "workshop", children: /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "workshop-inner", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "workshop-header", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { className: "eyebrow", children: "\u041C\u0410\u0421\u0422\u0415\u0420\u0421\u041A\u0410\u042F MAESTRO" }),
+        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("h2", { children: "\u041A\u0430\u0436\u0434\u0430\u044F \u0433\u0438\u0442\u0430\u0440\u0430 \u043F\u0440\u043E\u0445\u043E\u0434\u0438\u0442 3 \u044D\u0442\u0430\u043F\u0430 \u0434\u043E\u0432\u043E\u0434\u043A\u0438 \u043C\u0430\u0441\u0442\u0435\u0440\u043E\u043C" }),
+        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "workshop-subtitle", children: "\u041C\u044B \u043D\u0435 \u043E\u0442\u043F\u0440\u0430\u0432\u043B\u044F\u0435\u043C \u0437\u0430\u043F\u0435\u0447\u0430\u0442\u0430\u043D\u043D\u044B\u0435 \u0444\u0430\u0431\u0440\u0438\u0447\u043D\u044B\u0435 \u043A\u043E\u0440\u043E\u0431\u043A\u0438 \u0432\u0441\u043B\u0435\u043F\u0443\u044E. \u0418\u043D\u0441\u0442\u0440\u0443\u043C\u0435\u043D\u0442 \u0434\u043E\u0441\u0442\u0430\u0435\u0442\u0441\u044F, \u043F\u0440\u043E\u0432\u0435\u0440\u044F\u0435\u0442\u0441\u044F \u0438 \u043E\u0442\u0441\u0442\u0440\u0430\u0438\u0432\u0430\u0435\u0442\u0441\u044F \u0432\u0440\u0443\u0447\u043D\u0443\u044E \u043F\u0435\u0440\u0435\u0434 \u043E\u0442\u043F\u0440\u0430\u0432\u043A\u043E\u0439." })
+      ] }),
+      /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "workshop-steps-grid", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "workshop-step-card", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("div", { className: "workshop-step-num", children: "01" }),
+          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("div", { className: "workshop-step-icon", children: "\u{1F4D0}" }),
+          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("h3", { children: "\u041E\u0442\u0441\u0442\u0440\u043E\u0439\u043A\u0430 \u0430\u043D\u043A\u0435\u0440\u0430 \u0438 \u0432\u044B\u0441\u043E\u0442\u044B \u0441\u0442\u0440\u0443\u043D" }),
+          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { children: "\u0412\u044B\u0441\u0442\u0430\u0432\u043B\u044F\u0435\u043C \u043C\u0438\u043D\u0438\u043C\u0430\u043B\u044C\u043D\u044B\u0439 \u0437\u0430\u0437\u043E\u0440 \u043D\u0430\u0434 \u043B\u0430\u0434\u0430\u043C\u0438 (1.5\u20132 \u043C\u043C), \u0447\u0442\u043E\u0431\u044B \u0430\u043A\u043A\u043E\u0440\u0434\u044B \u0437\u0430\u0436\u0438\u043C\u0430\u043B\u0438\u0441\u044C \u043B\u0435\u0433\u043A\u043E \u0438 \u043F\u0430\u043B\u044C\u0446\u044B \u043D\u0435 \u0431\u043E\u043B\u0435\u043B\u0438 \u0434\u0430\u0436\u0435 \u0443 \u043D\u043E\u0432\u0438\u0447\u043A\u0430." })
+        ] }),
+        /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "workshop-step-card", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("div", { className: "workshop-step-num", children: "02" }),
+          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("div", { className: "workshop-step-icon", children: "\u2728" }),
+          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("h3", { children: "\u0428\u043B\u0438\u0444\u043E\u0432\u043A\u0430 \u0438 \u0442\u043E\u0440\u0446\u0435\u0432\u0430\u043D\u0438\u0435 \u043B\u0430\u0434\u043E\u0432" }),
+          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { children: "\u041E\u0431\u0440\u0430\u0431\u0430\u0442\u044B\u0432\u0430\u0435\u043C \u043A\u0440\u0430\u044F \u043C\u0435\u0442\u0430\u043B\u043B\u0438\u0447\u0435\u0441\u043A\u043E\u0433\u043E \u043B\u0430\u0434\u043E\u0432\u043E\u0433\u043E \u043F\u0440\u043E\u0444\u0438\u043B\u044F. \u0420\u0443\u043A\u0430 \u0441\u043A\u043E\u043B\u044C\u0437\u0438\u0442 \u043F\u043E \u0433\u0440\u0438\u0444\u0443 \u0438\u0434\u0435\u0430\u043B\u044C\u043D\u043E \u0433\u043B\u0430\u0434\u043A\u043E, \u0431\u0435\u0437 \u043C\u0438\u043A\u0440\u043E\u0446\u0430\u0440\u0430\u043F\u0438\u043D \u0438 \u0437\u0430\u0446\u0435\u043F\u043E\u0432." })
+        ] }),
+        /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "workshop-step-card", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("div", { className: "workshop-step-num", children: "03" }),
+          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("div", { className: "workshop-step-icon", children: "\u{1F39B}\uFE0F" }),
+          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("h3", { children: "\u041A\u0430\u043B\u0438\u0431\u0440\u043E\u0432\u043A\u0430 \u043C\u0435\u043D\u0437\u0443\u0440\u044B \u0438 \u044D\u043B\u0435\u043A\u0442\u0440\u043E\u043D\u0438\u043A\u0438" }),
+          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { children: "\u041F\u0440\u043E\u0432\u0435\u0440\u044F\u0435\u043C \u0442\u043E\u0447\u043D\u043E\u0441\u0442\u044C \u0441\u0442\u0440\u043E\u044F \u043F\u043E \u0432\u0441\u0435\u043C \u043B\u0430\u0434\u0430\u043C \u043E\u0442 1 \u0434\u043E 24, \u0442\u0435\u0441\u0442\u0438\u0440\u0443\u0435\u043C \u043A\u043E\u043B\u043A\u0438, \u0437\u0432\u0443\u043A\u043E\u0441\u043D\u0438\u043C\u0430\u0442\u0435\u043B\u0438 \u0438 \u043F\u043E\u0442\u0435\u043D\u0446\u0438\u043E\u043C\u0435\u0442\u0440\u044B \u0431\u0435\u0437 \u0444\u043E\u043D\u0430 \u0438 \u0448\u0443\u043C\u043E\u0432." })
+        ] })
+      ] }),
+      /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "workshop-cta-card", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "workshop-cta-copy", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { className: "live-video-badge", children: "\u{1F3A5} \u0412\u0438\u0434\u0435\u043E \u043F\u0435\u0440\u0435\u0434 \u043E\u0442\u043F\u0440\u0430\u0432\u043A\u043E\u0439" }),
+          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("h3", { children: "\u0425\u043E\u0442\u0438\u0442\u0435 \u0443\u0441\u043B\u044B\u0448\u0430\u0442\u044C \u0437\u0432\u0443\u043A \u043A\u043E\u043D\u043A\u0440\u0435\u0442\u043D\u043E\u0433\u043E \u0438\u043D\u0441\u0442\u0440\u0443\u043C\u0435\u043D\u0442\u0430?" }),
+          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { children: "\u041D\u0430\u043F\u0438\u0448\u0438\u0442\u0435 \u043C\u0430\u0441\u0442\u0435\u0440\u0443 \u0432 WhatsApp \u2014 \u0437\u0430\u043F\u0438\u0448\u0435\u043C \u043F\u0435\u0440\u0441\u043E\u043D\u0430\u043B\u044C\u043D\u043E\u0435 \u0432\u0438\u0434\u0435\u043E \u0441\u043E \u0437\u0432\u0443\u043A\u043E\u043C \u0438\u043C\u0435\u043D\u043D\u043E \u0432\u0430\u0448\u0435\u0439 \u0433\u0438\u0442\u0430\u0440\u044B \u043F\u0435\u0440\u0435\u0434 \u0443\u043F\u0430\u043A\u043E\u0432\u043A\u043E\u0439!" })
+        ] }),
+        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(
+          "a",
+          {
+            className: "workshop-wa-button",
+            href: "https://wa.me/77775055788?text=%D0%97%D0%B4%D1%80%D0%B0%D0%B2%D1%81%D1%82%D0%B2%D1%83%D0%B9%D1%82%D0%B5!%20%D0%A5%D0%BE%D1%87%D1%83%20%D0%BF%D0%BE%D1%81%D0%BC%D0%BE%D1%82%D1%80%D0%B5%D1%82%D1%8C%20%D0%B8%20%D0%BF%D0%BE%D1%81%D0%BB%D1%83%D1%88%D0%B0%D1%82%D1%8C%20%D0%B3%D0%B8%D1%82%D0%B0%D1%80%D1%83%20%D0%BF%D0%B5%D1%80%D0%B5%D0%B4%20%D0%BF%D0%BE%D0%BA%D1%83%D0%BF%D0%BA%D0%BE%D0%B9",
+            target: "_blank",
+            rel: "noopener noreferrer",
+            children: /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { children: "\u{1F4AC} \u041D\u0430\u043F\u0438\u0441\u0430\u0442\u044C \u043C\u0430\u0441\u0442\u0435\u0440\u0443 \u0432 WhatsApp" })
+          }
+        )
+      ] })
+    ] }) }),
     /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("section", { className: "delivery-section", id: "delivery", children: [
       /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("div", { className: "section-head", children: /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { children: [
         /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "eyebrow", children: "\u0421\u0415\u0420\u0412\u0418\u0421" }),
