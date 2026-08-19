@@ -248,12 +248,12 @@ button {
    2. HERO SECTION
    ========================================================================== */
 .hero {
-  min-height: 580px;
+  min-height: auto;
   display: grid;
   grid-template-columns: 1.15fr 0.85fr;
   align-items: center;
-  gap: 50px;
-  padding: 60px clamp(24px, 5vw, 80px);
+  gap: 36px;
+  padding: 44px clamp(20px, 4vw, 60px) 32px;
   background: linear-gradient(135deg, #fffdfa 0%, #f4eee2 100%);
   position: relative;
   overflow: hidden;

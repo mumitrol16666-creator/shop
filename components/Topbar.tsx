@@ -57,9 +57,9 @@ export function Topbar({
           🎓 Обучение & Курсы
         </button>
 
-        <a href="#picker" onClick={() => setView?.("store")}>Подбор</a>
-        <a href="#delivery" onClick={() => setView?.("store")}>Доставка</a>
-        <Link href="/admin/pricing" className="nav-admin-link">🔒 Админка</Link>
+        <a href="#pick" onClick={() => setView?.("store")}>🎯 Подбор</a>
+        <a href="#reviews" onClick={() => setView?.("store")}>⭐ Отзывы</a>
+        <a href="#faq" onClick={() => setView?.("store")}>❓ FAQ</a>
       </nav>
 
       <label className="search-box">
@@ -98,24 +98,38 @@ export function Topbar({
         </button>
       </div>
 
+      {/* Mobile Fast Navigation Strip */}
       <div className="mobile-nav-strip">
         <button
           type="button"
-          className={`mobile-tab-btn ${view === "store" ? "active" : ""}`}
-          onClick={() => setView?.("store")}
+          className={`mobile-nav-btn ${view === "store" ? "active" : ""}`}
+          onClick={() => {
+            setView?.("store");
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          }}
         >
-          🎸 Каталог
+          <span>🎸</span>
+          <small>Каталог</small>
         </button>
         <button
           type="button"
-          className={`mobile-tab-btn academy ${view === "academy" ? "active" : ""}`}
-          onClick={() => setView?.("academy")}
+          className={`mobile-nav-btn ${view === "academy" ? "active" : ""}`}
+          onClick={() => {
+            setView?.("academy");
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          }}
         >
-          🎓 Обучение & Курсы
+          <span>🎓</span>
+          <small>Обучение</small>
         </button>
-        <Link href="/admin/pricing" className="mobile-tab-btn admin">
-          🔒 Админка
-        </Link>
+        <button
+          type="button"
+          className="mobile-nav-btn"
+          onClick={() => setCartOpen(true)}
+        >
+          <span>🛒</span>
+          <small>Корзина ({cartCount})</small>
+        </button>
       </div>
     </header>
   );

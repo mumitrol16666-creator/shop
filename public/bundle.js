@@ -15496,9 +15496,9 @@ function Topbar({
           children: "\u{1F393} \u041E\u0431\u0443\u0447\u0435\u043D\u0438\u0435 & \u041A\u0443\u0440\u0441\u044B"
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("a", { href: "#picker", onClick: () => setView?.("store"), children: "\u041F\u043E\u0434\u0431\u043E\u0440" }),
-      /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("a", { href: "#delivery", onClick: () => setView?.("store"), children: "\u0414\u043E\u0441\u0442\u0430\u0432\u043A\u0430" }),
-      /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(Link, { href: "/admin/pricing", className: "nav-admin-link", children: "\u{1F512} \u0410\u0434\u043C\u0438\u043D\u043A\u0430" })
+      /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("a", { href: "#pick", onClick: () => setView?.("store"), children: "\u{1F3AF} \u041F\u043E\u0434\u0431\u043E\u0440" }),
+      /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("a", { href: "#reviews", onClick: () => setView?.("store"), children: "\u2B50 \u041E\u0442\u0437\u044B\u0432\u044B" }),
+      /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("a", { href: "#faq", onClick: () => setView?.("store"), children: "\u2753 FAQ" })
     ] }),
     /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("label", { className: "search-box", children: [
       /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("span", { className: "search-icon", children: "\u{1F50D}" }),
@@ -15545,25 +15545,52 @@ function Topbar({
       )
     ] }),
     /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("div", { className: "mobile-nav-strip", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)(
         "button",
         {
           type: "button",
-          className: `mobile-tab-btn ${view === "store" ? "active" : ""}`,
-          onClick: () => setView?.("store"),
-          children: "\u{1F3B8} \u041A\u0430\u0442\u0430\u043B\u043E\u0433"
+          className: `mobile-nav-btn ${view === "store" ? "active" : ""}`,
+          onClick: () => {
+            setView?.("store");
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          },
+          children: [
+            /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("span", { children: "\u{1F3B8}" }),
+            /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("small", { children: "\u041A\u0430\u0442\u0430\u043B\u043E\u0433" })
+          ]
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)(
         "button",
         {
           type: "button",
-          className: `mobile-tab-btn academy ${view === "academy" ? "active" : ""}`,
-          onClick: () => setView?.("academy"),
-          children: "\u{1F393} \u041E\u0431\u0443\u0447\u0435\u043D\u0438\u0435 & \u041A\u0443\u0440\u0441\u044B"
+          className: `mobile-nav-btn ${view === "academy" ? "active" : ""}`,
+          onClick: () => {
+            setView?.("academy");
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          },
+          children: [
+            /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("span", { children: "\u{1F393}" }),
+            /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("small", { children: "\u041E\u0431\u0443\u0447\u0435\u043D\u0438\u0435" })
+          ]
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(Link, { href: "/admin/pricing", className: "mobile-tab-btn admin", children: "\u{1F512} \u0410\u0434\u043C\u0438\u043D\u043A\u0430" })
+      /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)(
+        "button",
+        {
+          type: "button",
+          className: "mobile-nav-btn",
+          onClick: () => setCartOpen(true),
+          children: [
+            /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("span", { children: "\u{1F6D2}" }),
+            /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("small", { children: [
+              "\u041A\u043E\u0440\u0437\u0438\u043D\u0430 (",
+              cartCount,
+              ")"
+            ] })
+          ]
+        }
+      )
     ] })
   ] });
 }
