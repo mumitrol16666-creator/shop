@@ -4,7 +4,6 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import { COURSES, type Course, type CourseLesson } from "../lib/courses-data";
 import { installment, money } from "../lib/catalog-data";
-import { playInstrumentPreview } from "../lib/sound-synth";
 
 type AcademyViewProps = {
   onBackToStore: () => void;
@@ -264,14 +263,19 @@ export function AcademyView({ onBackToStore }: AcademyViewProps) {
                 <div className="active-lesson-view">
                   <div className="video-player-mock">
                     <div className="video-overlay">
-                      <button
-                        type="button"
-                        className="play-big-btn"
-                        onClick={() => playInstrumentPreview("acoustic-strum")}
-                        title="Воспроизвести урок"
-                      >
-                        ▶
-                      </button>
+                      {activeLesson.videoUrl ? (
+                        <a
+                          href={activeLesson.videoUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="play-big-btn"
+                          title="Смотреть видео урока"
+                        >
+                          ▶
+                        </a>
+                      ) : (
+                        <div className="play-big-btn">▶</div>
+                      )}
                       <span className="video-title-overlay">{activeLesson.title}</span>
                       <span className="video-duration-badge">{activeLesson.duration} · 4K UltraHD</span>
                     </div>
@@ -311,22 +315,16 @@ export function AcademyView({ onBackToStore }: AcademyViewProps) {
                     </button>
                   </div>
 
-                  {/* Chord diagrams interactive box */}
+                  {/* Chord diagrams box */}
                   {activeLesson.chords && activeLesson.chords.length > 0 && (
                     <div className="interactive-chords-box">
-                      <strong>🎸 Аккорды и аппликатуры урока (нажмите, чтобы послушать):</strong>
+                      <strong>🎸 Аккорды и аппликатуры урока:</strong>
                       <div className="chords-buttons-row">
                         {activeLesson.chords.map((chord) => (
-                          <button
-                            key={chord}
-                            type="button"
-                            className="chord-sound-pill"
-                            onClick={() => playInstrumentPreview("acoustic-strum")}
-                            title={`Послушать звучание ${chord}`}
-                          >
-                            <span>🔊</span>
+                          <div key={chord} className="chord-sound-pill">
+                            <span>🎼</span>
                             <strong>{chord}</strong>
-                          </button>
+                          </div>
                         ))}
                       </div>
                     </div>

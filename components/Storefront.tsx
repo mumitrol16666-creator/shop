@@ -11,7 +11,7 @@ import {
   variantsFor,
 } from "../lib/catalog-data";
 import { resolveAttachedCourse } from "../lib/courses-data";
-import { playInstrumentPreview, type SoundType } from "../lib/sound-synth";
+import { playProductAudio, stopProductAudio } from "../lib/sound-synth";
 
 type StorefrontProps = {
   category: string;
@@ -67,14 +67,14 @@ export function Storefront({
 
   const handleCardSoundPlay = (e: React.MouseEvent, product: Product) => {
     e.stopPropagation();
-    if (playingId === product.id) return;
+    if (!product.audioUrl) return;
+    if (playingId === product.id) {
+      stopProductAudio();
+      setPlayingId(null);
+      return;
+    }
     setPlayingId(product.id);
-    let soundType: SoundType = "acoustic-strum";
-    if (product.category.includes("Электро")) soundType = "electric-clean";
-    else if (product.category.includes("Укулеле")) soundType = "ukulele-chord";
-    else if (product.category.includes("Оборудование")) soundType = "electric-crunch";
-
-    playInstrumentPreview(soundType, () => {
+    playProductAudio(product.audioUrl, () => {
       setPlayingId(null);
     });
   };
@@ -449,25 +449,27 @@ export function Storefront({
                     {product.badge && <span className="product-badge">{product.badge}</span>}
                     {attachedCourse && <span className="card-gift-tag">🎁 Курс в подарок</span>}
 
-                    {/* Quick Sound preview button with Soundwave equalizer */}
-                    <button
-                      type="button"
-                      className={`card-sound-pill ${isPlaying ? "playing" : ""}`}
-                      onClick={(e) => handleCardSoundPlay(e, product)}
-                      title={isPlaying ? "Воспроизведение..." : "Послушать звучание инструмента"}
-                    >
-                      {isPlaying ? (
-                        <span className="soundwave-equalizer" aria-hidden="true">
-                          <span className="sw-bar sw-1" />
-                          <span className="sw-bar sw-2" />
-                          <span className="sw-bar sw-3" />
-                          <span className="sw-bar sw-4" />
-                        </span>
-                      ) : (
-                        <span className="sound-icon">🔊</span>
-                      )}
-                      <small>{isPlaying ? "Звучит" : "Звук"}</small>
-                    </button>
+                    {/* Quick Sound preview button with Soundwave equalizer (Only shown if audioUrl is set) */}
+                    {product.audioUrl && (
+                      <button
+                        type="button"
+                        className={`card-sound-pill ${isPlaying ? "playing" : ""}`}
+                        onClick={(e) => handleCardSoundPlay(e, product)}
+                        title={isPlaying ? "Остановить" : "Послушать звучание инструмента"}
+                      >
+                        {isPlaying ? (
+                          <span className="soundwave-equalizer" aria-hidden="true">
+                            <span className="sw-bar sw-1" />
+                            <span className="sw-bar sw-2" />
+                            <span className="sw-bar sw-3" />
+                            <span className="sw-bar sw-4" />
+                          </span>
+                        ) : (
+                          <span className="sound-icon">🔊</span>
+                        )}
+                        <small>{isPlaying ? "Звучит" : "Звук"}</small>
+                      </button>
+                    )}
                   </div>
 
                   <div className="product-card-meta">

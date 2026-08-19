@@ -53,6 +53,7 @@ export type Product = {
   description: string;
   features: string[];
   attachedCourseId?: string;
+  audioUrl?: string;
   price?: number;
   originalPrice?: number;
   discountPercent?: number;

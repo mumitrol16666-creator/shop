@@ -4,7 +4,7 @@ import Image from "next/image";
 import { type Dispatch, type SetStateAction, useState } from "react";
 import { installment, money, type Product, type Variant, variantsFor } from "../lib/catalog-data";
 import { resolveAttachedCourse } from "../lib/courses-data";
-import { playInstrumentPreview, type SoundType } from "../lib/sound-synth";
+import { playProductAudio, stopProductAudio } from "../lib/sound-synth";
 
 type ProductModalProps = {
   selected: Product | null;
@@ -64,14 +64,14 @@ export function ProductModal({
   const savings = hasDiscount && originalPrice ? originalPrice - currentPrice : 0;
 
   const handlePlaySound = () => {
-    if (isPlayingSound) return;
+    if (!selected.audioUrl) return;
+    if (isPlayingSound) {
+      stopProductAudio();
+      setIsPlayingSound(false);
+      return;
+    }
     setIsPlayingSound(true);
-    let soundType: SoundType = "acoustic-strum";
-    if (selected.category.includes("Электро")) soundType = "electric-clean";
-    else if (selected.category.includes("Укулеле")) soundType = "ukulele-chord";
-    else if (selected.category.includes("Оборудование")) soundType = "electric-crunch";
-
-    playInstrumentPreview(soundType, () => {
+    playProductAudio(selected.audioUrl, () => {
       setIsPlayingSound(false);
     });
   };
@@ -91,20 +91,22 @@ export function ProductModal({
           />
           {hasDiscount && <span className="modal-discount-pill">АКЦИЯ -{discountPercent}%</span>}
 
-          <button
-            type="button"
-            className={`sound-preview-btn ${isPlayingSound ? "playing" : ""}`}
-            onClick={handlePlaySound}
-            title="Послушать демонстрацию звучания инструмента"
-          >
-            <span className="sound-icon">{isPlayingSound ? "🎵" : "🔊"}</span>
-            <span>{isPlayingSound ? "Звучит пример..." : "Послушать звучание"}</span>
-            {isPlayingSound && (
-              <span className="sound-wave-bars">
-                <i /><i /><i /><i />
-              </span>
-            )}
-          </button>
+          {selected.audioUrl && (
+            <button
+              type="button"
+              className={`sound-preview-btn ${isPlayingSound ? "playing" : ""}`}
+              onClick={handlePlaySound}
+              title={isPlayingSound ? "Остановить" : "Послушать звучание инструмента"}
+            >
+              <span className="sound-icon">{isPlayingSound ? "🎵" : "🔊"}</span>
+              <span>{isPlayingSound ? "Звучит пример..." : "Послушать звучание"}</span>
+              {isPlayingSound && (
+                <span className="sound-wave-bars">
+                  <i /><i /><i /><i />
+                </span>
+              )}
+            </button>
+          )}
         </div>
         <div className="modal-copy">
           <p className="eyebrow">{selected.category}</p>

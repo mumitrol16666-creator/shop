@@ -13327,127 +13327,6 @@ function buildWhatsAppOrderUrl(params) {
   return `https://wa.me/${cleanPhone}?text=${text}`;
 }
 
-// lib/sound-synth.ts
-var audioCtx = null;
-function getAudioContext() {
-  if (!audioCtx) {
-    const AudioContextClass = window.AudioContext || window.webkitAudioContext;
-    audioCtx = new AudioContextClass();
-  }
-  if (audioCtx.state === "suspended") {
-    audioCtx.resume();
-  }
-  return audioCtx;
-}
-function playInstrumentPreview(type, onFinish) {
-  try {
-    const ctx = getAudioContext();
-    const now = ctx.currentTime;
-    if (type === "electric-clean") {
-      const freqs = [164.81, 246.94, 329.63, 392, 493.88, 659.25];
-      freqs.forEach((freq, idx) => {
-        playPluck(ctx, freq, now + idx * 0.12, 1.8, "triangle", 0.35);
-      });
-      if (onFinish) setTimeout(onFinish, 2400);
-    } else if (type === "electric-crunch") {
-      const freqs = [110, 164.81, 220];
-      freqs.forEach((freq) => {
-        playDistortedPluck(ctx, freq, now, 1.6, 0.4);
-      });
-      setTimeout(() => {
-        const freqs2 = [130.81, 196, 261.63];
-        freqs2.forEach((freq) => {
-          playDistortedPluck(ctx, freq, now + 0.35, 1.8, 0.45);
-        });
-      }, 350);
-      if (onFinish) setTimeout(onFinish, 2600);
-    } else if (type === "acoustic-strum") {
-      const freqs = [98, 123.47, 146.83, 196, 246.94, 392];
-      freqs.forEach((freq, idx) => {
-        playPluck(ctx, freq, now + idx * 0.04, 2.2, "sawtooth", 0.28, true);
-      });
-      setTimeout(() => {
-        const cFreqs = [130.81, 164.81, 196, 261.63, 329.63];
-        cFreqs.forEach((freq, idx) => {
-          playPluck(ctx, freq, now + 0.6 + idx * 0.035, 2.2, "sawtooth", 0.28, true);
-        });
-      }, 600);
-      if (onFinish) setTimeout(onFinish, 2800);
-    } else if (type === "ukulele-chord") {
-      const freqs = [392, 261.63, 329.63, 440];
-      freqs.forEach((freq, idx) => {
-        playPluck(ctx, freq, now + idx * 0.03, 1.4, "triangle", 0.4);
-      });
-      setTimeout(() => {
-        const fFreqs = [349.23, 261.63, 329.63, 440];
-        fFreqs.forEach((freq, idx) => {
-          playPluck(ctx, freq, now + 0.45 + idx * 0.03, 1.4, "triangle", 0.4);
-        });
-      }, 450);
-      if (onFinish) setTimeout(onFinish, 2e3);
-    } else {
-      const freqs = [196, 246.94, 293.66, 392];
-      freqs.forEach((freq, idx) => {
-        playPluck(ctx, freq, now + idx * 0.08, 1.5, "triangle", 0.3);
-      });
-      if (onFinish) setTimeout(onFinish, 2e3);
-    }
-  } catch (err) {
-    console.warn("Audio playback not permitted yet:", err);
-    if (onFinish) onFinish();
-  }
-}
-function playPluck(ctx, freq, time, duration, waveType = "triangle", gainLevel = 0.3, isAcoustic = false) {
-  const osc = ctx.createOscillator();
-  const gain = ctx.createGain();
-  const filter = ctx.createBiquadFilter();
-  osc.type = waveType;
-  osc.frequency.setValueAtTime(freq, time);
-  filter.type = isAcoustic ? "bandpass" : "lowpass";
-  filter.frequency.setValueAtTime(isAcoustic ? freq * 2.2 : freq * 3.5, time);
-  filter.Q.setValueAtTime(isAcoustic ? 3 : 1.5, time);
-  gain.gain.setValueAtTime(1e-4, time);
-  gain.gain.exponentialRampToValueAtTime(gainLevel, time + 0.015);
-  gain.gain.exponentialRampToValueAtTime(1e-4, time + duration);
-  osc.connect(filter);
-  filter.connect(gain);
-  gain.connect(ctx.destination);
-  osc.start(time);
-  osc.stop(time + duration + 0.1);
-}
-function playDistortedPluck(ctx, freq, time, duration, gainLevel = 0.3) {
-  const osc = ctx.createOscillator();
-  const gain = ctx.createGain();
-  const shaper = ctx.createWaveShaper();
-  const filter = ctx.createBiquadFilter();
-  osc.type = "sawtooth";
-  osc.frequency.setValueAtTime(freq, time);
-  shaper.curve = makeDistortionCurve(30);
-  shaper.oversample = "4x";
-  filter.type = "lowpass";
-  filter.frequency.setValueAtTime(2200, time);
-  gain.gain.setValueAtTime(1e-4, time);
-  gain.gain.exponentialRampToValueAtTime(gainLevel, time + 0.02);
-  gain.gain.exponentialRampToValueAtTime(1e-4, time + duration);
-  osc.connect(shaper);
-  shaper.connect(filter);
-  filter.connect(gain);
-  gain.connect(ctx.destination);
-  osc.start(time);
-  osc.stop(time + duration + 0.1);
-}
-function makeDistortionCurve(amount) {
-  const k = typeof amount === "number" ? amount : 50;
-  const n_samples = 44100;
-  const curve = new Float32Array(n_samples);
-  const deg = Math.PI / 180;
-  for (let i = 0; i < n_samples; ++i) {
-    const x = i * 2 / n_samples - 1;
-    curve[i] = (3 + k) * x * 20 * deg / (Math.PI + k * Math.abs(x));
-  }
-  return curve;
-}
-
 // components/AcademyView.tsx
 var import_jsx_runtime2 = __toESM(require_jsx_runtime(), 1);
 function AcademyView({ onBackToStore }) {
@@ -13688,16 +13567,17 @@ function AcademyView({ onBackToStore }) {
       /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "cabinet-grid", children: [
         /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "lesson-player-panel", children: activeLesson ? /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "active-lesson-view", children: [
           /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "video-player-mock", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "video-overlay", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
-              "button",
+            activeLesson.videoUrl ? /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
+              "a",
               {
-                type: "button",
+                href: activeLesson.videoUrl,
+                target: "_blank",
+                rel: "noopener noreferrer",
                 className: "play-big-btn",
-                onClick: () => playInstrumentPreview("acoustic-strum"),
-                title: "\u0412\u043E\u0441\u043F\u0440\u043E\u0438\u0437\u0432\u0435\u0441\u0442\u0438 \u0443\u0440\u043E\u043A",
+                title: "\u0421\u043C\u043E\u0442\u0440\u0435\u0442\u044C \u0432\u0438\u0434\u0435\u043E \u0443\u0440\u043E\u043A\u0430",
                 children: "\u25B6"
               }
-            ),
+            ) : /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "play-big-btn", children: "\u25B6" }),
             /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "video-title-overlay", children: activeLesson.title }),
             /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { className: "video-duration-badge", children: [
               activeLesson.duration,
@@ -13740,21 +13620,11 @@ function AcademyView({ onBackToStore }) {
             )
           ] }),
           activeLesson.chords && activeLesson.chords.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "interactive-chords-box", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("strong", { children: "\u{1F3B8} \u0410\u043A\u043A\u043E\u0440\u0434\u044B \u0438 \u0430\u043F\u043F\u043B\u0438\u043A\u0430\u0442\u0443\u0440\u044B \u0443\u0440\u043E\u043A\u0430 (\u043D\u0430\u0436\u043C\u0438\u0442\u0435, \u0447\u0442\u043E\u0431\u044B \u043F\u043E\u0441\u043B\u0443\u0448\u0430\u0442\u044C):" }),
-            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "chords-buttons-row", children: activeLesson.chords.map((chord) => /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(
-              "button",
-              {
-                type: "button",
-                className: "chord-sound-pill",
-                onClick: () => playInstrumentPreview("acoustic-strum"),
-                title: `\u041F\u043E\u0441\u043B\u0443\u0448\u0430\u0442\u044C \u0437\u0432\u0443\u0447\u0430\u043D\u0438\u0435 ${chord}`,
-                children: [
-                  /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { children: "\u{1F50A}" }),
-                  /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("strong", { children: chord })
-                ]
-              },
-              chord
-            )) })
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("strong", { children: "\u{1F3B8} \u0410\u043A\u043A\u043E\u0440\u0434\u044B \u0438 \u0430\u043F\u043F\u043B\u0438\u043A\u0430\u0442\u0443\u0440\u044B \u0443\u0440\u043E\u043A\u0430:" }),
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "chords-buttons-row", children: activeLesson.chords.map((chord) => /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "chord-sound-pill", children: [
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { children: "\u{1F3BC}" }),
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("strong", { children: chord })
+            ] }, chord)) })
           ] }),
           activeLesson.tabSnippet && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "tab-snippet-box", children: [
             /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { children: "\u0422\u0430\u0431\u0443\u043B\u0430\u0442\u0443\u0440\u0430 / \u0410\u043F\u043F\u043B\u0438\u043A\u0430\u0442\u0443\u0440\u0430:" }),
@@ -14368,6 +14238,54 @@ function KaspiQrModal({
 
 // components/ProductModal.tsx
 var import_react4 = __toESM(require_react(), 1);
+
+// lib/sound-synth.ts
+var currentAudio = null;
+function playProductAudio(audioUrl, onFinish) {
+  if (!audioUrl || typeof window === "undefined") {
+    if (onFinish) onFinish();
+    return false;
+  }
+  try {
+    if (currentAudio) {
+      currentAudio.pause();
+      currentAudio.currentTime = 0;
+      currentAudio = null;
+    }
+    const audio = new Audio(audioUrl);
+    currentAudio = audio;
+    audio.onended = () => {
+      currentAudio = null;
+      if (onFinish) onFinish();
+    };
+    audio.onerror = () => {
+      currentAudio = null;
+      if (onFinish) onFinish();
+    };
+    const playPromise = audio.play();
+    if (playPromise !== void 0) {
+      playPromise.catch((err) => {
+        console.warn("Audio playback interrupted or blocked:", err);
+        currentAudio = null;
+        if (onFinish) onFinish();
+      });
+    }
+    return true;
+  } catch (err) {
+    console.error("Audio playback error:", err);
+    if (onFinish) onFinish();
+    return false;
+  }
+}
+function stopProductAudio() {
+  if (currentAudio) {
+    currentAudio.pause();
+    currentAudio.currentTime = 0;
+    currentAudio = null;
+  }
+}
+
+// components/ProductModal.tsx
 var import_jsx_runtime5 = __toESM(require_jsx_runtime(), 1);
 function ProductModal({
   selected,
@@ -14397,13 +14315,14 @@ function ProductModal({
   const originalPrice = selected.originalPrice || (currentPrice && discountPercent > 0 ? Math.round(currentPrice / (1 - discountPercent / 100)) : null);
   const savings = hasDiscount && originalPrice ? originalPrice - currentPrice : 0;
   const handlePlaySound = () => {
-    if (isPlayingSound) return;
+    if (!selected.audioUrl) return;
+    if (isPlayingSound) {
+      stopProductAudio();
+      setIsPlayingSound(false);
+      return;
+    }
     setIsPlayingSound(true);
-    let soundType = "acoustic-strum";
-    if (selected.category.includes("\u042D\u043B\u0435\u043A\u0442\u0440\u043E")) soundType = "electric-clean";
-    else if (selected.category.includes("\u0423\u043A\u0443\u043B\u0435\u043B\u0435")) soundType = "ukulele-chord";
-    else if (selected.category.includes("\u041E\u0431\u043E\u0440\u0443\u0434\u043E\u0432\u0430\u043D\u0438\u0435")) soundType = "electric-crunch";
-    playInstrumentPreview(soundType, () => {
+    playProductAudio(selected.audioUrl, () => {
       setIsPlayingSound(false);
     });
   };
@@ -14426,13 +14345,13 @@ function ProductModal({
         discountPercent,
         "%"
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)(
+      selected.audioUrl && /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)(
         "button",
         {
           type: "button",
           className: `sound-preview-btn ${isPlayingSound ? "playing" : ""}`,
           onClick: handlePlaySound,
-          title: "\u041F\u043E\u0441\u043B\u0443\u0448\u0430\u0442\u044C \u0434\u0435\u043C\u043E\u043D\u0441\u0442\u0440\u0430\u0446\u0438\u044E \u0437\u0432\u0443\u0447\u0430\u043D\u0438\u044F \u0438\u043D\u0441\u0442\u0440\u0443\u043C\u0435\u043D\u0442\u0430",
+          title: isPlayingSound ? "\u041E\u0441\u0442\u0430\u043D\u043E\u0432\u0438\u0442\u044C" : "\u041F\u043E\u0441\u043B\u0443\u0448\u0430\u0442\u044C \u0437\u0432\u0443\u0447\u0430\u043D\u0438\u0435 \u0438\u043D\u0441\u0442\u0440\u0443\u043C\u0435\u043D\u0442\u0430",
           children: [
             /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "sound-icon", children: isPlayingSound ? "\u{1F3B5}" : "\u{1F50A}" }),
             /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { children: isPlayingSound ? "\u0417\u0432\u0443\u0447\u0438\u0442 \u043F\u0440\u0438\u043C\u0435\u0440..." : "\u041F\u043E\u0441\u043B\u0443\u0448\u0430\u0442\u044C \u0437\u0432\u0443\u0447\u0430\u043D\u0438\u0435" }),
@@ -14774,13 +14693,14 @@ function Storefront({
   }, [filteredProducts, quickFilter, sortBy]);
   const handleCardSoundPlay = (e, product) => {
     e.stopPropagation();
-    if (playingId === product.id) return;
+    if (!product.audioUrl) return;
+    if (playingId === product.id) {
+      stopProductAudio();
+      setPlayingId(null);
+      return;
+    }
     setPlayingId(product.id);
-    let soundType = "acoustic-strum";
-    if (product.category.includes("\u042D\u043B\u0435\u043A\u0442\u0440\u043E")) soundType = "electric-clean";
-    else if (product.category.includes("\u0423\u043A\u0443\u043B\u0435\u043B\u0435")) soundType = "ukulele-chord";
-    else if (product.category.includes("\u041E\u0431\u043E\u0440\u0443\u0434\u043E\u0432\u0430\u043D\u0438\u0435")) soundType = "electric-crunch";
-    playInstrumentPreview(soundType, () => {
+    playProductAudio(product.audioUrl, () => {
       setPlayingId(null);
     });
   };
@@ -15143,13 +15063,13 @@ function Storefront({
                   ] }),
                   product.badge && /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { className: "product-badge", children: product.badge }),
                   attachedCourse && /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { className: "card-gift-tag", children: "\u{1F381} \u041A\u0443\u0440\u0441 \u0432 \u043F\u043E\u0434\u0430\u0440\u043E\u043A" }),
-                  /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)(
+                  product.audioUrl && /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)(
                     "button",
                     {
                       type: "button",
                       className: `card-sound-pill ${isPlaying ? "playing" : ""}`,
                       onClick: (e) => handleCardSoundPlay(e, product),
-                      title: isPlaying ? "\u0412\u043E\u0441\u043F\u0440\u043E\u0438\u0437\u0432\u0435\u0434\u0435\u043D\u0438\u0435..." : "\u041F\u043E\u0441\u043B\u0443\u0448\u0430\u0442\u044C \u0437\u0432\u0443\u0447\u0430\u043D\u0438\u0435 \u0438\u043D\u0441\u0442\u0440\u0443\u043C\u0435\u043D\u0442\u0430",
+                      title: isPlaying ? "\u041E\u0441\u0442\u0430\u043D\u043E\u0432\u0438\u0442\u044C" : "\u041F\u043E\u0441\u043B\u0443\u0448\u0430\u0442\u044C \u0437\u0432\u0443\u0447\u0430\u043D\u0438\u0435 \u0438\u043D\u0441\u0442\u0440\u0443\u043C\u0435\u043D\u0442\u0430",
                       children: [
                         isPlaying ? /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("span", { className: "soundwave-equalizer", "aria-hidden": "true", children: [
                           /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { className: "sw-bar sw-1" }),
@@ -17311,6 +17231,7 @@ function PurchaserView({
   );
   const [targetAudience, setTargetAudience] = (0, import_react12.useState)("\u0414\u043B\u044F \u043D\u0430\u0447\u0438\u043D\u0430\u044E\u0449\u0438\u0445");
   const [attachedCourseId, setAttachedCourseId] = (0, import_react12.useState)("auto");
+  const [internalAudioUrl, setInternalAudioUrl] = (0, import_react12.useState)("");
   const [modelVariants, setModelVariants] = (0, import_react12.useState)([
     {
       id: "var-1",
@@ -17451,6 +17372,7 @@ function PurchaserView({
     setFeaturesText(product.features.join(", "));
     setTargetAudience(product.badge ?? "");
     setAttachedCourseId(product.attachedCourseId || "auto");
+    setInternalAudioUrl(product.audioUrl || "");
     const prodHasDiscount = Boolean(
       product.isDiscountActive || product.discountPercent && product.discountPercent > 0 || product.originalPrice && product.price && product.originalPrice > product.price
     );
@@ -17583,6 +17505,7 @@ function PurchaserView({
           features: featuresText.split(",").map((feature) => feature.trim()).filter(Boolean),
           targetAudience,
           attachedCourseId: attachedCourseId === "none" ? "" : attachedCourseId,
+          audioUrl: internalAudioUrl.trim(),
           variant: {
             name: primaryVariant.name,
             sku: primaryVariant.sku,
@@ -17629,6 +17552,7 @@ function PurchaserView({
         variantItems: modelVariants,
         price: Math.round(retail),
         attachedCourseId: attachedCourseId === "none" ? void 0 : attachedCourseId,
+        audioUrl: internalAudioUrl.trim() || void 0,
         originalPrice: hasDiscount && calculation ? Math.round(calculation.originalPriceKzt) : void 0,
         discountPercent: hasDiscount ? discountPercent : void 0,
         isDiscountActive: hasDiscount,
@@ -18004,6 +17928,21 @@ function PurchaserView({
                 ]
               }
             )
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("label", { className: "full-width", children: [
+            "\u{1F3B5} \u0410\u0443\u0434\u0438\u043E\u0437\u0430\u043F\u0438\u0441\u044C \u0437\u0432\u0443\u0447\u0430\u043D\u0438\u044F \u0438\u043D\u0441\u0442\u0440\u0443\u043C\u0435\u043D\u0442\u0430 (MP3 / \u041F\u0440\u044F\u043C\u0430\u044F \u0441\u0441\u044B\u043B\u043A\u0430)",
+            /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
+              "input",
+              {
+                value: internalAudioUrl,
+                onChange: (e) => {
+                  setInternalAudioUrl(e.target.value);
+                  setIsDirty(true);
+                },
+                placeholder: "\u043D\u0430\u043F\u0440\u0438\u043C\u0435\u0440, /audio/st20_preview.mp3 \u0438\u043B\u0438 https://example.com/sound.mp3"
+              }
+            ),
+            /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("small", { style: { color: "var(--muted)", fontSize: "11.5px", marginTop: "4px", display: "block" }, children: "\u{1F4A1} \u0415\u0441\u043B\u0438 \u043F\u043E\u043B\u0435 \u043F\u0443\u0441\u0442\u043E\u0435, \u043A\u043D\u043E\u043F\u043A\u0430 \xAB\u041F\u043E\u0441\u043B\u0443\u0448\u0430\u0442\u044C\xBB \u043D\u0430 \u0432\u0438\u0442\u0440\u0438\u043D\u0435 \u0441\u043A\u0440\u044B\u0442\u0430. \u0417\u0432\u0443\u043A \u0432\u043E\u0441\u043F\u0440\u043E\u0438\u0437\u0432\u043E\u0434\u0438\u0442\u0441\u044F \u0442\u043E\u043B\u044C\u043A\u043E \u0435\u0441\u043B\u0438 \u0432\u044B \u0443\u043A\u0430\u0436\u0435\u0442\u0435 \u0441\u0441\u044B\u043B\u043A\u0443 \u043D\u0430 \u0440\u0435\u0430\u043B\u044C\u043D\u0443\u044E \u0437\u0430\u043F\u0438\u0441\u044C." })
           ] })
         ] }),
         /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { className: "card-subhead between", children: [

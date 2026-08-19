@@ -90,6 +90,7 @@ export function PurchaserView({
   );
   const [targetAudience, setTargetAudience] = useState("Для начинающих");
   const [attachedCourseId, setAttachedCourseId] = useState<string>("auto");
+  const [internalAudioUrl, setInternalAudioUrl] = useState<string>("");
 
   // Model variants list (Color & Variant Matrix)
   const [modelVariants, setModelVariants] = useState<Variant[]>([
@@ -242,6 +243,7 @@ export function PurchaserView({
     setFeaturesText(product.features.join(", "));
     setTargetAudience(product.badge ?? "");
     setAttachedCourseId(product.attachedCourseId || "auto");
+    setInternalAudioUrl(product.audioUrl || "");
 
     // Discount
     const prodHasDiscount = Boolean(
@@ -396,6 +398,7 @@ export function PurchaserView({
             .filter(Boolean),
           targetAudience,
           attachedCourseId: attachedCourseId === "none" ? "" : attachedCourseId,
+          audioUrl: internalAudioUrl.trim(),
           variant: {
             name: primaryVariant.name,
             sku: primaryVariant.sku,
@@ -444,6 +447,7 @@ export function PurchaserView({
         variantItems: modelVariants,
         price: Math.round(retail),
         attachedCourseId: attachedCourseId === "none" ? undefined : attachedCourseId,
+        audioUrl: internalAudioUrl.trim() || undefined,
         originalPrice: hasDiscount && calculation ? Math.round(calculation.originalPriceKzt) : undefined,
         discountPercent: hasDiscount ? discountPercent : undefined,
         isDiscountActive: hasDiscount,
@@ -805,6 +809,21 @@ export function PurchaserView({
                   </option>
                 ))}
               </select>
+            </label>
+
+            <label className="full-width">
+              🎵 Аудиозапись звучания инструмента (MP3 / Прямая ссылка)
+              <input
+                value={internalAudioUrl}
+                onChange={(e) => {
+                  setInternalAudioUrl(e.target.value);
+                  setIsDirty(true);
+                }}
+                placeholder="например, /audio/st20_preview.mp3 или https://example.com/sound.mp3"
+              />
+              <small style={{ color: "var(--muted)", fontSize: "11.5px", marginTop: "4px", display: "block" }}>
+                💡 Если поле пустое, кнопка «Послушать» на витрине скрыта. Звук воспроизводится только если вы укажете ссылку на реальную запись.
+              </small>
             </label>
           </div>
 
