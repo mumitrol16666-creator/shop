@@ -12977,6 +12977,26 @@ var COURSES = [
     lessons: []
   }
 ];
+function resolveAttachedCourse(product, coursesList = COURSES) {
+  if (product.attachedCourseId === "none" || product.attachedCourseId === "") {
+    return null;
+  }
+  if (product.attachedCourseId && product.attachedCourseId !== "auto") {
+    const found = coursesList.find((c) => c.id === product.attachedCourseId || c.slug === product.attachedCourseId);
+    if (found) return found;
+  }
+  const cat = (product.category || "").toLowerCase();
+  if (cat.includes("\u044D\u043B\u0435\u043A\u0442\u0440\u043E")) {
+    return coursesList.find((c) => c.instrument === "electric") || coursesList[1] || coursesList[0] || null;
+  }
+  if (cat.includes("\u0443\u043A\u0443\u043B\u0435\u043B\u0435")) {
+    return coursesList.find((c) => c.instrument === "ukulele") || coursesList[2] || coursesList[0] || null;
+  }
+  if (cat.includes("\u0430\u043A\u0443\u0441\u0442\u0438\u0447\u0435\u0441\u043A") || cat.includes("\u043A\u043B\u0430\u0441\u0441\u0438\u0447\u0435\u0441\u043A") || cat.includes("\u0433\u0438\u0442\u0430\u0440")) {
+    return coursesList.find((c) => c.instrument === "acoustic") || coursesList[0] || null;
+  }
+  return coursesList[0] || null;
+}
 
 // lib/catalog-data.ts
 var products = [
@@ -13284,7 +13304,8 @@ function buildWhatsAppOrderUrl(params) {
   }
   const itemsText = params.cartItems.map((item, idx) => {
     const itemPriceText = item.price > 0 ? ` \xD7 ${money(item.price)} \u20B8 = ${money(item.price * item.quantity)} \u20B8` : "";
-    return `${idx + 1}. ${item.name} (${item.variantName}, ${item.sku}) \u2014 ${item.quantity} \u0448\u0442.${itemPriceText}`;
+    const bundleSuffix = item.bundle === "pro_pack" ? " [\u{1F451} PRO \u041A\u043E\u043C\u043F\u043B\u0435\u043A\u0442: \u0447\u0435\u0445\u043E\u043B + \u0440\u0435\u043C\u0435\u043D\u044C + \u0433\u043E\u0434\u043E\u0432\u043E\u0439 \u043A\u0443\u0440\u0441]" : item.giftCourseTitle ? ` [\u{1F381} + \u041E\u043D\u043B\u0430\u0439\u043D-\u043A\u0443\u0440\u0441 \xAB${item.giftCourseTitle}\xBB]` : item.bundle === "gift_course" ? " [\u{1F381} + \u041E\u043D\u043B\u0430\u0439\u043D-\u043A\u0443\u0440\u0441 \u0432 \u043F\u043E\u0434\u0430\u0440\u043E\u043A]" : "";
+    return `${idx + 1}. ${item.name} (${item.variantName}, ${item.sku})${bundleSuffix} \u2014 ${item.quantity} \u0448\u0442.${itemPriceText}`;
   }).join("\n");
   const totalQty = params.cartItems.reduce((acc, i) => acc + i.quantity, 0);
   const installmentText = params.totalPrice > 0 ? `
@@ -13586,18 +13607,32 @@ function AcademyView({ onBackToStore }) {
                     ] })
                   ] })
                 ] }),
-                /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "course-actions", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
-                  "button",
-                  {
-                    type: "button",
-                    className: "primary-button small",
-                    onClick: (e) => {
-                      e.stopPropagation();
-                      handleOrderCourseInWhatsApp(course);
-                    },
-                    children: "\u041F\u043E\u043B\u0443\u0447\u0438\u0442\u044C \u043A\u0443\u0440\u0441"
-                  }
-                ) })
+                /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "course-actions", children: [
+                  course.courseUrl && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
+                    "a",
+                    {
+                      href: course.courseUrl,
+                      target: "_blank",
+                      rel: "noopener noreferrer",
+                      className: "outline-button small course-link-btn",
+                      onClick: (e) => e.stopPropagation(),
+                      title: "\u041F\u0435\u0440\u0435\u0439\u0442\u0438 \u043A \u043F\u043B\u0430\u0442\u0444\u043E\u0440\u043C\u0435 \u043A\u0443\u0440\u0441\u0430",
+                      children: "\u{1F517} \u041F\u0435\u0440\u0435\u0439\u0442\u0438 \u043A \u043A\u0443\u0440\u0441\u0443"
+                    }
+                  ),
+                  /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
+                    "button",
+                    {
+                      type: "button",
+                      className: "primary-button small",
+                      onClick: (e) => {
+                        e.stopPropagation();
+                        handleOrderCourseInWhatsApp(course);
+                      },
+                      children: "\u041F\u043E\u043B\u0443\u0447\u0438\u0442\u044C \u043A\u0443\u0440\u0441"
+                    }
+                  )
+                ] })
               ] })
             ]
           },
@@ -13611,7 +13646,20 @@ function AcademyView({ onBackToStore }) {
           /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "eyebrow", children: "\u0418\u041D\u0422\u0415\u0420\u0410\u041A\u0422\u0418\u0412\u041D\u042B\u0419 \u041A\u0410\u0411\u0418\u041D\u0415\u0422 \u0423\u0427\u0415\u041D\u0418\u041A\u0410" }),
           /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("h2", { children: selectedCourse.title })
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "cabinet-auth-status", children: isCabinetUnlocked ? /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "unlocked-badge", children: "\u{1F7E2} \u0414\u043E\u0441\u0442\u0443\u043F \u0430\u043A\u0442\u0438\u0432\u0438\u0440\u043E\u0432\u0430\u043D (\u0423\u0447\u0435\u043D\u0438\u043A Maestro)" }) : /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "locked-badge", children: "\u{1F512} \u0420\u0435\u0436\u0438\u043C \u043F\u0440\u0435\u0434\u043F\u0440\u043E\u0441\u043C\u043E\u0442\u0440\u0430 (\u0414\u0435\u043C\u043E-\u0434\u043E\u0441\u0442\u0443\u043F)" }) })
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "cabinet-auth-status", children: [
+          selectedCourse.courseUrl && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
+            "a",
+            {
+              href: selectedCourse.courseUrl,
+              target: "_blank",
+              rel: "noopener noreferrer",
+              className: "course-platform-link",
+              title: "\u041E\u0442\u043A\u0440\u044B\u0442\u044C \u043A\u0443\u0440\u0441 \u043D\u0430 \u043F\u043B\u0430\u0442\u0444\u043E\u0440\u043C\u0435 \u043E\u0431\u0443\u0447\u0435\u043D\u0438\u044F",
+              children: "\u{1F517} \u0421\u0441\u044B\u043B\u043A\u0430 \u043D\u0430 \u043F\u043B\u0430\u0442\u0444\u043E\u0440\u043C\u0443 \u043A\u0443\u0440\u0441\u0430 \u2197"
+            }
+          ),
+          isCabinetUnlocked ? /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "unlocked-badge", children: "\u{1F7E2} \u0414\u043E\u0441\u0442\u0443\u043F \u0430\u043A\u0442\u0438\u0432\u0438\u0440\u043E\u0432\u0430\u043D (\u0423\u0447\u0435\u043D\u0438\u043A Maestro)" }) : /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "locked-badge", children: "\u{1F512} \u0420\u0435\u0436\u0438\u043C \u043F\u0440\u0435\u0434\u043F\u0440\u043E\u0441\u043C\u043E\u0442\u0440\u0430 (\u0414\u0435\u043C\u043E-\u0434\u043E\u0441\u0442\u0443\u043F)" })
+        ] })
       ] }),
       !isCabinetUnlocked && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "cabinet-pin-box", children: [
         /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "pin-prompt", children: [
@@ -13659,7 +13707,27 @@ function AcademyView({ onBackToStore }) {
           /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "lesson-info-bar", children: [
             /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { children: [
               /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("h3", { children: activeLesson.title }),
-              /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { children: activeLesson.description })
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { children: activeLesson.description }),
+              activeLesson.videoUrl && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
+                "a",
+                {
+                  href: activeLesson.videoUrl,
+                  target: "_blank",
+                  rel: "noopener noreferrer",
+                  className: "lesson-video-link",
+                  style: {
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: "6px",
+                    marginTop: "8px",
+                    fontSize: "12px",
+                    color: "var(--amber-dark)",
+                    fontWeight: 700,
+                    textDecoration: "none"
+                  },
+                  children: "\u{1F4FA} \u0421\u043C\u043E\u0442\u0440\u0435\u0442\u044C \u0432\u0438\u0434\u0435\u043E \u0443\u0440\u043E\u043A\u0430 \u2197"
+                }
+              )
             ] }),
             /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
               "button",
@@ -13829,6 +13897,11 @@ function CartDrawer({
               item.variantName,
               " \xB7 ",
               item.sku
+            ] }),
+            item.giftCourseTitle && /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("span", { className: "cart-gift-badge", children: [
+              "\u{1F381} \u0412 \u043A\u043E\u043C\u043F\u043B\u0435\u043A\u0442\u0435: \xAB",
+              item.giftCourseTitle,
+              "\xBB"
             ] }),
             item.price > 0 && /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("span", { className: "cart-line-price", children: [
               money(item.price * item.quantity),
@@ -14284,6 +14357,7 @@ function ProductModal({
   const [isPlayingSound, setIsPlayingSound] = (0, import_react4.useState)(false);
   const [selectedBundle, setSelectedBundle] = (0, import_react4.useState)("gift_course");
   if (!selected) return null;
+  const attachedCourse = resolveAttachedCourse(selected);
   const selectedImage = selectedVariant?.image || selected.image;
   const basePrice = selectedVariant?.price || selected.price || 0;
   const bundleDelta = selectedBundle === "pro_pack" ? 8900 : 0;
@@ -14416,7 +14490,32 @@ function ProductModal({
                 ]
               }
             ),
-            /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)(
+            attachedCourse ? /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)(
+              "button",
+              {
+                type: "button",
+                className: selectedBundle === "gift_course" ? "bundle-btn active recommended" : "bundle-btn recommended",
+                onClick: () => setSelectedBundle("gift_course"),
+                children: [
+                  /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "bundle-badge-pill", children: "\u041F\u041E\u0414\u0410\u0420\u041E\u041A 0 \u20B8" }),
+                  /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("span", { className: "bundle-title", children: [
+                    "\u{1F381} + \u041A\u0443\u0440\u0441 \xAB",
+                    attachedCourse.title.length > 28 ? attachedCourse.title.slice(0, 28) + "..." : attachedCourse.title,
+                    "\xBB"
+                  ] }),
+                  /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("small", { children: [
+                    attachedCourse.lessonsCount || 10,
+                    " \u0443\u0440\u043E\u043A\u043E\u0432 \xB7 \u041F\u0440\u0435\u043F. ",
+                    attachedCourse.instructor.name
+                  ] }),
+                  /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("strong", { className: "free-text", children: [
+                    "\u0411\u0435\u0441\u043F\u043B\u0430\u0442\u043D\u043E (",
+                    money(attachedCourse.price),
+                    " \u20B8)"
+                  ] })
+                ]
+              }
+            ) : /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)(
               "button",
               {
                 type: "button",
@@ -14438,7 +14537,7 @@ function ProductModal({
                 onClick: () => setSelectedBundle("pro_pack"),
                 children: [
                   /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "bundle-title", children: "\u{1F451} PRO \u041A\u043E\u043C\u043F\u043B\u0435\u043A\u0442" }),
-                  /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("small", { children: "\u0427\u0435\u0445\u043E\u043B + \u0420\u0435\u043C\u0435\u043D\u044C + \u0413\u043E\u0434\u043E\u0432\u043E\u0439 \u043A\u0443\u0440\u0441" }),
+                  /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("small", { children: "\u0427\u0435\u0445\u043E\u043B + \u0420\u0435\u043C\u0435\u043D\u044C + VIP \u0414\u043E\u0441\u0442\u0443\u043F" }),
                   /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("strong", { children: "+8 900 \u20B8" })
                 ]
               }
@@ -14525,7 +14624,20 @@ function ProductModal({
               }
             )
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("button", { className: "primary-button", onClick: () => onAddToCart(selected, selectedVariant, selectedBundle, currentPrice), children: "\u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u0432 \u0437\u0430\u044F\u0432\u043A\u0443" })
+          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
+            "button",
+            {
+              className: "primary-button",
+              onClick: () => onAddToCart(
+                selected,
+                selectedVariant,
+                selectedBundle,
+                currentPrice,
+                selectedBundle === "gift_course" ? attachedCourse?.title : void 0
+              ),
+              children: "\u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u0432 \u0437\u0430\u044F\u0432\u043A\u0443"
+            }
+          )
         ] })
       ] }) : /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "internal-note", children: [
         /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("strong", { children: "\u0412\u043D\u0443\u0442\u0440\u0435\u043D\u043D\u044F\u044F \u043A\u0430\u0440\u0442\u043E\u0447\u043A\u0430" }),
@@ -14781,6 +14893,7 @@ function Storefront({
         const variants = variantsFor(product);
         const currentVariant = selectedVariantsByProduct[product.id] || variants[0] || null;
         const displayImage = currentVariant?.image || product.image;
+        const attachedCourse = resolveAttachedCourse(product);
         return /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("article", { className: "product-card", children: [
           /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)(
             "div",
@@ -14809,6 +14922,7 @@ function Storefront({
                     "%"
                   ] }),
                   product.badge && /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { className: "product-badge", children: product.badge }),
+                  attachedCourse && /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { className: "card-gift-tag", children: "\u{1F381} \u041A\u0443\u0440\u0441 \u0432 \u043F\u043E\u0434\u0430\u0440\u043E\u043A" }),
                   /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)(
                     "button",
                     {
@@ -15068,11 +15182,33 @@ function Topbar({
           onClick: () => setCartOpen(true),
           "aria-label": `\u041A\u043E\u0440\u0437\u0438\u043D\u0430, ${cartCount} \u0442\u043E\u0432\u0430\u0440\u043E\u0432`,
           children: [
-            /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("span", { className: "cart-label", children: "\u{1F6D2} \u0417\u0430\u044F\u0432\u043A\u0430" }),
+            /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("span", { className: "cart-label", children: "\u{1F6D2}" }),
+            /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("span", { className: "cart-text", children: "\u0417\u0430\u044F\u0432\u043A\u0430" }),
             /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("span", { className: "cart-btn-badge", children: cartCount })
           ]
         }
       )
+    ] }),
+    /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("div", { className: "mobile-nav-strip", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(
+        "button",
+        {
+          type: "button",
+          className: `mobile-tab-btn ${view === "store" ? "active" : ""}`,
+          onClick: () => setView?.("store"),
+          children: "\u{1F3B8} \u041A\u0430\u0442\u0430\u043B\u043E\u0433"
+        }
+      ),
+      /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(
+        "button",
+        {
+          type: "button",
+          className: `mobile-tab-btn academy ${view === "academy" ? "active" : ""}`,
+          onClick: () => setView?.("academy"),
+          children: "\u{1F393} \u041E\u0431\u0443\u0447\u0435\u043D\u0438\u0435 & \u041A\u0443\u0440\u0441\u044B"
+        }
+      ),
+      /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(Link, { href: "/admin/pricing", className: "mobile-tab-btn admin", children: "\u{1F512} \u0410\u0434\u043C\u0438\u043D\u043A\u0430" })
     ] })
   ] });
 }
@@ -15152,13 +15288,13 @@ function Home() {
     setView("store");
     document.getElementById("catalog")?.scrollIntoView({ behavior: "smooth" });
   };
-  const addToCart = (product, variantOverride, bundleType, priceOverride) => {
+  const addToCart = (product, variantOverride, bundleType, priceOverride, giftCourseTitle) => {
     const variant = variantOverride ?? selectedVariant ?? variantsFor(product)[0];
     if (!variant) return;
     const maxQty = variant.stock || 1;
     const itemKey = `${product.sku}-${variant.sku}-${bundleType || "gift_course"}`;
     const qtyToAdd = Math.min(requestedQuantity, maxQty);
-    const bundleLabel = bundleType === "gift_course" ? "\u{1F381} + \u041E\u043D\u043B\u0430\u0439\u043D-\u043A\u0443\u0440\u0441" : bundleType === "pro_pack" ? "\u{1F451} PRO \u041A\u043E\u043C\u043F\u043B\u0435\u043A\u0442" : "\u{1F3B8} \u0421\u0442\u0430\u043D\u0434\u0430\u0440\u0442";
+    const bundleLabel = bundleType === "gift_course" ? giftCourseTitle ? `\u{1F381} + \u041A\u0443\u0440\u0441 \xAB${giftCourseTitle}\xBB` : "\u{1F381} + \u041E\u043D\u043B\u0430\u0439\u043D-\u043A\u0443\u0440\u0441" : bundleType === "pro_pack" ? "\u{1F451} PRO \u041A\u043E\u043C\u043F\u043B\u0435\u043A\u0442" : "\u{1F3B8} \u0421\u0442\u0430\u043D\u0434\u0430\u0440\u0442";
     const itemPrice = priceOverride ?? (variant.price || product.price || 0);
     setCartItems((current) => {
       const existingIndex = current.findIndex((item) => item.key === itemKey);
@@ -15182,7 +15318,9 @@ function Home() {
           image: variant.image || product.image,
           price: itemPrice,
           quantity: qtyToAdd,
-          maxQuantity: maxQty
+          maxQuantity: maxQty,
+          bundle: bundleType,
+          giftCourseTitle: bundleType === "gift_course" ? giftCourseTitle : void 0
         }
       ];
     });
@@ -15652,7 +15790,7 @@ function PresetManagerModal({
   };
   const handleDeletePreset = (id) => {
     if (presets.length <= 1) {
-      alert("\u041D\u0435\u043B\u044C\u0437\u044F \u0443\u0434\u0430\u043B\u0438\u0442\u044C \u043F\u043E\u0441\u043B\u0435\u0434\u043D\u0438\u0439 \u043E\u0441\u0442\u0430\u0432\u0448\u0438\u0439\u0441\u044F \u0448\u0430\u0431\u043B\u043E\u043D");
+      alert("\u041D\u0435\u043B\u044C\u0437\u044F \u0443\u0434\u0430\u043B\u0438\u0442\u044C \u0435\u0434\u0438\u043D\u0441\u0442\u0432\u0435\u043D\u043D\u044B\u0439 \u0448\u0430\u0431\u043B\u043E\u043D");
       return;
     }
     const updated = presets.filter((p) => p.id !== id);
@@ -15679,14 +15817,14 @@ function PresetManagerModal({
       children: [
         /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("div", { className: "modal-header-row", children: [
           /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("div", { children: [
-            /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("p", { className: "eyebrow", children: "\u041D\u0430\u0441\u0442\u0440\u043E\u0439\u043A\u0438" }),
+            /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("p", { className: "eyebrow", children: "\u042E\u041D\u0418\u0422-\u042D\u041A\u041E\u041D\u041E\u041C\u0418\u041A\u0410" }),
             /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("h2", { children: "\u041A\u043E\u043D\u0441\u0442\u0440\u0443\u043A\u0442\u043E\u0440 \u0448\u0430\u0431\u043B\u043E\u043D\u043E\u0432 \u0440\u0430\u0441\u0445\u043E\u0434\u043E\u0432" })
           ] }),
           /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("button", { className: "modal-close", onClick: onClose, "aria-label": "\u0417\u0430\u043A\u0440\u044B\u0442\u044C", children: "\xD7" })
         ] }),
         editingPreset ? /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("form", { onSubmit: handleSavePreset, className: "preset-edit-form", children: [
           /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("div", { className: "preset-form-head", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("h3", { children: isCreating ? "\u0421\u043E\u0437\u0434\u0430\u043D\u0438\u0435 \u043D\u043E\u0432\u043E\u0433\u043E \u0448\u0430\u0431\u043B\u043E\u043D\u0430" : `\u0420\u0435\u0434\u0430\u043A\u0442\u0438\u0440\u043E\u0432\u0430\u043D\u0438\u0435: ${editingPreset.name}` }),
+            /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("h3", { children: isCreating ? "\u2795 \u0421\u043E\u0437\u0434\u0430\u043D\u0438\u0435 \u043D\u043E\u0432\u043E\u0433\u043E \u0448\u0430\u0431\u043B\u043E\u043D\u0430" : `\u270F\uFE0F \u0420\u0435\u0434\u0430\u043A\u0442\u0438\u0440\u043E\u0432\u0430\u043D\u0438\u0435: ${editingPreset.name}` }),
             /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(
               "button",
               {
@@ -15720,7 +15858,7 @@ function PresetManagerModal({
                 {
                   value: editingPreset.description || "",
                   onChange: (e) => setEditingPreset({ ...editingPreset, description: e.target.value }),
-                  placeholder: "\u041E\u0441\u043E\u0431\u0435\u043D\u043D\u043E\u0441\u0442\u0438 \u0443\u043F\u0430\u043A\u043E\u0432\u043A\u0438 \u0438\u043B\u0438 \u0434\u043E\u0432\u043E\u0434\u043A\u0438"
+                  placeholder: "\u041E\u0441\u043E\u0431\u0435\u043D\u043D\u043E\u0441\u0442\u0438 \u0443\u043F\u0430\u043A\u043E\u0432\u043A\u0438, \u0434\u043E\u0432\u043E\u0434\u043A\u0438 \u043C\u0430\u0441\u0442\u0435\u0440\u0430 \u0438\u043B\u0438 \u043A\u0430\u0440\u0433\u043E"
                 }
               )
             ] }),
@@ -15748,7 +15886,9 @@ function PresetManagerModal({
                 "input",
                 {
                   type: "number",
-                  value: editingPreset.chinaDeliveryKzt,
+                  placeholder: "0",
+                  value: editingPreset.chinaDeliveryKzt === 0 ? "" : editingPreset.chinaDeliveryKzt,
+                  onFocus: (e) => e.target.select(),
                   onChange: (e) => setEditingPreset({ ...editingPreset, chinaDeliveryKzt: +e.target.value })
                 }
               )
@@ -15759,7 +15899,9 @@ function PresetManagerModal({
                 "input",
                 {
                   type: "number",
-                  value: editingPreset.cargoKzt,
+                  placeholder: "0",
+                  value: editingPreset.cargoKzt === 0 ? "" : editingPreset.cargoKzt,
+                  onFocus: (e) => e.target.select(),
                   onChange: (e) => setEditingPreset({ ...editingPreset, cargoKzt: +e.target.value })
                 }
               )
@@ -15770,7 +15912,9 @@ function PresetManagerModal({
                 "input",
                 {
                   type: "number",
-                  value: editingPreset.customsKzt,
+                  placeholder: "0",
+                  value: editingPreset.customsKzt === 0 ? "" : editingPreset.customsKzt,
+                  onFocus: (e) => e.target.select(),
                   onChange: (e) => setEditingPreset({ ...editingPreset, customsKzt: +e.target.value })
                 }
               )
@@ -15781,7 +15925,9 @@ function PresetManagerModal({
                 "input",
                 {
                   type: "number",
-                  value: editingPreset.packagingKzt,
+                  placeholder: "0",
+                  value: editingPreset.packagingKzt === 0 ? "" : editingPreset.packagingKzt,
+                  onFocus: (e) => e.target.select(),
                   onChange: (e) => setEditingPreset({ ...editingPreset, packagingKzt: +e.target.value })
                 }
               )
@@ -15792,7 +15938,9 @@ function PresetManagerModal({
                 "input",
                 {
                   type: "number",
-                  value: editingPreset.setupKzt,
+                  placeholder: "0",
+                  value: editingPreset.setupKzt === 0 ? "" : editingPreset.setupKzt,
+                  onFocus: (e) => e.target.select(),
                   onChange: (e) => setEditingPreset({ ...editingPreset, setupKzt: +e.target.value })
                 }
               )
@@ -15803,7 +15951,9 @@ function PresetManagerModal({
                 "input",
                 {
                   type: "number",
-                  value: editingPreset.marketingKzt,
+                  placeholder: "0",
+                  value: editingPreset.marketingKzt === 0 ? "" : editingPreset.marketingKzt,
+                  onFocus: (e) => e.target.select(),
                   onChange: (e) => setEditingPreset({ ...editingPreset, marketingKzt: +e.target.value })
                 }
               )
@@ -15814,7 +15964,9 @@ function PresetManagerModal({
                 "input",
                 {
                   type: "number",
-                  value: editingPreset.otherCostsKzt,
+                  placeholder: "0",
+                  value: editingPreset.otherCostsKzt === 0 ? "" : editingPreset.otherCostsKzt,
+                  onFocus: (e) => e.target.select(),
                   onChange: (e) => setEditingPreset({ ...editingPreset, otherCostsKzt: +e.target.value })
                 }
               )
@@ -15825,7 +15977,9 @@ function PresetManagerModal({
                 "input",
                 {
                   type: "number",
-                  value: editingPreset.taxPercent,
+                  placeholder: "0",
+                  value: editingPreset.taxPercent === 0 ? "" : editingPreset.taxPercent,
+                  onFocus: (e) => e.target.select(),
                   onChange: (e) => setEditingPreset({ ...editingPreset, taxPercent: +e.target.value })
                 }
               )
@@ -15836,7 +15990,9 @@ function PresetManagerModal({
                 "input",
                 {
                   type: "number",
-                  value: editingPreset.bankInstallmentPercent,
+                  placeholder: "0",
+                  value: editingPreset.bankInstallmentPercent === 0 ? "" : editingPreset.bankInstallmentPercent,
+                  onFocus: (e) => e.target.select(),
                   onChange: (e) => setEditingPreset({ ...editingPreset, bankInstallmentPercent: +e.target.value })
                 }
               )
@@ -15847,7 +16003,9 @@ function PresetManagerModal({
                 "input",
                 {
                   type: "number",
-                  value: editingPreset.installmentMonths,
+                  placeholder: "0",
+                  value: editingPreset.installmentMonths === 0 ? "" : editingPreset.installmentMonths,
+                  onFocus: (e) => e.target.select(),
                   onChange: (e) => setEditingPreset({ ...editingPreset, installmentMonths: +e.target.value })
                 }
               )
@@ -15858,7 +16016,9 @@ function PresetManagerModal({
                 "input",
                 {
                   type: "number",
-                  value: editingPreset.sellerPercent,
+                  placeholder: "0",
+                  value: editingPreset.sellerPercent === 0 ? "" : editingPreset.sellerPercent,
+                  onFocus: (e) => e.target.select(),
                   onChange: (e) => setEditingPreset({ ...editingPreset, sellerPercent: +e.target.value })
                 }
               )
@@ -15869,7 +16029,9 @@ function PresetManagerModal({
                 "input",
                 {
                   type: "number",
-                  value: editingPreset.targetProfitPercent,
+                  placeholder: "0",
+                  value: editingPreset.targetProfitPercent === 0 ? "" : editingPreset.targetProfitPercent,
+                  onFocus: (e) => e.target.select(),
                   onChange: (e) => setEditingPreset({ ...editingPreset, targetProfitPercent: +e.target.value })
                 }
               )
@@ -15888,38 +16050,50 @@ function PresetManagerModal({
                 children: "\u041E\u0442\u043C\u0435\u043D\u0430"
               }
             ),
-            /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("button", { type: "submit", className: "primary-button", children: isCreating ? "\u0421\u043E\u0437\u0434\u0430\u0442\u044C \u0448\u0430\u0431\u043B\u043E\u043D" : "\u0421\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C \u0438\u0437\u043C\u0435\u043D\u0435\u043D\u0438\u044F" })
+            /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("button", { type: "submit", className: "primary-button", children: isCreating ? "\u2795 \u0421\u043E\u0437\u0434\u0430\u0442\u044C \u0448\u0430\u0431\u043B\u043E\u043D" : "\u{1F4BE} \u0421\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C \u0438\u0437\u043C\u0435\u043D\u0435\u043D\u0438\u044F" })
           ] })
         ] }) : /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("div", { className: "preset-list-view", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("p", { className: "preset-note", children: "\u041D\u0430\u0441\u0442\u0440\u043E\u0435\u043D\u043D\u044B\u0435 \u0448\u0430\u0431\u043B\u043E\u043D\u044B \u043F\u043E\u0437\u0432\u043E\u043B\u044F\u044E\u0442 \u043C\u0433\u043D\u043E\u0432\u0435\u043D\u043D\u043E \u043F\u043E\u0434\u0441\u0442\u0430\u0432\u043B\u044F\u0442\u044C \u0441\u0442\u0430\u043D\u0434\u0430\u0440\u0442\u043D\u044B\u0435 \u0440\u0430\u0441\u0445\u043E\u0434\u044B (\u043A\u0430\u0440\u0433\u043E, \u043E\u0442\u0441\u0442\u0440\u043E\u0439\u043A\u0430, \u043A\u043E\u0440\u043E\u0431\u043A\u0430, \u043D\u0430\u043B\u043E\u0433\u0438) \u043F\u0440\u0438 \u0440\u0430\u0441\u0447\u0435\u0442\u0435 \u043B\u044E\u0431\u043E\u0439 \u0433\u0438\u0442\u0430\u0440\u044B \u0438\u043B\u0438 \u043E\u0431\u043E\u0440\u0443\u0434\u043E\u0432\u0430\u043D\u0438\u044F." }),
+          /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("p", { className: "preset-note", children: [
+            "\u{1F4A1} ",
+            /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("strong", { children: "\u0428\u0430\u0431\u043B\u043E\u043D\u044B \u0440\u0430\u0441\u0445\u043E\u0434\u043E\u0432" }),
+            " \u043F\u043E\u0437\u0432\u043E\u043B\u044F\u044E\u0442 \u0432 \u043E\u0434\u0438\u043D \u043A\u043B\u0438\u043A \u043F\u043E\u0434\u0441\u0442\u0430\u0432\u043B\u044F\u0442\u044C \u043B\u043E\u0433\u0438\u0441\u0442\u0438\u043A\u0443, \u043E\u0442\u0441\u0442\u0440\u043E\u0439\u043A\u0443 \u043C\u0430\u0441\u0442\u0435\u0440\u0430, \u043A\u0430\u0440\u0433\u043E \u0438 \u043D\u0430\u0446\u0435\u043D\u043A\u0443 \u043F\u043E\u0434 \u0440\u0430\u0437\u043D\u044B\u0435 \u043A\u0430\u0442\u0435\u0433\u043E\u0440\u0438\u0438 \u0438\u043D\u0441\u0442\u0440\u0443\u043C\u0435\u043D\u0442\u043E\u0432."
+          ] }),
           /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("div", { className: "preset-cards-grid", children: presets.map((preset) => {
             const totalDirectExpenses = preset.chinaDeliveryKzt + preset.cargoKzt + preset.customsKzt + preset.packagingKzt + preset.setupKzt + preset.marketingKzt + preset.otherCostsKzt;
             return /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("div", { className: "preset-card-item", children: [
               /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("div", { className: "preset-item-head", children: [
-                /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("strong", { children: preset.name }),
-                /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("span", { className: "currency-pill", children: preset.purchaseCurrency })
+                /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("strong", { className: "preset-title", children: preset.name }),
+                /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("span", { className: "currency-pill", children: preset.purchaseCurrency === "CNY" ? "\xA5 CNY" : preset.purchaseCurrency === "USD" ? "$ USD" : "\u20B8 KZT" })
               ] }),
               preset.description && /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("p", { className: "preset-desc", children: preset.description }),
               /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("div", { className: "preset-breakdown-tags", children: [
-                /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("span", { children: [
-                  "\u041D\u0430\u043A\u043B\u0430\u0434\u043D\u044B\u0435: ",
-                  totalDirectExpenses.toLocaleString("ru-RU"),
-                  " \u20B8"
+                /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("span", { className: "tag-pill overhead", title: "\u0421\u0443\u043C\u043C\u0430\u0440\u043D\u044B\u0435 \u043F\u0440\u044F\u043C\u044B\u0435 \u043D\u0430\u043A\u043B\u0430\u0434\u043D\u044B\u0435 \u0440\u0430\u0441\u0445\u043E\u0434\u044B", children: [
+                  "\u{1F4E6} \u041D\u0430\u043A\u043B\u0430\u0434\u043D\u044B\u0435: ",
+                  /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("strong", { children: [
+                    totalDirectExpenses.toLocaleString("ru-RU"),
+                    " \u20B8"
+                  ] })
                 ] }),
-                /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("span", { children: [
-                  "\u0414\u043E\u0432\u043E\u0434\u043A\u0430: ",
-                  preset.setupKzt.toLocaleString("ru-RU"),
-                  " \u20B8"
+                /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("span", { className: "tag-pill setup", title: "\u0421\u0442\u043E\u0438\u043C\u043E\u0441\u0442\u044C \u043F\u0440\u0435\u0434\u043F\u0440\u043E\u0434\u0430\u0436\u043D\u043E\u0439 \u043E\u0442\u0441\u0442\u0440\u043E\u0439\u043A\u0438 \u043C\u0430\u0441\u0442\u0435\u0440\u043E\u043C", children: [
+                  "\u{1F527} \u0414\u043E\u0432\u043E\u0434\u043A\u0430: ",
+                  /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("strong", { children: [
+                    preset.setupKzt.toLocaleString("ru-RU"),
+                    " \u20B8"
+                  ] })
                 ] }),
-                /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("span", { children: [
-                  "\u041C\u0430\u0440\u0436\u0430: ",
-                  preset.targetProfitPercent,
-                  "%"
+                /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("span", { className: "tag-pill margin", title: "\u0426\u0435\u043B\u0435\u0432\u0430\u044F \u043C\u0430\u0440\u0436\u0438\u043D\u0430\u043B\u044C\u043D\u043E\u0441\u0442\u044C", children: [
+                  "\u{1F4C8} \u041C\u0430\u0440\u0436\u0430: ",
+                  /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("strong", { children: [
+                    preset.targetProfitPercent,
+                    "%"
+                  ] })
                 ] }),
-                /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("span", { children: [
-                  "\u0411\u0430\u043D\u043A: ",
-                  preset.bankInstallmentPercent,
-                  "%"
+                /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("span", { className: "tag-pill bank", title: "\u041A\u043E\u043C\u0438\u0441\u0441\u0438\u044F \u0431\u0430\u043D\u043A\u0430 \u0437\u0430 \u0440\u0430\u0441\u0441\u0440\u043E\u0447\u043A\u0443 Kaspi", children: [
+                  "\u{1F4B3} \u0420\u0430\u0441\u0441\u0440\u043E\u0447\u043A\u0430: ",
+                  /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("strong", { children: [
+                    preset.bankInstallmentPercent,
+                    "%"
+                  ] })
                 ] })
               ] }),
               /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("div", { className: "preset-item-actions", children: [
@@ -15927,12 +16101,12 @@ function PresetManagerModal({
                   "button",
                   {
                     type: "button",
-                    className: "primary-button small",
+                    className: "primary-button small apply-btn",
                     onClick: () => {
                       onApplyPreset(preset);
                       onClose();
                     },
-                    children: "\u041F\u0440\u0438\u043C\u0435\u043D\u0438\u0442\u044C"
+                    children: "\u26A1 \u041F\u0440\u0438\u043C\u0435\u043D\u0438\u0442\u044C"
                   }
                 ),
                 /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(
@@ -15944,7 +16118,7 @@ function PresetManagerModal({
                       setEditingPreset(preset);
                       setIsCreating(false);
                     },
-                    children: "\u0418\u0437\u043C\u0435\u043D\u0438\u0442\u044C"
+                    children: "\u270F\uFE0F \u0418\u0437\u043C\u0435\u043D\u0438\u0442\u044C"
                   }
                 ),
                 /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(
@@ -15961,8 +16135,8 @@ function PresetManagerModal({
             ] }, preset.id);
           }) }),
           /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("div", { className: "preset-footer-actions", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("button", { type: "button", className: "outline-button", onClick: handleResetDefaults, children: "\u0421\u0431\u0440\u043E\u0441\u0438\u0442\u044C \u043A \u0437\u0430\u0432\u043E\u0434\u0441\u043A\u0438\u043C" }),
-            /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("button", { type: "button", className: "primary-button", onClick: startCreate, children: "+ \u0421\u043E\u0437\u0434\u0430\u0442\u044C \u043D\u043E\u0432\u044B\u0439 \u0448\u0430\u0431\u043B\u043E\u043D" })
+            /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("button", { type: "button", className: "outline-button reset-btn", onClick: handleResetDefaults, children: "\u{1F504} \u0421\u0431\u0440\u043E\u0441\u0438\u0442\u044C \u043A \u0437\u0430\u0432\u043E\u0434\u0441\u043A\u0438\u043C" }),
+            /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("button", { type: "button", className: "primary-button", onClick: startCreate, children: "\u2795 \u0421\u043E\u0437\u0434\u0430\u0442\u044C \u043D\u043E\u0432\u044B\u0439 \u0448\u0430\u0431\u043B\u043E\u043D" })
           ] })
         ] })
       ]
@@ -16156,10 +16330,12 @@ function CourseEditorModal({
   onSavedNotice
 }) {
   const [selectedCourseId, setSelectedCourseId] = (0, import_react10.useState)(courses[0]?.id || "");
-  const activeCourse = courses.find((c) => c.id === selectedCourseId) || courses[0];
+  const [isCreatingNew, setIsCreatingNew] = (0, import_react10.useState)(false);
+  const activeCourse = isCreatingNew ? null : courses.find((c) => c.id === selectedCourseId) || courses[0];
   const [title, setTitle] = (0, import_react10.useState)(activeCourse?.title || "");
   const [subtitle, setSubtitle] = (0, import_react10.useState)(activeCourse?.subtitle || "");
   const [badge, setBadge] = (0, import_react10.useState)(activeCourse?.badge || "");
+  const [courseUrl, setCourseUrl] = (0, import_react10.useState)(activeCourse?.courseUrl || "");
   const [instrument, setInstrument] = (0, import_react10.useState)(
     activeCourse?.instrument || "acoustic"
   );
@@ -16176,15 +16352,31 @@ function CourseEditorModal({
   const [instructorAvatar, setInstructorAvatar] = (0, import_react10.useState)(activeCourse?.instructor?.avatar || "\u{1F3B8}");
   const [lessons, setLessons] = (0, import_react10.useState)(activeCourse?.lessons || []);
   const [isSaving, setIsSaving] = (0, import_react10.useState)(false);
+  const [isDeleting, setIsDeleting] = (0, import_react10.useState)(false);
   const [statusMsg, setStatusMsg] = (0, import_react10.useState)("");
+  (0, import_react10.useEffect)(() => {
+    if (isOpen && (!courses || courses.length === 0)) {
+      fetch("/api/courses").then((r) => r.ok ? r.json() : Promise.reject(new Error("Failed"))).then((data) => {
+        if (Array.isArray(data.courses) && data.courses.length > 0) {
+          setCourses(data.courses);
+          if (!selectedCourseId) {
+            handleSelectCourse(data.courses[0].id, data.courses);
+          }
+        }
+      }).catch(() => {
+      });
+    }
+  }, [isOpen]);
   if (!isOpen) return null;
-  const handleSelectCourse = (courseId) => {
+  const handleSelectCourse = (courseId, sourceList = courses) => {
+    setIsCreatingNew(false);
     setSelectedCourseId(courseId);
-    const found = courses.find((c) => c.id === courseId);
+    const found = sourceList.find((c) => c.id === courseId);
     if (found) {
       setTitle(found.title);
       setSubtitle(found.subtitle);
       setBadge(found.badge);
+      setCourseUrl(found.courseUrl || "");
       setInstrument(found.instrument);
       setLevel(found.level);
       setPrice(found.price);
@@ -16196,16 +16388,45 @@ function CourseEditorModal({
       setInstructorExp(found.instructor?.experience || "");
       setInstructorAvatar(found.instructor?.avatar || "\u{1F3B8}");
       setLessons(found.lessons || []);
-      setStatusMsg(`\u0417\u0430\u0433\u0440\u0443\u0436\u0435\u043D \u043A\u0443\u0440\u0441: ${found.title}`);
+      setStatusMsg(`\u0412\u044B\u0431\u0440\u0430\u043D \u043A\u0443\u0440\u0441: ${found.title}`);
     }
+  };
+  const handleStartCreateNew = () => {
+    setIsCreatingNew(true);
+    setSelectedCourseId("");
+    setTitle("\u041D\u043E\u0432\u044B\u0439 \u043E\u043D\u043B\u0430\u0439\u043D-\u043A\u0443\u0440\u0441");
+    setSubtitle("\u041F\u043E\u0448\u0430\u0433\u043E\u0432\u0430\u044F \u043F\u0440\u043E\u0433\u0440\u0430\u043C\u043C\u0430 \u043E\u0431\u0443\u0447\u0435\u043D\u0438\u044F \u0441 \u043D\u0443\u043B\u044F");
+    setBadge("\u041D\u041E\u0412\u0418\u041D\u041A\u0410");
+    setCourseUrl("https://app.maestro.com.kz");
+    setInstrument("acoustic");
+    setLevel("\u041D\u0430\u0447\u0438\u043D\u0430\u044E\u0449\u0438\u0439");
+    setPrice(9900);
+    setOriginalPrice(19900);
+    setDescription("\u041F\u0440\u0430\u043A\u0442\u0438\u0447\u0435\u0441\u043A\u0438\u0439 \u043A\u0443\u0440\u0441 \u043E\u0431\u0443\u0447\u0435\u043D\u0438\u044F \u0438\u0433\u0440\u0435 \u043D\u0430 \u0438\u043D\u0441\u0442\u0440\u0443\u043C\u0435\u043D\u0442\u0435.");
+    setHighlightsText("10 \u0432\u0438\u0434\u0435\u043E\u0443\u0440\u043E\u043A\u043E\u0432 \u0432 HD \u043A\u0430\u0447\u0435\u0441\u0442\u0432\u0435\n\u0420\u0430\u0437\u0431\u043E\u0440 \u0431\u0430\u0437\u043E\u0432\u044B\u0445 \u0430\u043A\u043A\u043E\u0440\u0434\u043E\u0432 \u0438 \u0440\u0438\u0442\u043C\u043E\u0432\n\u0414\u043E\u0441\u0442\u0443\u043F \u0432 \u043B\u0438\u0447\u043D\u044B\u0439 \u043A\u0430\u0431\u0438\u043D\u0435\u0442 \u0443\u0447\u0435\u043D\u0438\u043A\u0430");
+    setInstructorName("\u0420\u0443\u0441\u043B\u0430\u043D \u0421\u0430\u0433\u0438\u0442\u043E\u0432");
+    setInstructorRole("\u041F\u0440\u0435\u043F\u043E\u0434\u0430\u0432\u0430\u0442\u0435\u043B\u044C Maestro Academy");
+    setInstructorExp("\u041E\u043F\u044B\u0442 \u043F\u0440\u0435\u043F\u043E\u0434\u0430\u0432\u0430\u043D\u0438\u044F 8+ \u043B\u0435\u0442");
+    setInstructorAvatar("\u{1F3B8}");
+    setLessons([
+      {
+        id: `l-${Date.now()}-1`,
+        title: "\u0423\u0440\u043E\u043A 1: \u0412\u0432\u0435\u0434\u0435\u043D\u0438\u0435 \u0438 \u043F\u0440\u0430\u0432\u0438\u043B\u044C\u043D\u0430\u044F \u043F\u043E\u0441\u0442\u0430\u043D\u043E\u0432\u043A\u0430 \u0440\u0443\u043A",
+        duration: "12 \u043C\u0438\u043D",
+        description: "\u041E\u0441\u043D\u043E\u0432\u044B \u043F\u043E\u0441\u0430\u0434\u043A\u0438, \u043F\u0440\u0430\u0432\u0438\u043B\u044C\u043D\u043E\u0435 \u0437\u0432\u0443\u043A\u043E\u0438\u0437\u0432\u043B\u0435\u0447\u0435\u043D\u0438\u0435 \u0438 \u043D\u0430\u0441\u0442\u0440\u043E\u0439\u043A\u0430 \u0438\u043D\u0441\u0442\u0440\u0443\u043C\u0435\u043D\u0442\u0430.",
+        isFreePreview: true,
+        chords: ["\u041D\u0430\u0441\u0442\u0440\u043E\u0439\u043A\u0430 \u0441\u0442\u0440\u0443\u043D"]
+      }
+    ]);
+    setStatusMsg("\u2728 \u0421\u043E\u0437\u0434\u0430\u043D\u0438\u0435 \u043D\u043E\u0432\u043E\u0433\u043E \u043A\u0443\u0440\u0441\u0430. \u0417\u0430\u043F\u043E\u043B\u043D\u0438\u0442\u0435 \u0434\u0430\u043D\u043D\u044B\u0435 \u0438 \u043D\u0430\u0436\u043C\u0438\u0442\u0435 \xAB\u0421\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C\xBB.");
   };
   const handleAddLesson = () => {
     const nextNum = lessons.length + 1;
     const newLesson = {
-      id: `lesson-${Date.now()}`,
-      title: `\u0423\u0440\u043E\u043A ${nextNum}: \u0422\u0435\u043C\u0430 \u0443\u0440\u043E\u043A\u0430`,
+      id: `lesson-${Date.now()}-${nextNum}`,
+      title: `\u0423\u0440\u043E\u043A ${nextNum}: \u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435 \u0443\u0440\u043E\u043A\u0430`,
       duration: "15 \u043C\u0438\u043D",
-      description: "\u041A\u0440\u0430\u0442\u043A\u043E\u0435 \u043E\u043F\u0438\u0441\u0430\u043D\u0438\u0435 \u0442\u043E\u0433\u043E, \u0447\u0435\u043C\u0443 \u043D\u0430\u0443\u0447\u0438\u0442\u0441\u044F \u0443\u0447\u0435\u043D\u0438\u043A \u0432 \u044D\u0442\u043E\u043C \u0443\u0440\u043E\u043A\u0435.",
+      description: "\u041A\u0440\u0430\u0442\u043A\u043E\u0435 \u043E\u043F\u0438\u0441\u0430\u043D\u0438\u0435 \u0442\u0435\u043C\u044B \u0438 \u043F\u0440\u0430\u043A\u0442\u0438\u0447\u0435\u0441\u043A\u043E\u0433\u043E \u0443\u043F\u0440\u0430\u0436\u043D\u0435\u043D\u0438\u044F.",
       isFreePreview: false,
       chords: ["Am", "Dm", "E"]
     };
@@ -16223,34 +16444,36 @@ function CourseEditorModal({
   };
   const handleSaveCourse = async () => {
     if (!title.trim() || !description.trim()) {
-      setStatusMsg("\u0417\u0430\u043F\u043E\u043B\u043D\u0438\u0442\u0435 \u043D\u0430\u0437\u0432\u0430\u043D\u0438\u0435 \u0438 \u043E\u043F\u0438\u0441\u0430\u043D\u0438\u0435 \u043A\u0443\u0440\u0441\u0430.");
+      setStatusMsg("\u26A0\uFE0F \u0417\u0430\u043F\u043E\u043B\u043D\u0438\u0442\u0435 \u043D\u0430\u0437\u0432\u0430\u043D\u0438\u0435 \u0438 \u043E\u043F\u0438\u0441\u0430\u043D\u0438\u0435 \u043A\u0443\u0440\u0441\u0430.");
       return;
     }
     setIsSaving(true);
-    setStatusMsg("\u0421\u043E\u0445\u0440\u0430\u043D\u044F\u0435\u043C \u043A\u0443\u0440\u0441 \u0432 \u0431\u0430\u0437\u0443 \u0434\u0430\u043D\u043D\u044B\u0445...");
+    setStatusMsg("\u0421\u043E\u0445\u0440\u0430\u043D\u044F\u0435\u043C \u043A\u0443\u0440\u0441 \u043D\u0430 \u0441\u0435\u0440\u0432\u0435\u0440\u0435...");
     try {
       const highlights = highlightsText.split("\n").map((h) => h.trim()).filter(Boolean);
+      const targetId = isCreatingNew || !activeCourse ? `course-${Date.now()}` : activeCourse.id;
+      const targetSlug = isCreatingNew || !activeCourse ? `course-${Date.now()}` : activeCourse.slug;
       const payload = {
-        ...activeCourse,
-        id: activeCourse?.id || `course-${Date.now()}`,
-        slug: activeCourse?.slug || `course-${Date.now()}`,
-        title,
-        subtitle,
-        badge,
+        id: targetId,
+        slug: targetSlug,
+        title: title.trim(),
+        subtitle: subtitle.trim(),
+        badge: badge.trim(),
+        courseUrl: courseUrl.trim() || void 0,
         instrument,
         level,
         price,
         originalPrice,
-        description,
+        description: description.trim(),
         highlights,
-        lessonsCount: lessons.length || activeCourse?.lessonsCount || 10,
-        durationHours: activeCourse?.durationHours || 6,
+        lessonsCount: lessons.length || 1,
+        durationHours: activeCourse?.durationHours || Math.max(1, Math.round(lessons.length * 0.5)),
         image: activeCourse?.image || "/products/04_41_acoustic.png",
         instructor: {
-          name: instructorName,
-          role: instructorRole,
-          experience: instructorExp,
-          avatar: instructorAvatar
+          name: instructorName.trim() || "\u041F\u0440\u0435\u043F\u043E\u0434\u0430\u0432\u0430\u0442\u0435\u043B\u044C Maestro",
+          role: instructorRole.trim() || "\u041F\u0440\u0435\u043F\u043E\u0434\u0430\u0432\u0430\u0442\u0435\u043B\u044C",
+          experience: instructorExp.trim() || "\u041E\u043F\u044B\u0442 \u043F\u0440\u0435\u043F\u043E\u0434\u0430\u0432\u0430\u043D\u0438\u044F",
+          avatar: instructorAvatar.trim() || "\u{1F3B8}"
         },
         lessons
       };
@@ -16267,13 +16490,44 @@ function CourseEditorModal({
         const withoutSaved = current.filter((c) => c.id !== data.course.id);
         return [...withoutSaved, data.course];
       });
+      setIsCreatingNew(false);
+      setSelectedCourseId(data.course.id);
       const timeStr = (/* @__PURE__ */ new Date()).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", second: "2-digit" });
-      setStatusMsg(`\u2705 \u041A\u0443\u0440\u0441 \u0443\u0441\u043F\u0435\u0448\u043D\u043E \u0441\u043E\u0445\u0440\u0430\u043D\u0451\u043D \u0432 ${timeStr}!`);
+      setStatusMsg(`\u2705 \u041A\u0443\u0440\u0441 \xAB${data.course.title}\xBB \u0443\u0441\u043F\u0435\u0448\u043D\u043E \u0441\u043E\u0445\u0440\u0430\u043D\u0451\u043D \u0432 ${timeStr}!`);
       onSavedNotice?.(`\u041A\u0443\u0440\u0441 \xAB${title}\xBB \u0441\u043E\u0445\u0440\u0430\u043D\u0451\u043D (${money(price)} \u20B8)`);
     } catch (err) {
       setStatusMsg(err instanceof Error ? err.message : "\u041E\u0448\u0438\u0431\u043A\u0430 \u043F\u0440\u0438 \u0441\u043E\u0445\u0440\u0430\u043D\u0435\u043D\u0438\u0438");
     } finally {
       setIsSaving(false);
+    }
+  };
+  const handleDeleteCourse = async () => {
+    if (isCreatingNew || !activeCourse) {
+      setIsCreatingNew(false);
+      if (courses.length > 0) handleSelectCourse(courses[0].id);
+      return;
+    }
+    if (!window.confirm(`\u0412\u044B \u0443\u0432\u0435\u0440\u0435\u043D\u044B, \u0447\u0442\u043E \u0445\u043E\u0442\u0438\u0442\u0435 \u0443\u0434\u0430\u043B\u0438\u0442\u044C \u043A\u0443\u0440\u0441 \xAB${activeCourse.title}\xBB?`)) {
+      return;
+    }
+    setIsDeleting(true);
+    setStatusMsg("\u0423\u0434\u0430\u043B\u044F\u0435\u043C \u043A\u0443\u0440\u0441...");
+    try {
+      const res = await fetch(`/api/courses?id=${activeCourse.id}`, { method: "DELETE" });
+      if (!res.ok) throw new Error("\u041E\u0448\u0438\u0431\u043A\u0430 \u043F\u0440\u0438 \u0443\u0434\u0430\u043B\u0435\u043D\u0438\u0438 \u043D\u0430 \u0441\u0435\u0440\u0432\u0435\u0440\u0435");
+      const remaining = courses.filter((c) => c.id !== activeCourse.id);
+      setCourses(remaining);
+      if (remaining.length > 0) {
+        handleSelectCourse(remaining[0].id, remaining);
+      } else {
+        handleStartCreateNew();
+      }
+      setStatusMsg(`\u{1F5D1} \u041A\u0443\u0440\u0441 \xAB${activeCourse.title}\xBB \u0443\u0434\u0430\u043B\u0451\u043D.`);
+      onSavedNotice?.(`\u041A\u0443\u0440\u0441 \xAB${activeCourse.title}\xBB \u0443\u0434\u0430\u043B\u0451\u043D`);
+    } catch (err) {
+      setStatusMsg(err instanceof Error ? err.message : "\u041E\u0448\u0438\u0431\u043A\u0430 \u043F\u0440\u0438 \u0443\u0434\u0430\u043B\u0435\u043D\u0438\u0438");
+    } finally {
+      setIsDeleting(false);
     }
   };
   return /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("div", { className: "modal-backdrop", role: "presentation", onMouseDown: onClose, children: /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)(
@@ -16286,36 +16540,63 @@ function CourseEditorModal({
       children: [
         /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "modal-header", children: [
           /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { children: [
-            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("h2", { children: "\u{1F393} \u041D\u0430\u0441\u0442\u0440\u043E\u0439\u043A\u0430 \u0438 \u0440\u0435\u0434\u0430\u043A\u0442\u0438\u0440\u043E\u0432\u0430\u043D\u0438\u0435 \u043A\u0443\u0440\u0441\u043E\u0432" }),
-            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("p", { children: "\u0423\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435 \u043F\u0440\u043E\u0433\u0440\u0430\u043C\u043C\u0430\u043C\u0438 \u043E\u0431\u0443\u0447\u0435\u043D\u0438\u044F, \u0446\u0435\u043D\u0430\u043C\u0438, \u043E\u043F\u0438\u0441\u0430\u043D\u0438\u044F\u043C\u0438 \u0438 \u0443\u0440\u043E\u043A\u0430\u043C\u0438 Maestro Academy" })
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("h2", { children: "\u{1F393} \u041D\u0430\u0441\u0442\u0440\u043E\u0439\u043A\u0430 \u0438 \u0434\u043E\u0431\u0430\u0432\u043B\u0435\u043D\u0438\u0435 \u043E\u043D\u043B\u0430\u0439\u043D-\u043A\u0443\u0440\u0441\u043E\u0432" }),
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("p", { children: "\u0423\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435 \u043F\u0440\u043E\u0433\u0440\u0430\u043C\u043C\u0430\u043C\u0438 \u043E\u0431\u0443\u0447\u0435\u043D\u0438\u044F, \u0441\u0441\u044B\u043B\u043A\u0430\u043C\u0438 \u043D\u0430 \u043F\u043B\u0430\u0442\u0444\u043E\u0440\u043C\u0443, \u0446\u0435\u043D\u0430\u043C\u0438, \u0443\u0440\u043E\u043A\u0430\u043C\u0438 \u0438 \u043F\u0440\u0435\u043F\u043E\u0434\u0430\u0432\u0430\u0442\u0435\u043B\u044F\u043C\u0438 Maestro Academy" })
           ] }),
           /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("button", { className: "modal-close", onClick: onClose, "aria-label": "\u0417\u0430\u043A\u0440\u044B\u0442\u044C", children: "\xD7" })
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("div", { className: "course-picker-tabs", children: courses.map((c) => /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)(
-          "button",
-          {
-            type: "button",
-            className: `course-tab-pill ${c.id === selectedCourseId ? "active" : ""}`,
-            onClick: () => handleSelectCourse(c.id),
-            children: [
-              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { children: c.instructor?.avatar || "\u{1F393}" }),
-              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("strong", { children: c.title }),
-              /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("small", { children: [
-                money(c.price),
-                " \u20B8"
-              ] })
-            ]
-          },
-          c.id
-        )) }),
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "course-picker-tabs", children: [
+          courses.map((c) => /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)(
+            "button",
+            {
+              type: "button",
+              className: `course-tab-pill ${!isCreatingNew && c.id === selectedCourseId ? "active" : ""}`,
+              onClick: () => handleSelectCourse(c.id),
+              children: [
+                /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { children: c.instructor?.avatar || "\u{1F393}" }),
+                /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("strong", { children: c.title }),
+                /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("small", { children: [
+                  money(c.price),
+                  " \u20B8"
+                ] })
+              ]
+            },
+            c.id
+          )),
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)(
+            "button",
+            {
+              type: "button",
+              className: `course-tab-pill add-new ${isCreatingNew ? "active" : ""}`,
+              onClick: handleStartCreateNew,
+              title: "\u0421\u043E\u0437\u0434\u0430\u0442\u044C \u043D\u043E\u0432\u044B\u0439 \u043A\u0443\u0440\u0441",
+              children: [
+                /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { children: "\u2795" }),
+                /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("strong", { children: "+ \u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u043D\u043E\u0432\u044B\u0439 \u043A\u0443\u0440\u0441" }),
+                /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("small", { children: "\u0421\u043E\u0437\u0434\u0430\u0442\u044C \u0441 \u043D\u0443\u043B\u044F" })
+              ]
+            }
+          )
+        ] }),
         /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "course-form-grid", children: [
           /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("label", { className: "full-width", children: [
             "\u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435 \u043A\u0443\u0440\u0441\u0430",
-            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("input", { value: title, onChange: (e) => setTitle(e.target.value) })
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("input", { value: title, onChange: (e) => setTitle(e.target.value), placeholder: "\u041D\u0430\u043F\u0440\u0438\u043C\u0435\u0440: \u0410\u043A\u0443\u0441\u0442\u0438\u0447\u0435\u0441\u043A\u0430\u044F \u0433\u0438\u0442\u0430\u0440\u0430 \u0441 \u043D\u0443\u043B\u044F" })
           ] }),
           /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("label", { className: "full-width", children: [
             "\u041F\u043E\u0434\u0437\u0430\u0433\u043E\u043B\u043E\u0432\u043E\u043A (\u043A\u0440\u0430\u0442\u043A\u043E\u0435 \u0423\u0422\u041F)",
-            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("input", { value: subtitle, onChange: (e) => setSubtitle(e.target.value) })
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("input", { value: subtitle, onChange: (e) => setSubtitle(e.target.value), placeholder: "\u041F\u043E\u0448\u0430\u0433\u043E\u0432\u044B\u0439 \u043A\u0443\u0440\u0441 \u0434\u043B\u044F \u0430\u0431\u0441\u043E\u043B\u044E\u0442\u043D\u044B\u0445 \u043D\u043E\u0432\u0438\u0447\u043A\u043E\u0432" })
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("label", { className: "full-width highlight-field", children: [
+            "\u{1F517} \u0421\u0441\u044B\u043B\u043A\u0430 \u043D\u0430 \u043A\u0443\u0440\u0441 / \u043F\u043B\u0430\u0442\u0444\u043E\u0440\u043C\u0443 \u043E\u0431\u0443\u0447\u0435\u043D\u0438\u044F (URL)",
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(
+              "input",
+              {
+                value: courseUrl,
+                onChange: (e) => setCourseUrl(e.target.value),
+                placeholder: "https://app.maestro.com.kz/courses/... \u0438\u043B\u0438 https://t.me/..."
+              }
+            )
           ] }),
           /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("label", { children: [
             "\u0411\u0435\u0439\u0434\u0436 / \u043F\u043B\u0430\u0448\u043A\u0430",
@@ -16340,11 +16621,29 @@ function CourseEditorModal({
           ] }),
           /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("label", { children: [
             "\u0426\u0435\u043D\u0430 \u043A\u0443\u0440\u0441\u0430, \u20B8",
-            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("input", { type: "number", value: price, onChange: (e) => setPrice(+e.target.value) })
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(
+              "input",
+              {
+                type: "number",
+                placeholder: "0",
+                value: price === 0 ? "" : price,
+                onFocus: (e) => e.target.select(),
+                onChange: (e) => setPrice(+e.target.value)
+              }
+            )
           ] }),
           /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("label", { children: [
             "\u0421\u0442\u0430\u0440\u0430\u044F \u0446\u0435\u043D\u0430, \u20B8 (\u0437\u0430\u0447\u0451\u0440\u043A\u043D\u0443\u0442\u0430\u044F)",
-            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("input", { type: "number", value: originalPrice, onChange: (e) => setOriginalPrice(+e.target.value) })
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(
+              "input",
+              {
+                type: "number",
+                placeholder: "0",
+                value: originalPrice === 0 ? "" : originalPrice,
+                onFocus: (e) => e.target.select(),
+                onChange: (e) => setOriginalPrice(+e.target.value)
+              }
+            )
           ] }),
           /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("label", { className: "full-width", children: [
             "\u041F\u043E\u0434\u0440\u043E\u0431\u043D\u043E\u0435 \u043E\u043F\u0438\u0441\u0430\u043D\u0438\u0435 \u043A\u0443\u0440\u0441\u0430",
@@ -16375,19 +16674,19 @@ function CourseEditorModal({
             /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "instructor-inputs-grid", children: [
               /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("label", { children: [
                 "\u0418\u043C\u044F \u043F\u0440\u0435\u043F\u043E\u0434\u0430\u0432\u0430\u0442\u0435\u043B\u044F",
-                /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("input", { value: instructorName, onChange: (e) => setInstructorName(e.target.value) })
+                /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("input", { value: instructorName, onChange: (e) => setInstructorName(e.target.value), placeholder: "\u0420\u0443\u0441\u043B\u0430\u043D \u0421\u0430\u0433\u0438\u0442\u043E\u0432" })
               ] }),
               /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("label", { children: [
                 "\u0414\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u044C / \u0421\u043F\u0435\u0446\u0438\u0430\u043B\u0438\u0437\u0430\u0446\u0438\u044F",
-                /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("input", { value: instructorRole, onChange: (e) => setInstructorRole(e.target.value) })
+                /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("input", { value: instructorRole, onChange: (e) => setInstructorRole(e.target.value), placeholder: "\u041F\u0440\u0435\u043F\u043E\u0434\u0430\u0432\u0430\u0442\u0435\u043B\u044C \u0433\u0438\u0442\u0430\u0440\u044B" })
               ] }),
               /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("label", { children: [
                 "\u041E\u043F\u044B\u0442 \u0438 \u0440\u0435\u0433\u0430\u043B\u0438\u0438",
-                /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("input", { value: instructorExp, onChange: (e) => setInstructorExp(e.target.value) })
+                /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("input", { value: instructorExp, onChange: (e) => setInstructorExp(e.target.value), placeholder: "\u041E\u043F\u044B\u0442 \u043F\u0440\u0435\u043F\u043E\u0434\u0430\u0432\u0430\u043D\u0438\u044F 10+ \u043B\u0435\u0442" })
               ] }),
               /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("label", { children: [
                 "\u0418\u043A\u043E\u043D\u043A\u0430 / \u042D\u043C\u043E\u0434\u0437\u0438",
-                /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("input", { value: instructorAvatar, onChange: (e) => setInstructorAvatar(e.target.value), maxLength: 4 })
+                /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("input", { value: instructorAvatar, onChange: (e) => setInstructorAvatar(e.target.value), maxLength: 4, placeholder: "\u{1F3B8}" })
               ] })
             ] })
           ] }),
@@ -16425,6 +16724,17 @@ function CourseEditorModal({
                   }
                 )
               ] }),
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("label", { className: "lesson-url-field", children: [
+                "\u0421\u0441\u044B\u043B\u043A\u0430 \u043D\u0430 \u0432\u0438\u0434\u0435\u043E / \u0443\u0440\u043E\u043A",
+                /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(
+                  "input",
+                  {
+                    value: lesson.videoUrl || "",
+                    onChange: (e) => handleUpdateLesson(idx, { videoUrl: e.target.value }),
+                    placeholder: "https://..."
+                  }
+                )
+              ] }),
               /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("label", { className: "lesson-demo-field", children: [
                 /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(
                   "input",
@@ -16452,6 +16762,17 @@ function CourseEditorModal({
         /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "modal-footer-bar", children: [
           /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { className: "editor-status-text", children: statusMsg }),
           /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "footer-actions", children: [
+            !isCreatingNew && activeCourse && /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(
+              "button",
+              {
+                type: "button",
+                className: "outline-button delete-btn",
+                disabled: isDeleting || isSaving,
+                onClick: handleDeleteCourse,
+                title: "\u0423\u0434\u0430\u043B\u0438\u0442\u044C \u0432\u044B\u0431\u0440\u0430\u043D\u043D\u044B\u0439 \u043A\u0443\u0440\u0441",
+                children: isDeleting ? "\u0423\u0434\u0430\u043B\u044F\u0435\u043C..." : "\u{1F5D1} \u0423\u0434\u0430\u043B\u0438\u0442\u044C \u043A\u0443\u0440\u0441"
+              }
+            ),
             /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("button", { type: "button", className: "outline-button", onClick: onClose, children: "\u0417\u0430\u043A\u0440\u044B\u0442\u044C" }),
             /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(
               "button",
@@ -16460,7 +16781,7 @@ function CourseEditorModal({
                 className: "primary-button",
                 disabled: isSaving,
                 onClick: handleSaveCourse,
-                children: isSaving ? "\u0421\u043E\u0445\u0440\u0430\u043D\u044F\u0435\u043C..." : "\u{1F4BE} \u0421\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C \u0438\u0437\u043C\u0435\u043D\u0435\u043D\u0438\u044F \u043A\u0443\u0440\u0441\u0430"
+                children: isSaving ? "\u0421\u043E\u0445\u0440\u0430\u043D\u044F\u0435\u043C..." : isCreatingNew ? "\u2795 \u0421\u043E\u0437\u0434\u0430\u0442\u044C \u0438 \u0441\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C \u043A\u0443\u0440\u0441" : "\u{1F4BE} \u0421\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C \u0438\u0437\u043C\u0435\u043D\u0435\u043D\u0438\u044F \u043A\u0443\u0440\u0441\u0430"
               }
             )
           ] })
@@ -16528,6 +16849,7 @@ function PurchaserView({
     "\u0424\u043E\u0440\u043C\u0430 \u043A\u043E\u0440\u043F\u0443\u0441\u0430 ST, \u041A\u043E\u043D\u0444\u0438\u0433\u0443\u0440\u0430\u0446\u0438\u044F HSS, 6 \u0446\u0432\u0435\u0442\u043E\u0432, \u0421\u0442\u0430\u043D\u0434\u0430\u0440\u0442\u043D\u0430\u044F \u043C\u0435\u043D\u0437\u0443\u0440\u0430"
   );
   const [targetAudience, setTargetAudience] = (0, import_react11.useState)("\u0414\u043B\u044F \u043D\u0430\u0447\u0438\u043D\u0430\u044E\u0449\u0438\u0445");
+  const [attachedCourseId, setAttachedCourseId] = (0, import_react11.useState)("auto");
   const [modelVariants, setModelVariants] = (0, import_react11.useState)([
     {
       id: "var-1",
@@ -16667,6 +16989,7 @@ function PurchaserView({
     setInternalDescription(product.description);
     setFeaturesText(product.features.join(", "));
     setTargetAudience(product.badge ?? "");
+    setAttachedCourseId(product.attachedCourseId || "auto");
     const prodHasDiscount = Boolean(
       product.isDiscountActive || product.discountPercent && product.discountPercent > 0 || product.originalPrice && product.price && product.originalPrice > product.price
     );
@@ -16798,6 +17121,7 @@ function PurchaserView({
           description: internalDescription,
           features: featuresText.split(",").map((feature) => feature.trim()).filter(Boolean),
           targetAudience,
+          attachedCourseId: attachedCourseId === "none" ? "" : attachedCourseId,
           variant: {
             name: primaryVariant.name,
             sku: primaryVariant.sku,
@@ -16807,6 +17131,7 @@ function PurchaserView({
             size: primaryVariant.size,
             stockQuantity: totalModelStock
           },
+          variants: modelVariants,
           pricing: {
             purchaseCurrency: currency,
             purchasePrice: purchase,
@@ -16842,13 +17167,17 @@ function PurchaserView({
         variants: modelVariants.length,
         variantItems: modelVariants,
         price: Math.round(retail),
+        attachedCourseId: attachedCourseId === "none" ? void 0 : attachedCourseId,
         originalPrice: hasDiscount && calculation ? Math.round(calculation.originalPriceKzt) : void 0,
         discountPercent: hasDiscount ? discountPercent : void 0,
         isDiscountActive: hasDiscount,
-        publicationStatus: publish ? "published" : "draft"
+        publicationStatus: publish ? "published" : "draft",
+        isStored: true
       };
       setStoredProducts((current) => {
-        const withoutSaved = current.filter((p) => p.id !== updatedProduct.id);
+        const withoutSaved = current.filter(
+          (p) => String(p.id) !== String(updatedProduct.id) && (p.sku && updatedProduct.sku ? p.sku.toLowerCase() !== updatedProduct.sku.toLowerCase() : true)
+        );
         return [...withoutSaved, updatedProduct];
       });
       setEditingProductId(data.product.databaseId || String(data.product.id));
@@ -17065,7 +17394,28 @@ function PurchaserView({
                 className: "preset-manage-btn",
                 onClick: () => setIsPresetModalOpen(true),
                 title: "\u0420\u0435\u0434\u0430\u043A\u0442\u0438\u0440\u043E\u0432\u0430\u0442\u044C \u0438 \u0441\u043E\u0437\u0434\u0430\u0432\u0430\u0442\u044C \u0441\u0432\u043E\u0438 \u0448\u0430\u0431\u043B\u043E\u043D\u044B",
-                children: "\u2699\uFE0F \u0423\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435"
+                children: "\u2699\uFE0F \u0428\u0430\u0431\u043B\u043E\u043D\u044B"
+              }
+            ),
+            /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
+              "button",
+              {
+                type: "button",
+                className: "preset-manage-btn course-btn",
+                onClick: () => setIsCourseModalOpen(true),
+                title: "\u041D\u0430\u0441\u0442\u0440\u043E\u0439\u043A\u0430 \u0438 \u0434\u043E\u0431\u0430\u0432\u043B\u0435\u043D\u0438\u0435 \u043E\u043D\u043B\u0430\u0439\u043D-\u043A\u0443\u0440\u0441\u043E\u0432",
+                style: { background: "#2a221a", borderColor: "#c87531", color: "#f3e7d8", fontWeight: 600 },
+                children: "\u{1F393} \u041A\u0443\u0440\u0441\u044B"
+              }
+            ),
+            /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
+              "button",
+              {
+                type: "button",
+                className: "preset-manage-btn",
+                onClick: () => setIsPrintModalOpen(true),
+                title: "\u041F\u0435\u0447\u0430\u0442\u044C \u0446\u0435\u043D\u043D\u0438\u043A\u043E\u0432 \u0441\u043E \u0448\u0442\u0440\u0438\u0445\u043A\u043E\u0434\u0430\u043C\u0438",
+                children: "\u{1F5A8} \u0426\u0435\u043D\u043D\u0438\u043A\u0438"
               }
             )
           ] })
@@ -17167,6 +17517,32 @@ function PurchaserView({
                 }
               }
             )
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("label", { className: "full-width", children: [
+            "\u{1F393} \u041F\u043E\u0434\u0430\u0440\u043E\u0447\u043D\u044B\u0439 \u043E\u043D\u043B\u0430\u0439\u043D-\u043A\u0443\u0440\u0441 (\u0432 \u043A\u043E\u043C\u043F\u043B\u0435\u043A\u0442\u0435 \u043A \u0438\u043D\u0441\u0442\u0440\u0443\u043C\u0435\u043D\u0442\u0443)",
+            /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)(
+              "select",
+              {
+                value: attachedCourseId,
+                onChange: (e) => {
+                  setAttachedCourseId(e.target.value);
+                  setIsDirty(true);
+                },
+                children: [
+                  /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("option", { value: "auto", children: "\u2728 \u0410\u0432\u0442\u043E\u043C\u0430\u0442\u0438\u0447\u0435\u0441\u043A\u0438 (\u043F\u043E \u0442\u0438\u043F\u0443: \u0410\u043A\u0443\u0441\u0442\u0438\u043A\u0430 \u2192 \u0441 \u043D\u0443\u043B\u044F / \u042D\u043B\u0435\u043A\u0442\u0440\u043E \u2192 \u0440\u0438\u0444\u0444\u044B / \u0423\u043A\u0443\u043B\u0435\u043B\u0435 \u2192 \u044D\u043A\u0441\u043F\u0440\u0435\u0441\u0441)" }),
+                  /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("option", { value: "none", children: "\u274C \u0411\u0435\u0437 \u043A\u0443\u0440\u0441\u0430 (\u0442\u043E\u043B\u044C\u043A\u043E \u0433\u0438\u0442\u0430\u0440\u0430)" }),
+                  adminCourses.map((c) => /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("option", { value: c.id, children: [
+                    "\u{1F393} ",
+                    c.title,
+                    " (",
+                    c.level,
+                    ", ",
+                    c.lessonsCount || 10,
+                    " \u0443\u0440\u043E\u043A\u043E\u0432)"
+                  ] }, c.id))
+                ]
+              }
+            )
           ] })
         ] }),
         /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { className: "card-subhead between", children: [
@@ -17250,7 +17626,9 @@ function PurchaserView({
               {
                 type: "number",
                 min: "0",
-                value: variant.stock,
+                placeholder: "0",
+                value: variant.stock === 0 ? "" : variant.stock,
+                onFocus: (e) => e.target.select(),
                 onChange: (e) => updateVariantRow(idx, { stock: Math.max(0, +e.target.value) })
               }
             ) }),
@@ -17314,7 +17692,9 @@ function PurchaserView({
               "input",
               {
                 type: "number",
-                value: purchase,
+                placeholder: "0",
+                value: purchase === 0 ? "" : purchase,
+                onFocus: (e) => e.target.select(),
                 onChange: (e) => {
                   setPurchase(+e.target.value);
                   setIsDirty(true);
@@ -17328,7 +17708,9 @@ function PurchaserView({
               "input",
               {
                 type: "number",
-                value: cnyRate,
+                placeholder: "0",
+                value: cnyRate === 0 ? "" : cnyRate,
+                onFocus: (e) => e.target.select(),
                 onChange: (e) => {
                   setCnyRate(+e.target.value);
                   setIsDirty(true);
@@ -17342,7 +17724,9 @@ function PurchaserView({
               "input",
               {
                 type: "number",
-                value: usdRate,
+                placeholder: "0",
+                value: usdRate === 0 ? "" : usdRate,
+                onFocus: (e) => e.target.select(),
                 onChange: (e) => {
                   setUsdRate(+e.target.value);
                   setIsDirty(true);
@@ -17356,7 +17740,9 @@ function PurchaserView({
               "input",
               {
                 type: "number",
-                value: delivery,
+                placeholder: "0",
+                value: delivery === 0 ? "" : delivery,
+                onFocus: (e) => e.target.select(),
                 onChange: (e) => {
                   setDelivery(+e.target.value);
                   setIsDirty(true);
@@ -17370,7 +17756,9 @@ function PurchaserView({
               "input",
               {
                 type: "number",
-                value: cargo,
+                placeholder: "0",
+                value: cargo === 0 ? "" : cargo,
+                onFocus: (e) => e.target.select(),
                 onChange: (e) => {
                   setCargo(+e.target.value);
                   setIsDirty(true);
@@ -17384,7 +17772,9 @@ function PurchaserView({
               "input",
               {
                 type: "number",
-                value: customs,
+                placeholder: "0",
+                value: customs === 0 ? "" : customs,
+                onFocus: (e) => e.target.select(),
                 onChange: (e) => {
                   setCustoms(+e.target.value);
                   setIsDirty(true);
@@ -17398,7 +17788,9 @@ function PurchaserView({
               "input",
               {
                 type: "number",
-                value: packaging,
+                placeholder: "0",
+                value: packaging === 0 ? "" : packaging,
+                onFocus: (e) => e.target.select(),
                 onChange: (e) => {
                   setPackaging(+e.target.value);
                   setIsDirty(true);
@@ -17412,7 +17804,9 @@ function PurchaserView({
               "input",
               {
                 type: "number",
-                value: setupCost,
+                placeholder: "0",
+                value: setupCost === 0 ? "" : setupCost,
+                onFocus: (e) => e.target.select(),
                 onChange: (e) => {
                   setSetupCost(+e.target.value);
                   setIsDirty(true);
@@ -17426,7 +17820,9 @@ function PurchaserView({
               "input",
               {
                 type: "number",
-                value: marketingCost,
+                placeholder: "0",
+                value: marketingCost === 0 ? "" : marketingCost,
+                onFocus: (e) => e.target.select(),
                 onChange: (e) => {
                   setMarketingCost(+e.target.value);
                   setIsDirty(true);
@@ -17440,7 +17836,9 @@ function PurchaserView({
               "input",
               {
                 type: "number",
-                value: other,
+                placeholder: "0",
+                value: other === 0 ? "" : other,
+                onFocus: (e) => e.target.select(),
                 onChange: (e) => {
                   setOther(+e.target.value);
                   setIsDirty(true);
@@ -17460,7 +17858,9 @@ function PurchaserView({
               "input",
               {
                 type: "number",
-                value: taxPercent,
+                placeholder: "0",
+                value: taxPercent === 0 ? "" : taxPercent,
+                onFocus: (e) => e.target.select(),
                 onChange: (e) => {
                   setTaxPercent(+e.target.value);
                   setIsDirty(true);
@@ -17474,7 +17874,9 @@ function PurchaserView({
               "input",
               {
                 type: "number",
-                value: bankPercent,
+                placeholder: "0",
+                value: bankPercent === 0 ? "" : bankPercent,
+                onFocus: (e) => e.target.select(),
                 onChange: (e) => {
                   setBankPercent(+e.target.value);
                   setIsDirty(true);
@@ -17489,7 +17891,9 @@ function PurchaserView({
               {
                 type: "number",
                 min: "0",
-                value: installmentMonths,
+                placeholder: "0",
+                value: installmentMonths === 0 ? "" : installmentMonths,
+                onFocus: (e) => e.target.select(),
                 onChange: (e) => {
                   setInstallmentMonths(Math.max(0, +e.target.value));
                   setIsDirty(true);
@@ -17503,7 +17907,9 @@ function PurchaserView({
               "input",
               {
                 type: "number",
-                value: sellerPercent,
+                placeholder: "0",
+                value: sellerPercent === 0 ? "" : sellerPercent,
+                onFocus: (e) => e.target.select(),
                 onChange: (e) => {
                   setSellerPercent(+e.target.value);
                   setIsDirty(true);
@@ -17517,7 +17923,9 @@ function PurchaserView({
               "input",
               {
                 type: "number",
-                value: markup,
+                placeholder: "0",
+                value: markup === 0 ? "" : markup,
+                onFocus: (e) => e.target.select(),
                 onChange: (e) => {
                   setMarkup(+e.target.value);
                   setIsDirty(true);
@@ -17531,7 +17939,9 @@ function PurchaserView({
               "input",
               {
                 type: "number",
-                value: Math.round(manualPricing ? manualPrice : recommendedPrice),
+                placeholder: "0",
+                value: Math.round(manualPricing ? manualPrice : recommendedPrice) === 0 ? "" : Math.round(manualPricing ? manualPrice : recommendedPrice),
+                onFocus: (e) => e.target.select(),
                 onChange: (e) => {
                   setManualPricing(true);
                   setManualPrice(+e.target.value);
@@ -17586,7 +17996,9 @@ function PurchaserView({
                 type: "number",
                 min: "1",
                 max: "90",
-                value: discountPercent,
+                placeholder: "0",
+                value: discountPercent === 0 ? "" : discountPercent,
+                onFocus: (e) => e.target.select(),
                 onChange: (e) => {
                   setDiscountPercent(Math.min(90, Math.max(1, +e.target.value)));
                   setIsDirty(true);
@@ -17600,7 +18012,9 @@ function PurchaserView({
               "input",
               {
                 type: "number",
-                value: originalPriceInput || Math.round(originalPriceDisplay),
+                placeholder: "0",
+                value: (originalPriceInput || Math.round(originalPriceDisplay)) === 0 ? "" : originalPriceInput || Math.round(originalPriceDisplay),
+                onFocus: (e) => e.target.select(),
                 onChange: (e) => {
                   setOriginalPriceInput(+e.target.value);
                   setIsDirty(true);
