@@ -49,7 +49,9 @@ queue prevents concurrent file-state writes.
 
 The D1 migration is additive: `orders`, `order_items`, `payments`,
 `order_status_history`, `stock_reservations`, and `product_pricing.pricing_version`.
-It adds unique keys, foreign keys, checks, indexes and stock reservation triggers.
+It adds unique keys, foreign keys, checks and indexes. The D1 order batch uses a
+guarded reservation insert whose insufficient-stock branch produces `NULL` and
+therefore rolls the whole batch back through the `quantity NOT NULL` constraint.
 There are no destructive statements and no existing row rewrite.
 
 Before a production migration, retain the provider database backup/restore point
@@ -76,7 +78,8 @@ release and Stage 2 acceptance.
 - Initial reservation: `COMMERCE_RESERVATION_TTL_MINUTES`, default 30 minutes.
 - After customer payment report: `COMMERCE_REPORTED_RESERVATION_TTL_MINUTES`,
   default 1,440 minutes.
-- D1 protects last stock with an atomic trigger inside the batch transaction.
+- D1 protects last stock with a guarded insert and explicit stock update inside
+  one atomic batch transaction.
 - VPS protects last stock with a single-process serialized mutation queue.
 
 ## Safe production smoke

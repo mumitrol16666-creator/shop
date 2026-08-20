@@ -61,12 +61,16 @@ test("Contract: client has no paid mutation and trusted confirmation is authenti
 });
 
 test("Contract: schema is additive, indexed and has atomic stock guards", async () => {
-  const migration = await source("../drizzle/0002_absurd_meggan.sql");
+  const [migration, store] = await Promise.all([
+    source("../drizzle/0002_absurd_meggan.sql"),
+    source("../lib/commerce/d1-store.ts"),
+  ]);
   for (const table of ["orders", "order_items", "payments", "order_status_history", "stock_reservations"]) {
     assert.ok(migration.includes(`CREATE TABLE \`${table}\``));
   }
   assert.match(migration, /orders_idempotency_key_unique/);
-  assert.match(migration, /stock_reservations_guard_insert/);
-  assert.match(migration, /RAISE\(ABORT, 'INSUFFICIENT_STOCK'\)/);
+  assert.match(store, /stock_quantity - reserved_quantity >= \?/);
+  assert.match(store, /ELSE NULL/);
+  assert.match(store, /batch\(statements\)/);
   assert.doesNotMatch(migration, /DROP TABLE|DELETE FROM/);
 });

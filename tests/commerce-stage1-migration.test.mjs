@@ -39,22 +39,29 @@ id,public_token,idempotency_key,payload_hash,customer_name,customer_phone,custom
 fulfilment_method,payment_method,subtotal_kzt,discount_kzt,total_kzt,currency,status,is_test,created_at,updated_at)
 VALUES ('${id}','token-${id}','key-${id}','hash-${id}','T','+77000000000','A','','pickup','Kaspi',100,0,100,'KZT','awaiting_payment',1,'now','now');`;
 
-test("Integration DB: migration is additive and stock reservation trigger prevents oversell", async (t) => {
+test("Integration DB: migration is additive and guarded reservation prevents oversell", async (t) => {
   const database = await migratedDatabase(t);
-  let result = sqlite(database, `.bail on\n${fixtures}\n${orderInsert("o1")}\nINSERT INTO stock_reservations (id,order_id,variant_id,variant_sku,quantity,status,expires_at,created_at,updated_at) VALUES ('r1','o1','v','V',1,'reserved','later','now','now');`);
+  const guardedReservation = (reservationId, orderId, quantity) => `
+INSERT INTO stock_reservations (id,order_id,variant_id,variant_sku,quantity,status,expires_at,created_at,updated_at)
+VALUES ('${reservationId}','${orderId}','v','V',(
+  SELECT CASE WHEN stock_quantity - reserved_quantity >= ${quantity} THEN ${quantity} ELSE NULL END
+  FROM product_variants WHERE id='v' AND sku='V'
+),'reserved','later','now','now');
+UPDATE product_variants SET reserved_quantity=reserved_quantity+${quantity} WHERE id='v' AND sku='V';`;
+  let result = sqlite(database, `.bail on\n${fixtures}\nBEGIN IMMEDIATE;\n${orderInsert("o1")}\n${guardedReservation("r1", "o1", 1)}\nCOMMIT;`);
   assert.equal(result.status, 0, result.stderr);
-  result = sqlite(database, `.bail on\nPRAGMA foreign_keys=ON;\n${orderInsert("o2")}\nINSERT INTO stock_reservations (id,order_id,variant_id,variant_sku,quantity,status,expires_at,created_at,updated_at) VALUES ('r2','o2','v','V',1,'reserved','later','now','now');`);
+  result = sqlite(database, `.bail on\nPRAGMA foreign_keys=ON;\nBEGIN IMMEDIATE;\n${orderInsert("o2")}\n${guardedReservation("r2", "o2", 1)}\nCOMMIT;`);
   assert.notEqual(result.status, 0);
-  assert.match(result.stderr, /INSUFFICIENT_STOCK/);
+  assert.match(result.stderr, /NOT NULL constraint failed: stock_reservations.quantity/);
   const counts = sqlite(database, "SELECT reserved_quantity FROM product_variants WHERE id='v'; SELECT count(*) FROM stock_reservations WHERE status='reserved';");
   assert.equal(counts.stdout.trim(), "1\n1");
 });
 
 test("Integration DB: failed transactional create leaves no partial order or reservation", async (t) => {
   const database = await migratedDatabase(t);
-  const result = sqlite(database, `.bail on\nPRAGMA foreign_keys=ON;\n${fixtures}\nBEGIN IMMEDIATE;\n${orderInsert("rollback")}\nINSERT INTO stock_reservations (id,order_id,variant_id,variant_sku,quantity,status,expires_at,created_at,updated_at) VALUES ('rollback-r','rollback','v','V',2,'reserved','later','now','now');\nCOMMIT;`);
+  const result = sqlite(database, `.bail on\nPRAGMA foreign_keys=ON;\n${fixtures}\nBEGIN IMMEDIATE;\n${orderInsert("rollback")}\nINSERT INTO stock_reservations (id,order_id,variant_id,variant_sku,quantity,status,expires_at,created_at,updated_at) VALUES ('rollback-r','rollback','v','V',(SELECT CASE WHEN stock_quantity-reserved_quantity >= 2 THEN 2 ELSE NULL END FROM product_variants WHERE id='v' AND sku='V'),'reserved','later','now','now');\nUPDATE product_variants SET reserved_quantity=reserved_quantity+2 WHERE id='v';\nCOMMIT;`);
   assert.notEqual(result.status, 0);
-  assert.match(result.stderr, /INSUFFICIENT_STOCK/);
+  assert.match(result.stderr, /NOT NULL constraint failed: stock_reservations.quantity/);
   const counts = sqlite(database, "SELECT count(*) FROM orders; SELECT count(*) FROM stock_reservations; SELECT reserved_quantity FROM product_variants WHERE id='v';");
   assert.equal(counts.stdout.trim(), "0\n0\n0");
 });

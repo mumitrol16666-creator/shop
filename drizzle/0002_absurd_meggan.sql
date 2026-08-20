@@ -101,45 +101,4 @@ CREATE TABLE `stock_reservations` (
 CREATE UNIQUE INDEX `stock_reservations_order_variant_unique` ON `stock_reservations` (`order_id`,`variant_id`);--> statement-breakpoint
 CREATE INDEX `stock_reservations_status_expiry_idx` ON `stock_reservations` (`status`,`expires_at`);--> statement-breakpoint
 CREATE INDEX `stock_reservations_variant_idx` ON `stock_reservations` (`variant_id`);--> statement-breakpoint
-ALTER TABLE `product_pricing` ADD `pricing_version` integer DEFAULT 1 NOT NULL;--> statement-breakpoint
-CREATE TRIGGER `stock_reservations_guard_insert`
-BEFORE INSERT ON `stock_reservations`
-WHEN NEW.`status` = 'reserved'
-BEGIN
-	SELECT CASE
-		WHEN COALESCE((
-			SELECT `stock_quantity` - `reserved_quantity`
-			FROM `product_variants`
-			WHERE `id` = NEW.`variant_id` AND `sku` = NEW.`variant_sku`
-		), -1) < NEW.`quantity`
-		THEN RAISE(ABORT, 'INSUFFICIENT_STOCK')
-	END;
-END;--> statement-breakpoint
-CREATE TRIGGER `stock_reservations_apply_insert`
-AFTER INSERT ON `stock_reservations`
-WHEN NEW.`status` = 'reserved'
-BEGIN
-	UPDATE `product_variants`
-	SET `reserved_quantity` = `reserved_quantity` + NEW.`quantity`,
-		`updated_at` = NEW.`updated_at`
-	WHERE `id` = NEW.`variant_id`;
-END;--> statement-breakpoint
-CREATE TRIGGER `stock_reservations_release_update`
-AFTER UPDATE OF `status` ON `stock_reservations`
-WHEN OLD.`status` = 'reserved' AND NEW.`status` IN ('released', 'expired')
-BEGIN
-	UPDATE `product_variants`
-	SET `reserved_quantity` = MAX(0, `reserved_quantity` - OLD.`quantity`),
-		`updated_at` = NEW.`updated_at`
-	WHERE `id` = OLD.`variant_id`;
-END;--> statement-breakpoint
-CREATE TRIGGER `stock_reservations_confirm_update`
-AFTER UPDATE OF `status` ON `stock_reservations`
-WHEN OLD.`status` = 'reserved' AND NEW.`status` = 'confirmed'
-BEGIN
-	UPDATE `product_variants`
-	SET `stock_quantity` = `stock_quantity` - OLD.`quantity`,
-		`reserved_quantity` = MAX(0, `reserved_quantity` - OLD.`quantity`),
-		`updated_at` = NEW.`updated_at`
-	WHERE `id` = OLD.`variant_id`;
-END;
+ALTER TABLE `product_pricing` ADD `pricing_version` integer DEFAULT 1 NOT NULL;

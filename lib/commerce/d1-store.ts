@@ -46,20 +46,33 @@ const isConstraint = (error: unknown, token: string) =>
 export async function cleanupExpiredD1(d1: CommerceD1, now = new Date()) {
   const nowIso = now.toISOString();
   const expired = await d1
-    .prepare(`SELECT DISTINCT order_id FROM stock_reservations
-      WHERE status = 'reserved' AND expires_at <= ?`)
+    .prepare(`SELECT order_id, variant_id, SUM(quantity) AS quantity
+      FROM stock_reservations
+      WHERE status = 'reserved' AND expires_at <= ?
+      GROUP BY order_id, variant_id`)
     .bind(nowIso)
-    .all<{ order_id: string }>();
-  const orderIds = expired.results?.map((row) => row.order_id) ?? [];
+    .all<{ order_id: string; variant_id: string; quantity: number }>();
+  const expiredRows = expired.results ?? [];
+  const orderIds = [...new Set(expiredRows.map((row) => row.order_id))];
   if (!orderIds.length) return;
 
-  const statements: D1Prepared[] = [
+  const statements: D1Prepared[] = expiredRows.map((row) =>
+    d1
+      .prepare(`UPDATE product_variants
+        SET reserved_quantity = MAX(0, reserved_quantity - ?), updated_at = ?
+        WHERE id = ? AND EXISTS (
+          SELECT 1 FROM stock_reservations
+          WHERE order_id = ? AND variant_id = ? AND status = 'reserved' AND expires_at <= ?
+        )`)
+      .bind(row.quantity, nowIso, row.variant_id, row.order_id, row.variant_id, nowIso),
+  );
+  statements.push(
     d1
       .prepare(`UPDATE stock_reservations
         SET status = 'expired', updated_at = ?
         WHERE status = 'reserved' AND expires_at <= ?`)
       .bind(nowIso, nowIso),
-  ];
+  );
   for (const orderId of orderIds) {
     const order = await d1
       .prepare("SELECT status FROM orders WHERE id = ? LIMIT 1")
@@ -68,14 +81,15 @@ export async function cleanupExpiredD1(d1: CommerceD1, now = new Date()) {
     if (!order || !["awaiting_payment", "pending_contact"].includes(order.status)) continue;
     statements.push(
       d1
+        .prepare(`INSERT INTO order_status_history (
+          id, order_id, from_status, to_status, actor_type, reason, created_at
+        ) SELECT ?, ?, ?, 'expired', 'system', 'reservation_ttl_elapsed', ?
+          WHERE EXISTS (SELECT 1 FROM orders WHERE id = ? AND status = ?)`)
+        .bind(crypto.randomUUID(), orderId, order.status, nowIso, orderId, order.status),
+      d1
         .prepare(`UPDATE orders SET status = 'expired', updated_at = ?
           WHERE id = ? AND status IN ('awaiting_payment', 'pending_contact')`)
         .bind(nowIso, orderId),
-      d1
-        .prepare(`INSERT INTO order_status_history (
-          id, order_id, from_status, to_status, actor_type, reason, created_at
-        ) VALUES (?, ?, ?, 'expired', 'system', 'reservation_ttl_elapsed', ?)`)
-        .bind(crypto.randomUUID(), orderId, order.status, nowIso),
     );
   }
   await d1.batch(statements);
@@ -321,16 +335,36 @@ export async function createOrderD1(input: {
         .prepare(`INSERT INTO stock_reservations (
           id, order_id, variant_id, variant_sku, quantity, status,
           expires_at, created_at, updated_at
-        ) VALUES (?, ?, ?, ?, ?, 'reserved', ?, ?, ?)`)
+        ) VALUES (?, ?, ?, ?, (
+          SELECT CASE
+            WHEN stock_quantity - reserved_quantity >= ? THEN ?
+            ELSE NULL
+          END FROM product_variants WHERE id = ? AND sku = ?
+        ), 'reserved', ?, ?, ?)`)
         .bind(
           reservation.id,
           order.id,
           reservation.variantId,
           reservation.variantSku,
           reservation.quantity,
+          reservation.quantity,
+          reservation.variantId,
+          reservation.variantSku,
           reservation.expiresAt,
           order.createdAt,
           order.updatedAt,
+        ),
+    ),
+    ...[...reservationsByVariant.values()].map((reservation) =>
+      input.d1
+        .prepare(`UPDATE product_variants
+          SET reserved_quantity = reserved_quantity + ?, updated_at = ?
+          WHERE id = ? AND sku = ?`)
+        .bind(
+          reservation.quantity,
+          order.updatedAt,
+          reservation.variantId,
+          reservation.variantSku,
         ),
     ),
   ];
@@ -338,7 +372,10 @@ export async function createOrderD1(input: {
   try {
     await input.d1.batch(statements);
   } catch (error) {
-    if (isConstraint(error, "INSUFFICIENT_STOCK")) {
+    if (
+      isConstraint(error, "INSUFFICIENT_STOCK") ||
+      isConstraint(error, "stock_reservations.quantity")
+    ) {
       throw commerceError("INSUFFICIENT_STOCK", "Остаток изменился во время оформления.", {
         recoverable: true,
       });
@@ -439,16 +476,33 @@ export async function confirmPaymentD1(input: {
     .first<{ id: string; public_token: string; status: OrderStatus }>();
   if (!order) throw commerceError("ORDER_NOT_FOUND", "Заказ не найден.", { recoverable: false });
   assertOrderTransition(order.status, "paid", input.actorType);
+  const reservations = await input.d1
+    .prepare(`SELECT variant_id, SUM(quantity) AS quantity
+      FROM stock_reservations WHERE order_id = ? AND status = 'reserved'
+      GROUP BY variant_id`)
+    .bind(order.id)
+    .all<{ variant_id: string; quantity: number }>();
   await input.d1.batch([
+    ...(reservations.results ?? []).map((reservation) =>
+      input.d1
+        .prepare(`UPDATE product_variants
+          SET stock_quantity = stock_quantity - ?,
+              reserved_quantity = MAX(0, reserved_quantity - ?),
+              updated_at = ?
+          WHERE id = ? AND EXISTS (
+            SELECT 1 FROM orders WHERE id = ? AND status = 'payment_reported'
+          )`)
+        .bind(reservation.quantity, reservation.quantity, nowIso, reservation.variant_id, order.id),
+    ),
     input.d1
       .prepare(`INSERT INTO order_status_history (
         id, order_id, from_status, to_status, actor_type, actor_id, reason, created_at
       ) SELECT ?, ?, ?, 'paid', ?, ?, 'trusted_payment_confirmation', ?
         WHERE EXISTS (SELECT 1 FROM orders WHERE id = ? AND status = 'payment_reported')`)
       .bind(crypto.randomUUID(), order.id, order.status, input.actorType, input.actorId ?? null, nowIso, order.id),
-    input.d1.prepare("UPDATE orders SET status = 'paid', updated_at = ? WHERE id = ? AND status = 'payment_reported'").bind(nowIso, order.id),
-    input.d1.prepare("UPDATE payments SET status = 'paid', verified_at = ?, updated_at = ? WHERE order_id = ?").bind(nowIso, nowIso, order.id),
     input.d1.prepare("UPDATE stock_reservations SET status = 'confirmed', updated_at = ? WHERE order_id = ? AND status = 'reserved'").bind(nowIso, order.id),
+    input.d1.prepare("UPDATE payments SET status = 'paid', verified_at = ?, updated_at = ? WHERE order_id = ? AND status = 'payment_reported'").bind(nowIso, nowIso, order.id),
+    input.d1.prepare("UPDATE orders SET status = 'paid', updated_at = ? WHERE id = ? AND status = 'payment_reported'").bind(nowIso, order.id),
   ]);
   return readPublicOrderBy(input.d1, "public_token", order.public_token);
 }
@@ -468,7 +522,22 @@ export async function cancelOrderD1(input: {
     .first<{ id: string; public_token: string; status: OrderStatus }>();
   if (!order) throw commerceError("ORDER_NOT_FOUND", "Заказ не найден.", { recoverable: false });
   assertOrderTransition(order.status, "cancelled", "admin");
+  const reservations = await input.d1
+    .prepare(`SELECT variant_id, SUM(quantity) AS quantity
+      FROM stock_reservations WHERE order_id = ? AND status = 'reserved'
+      GROUP BY variant_id`)
+    .bind(order.id)
+    .all<{ variant_id: string; quantity: number }>();
   await input.d1.batch([
+    ...(reservations.results ?? []).map((reservation) =>
+      input.d1
+        .prepare(`UPDATE product_variants
+          SET reserved_quantity = MAX(0, reserved_quantity - ?), updated_at = ?
+          WHERE id = ? AND EXISTS (
+            SELECT 1 FROM orders WHERE id = ? AND status = ?
+          )`)
+        .bind(reservation.quantity, nowIso, reservation.variant_id, order.id, order.status),
+    ),
     input.d1
       .prepare(`INSERT INTO order_status_history (
         id, order_id, from_status, to_status, actor_type, actor_id, reason, created_at
