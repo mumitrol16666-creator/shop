@@ -36,18 +36,18 @@ export function ProductModal({
   onClose,
   onAddToCart,
 }: ProductModalProps) {
-  const [installmentMonths, setInstallmentMonths] = useState<number>(12);
-  const [isPlayingSound, setIsPlayingSound] = useState(false);
-  const [selectedBundle, setSelectedBundle] = useState<"base" | "gift_course" | "pro_pack">("gift_course");
-  const [selectedStrings, setSelectedStrings] = useState<"elixir" | "daddario" | null>(null);
-
-  if (!selected) return null;
-
-  const proPackTitle = selected.proPackTitle || "Чехол + Ремень + VIP Доступ";
+  const proPackTitle = selected?.proPackTitle || "Чехол + Ремень + VIP Доступ";
   const proPackPrice = selected.proPackPrice !== undefined ? selected.proPackPrice : 8900;
+  const showProPackOption = selected.allowProPack !== false;
+  const showCourseOption = selected.attachedCourseId !== "none";
   const showStringsUpsell = selected.allowStringsUpsell !== false;
 
-  const attachedCourse = resolveAttachedCourse(selected);
+  const [selectedBundle, setSelectedBundle] = useState<"base" | "gift_course" | "pro_pack">(
+    showCourseOption ? "gift_course" : showProPackOption ? "pro_pack" : "base"
+  );
+  const [selectedStrings, setSelectedStrings] = useState<"elixir" | "daddario" | null>(null);
+
+  const attachedCourse = showCourseOption ? resolveAttachedCourse(selected) : null;
   const selectedImage = selectedVariant?.image || selected.image;
   const basePrice = selectedVariant?.price || selected.price || 0;
   const bundleDelta = selectedBundle === "pro_pack" ? proPackPrice : 0;
@@ -188,54 +188,60 @@ export function ProductModal({
               </div>
 
               {/* Bundle & Course Selector */}
-              <div className="bundle-selector-card">
-                <span className="bundle-label">ВЫБЕРИТЕ КОМПЛЕКТАЦИЮ:</span>
-                <div className="bundle-options-grid">
-                  <button
-                    type="button"
-                    className={selectedBundle === "base" ? "bundle-btn active" : "bundle-btn"}
-                    onClick={() => setSelectedBundle("base")}
-                  >
-                    <span className="bundle-title">🎸 Только инструмент</span>
-                    <small>Заводская комплектация</small>
-                    <strong>+0 ₸</strong>
-                  </button>
-
-                  {attachedCourse ? (
+              {(showCourseOption || showProPackOption) && (
+                <div className="bundle-selector-card">
+                  <span className="bundle-label">ВЫБЕРИТЕ КОМПЛЕКТАЦИЮ:</span>
+                  <div className="bundle-options-grid">
                     <button
                       type="button"
-                      className={selectedBundle === "gift_course" ? "bundle-btn active recommended" : "bundle-btn recommended"}
-                      onClick={() => setSelectedBundle("gift_course")}
+                      className={selectedBundle === "base" ? "bundle-btn active" : "bundle-btn"}
+                      onClick={() => setSelectedBundle("base")}
                     >
-                      <span className="bundle-badge-pill">ПОДАРОК 0 ₸</span>
-                      <span className="bundle-title">🎁 + Курс «{attachedCourse.title.length > 26 ? attachedCourse.title.slice(0, 26) + "..." : attachedCourse.title}»</span>
-                      <small>{attachedCourse.lessonsCount || 10} уроков · Преп. {attachedCourse.instructor.name}</small>
-                      <strong className="free-text">Бесплатно ({money(attachedCourse.price)} ₸)</strong>
+                      <span className="bundle-title">🎸 Только инструмент</span>
+                      <small>Заводская комплектация</small>
+                      <strong>+0 ₸</strong>
                     </button>
-                  ) : (
-                    <button
-                      type="button"
-                      className={selectedBundle === "gift_course" ? "bundle-btn active recommended" : "bundle-btn recommended"}
-                      onClick={() => setSelectedBundle("gift_course")}
-                    >
-                      <span className="bundle-badge-pill">ПОДАРОК 0 ₸</span>
-                      <span className="bundle-title">🎁 Гитара + Онлайн-курс</span>
-                      <small>12 видеоуроков от Maestro</small>
-                      <strong className="free-text">Бесплатно</strong>
-                    </button>
-                  )}
 
-                  <button
-                    type="button"
-                    className={selectedBundle === "pro_pack" ? "bundle-btn active" : "bundle-btn"}
-                    onClick={() => setSelectedBundle("pro_pack")}
-                  >
-                    <span className="bundle-title">👑 PRO Комплект</span>
-                    <small>{proPackTitle}</small>
-                    <strong>+{money(proPackPrice)} ₸</strong>
-                  </button>
+                    {showCourseOption && (
+                      attachedCourse ? (
+                        <button
+                          type="button"
+                          className={selectedBundle === "gift_course" ? "bundle-btn active recommended" : "bundle-btn recommended"}
+                          onClick={() => setSelectedBundle("gift_course")}
+                        >
+                          <span className="bundle-badge-pill">ПОДАРОК 0 ₸</span>
+                          <span className="bundle-title">🎁 + Курс «{attachedCourse.title.length > 26 ? attachedCourse.title.slice(0, 26) + "..." : attachedCourse.title}»</span>
+                          <small>{attachedCourse.lessonsCount || 10} уроков · Преп. {attachedCourse.instructor.name}</small>
+                          <strong className="free-text">Бесплатно ({money(attachedCourse.price)} ₸)</strong>
+                        </button>
+                      ) : (
+                        <button
+                          type="button"
+                          className={selectedBundle === "gift_course" ? "bundle-btn active recommended" : "bundle-btn recommended"}
+                          onClick={() => setSelectedBundle("gift_course")}
+                        >
+                          <span className="bundle-badge-pill">ПОДАРОК 0 ₸</span>
+                          <span className="bundle-title">🎁 Гитара + Онлайн-курс</span>
+                          <small>12 видеоуроков от Maestro</small>
+                          <strong className="free-text">Бесплатно</strong>
+                        </button>
+                      )
+                    )}
+
+                    {showProPackOption && (
+                      <button
+                        type="button"
+                        className={selectedBundle === "pro_pack" ? "bundle-btn active" : "bundle-btn"}
+                        onClick={() => setSelectedBundle("pro_pack")}
+                      >
+                        <span className="bundle-title">👑 PRO Комплект</span>
+                        <small>{proPackTitle}</small>
+                        <strong>+{money(proPackPrice)} ₸</strong>
+                      </button>
+                    )}
+                  </div>
                 </div>
-              </div>
+              )}
 
               {/* Exclusive Strings Order Bump (-50%) */}
               {showStringsUpsell && (

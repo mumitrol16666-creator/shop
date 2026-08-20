@@ -54,6 +54,7 @@ export type Product = {
   features: string[];
   attachedCourseId?: string;
   audioUrl?: string;
+  allowProPack?: boolean;
   proPackTitle?: string;
   proPackPrice?: number;
   proPackDescription?: string;

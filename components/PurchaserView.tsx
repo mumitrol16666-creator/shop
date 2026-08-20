@@ -92,6 +92,7 @@ export function PurchaserView({
   const [targetAudience, setTargetAudience] = useState("Для начинающих");
   const [attachedCourseId, setAttachedCourseId] = useState<string>("auto");
   const [internalAudioUrl, setInternalAudioUrl] = useState<string>("");
+  const [internalAllowProPack, setInternalAllowProPack] = useState<boolean>(true);
   const [internalProPackTitle, setInternalProPackTitle] = useState<string>("Чехол + Ремень + VIP Доступ");
   const [internalProPackPrice, setInternalProPackPrice] = useState<number>(8900);
   const [internalAllowStrings, setInternalAllowStrings] = useState<boolean>(true);
@@ -250,6 +251,7 @@ export function PurchaserView({
     setTargetAudience(product.badge ?? "");
     setAttachedCourseId(product.attachedCourseId || "auto");
     setInternalAudioUrl(product.audioUrl || "");
+    setInternalAllowProPack(product.allowProPack !== false);
     setInternalProPackTitle(product.proPackTitle || "Чехол + Ремень + VIP Доступ");
     setInternalProPackPrice(product.proPackPrice !== undefined ? product.proPackPrice : 8900);
     setInternalAllowStrings(product.allowStringsUpsell !== false);
@@ -408,6 +410,7 @@ export function PurchaserView({
           targetAudience,
           attachedCourseId: attachedCourseId === "none" ? "" : attachedCourseId,
           audioUrl: internalAudioUrl.trim(),
+          allowProPack: internalAllowProPack,
           proPackTitle: internalProPackTitle.trim(),
           proPackPrice: internalProPackPrice,
           allowStringsUpsell: internalAllowStrings,
@@ -460,6 +463,7 @@ export function PurchaserView({
         price: Math.round(retail),
         attachedCourseId: attachedCourseId === "none" ? undefined : attachedCourseId,
         audioUrl: internalAudioUrl.trim() || undefined,
+        allowProPack: internalAllowProPack,
         proPackTitle: internalProPackTitle.trim(),
         proPackPrice: internalProPackPrice,
         allowStringsUpsell: internalAllowStrings,
@@ -933,89 +937,163 @@ export function PurchaserView({
             <div className="tab-pane-content">
               <div className="tab-section-head">
                 <strong>Комплектация, подарки и допродажи</strong>
-                <p>Настройте подарочный онлайн-курс, состав PRO-комплекта и предложение струн со скидкой 50%.</p>
+                <p>Включайте или отключайте подарочный онлайн-курс, состав PRO-комплекта и предложение струн со скидкой 50% с помощью переключателей справа.</p>
               </div>
 
               <div className="bundle-editor-grid">
-                <div className="bundle-config-card">
-                  <div className="bundle-card-top">
-                    <span className="bundle-icon">🎁</span>
-                    <div>
-                      <strong>Подарочный онлайн-курс к инструменту</strong>
-                      <span>Отображается как бесплатный подарок на 19 900 ₸ при покупке.</span>
+                {/* 1. GIFT COURSE */}
+                <div className={`bundle-config-card ${attachedCourseId !== "none" ? "enabled" : "disabled"}`}>
+                  <div className="bundle-card-header-row">
+                    <div className="bundle-card-top">
+                      <span className="bundle-icon">🎁</span>
+                      <div>
+                        <strong>1. Подарочный онлайн-курс к инструменту</strong>
+                        <span>Бесплатный видеокурс в подарок (ценность 19 900 ₸) при покупке</span>
+                      </div>
                     </div>
-                  </div>
-                  <select
-                    value={attachedCourseId}
-                    onChange={(e) => {
-                      setAttachedCourseId(e.target.value);
-                      setIsDirty(true);
-                    }}
-                  >
-                    <option value="auto">✨ Автоматически (по типу: Акустика → с нуля / Электро → риффы / Укулеле → экспресс)</option>
-                    <option value="none">❌ Без курса (только инструмент)</option>
-                    {adminCourses.map((c) => (
-                      <option key={c.id} value={c.id}>
-                        🎓 {c.title} ({c.level}, {c.lessonsCount || 10} уроков)
-                      </option>
-                    ))}
-                  </select>
-                </div>
 
-                <div className="bundle-config-card">
-                  <div className="bundle-card-top">
-                    <span className="bundle-icon">👑</span>
-                    <div>
-                      <strong>PRO Комплект (Чехол, аксессуары и VIP)</strong>
-                      <span>Дополнительная комплектация с увеличением среднего чека.</span>
-                    </div>
-                  </div>
-                  <div className="two-cols-input">
-                    <label>
-                      Состав аксессуаров в PRO-комплекте
-                      <input
-                        value={internalProPackTitle}
-                        onChange={(e) => {
-                          setInternalProPackTitle(e.target.value);
-                          setIsDirty(true);
-                        }}
-                        placeholder="Чехол + Ремень + VIP Доступ"
-                      />
-                    </label>
-                    <label>
-                      Доплата за PRO-комплект (₸)
-                      <input
-                        type="number"
-                        value={internalProPackPrice}
-                        onChange={(e) => {
-                          setInternalProPackPrice(Number(e.target.value) || 0);
-                          setIsDirty(true);
-                        }}
-                        placeholder="8900"
-                      />
-                    </label>
-                  </div>
-                </div>
-
-                <div className="bundle-config-card">
-                  <div className="bundle-card-top">
-                    <span className="bundle-icon">⚡</span>
-                    <div>
-                      <strong>Допродажа струн со скидкой 50% (Order Bump)</strong>
-                      <span>Показывает выбор Elixir Nanoweb (+4 950 ₸) и D'Addario Pro (+2 450 ₸) при добавлении в корзину.</span>
-                    </div>
-                  </div>
-                  <label className="checkbox-setting-label">
-                    <input
-                      type="checkbox"
-                      checked={internalAllowStrings}
-                      onChange={(e) => {
-                        setInternalAllowStrings(e.target.checked);
+                    <button
+                      type="button"
+                      className={`bundle-switch-btn ${attachedCourseId !== "none" ? "active" : ""}`}
+                      onClick={() => {
+                        setAttachedCourseId((prev) => (prev === "none" ? "auto" : "none"));
                         setIsDirty(true);
                       }}
-                    />
-                    <span>Включить предложение запасного комплекта струн (-50%) в карточке этой гитары</span>
-                  </label>
+                    >
+                      <span className="switch-knob" />
+                      <span className="switch-text">{attachedCourseId !== "none" ? "ВКЛЮЧЕН" : "ОТКЛЮЧЕН"}</span>
+                    </button>
+                  </div>
+
+                  {attachedCourseId !== "none" ? (
+                    <div className="bundle-card-body">
+                      <label>
+                        Привязанный курс из Академии Maestro:
+                        <select
+                          value={attachedCourseId}
+                          onChange={(e) => {
+                            setAttachedCourseId(e.target.value);
+                            setIsDirty(true);
+                          }}
+                        >
+                          <option value="auto">✨ Автоматически (по категории инструмента)</option>
+                          {adminCourses.map((c) => (
+                            <option key={c.id} value={c.id}>
+                              🎓 {c.title} ({c.level}, {c.lessonsCount || 10} уроков)
+                            </option>
+                          ))}
+                        </select>
+                      </label>
+                      <span className="bundle-status-tag green">✓ Отображается на карточке товара как бесплатный подарок (0 ₸)</span>
+                    </div>
+                  ) : (
+                    <div className="bundle-card-disabled-hint">
+                      <p>❌ <strong>Курс отключен</strong>. Товар продается только как инструмент в заводской коробке без онлайн-уроков.</p>
+                    </div>
+                  )}
+                </div>
+
+                {/* 2. PRO PACK */}
+                <div className={`bundle-config-card ${internalAllowProPack ? "enabled" : "disabled"}`}>
+                  <div className="bundle-card-header-row">
+                    <div className="bundle-card-top">
+                      <span className="bundle-icon">👑</span>
+                      <div>
+                        <strong>2. PRO Комплект (Чехол, аксессуары и VIP)</strong>
+                        <span>Расширенный набор аксессуаров для увеличения среднего чека</span>
+                      </div>
+                    </div>
+
+                    <button
+                      type="button"
+                      className={`bundle-switch-btn ${internalAllowProPack ? "active" : ""}`}
+                      onClick={() => {
+                        setInternalAllowProPack((prev) => !prev);
+                        setIsDirty(true);
+                      }}
+                    >
+                      <span className="switch-knob" />
+                      <span className="switch-text">{internalAllowProPack ? "ВКЛЮЧЕН" : "ОТКЛЮЧЕН"}</span>
+                    </button>
+                  </div>
+
+                  {internalAllowProPack ? (
+                    <div className="bundle-card-body">
+                      <div className="two-cols-input">
+                        <label>
+                          Название и состав аксессуаров в PRO-комплекте
+                          <input
+                            value={internalProPackTitle}
+                            onChange={(e) => {
+                              setInternalProPackTitle(e.target.value);
+                              setIsDirty(true);
+                            }}
+                            placeholder="Чехол + Ремень + VIP Доступ"
+                          />
+                        </label>
+                        <label>
+                          Доплата за PRO-комплект (₸)
+                          <input
+                            type="number"
+                            value={internalProPackPrice}
+                            onChange={(e) => {
+                              setInternalProPackPrice(Number(e.target.value) || 0);
+                              setIsDirty(true);
+                            }}
+                            placeholder="8900"
+                          />
+                        </label>
+                      </div>
+                      <span className="bundle-status-tag gold">✓ Покупатель сможет выбрать кнопку «👑 PRO Комплект (+{money(internalProPackPrice)} ₸)»</span>
+                    </div>
+                  ) : (
+                    <div className="bundle-card-disabled-hint">
+                      <p>❌ <strong>PRO-комплект отключен</strong>. Кнопка выбора PRO-комплекта скрыта на карточке этого товара.</p>
+                    </div>
+                  )}
+                </div>
+
+                {/* 3. STRINGS UPSELL (-50%) */}
+                <div className={`bundle-config-card ${internalAllowStrings ? "enabled" : "disabled"}`}>
+                  <div className="bundle-card-header-row">
+                    <div className="bundle-card-top">
+                      <span className="bundle-icon">⚡</span>
+                      <div>
+                        <strong>3. Допродажа струн со скидкой 50% (Order Bump)</strong>
+                        <span>Выбор премиум-струн Elixir / D'Addario со скидкой 50%</span>
+                      </div>
+                    </div>
+
+                    <button
+                      type="button"
+                      className={`bundle-switch-btn ${internalAllowStrings ? "active" : ""}`}
+                      onClick={() => {
+                        setInternalAllowStrings((prev) => !prev);
+                        setIsDirty(true);
+                      }}
+                    >
+                      <span className="switch-knob" />
+                      <span className="switch-text">{internalAllowStrings ? "ВКЛЮЧЕН" : "ОТКЛЮЧЕН"}</span>
+                    </button>
+                  </div>
+
+                  {internalAllowStrings ? (
+                    <div className="bundle-card-body">
+                      <div className="bump-preview-pills" style={{ display: "flex", gap: "10px", flexWrap: "wrap", margin: "4px 0" }}>
+                        <span style={{ fontSize: "12px", background: "#fff", padding: "6px 12px", borderRadius: "8px", border: "1px solid var(--line)", fontWeight: 700 }}>
+                          👑 Струны Elixir Nanoweb (USA): <strong>+4 950 ₸</strong> <del style={{ color: "var(--muted)" }}>9 900 ₸</del>
+                        </span>
+                        <span style={{ fontSize: "12px", background: "#fff", padding: "6px 12px", borderRadius: "8px", border: "1px solid var(--line)", fontWeight: 700 }}>
+                          🎸 Струны D'Addario Pro: <strong>+2 450 ₸</strong> <del style={{ color: "var(--muted)" }}>4 900 ₸</del>
+                        </span>
+                      </div>
+                      <span className="bundle-status-tag green">✓ Блок предложения запасных струн со скидкой -50% активен в карточке</span>
+                    </div>
+                  ) : (
+                    <div className="bundle-card-disabled-hint">
+                      <p>❌ <strong>Спецпредложение струн отключено</strong>. Блок допродажи струн скрыт в карточке этого товара.</p>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>

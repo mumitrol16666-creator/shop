@@ -14306,15 +14306,16 @@ function ProductModal({
   onClose,
   onAddToCart
 }) {
-  const [installmentMonths, setInstallmentMonths] = (0, import_react4.useState)(12);
-  const [isPlayingSound, setIsPlayingSound] = (0, import_react4.useState)(false);
-  const [selectedBundle, setSelectedBundle] = (0, import_react4.useState)("gift_course");
-  const [selectedStrings, setSelectedStrings] = (0, import_react4.useState)(null);
-  if (!selected) return null;
-  const proPackTitle = selected.proPackTitle || "\u0427\u0435\u0445\u043E\u043B + \u0420\u0435\u043C\u0435\u043D\u044C + VIP \u0414\u043E\u0441\u0442\u0443\u043F";
+  const proPackTitle = selected?.proPackTitle || "\u0427\u0435\u0445\u043E\u043B + \u0420\u0435\u043C\u0435\u043D\u044C + VIP \u0414\u043E\u0441\u0442\u0443\u043F";
   const proPackPrice = selected.proPackPrice !== void 0 ? selected.proPackPrice : 8900;
+  const showProPackOption = selected.allowProPack !== false;
+  const showCourseOption = selected.attachedCourseId !== "none";
   const showStringsUpsell = selected.allowStringsUpsell !== false;
-  const attachedCourse = resolveAttachedCourse(selected);
+  const [selectedBundle, setSelectedBundle] = (0, import_react4.useState)(
+    showCourseOption ? "gift_course" : showProPackOption ? "pro_pack" : "base"
+  );
+  const [selectedStrings, setSelectedStrings] = (0, import_react4.useState)(null);
+  const attachedCourse = showCourseOption ? resolveAttachedCourse(selected) : null;
   const selectedImage = selectedVariant?.image || selected.image;
   const basePrice = selectedVariant?.price || selected.price || 0;
   const bundleDelta = selectedBundle === "pro_pack" ? proPackPrice : 0;
@@ -14449,7 +14450,7 @@ function ProductModal({
           )) }),
           selectedVariant?.note && /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { className: "variant-note", children: selectedVariant.note })
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "bundle-selector-card", children: [
+        (showCourseOption || showProPackOption) && /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "bundle-selector-card", children: [
           /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "bundle-label", children: "\u0412\u042B\u0411\u0415\u0420\u0418\u0422\u0415 \u041A\u041E\u041C\u041F\u041B\u0415\u041A\u0422\u0410\u0426\u0418\u042E:" }),
           /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "bundle-options-grid", children: [
             /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)(
@@ -14465,7 +14466,7 @@ function ProductModal({
                 ]
               }
             ),
-            attachedCourse ? /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)(
+            showCourseOption && (attachedCourse ? /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)(
               "button",
               {
                 type: "button",
@@ -14503,8 +14504,8 @@ function ProductModal({
                   /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("strong", { className: "free-text", children: "\u0411\u0435\u0441\u043F\u043B\u0430\u0442\u043D\u043E" })
                 ]
               }
-            ),
-            /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)(
+            )),
+            showProPackOption && /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)(
               "button",
               {
                 type: "button",
@@ -17299,7 +17300,7 @@ function PurchaserView({
   const [other, setOther] = (0, import_react12.useState)(300);
   const [taxPercent, setTaxPercent] = (0, import_react12.useState)(3);
   const [bankPercent, setBankPercent] = (0, import_react12.useState)(11);
-  const [installmentMonths, setInstallmentMonths] = (0, import_react12.useState)(12);
+  const [installmentMonths2, setInstallmentMonths2] = (0, import_react12.useState)(12);
   const [sellerPercent, setSellerPercent] = (0, import_react12.useState)(5);
   const [markup, setMarkup] = (0, import_react12.useState)(35);
   const [manualPricing, setManualPricing] = (0, import_react12.useState)(false);
@@ -17322,6 +17323,7 @@ function PurchaserView({
   const [targetAudience, setTargetAudience] = (0, import_react12.useState)("\u0414\u043B\u044F \u043D\u0430\u0447\u0438\u043D\u0430\u044E\u0449\u0438\u0445");
   const [attachedCourseId, setAttachedCourseId] = (0, import_react12.useState)("auto");
   const [internalAudioUrl, setInternalAudioUrl] = (0, import_react12.useState)("");
+  const [internalAllowProPack, setInternalAllowProPack] = (0, import_react12.useState)(true);
   const [internalProPackTitle, setInternalProPackTitle] = (0, import_react12.useState)("\u0427\u0435\u0445\u043E\u043B + \u0420\u0435\u043C\u0435\u043D\u044C + VIP \u0414\u043E\u0441\u0442\u0443\u043F");
   const [internalProPackPrice, setInternalProPackPrice] = (0, import_react12.useState)(8900);
   const [internalAllowStrings, setInternalAllowStrings] = (0, import_react12.useState)(true);
@@ -17444,7 +17446,7 @@ function PurchaserView({
     setOther(preset.otherCostsKzt);
     setTaxPercent(preset.taxPercent);
     setBankPercent(preset.bankInstallmentPercent);
-    setInstallmentMonths(preset.installmentMonths);
+    setInstallmentMonths2(preset.installmentMonths);
     setSellerPercent(preset.sellerPercent);
     setMarkup(preset.targetProfitPercent);
     setIsDirty(true);
@@ -17468,6 +17470,7 @@ function PurchaserView({
     setTargetAudience(product.badge ?? "");
     setAttachedCourseId(product.attachedCourseId || "auto");
     setInternalAudioUrl(product.audioUrl || "");
+    setInternalAllowProPack(product.allowProPack !== false);
     setInternalProPackTitle(product.proPackTitle || "\u0427\u0435\u0445\u043E\u043B + \u0420\u0435\u043C\u0435\u043D\u044C + VIP \u0414\u043E\u0441\u0442\u0443\u043F");
     setInternalProPackPrice(product.proPackPrice !== void 0 ? product.proPackPrice : 8900);
     setInternalAllowStrings(product.allowStringsUpsell !== false);
@@ -17508,7 +17511,7 @@ function PurchaserView({
       setOther(p.otherCostsKzt);
       setTaxPercent(p.taxPercent);
       setBankPercent(p.bankInstallmentPercent);
-      setInstallmentMonths(p.installmentMonths);
+      setInstallmentMonths2(p.installmentMonths);
       setSellerPercent(p.sellerPercent);
       setMarkup(p.targetProfitPercent);
       setManualPricing(p.pricingMode === "manual");
@@ -17604,6 +17607,7 @@ function PurchaserView({
           targetAudience,
           attachedCourseId: attachedCourseId === "none" ? "" : attachedCourseId,
           audioUrl: internalAudioUrl.trim(),
+          allowProPack: internalAllowProPack,
           proPackTitle: internalProPackTitle.trim(),
           proPackPrice: internalProPackPrice,
           allowStringsUpsell: internalAllowStrings,
@@ -17630,7 +17634,7 @@ function PurchaserView({
             otherCostsKzt: other,
             taxPercent,
             bankInstallmentPercent: bankPercent,
-            installmentMonths,
+            installmentMonths: installmentMonths2,
             sellerPercent,
             targetProfitPercent: markup,
             pricingMode: manualPricing ? "manual" : "auto",
@@ -17654,6 +17658,7 @@ function PurchaserView({
         price: Math.round(retail),
         attachedCourseId: attachedCourseId === "none" ? void 0 : attachedCourseId,
         audioUrl: internalAudioUrl.trim() || void 0,
+        allowProPack: internalAllowProPack,
         proPackTitle: internalProPackTitle.trim(),
         proPackPrice: internalProPackPrice,
         allowStringsUpsell: internalAllowStrings,
@@ -17801,7 +17806,7 @@ function PurchaserView({
           otherCostsKzt: other,
           taxPercent,
           bankInstallmentPercent: bankPercent,
-          installmentMonths,
+          installmentMonths: installmentMonths2,
           sellerPercent,
           targetProfitPercent: markup
         }
@@ -18159,103 +18164,181 @@ function PurchaserView({
         activeTab === "bundle" && /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { className: "tab-pane-content", children: [
           /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { className: "tab-section-head", children: [
             /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("strong", { children: "\u041A\u043E\u043C\u043F\u043B\u0435\u043A\u0442\u0430\u0446\u0438\u044F, \u043F\u043E\u0434\u0430\u0440\u043A\u0438 \u0438 \u0434\u043E\u043F\u0440\u043E\u0434\u0430\u0436\u0438" }),
-            /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("p", { children: "\u041D\u0430\u0441\u0442\u0440\u043E\u0439\u0442\u0435 \u043F\u043E\u0434\u0430\u0440\u043E\u0447\u043D\u044B\u0439 \u043E\u043D\u043B\u0430\u0439\u043D-\u043A\u0443\u0440\u0441, \u0441\u043E\u0441\u0442\u0430\u0432 PRO-\u043A\u043E\u043C\u043F\u043B\u0435\u043A\u0442\u0430 \u0438 \u043F\u0440\u0435\u0434\u043B\u043E\u0436\u0435\u043D\u0438\u0435 \u0441\u0442\u0440\u0443\u043D \u0441\u043E \u0441\u043A\u0438\u0434\u043A\u043E\u0439 50%." })
+            /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("p", { children: "\u0412\u043A\u043B\u044E\u0447\u0430\u0439\u0442\u0435 \u0438\u043B\u0438 \u043E\u0442\u043A\u043B\u044E\u0447\u0430\u0439\u0442\u0435 \u043F\u043E\u0434\u0430\u0440\u043E\u0447\u043D\u044B\u0439 \u043E\u043D\u043B\u0430\u0439\u043D-\u043A\u0443\u0440\u0441, \u0441\u043E\u0441\u0442\u0430\u0432 PRO-\u043A\u043E\u043C\u043F\u043B\u0435\u043A\u0442\u0430 \u0438 \u043F\u0440\u0435\u0434\u043B\u043E\u0436\u0435\u043D\u0438\u0435 \u0441\u0442\u0440\u0443\u043D \u0441\u043E \u0441\u043A\u0438\u0434\u043A\u043E\u0439 50% \u0441 \u043F\u043E\u043C\u043E\u0449\u044C\u044E \u043F\u0435\u0440\u0435\u043A\u043B\u044E\u0447\u0430\u0442\u0435\u043B\u0435\u0439 \u0441\u043F\u0440\u0430\u0432\u0430." })
           ] }),
           /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { className: "bundle-editor-grid", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { className: "bundle-config-card", children: [
-              /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { className: "bundle-card-top", children: [
-                /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("span", { className: "bundle-icon", children: "\u{1F381}" }),
-                /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { children: [
-                  /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("strong", { children: "\u041F\u043E\u0434\u0430\u0440\u043E\u0447\u043D\u044B\u0439 \u043E\u043D\u043B\u0430\u0439\u043D-\u043A\u0443\u0440\u0441 \u043A \u0438\u043D\u0441\u0442\u0440\u0443\u043C\u0435\u043D\u0442\u0443" }),
-                  /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("span", { children: "\u041E\u0442\u043E\u0431\u0440\u0430\u0436\u0430\u0435\u0442\u0441\u044F \u043A\u0430\u043A \u0431\u0435\u0441\u043F\u043B\u0430\u0442\u043D\u044B\u0439 \u043F\u043E\u0434\u0430\u0440\u043E\u043A \u043D\u0430 19 900 \u20B8 \u043F\u0440\u0438 \u043F\u043E\u043A\u0443\u043F\u043A\u0435." })
-                ] })
+            /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { className: `bundle-config-card ${attachedCourseId !== "none" ? "enabled" : "disabled"}`, children: [
+              /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { className: "bundle-card-header-row", children: [
+                /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { className: "bundle-card-top", children: [
+                  /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("span", { className: "bundle-icon", children: "\u{1F381}" }),
+                  /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { children: [
+                    /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("strong", { children: "1. \u041F\u043E\u0434\u0430\u0440\u043E\u0447\u043D\u044B\u0439 \u043E\u043D\u043B\u0430\u0439\u043D-\u043A\u0443\u0440\u0441 \u043A \u0438\u043D\u0441\u0442\u0440\u0443\u043C\u0435\u043D\u0442\u0443" }),
+                    /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("span", { children: "\u0411\u0435\u0441\u043F\u043B\u0430\u0442\u043D\u044B\u0439 \u0432\u0438\u0434\u0435\u043E\u043A\u0443\u0440\u0441 \u0432 \u043F\u043E\u0434\u0430\u0440\u043E\u043A (\u0446\u0435\u043D\u043D\u043E\u0441\u0442\u044C 19 900 \u20B8) \u043F\u0440\u0438 \u043F\u043E\u043A\u0443\u043F\u043A\u0435" })
+                  ] })
+                ] }),
+                /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)(
+                  "button",
+                  {
+                    type: "button",
+                    className: `bundle-switch-btn ${attachedCourseId !== "none" ? "active" : ""}`,
+                    onClick: () => {
+                      setAttachedCourseId((prev) => prev === "none" ? "auto" : "none");
+                      setIsDirty(true);
+                    },
+                    children: [
+                      /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("span", { className: "switch-knob" }),
+                      /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("span", { className: "switch-text", children: attachedCourseId !== "none" ? "\u0412\u041A\u041B\u042E\u0427\u0415\u041D" : "\u041E\u0422\u041A\u041B\u042E\u0427\u0415\u041D" })
+                    ]
+                  }
+                )
               ] }),
-              /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)(
-                "select",
-                {
-                  value: attachedCourseId,
-                  onChange: (e) => {
-                    setAttachedCourseId(e.target.value);
-                    setIsDirty(true);
-                  },
-                  children: [
-                    /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("option", { value: "auto", children: "\u2728 \u0410\u0432\u0442\u043E\u043C\u0430\u0442\u0438\u0447\u0435\u0441\u043A\u0438 (\u043F\u043E \u0442\u0438\u043F\u0443: \u0410\u043A\u0443\u0441\u0442\u0438\u043A\u0430 \u2192 \u0441 \u043D\u0443\u043B\u044F / \u042D\u043B\u0435\u043A\u0442\u0440\u043E \u2192 \u0440\u0438\u0444\u0444\u044B / \u0423\u043A\u0443\u043B\u0435\u043B\u0435 \u2192 \u044D\u043A\u0441\u043F\u0440\u0435\u0441\u0441)" }),
-                    /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("option", { value: "none", children: "\u274C \u0411\u0435\u0437 \u043A\u0443\u0440\u0441\u0430 (\u0442\u043E\u043B\u044C\u043A\u043E \u0438\u043D\u0441\u0442\u0440\u0443\u043C\u0435\u043D\u0442)" }),
-                    adminCourses.map((c) => /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("option", { value: c.id, children: [
-                      "\u{1F393} ",
-                      c.title,
-                      " (",
-                      c.level,
-                      ", ",
-                      c.lessonsCount || 10,
-                      " \u0443\u0440\u043E\u043A\u043E\u0432)"
-                    ] }, c.id))
-                  ]
-                }
-              )
-            ] }),
-            /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { className: "bundle-config-card", children: [
-              /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { className: "bundle-card-top", children: [
-                /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("span", { className: "bundle-icon", children: "\u{1F451}" }),
-                /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { children: [
-                  /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("strong", { children: "PRO \u041A\u043E\u043C\u043F\u043B\u0435\u043A\u0442 (\u0427\u0435\u0445\u043E\u043B, \u0430\u043A\u0441\u0435\u0441\u0441\u0443\u0430\u0440\u044B \u0438 VIP)" }),
-                  /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("span", { children: "\u0414\u043E\u043F\u043E\u043B\u043D\u0438\u0442\u0435\u043B\u044C\u043D\u0430\u044F \u043A\u043E\u043C\u043F\u043B\u0435\u043A\u0442\u0430\u0446\u0438\u044F \u0441 \u0443\u0432\u0435\u043B\u0438\u0447\u0435\u043D\u0438\u0435\u043C \u0441\u0440\u0435\u0434\u043D\u0435\u0433\u043E \u0447\u0435\u043A\u0430." })
-                ] })
-              ] }),
-              /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { className: "two-cols-input", children: [
+              attachedCourseId !== "none" ? /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { className: "bundle-card-body", children: [
                 /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("label", { children: [
-                  "\u0421\u043E\u0441\u0442\u0430\u0432 \u0430\u043A\u0441\u0435\u0441\u0441\u0443\u0430\u0440\u043E\u0432 \u0432 PRO-\u043A\u043E\u043C\u043F\u043B\u0435\u043A\u0442\u0435",
-                  /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
-                    "input",
+                  "\u041F\u0440\u0438\u0432\u044F\u0437\u0430\u043D\u043D\u044B\u0439 \u043A\u0443\u0440\u0441 \u0438\u0437 \u0410\u043A\u0430\u0434\u0435\u043C\u0438\u0438 Maestro:",
+                  /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)(
+                    "select",
                     {
-                      value: internalProPackTitle,
+                      value: attachedCourseId,
                       onChange: (e) => {
-                        setInternalProPackTitle(e.target.value);
+                        setAttachedCourseId(e.target.value);
                         setIsDirty(true);
                       },
-                      placeholder: "\u0427\u0435\u0445\u043E\u043B + \u0420\u0435\u043C\u0435\u043D\u044C + VIP \u0414\u043E\u0441\u0442\u0443\u043F"
+                      children: [
+                        /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("option", { value: "auto", children: "\u2728 \u0410\u0432\u0442\u043E\u043C\u0430\u0442\u0438\u0447\u0435\u0441\u043A\u0438 (\u043F\u043E \u043A\u0430\u0442\u0435\u0433\u043E\u0440\u0438\u0438 \u0438\u043D\u0441\u0442\u0440\u0443\u043C\u0435\u043D\u0442\u0430)" }),
+                        adminCourses.map((c) => /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("option", { value: c.id, children: [
+                          "\u{1F393} ",
+                          c.title,
+                          " (",
+                          c.level,
+                          ", ",
+                          c.lessonsCount || 10,
+                          " \u0443\u0440\u043E\u043A\u043E\u0432)"
+                        ] }, c.id))
+                      ]
                     }
                   )
                 ] }),
-                /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("label", { children: [
-                  "\u0414\u043E\u043F\u043B\u0430\u0442\u0430 \u0437\u0430 PRO-\u043A\u043E\u043C\u043F\u043B\u0435\u043A\u0442 (\u20B8)",
-                  /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
-                    "input",
-                    {
-                      type: "number",
-                      value: internalProPackPrice,
-                      onChange: (e) => {
-                        setInternalProPackPrice(Number(e.target.value) || 0);
-                        setIsDirty(true);
-                      },
-                      placeholder: "8900"
-                    }
-                  )
-                ] })
-              ] })
+                /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("span", { className: "bundle-status-tag green", children: "\u2713 \u041E\u0442\u043E\u0431\u0440\u0430\u0436\u0430\u0435\u0442\u0441\u044F \u043D\u0430 \u043A\u0430\u0440\u0442\u043E\u0447\u043A\u0435 \u0442\u043E\u0432\u0430\u0440\u0430 \u043A\u0430\u043A \u0431\u0435\u0441\u043F\u043B\u0430\u0442\u043D\u044B\u0439 \u043F\u043E\u0434\u0430\u0440\u043E\u043A (0 \u20B8)" })
+              ] }) : /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("div", { className: "bundle-card-disabled-hint", children: /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("p", { children: [
+                "\u274C ",
+                /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("strong", { children: "\u041A\u0443\u0440\u0441 \u043E\u0442\u043A\u043B\u044E\u0447\u0435\u043D" }),
+                ". \u0422\u043E\u0432\u0430\u0440 \u043F\u0440\u043E\u0434\u0430\u0435\u0442\u0441\u044F \u0442\u043E\u043B\u044C\u043A\u043E \u043A\u0430\u043A \u0438\u043D\u0441\u0442\u0440\u0443\u043C\u0435\u043D\u0442 \u0432 \u0437\u0430\u0432\u043E\u0434\u0441\u043A\u043E\u0439 \u043A\u043E\u0440\u043E\u0431\u043A\u0435 \u0431\u0435\u0437 \u043E\u043D\u043B\u0430\u0439\u043D-\u0443\u0440\u043E\u043A\u043E\u0432."
+              ] }) })
             ] }),
-            /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { className: "bundle-config-card", children: [
-              /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { className: "bundle-card-top", children: [
-                /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("span", { className: "bundle-icon", children: "\u26A1" }),
-                /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { children: [
-                  /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("strong", { children: "\u0414\u043E\u043F\u0440\u043E\u0434\u0430\u0436\u0430 \u0441\u0442\u0440\u0443\u043D \u0441\u043E \u0441\u043A\u0438\u0434\u043A\u043E\u0439 50% (Order Bump)" }),
-                  /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("span", { children: "\u041F\u043E\u043A\u0430\u0437\u044B\u0432\u0430\u0435\u0442 \u0432\u044B\u0431\u043E\u0440 Elixir Nanoweb (+4 950 \u20B8) \u0438 D'Addario Pro (+2 450 \u20B8) \u043F\u0440\u0438 \u0434\u043E\u0431\u0430\u0432\u043B\u0435\u043D\u0438\u0438 \u0432 \u043A\u043E\u0440\u0437\u0438\u043D\u0443." })
-                ] })
-              ] }),
-              /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("label", { className: "checkbox-setting-label", children: [
-                /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
-                  "input",
+            /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { className: `bundle-config-card ${internalAllowProPack ? "enabled" : "disabled"}`, children: [
+              /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { className: "bundle-card-header-row", children: [
+                /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { className: "bundle-card-top", children: [
+                  /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("span", { className: "bundle-icon", children: "\u{1F451}" }),
+                  /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { children: [
+                    /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("strong", { children: "2. PRO \u041A\u043E\u043C\u043F\u043B\u0435\u043A\u0442 (\u0427\u0435\u0445\u043E\u043B, \u0430\u043A\u0441\u0435\u0441\u0441\u0443\u0430\u0440\u044B \u0438 VIP)" }),
+                    /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("span", { children: "\u0420\u0430\u0441\u0448\u0438\u0440\u0435\u043D\u043D\u044B\u0439 \u043D\u0430\u0431\u043E\u0440 \u0430\u043A\u0441\u0435\u0441\u0441\u0443\u0430\u0440\u043E\u0432 \u0434\u043B\u044F \u0443\u0432\u0435\u043B\u0438\u0447\u0435\u043D\u0438\u044F \u0441\u0440\u0435\u0434\u043D\u0435\u0433\u043E \u0447\u0435\u043A\u0430" })
+                  ] })
+                ] }),
+                /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)(
+                  "button",
                   {
-                    type: "checkbox",
-                    checked: internalAllowStrings,
-                    onChange: (e) => {
-                      setInternalAllowStrings(e.target.checked);
+                    type: "button",
+                    className: `bundle-switch-btn ${internalAllowProPack ? "active" : ""}`,
+                    onClick: () => {
+                      setInternalAllowProPack((prev) => !prev);
                       setIsDirty(true);
-                    }
+                    },
+                    children: [
+                      /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("span", { className: "switch-knob" }),
+                      /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("span", { className: "switch-text", children: internalAllowProPack ? "\u0412\u041A\u041B\u042E\u0427\u0415\u041D" : "\u041E\u0422\u041A\u041B\u042E\u0427\u0415\u041D" })
+                    ]
                   }
-                ),
-                /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("span", { children: "\u0412\u043A\u043B\u044E\u0447\u0438\u0442\u044C \u043F\u0440\u0435\u0434\u043B\u043E\u0436\u0435\u043D\u0438\u0435 \u0437\u0430\u043F\u0430\u0441\u043D\u043E\u0433\u043E \u043A\u043E\u043C\u043F\u043B\u0435\u043A\u0442\u0430 \u0441\u0442\u0440\u0443\u043D (-50%) \u0432 \u043A\u0430\u0440\u0442\u043E\u0447\u043A\u0435 \u044D\u0442\u043E\u0439 \u0433\u0438\u0442\u0430\u0440\u044B" })
-              ] })
+                )
+              ] }),
+              internalAllowProPack ? /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { className: "bundle-card-body", children: [
+                /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { className: "two-cols-input", children: [
+                  /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("label", { children: [
+                    "\u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435 \u0438 \u0441\u043E\u0441\u0442\u0430\u0432 \u0430\u043A\u0441\u0435\u0441\u0441\u0443\u0430\u0440\u043E\u0432 \u0432 PRO-\u043A\u043E\u043C\u043F\u043B\u0435\u043A\u0442\u0435",
+                    /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
+                      "input",
+                      {
+                        value: internalProPackTitle,
+                        onChange: (e) => {
+                          setInternalProPackTitle(e.target.value);
+                          setIsDirty(true);
+                        },
+                        placeholder: "\u0427\u0435\u0445\u043E\u043B + \u0420\u0435\u043C\u0435\u043D\u044C + VIP \u0414\u043E\u0441\u0442\u0443\u043F"
+                      }
+                    )
+                  ] }),
+                  /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("label", { children: [
+                    "\u0414\u043E\u043F\u043B\u0430\u0442\u0430 \u0437\u0430 PRO-\u043A\u043E\u043C\u043F\u043B\u0435\u043A\u0442 (\u20B8)",
+                    /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
+                      "input",
+                      {
+                        type: "number",
+                        value: internalProPackPrice,
+                        onChange: (e) => {
+                          setInternalProPackPrice(Number(e.target.value) || 0);
+                          setIsDirty(true);
+                        },
+                        placeholder: "8900"
+                      }
+                    )
+                  ] })
+                ] }),
+                /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("span", { className: "bundle-status-tag gold", children: [
+                  "\u2713 \u041F\u043E\u043A\u0443\u043F\u0430\u0442\u0435\u043B\u044C \u0441\u043C\u043E\u0436\u0435\u0442 \u0432\u044B\u0431\u0440\u0430\u0442\u044C \u043A\u043D\u043E\u043F\u043A\u0443 \xAB\u{1F451} PRO \u041A\u043E\u043C\u043F\u043B\u0435\u043A\u0442 (+",
+                  money(internalProPackPrice),
+                  " \u20B8)\xBB"
+                ] })
+              ] }) : /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("div", { className: "bundle-card-disabled-hint", children: /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("p", { children: [
+                "\u274C ",
+                /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("strong", { children: "PRO-\u043A\u043E\u043C\u043F\u043B\u0435\u043A\u0442 \u043E\u0442\u043A\u043B\u044E\u0447\u0435\u043D" }),
+                ". \u041A\u043D\u043E\u043F\u043A\u0430 \u0432\u044B\u0431\u043E\u0440\u0430 PRO-\u043A\u043E\u043C\u043F\u043B\u0435\u043A\u0442\u0430 \u0441\u043A\u0440\u044B\u0442\u0430 \u043D\u0430 \u043A\u0430\u0440\u0442\u043E\u0447\u043A\u0435 \u044D\u0442\u043E\u0433\u043E \u0442\u043E\u0432\u0430\u0440\u0430."
+              ] }) })
+            ] }),
+            /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { className: `bundle-config-card ${internalAllowStrings ? "enabled" : "disabled"}`, children: [
+              /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { className: "bundle-card-header-row", children: [
+                /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { className: "bundle-card-top", children: [
+                  /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("span", { className: "bundle-icon", children: "\u26A1" }),
+                  /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { children: [
+                    /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("strong", { children: "3. \u0414\u043E\u043F\u0440\u043E\u0434\u0430\u0436\u0430 \u0441\u0442\u0440\u0443\u043D \u0441\u043E \u0441\u043A\u0438\u0434\u043A\u043E\u0439 50% (Order Bump)" }),
+                    /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("span", { children: "\u0412\u044B\u0431\u043E\u0440 \u043F\u0440\u0435\u043C\u0438\u0443\u043C-\u0441\u0442\u0440\u0443\u043D Elixir / D'Addario \u0441\u043E \u0441\u043A\u0438\u0434\u043A\u043E\u0439 50%" })
+                  ] })
+                ] }),
+                /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)(
+                  "button",
+                  {
+                    type: "button",
+                    className: `bundle-switch-btn ${internalAllowStrings ? "active" : ""}`,
+                    onClick: () => {
+                      setInternalAllowStrings((prev) => !prev);
+                      setIsDirty(true);
+                    },
+                    children: [
+                      /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("span", { className: "switch-knob" }),
+                      /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("span", { className: "switch-text", children: internalAllowStrings ? "\u0412\u041A\u041B\u042E\u0427\u0415\u041D" : "\u041E\u0422\u041A\u041B\u042E\u0427\u0415\u041D" })
+                    ]
+                  }
+                )
+              ] }),
+              internalAllowStrings ? /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { className: "bundle-card-body", children: [
+                /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { className: "bump-preview-pills", style: { display: "flex", gap: "10px", flexWrap: "wrap", margin: "4px 0" }, children: [
+                  /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("span", { style: { fontSize: "12px", background: "#fff", padding: "6px 12px", borderRadius: "8px", border: "1px solid var(--line)", fontWeight: 700 }, children: [
+                    "\u{1F451} \u0421\u0442\u0440\u0443\u043D\u044B Elixir Nanoweb (USA): ",
+                    /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("strong", { children: "+4 950 \u20B8" }),
+                    " ",
+                    /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("del", { style: { color: "var(--muted)" }, children: "9 900 \u20B8" })
+                  ] }),
+                  /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("span", { style: { fontSize: "12px", background: "#fff", padding: "6px 12px", borderRadius: "8px", border: "1px solid var(--line)", fontWeight: 700 }, children: [
+                    "\u{1F3B8} \u0421\u0442\u0440\u0443\u043D\u044B D'Addario Pro: ",
+                    /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("strong", { children: "+2 450 \u20B8" }),
+                    " ",
+                    /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("del", { style: { color: "var(--muted)" }, children: "4 900 \u20B8" })
+                  ] })
+                ] }),
+                /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("span", { className: "bundle-status-tag green", children: "\u2713 \u0411\u043B\u043E\u043A \u043F\u0440\u0435\u0434\u043B\u043E\u0436\u0435\u043D\u0438\u044F \u0437\u0430\u043F\u0430\u0441\u043D\u044B\u0445 \u0441\u0442\u0440\u0443\u043D \u0441\u043E \u0441\u043A\u0438\u0434\u043A\u043E\u0439 -50% \u0430\u043A\u0442\u0438\u0432\u0435\u043D \u0432 \u043A\u0430\u0440\u0442\u043E\u0447\u043A\u0435" })
+              ] }) : /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("div", { className: "bundle-card-disabled-hint", children: /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("p", { children: [
+                "\u274C ",
+                /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("strong", { children: "\u0421\u043F\u0435\u0446\u043F\u0440\u0435\u0434\u043B\u043E\u0436\u0435\u043D\u0438\u0435 \u0441\u0442\u0440\u0443\u043D \u043E\u0442\u043A\u043B\u044E\u0447\u0435\u043D\u043E" }),
+                ". \u0411\u043B\u043E\u043A \u0434\u043E\u043F\u0440\u043E\u0434\u0430\u0436\u0438 \u0441\u0442\u0440\u0443\u043D \u0441\u043A\u0440\u044B\u0442 \u0432 \u043A\u0430\u0440\u0442\u043E\u0447\u043A\u0435 \u044D\u0442\u043E\u0433\u043E \u0442\u043E\u0432\u0430\u0440\u0430."
+              ] }) })
             ] })
           ] })
         ] }),
@@ -18597,10 +18680,10 @@ function PurchaserView({
                 "input",
                 {
                   type: "number",
-                  value: installmentMonths === 0 ? "" : installmentMonths,
+                  value: installmentMonths2 === 0 ? "" : installmentMonths2,
                   onFocus: (e) => e.target.select(),
                   onChange: (e) => {
-                    setInstallmentMonths(+e.target.value);
+                    setInstallmentMonths2(+e.target.value);
                     setIsDirty(true);
                   }
                 }
