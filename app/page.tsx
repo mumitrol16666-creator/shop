@@ -277,6 +277,8 @@ export default function Home() {
         totalPrice={cartTotalPrice}
         customerName={customerName}
         customerPhone={customerPhone}
+        customerCity={customerCity}
+        customerComment={customerComment}
         onPaymentSuccess={() => {
           setCartItems([]);
           setNotice("Оплата через Kaspi принята! Менеджер свяжется с вами.");

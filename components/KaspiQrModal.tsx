@@ -1,8 +1,7 @@
-"use client";
+import { useState } from "react";
+import { buildWhatsAppOrderUrl, installment, money, type CartItem } from "../lib/catalog-data";
 
-import { useMemo, useState } from "react";
-import { installment, money, type CartItem } from "../lib/catalog-data";
-import { generateQRCodeSVG } from "../lib/qrcode";
+export const OFFICIAL_KASPI_PAY_LINK = "https://pay.kaspi.kz/pay/ku3aldre";
 
 type KaspiQrModalProps = {
   isOpen: boolean;
@@ -11,6 +10,8 @@ type KaspiQrModalProps = {
   totalPrice: number;
   customerName: string;
   customerPhone: string;
+  customerCity?: string;
+  customerComment?: string;
   onPaymentSuccess: () => void;
 };
 
@@ -21,28 +22,41 @@ export function KaspiQrModal({
   totalPrice,
   customerName,
   customerPhone,
+  customerCity = "Актобе",
+  customerComment = "",
   onPaymentSuccess,
 }: KaspiQrModalProps) {
   const [isConfirmed, setIsConfirmed] = useState(false);
-
-  // Deep link or payment URL for Kaspi
-  const paymentUrl = useMemo(() => {
-    return `https://kaspi.kz/pay/MaestroMusicStore?amount=${totalPrice}&order=${Date.now()}`;
-  }, [totalPrice]);
-
-  const qrSvg = useMemo(() => {
-    return generateQRCodeSVG(paymentUrl, 220);
-  }, [paymentUrl]);
 
   if (!isOpen) return null;
 
   const handleConfirmPaid = () => {
     setIsConfirmed(true);
+
+    // Send complete order details to WhatsApp manager
+    const fullComment = [
+      customerComment,
+      `💳 [ОПЛАТА]: Клиент подтвердил оплату через Kaspi Pay (${OFFICIAL_KASPI_PAY_LINK}). Ожидает подтверждения и отправки.`,
+    ]
+      .filter(Boolean)
+      .join("\n");
+
+    const waUrl = buildWhatsAppOrderUrl({
+      customerName,
+      customerPhone,
+      customerCity,
+      customerComment: fullComment,
+      cartItems,
+      totalPrice,
+    });
+
+    window.open(waUrl, "_blank", "noopener,noreferrer");
+
     setTimeout(() => {
       onPaymentSuccess();
       setIsConfirmed(false);
       onClose();
-    }, 2000);
+    }, 2400);
   };
 
   return (
@@ -67,9 +81,9 @@ export function KaspiQrModal({
         {isConfirmed ? (
           <div className="kaspi-success-screen">
             <div className="kaspi-success-icon">✓</div>
-            <h3>Заказ успешно оплачен!</h3>
+            <h3>Заказ принят в обработку!</h3>
             <p>
-              Спасибо за покупку, <strong>{customerName || "дорогой клиент"}</strong>! Менеджер магазина уже подготавливает инструмент и свяжется с вами для согласования выдачи или доставки.
+              Спасибо за оплату, <strong>{customerName || "дорогой клиент"}</strong>! Заявка отправлена менеджеру в WhatsApp. Мы свяжемся с вами в течение 5 минут.
             </p>
             <div className="receipt-box">
               <span>Сумма: <strong>{money(totalPrice)} ₸</strong></span>
@@ -87,6 +101,21 @@ export function KaspiQrModal({
               </div>
             </div>
 
+            {/* Direct Mobile Link to Kaspi App */}
+            <a
+              href={OFFICIAL_KASPI_PAY_LINK}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="kaspi-mobile-app-button"
+            >
+              <span className="kaspi-btn-icon">📲</span>
+              <span>Оплатить в приложении Kaspi.kz</span>
+            </a>
+
+            <div className="kaspi-divider-line">
+              <span>или отсканируйте QR с экрана</span>
+            </div>
+
             <div className="kaspi-qr-frame">
               <div className="kaspi-official-qr-wrap">
                 <img
@@ -101,15 +130,15 @@ export function KaspiQrModal({
             <div className="kaspi-steps-list">
               <div className="kaspi-step">
                 <span>1</span>
-                <p>Откройте приложение <strong>Kaspi.kz</strong> на смартфоне</p>
+                <p>Оплатите по кнопке выше или отсканируйте QR-код</p>
               </div>
               <div className="kaspi-step">
                 <span>2</span>
-                <p>Нажмите <strong>Kaspi QR</strong> и отсканируйте код с экрана</p>
+                <p>Выберите <strong>Kaspi Red</strong>, <strong>Gold</strong> или <strong>Рассрочку 0-0-12</strong></p>
               </div>
               <div className="kaspi-step">
                 <span>3</span>
-                <p>Выберите <strong>Kaspi Red</strong>, <strong>Gold</strong> или <strong>Рассрочку 0-0-12</strong></p>
+                <p>Нажмите кнопку ниже для отправки чека менеджеру в WhatsApp</p>
               </div>
             </div>
 
@@ -119,12 +148,12 @@ export function KaspiQrModal({
                 className="kaspi-confirm-button"
                 onClick={handleConfirmPaid}
               >
-                ✓ Я оплатил через Kaspi
+                ✓ Я оплатил через Kaspi → Подтвердить заказ
               </button>
             </div>
 
             <p className="kaspi-merchant-note">
-              Получатель: <strong>MAESTRO MUSIC STORE</strong> · Официальный Kaspi Pay
+              Получатель: <strong>MAESTRO MUSIC STORE</strong> · Ссылка: <a href={OFFICIAL_KASPI_PAY_LINK} target="_blank" rel="noopener noreferrer" style={{ color: "var(--kaspi)", textDecoration: "underline" }}>pay.kaspi.kz</a>
             </p>
           </div>
         )}

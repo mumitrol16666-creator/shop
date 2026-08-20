@@ -13988,113 +13988,8 @@ function CartDrawer({
 
 // components/KaspiQrModal.tsx
 var import_react3 = __toESM(require_react(), 1);
-
-// lib/qrcode.ts
-function generateQRCodeSVG(text, size = 220) {
-  const matrix = createQRMatrix(text);
-  const n = matrix.length;
-  const cellSize = size / (n + 4);
-  const offset = cellSize * 2;
-  let path = "";
-  for (let r = 0; r < n; r++) {
-    for (let c = 0; c < n; c++) {
-      if (matrix[r][c]) {
-        const x = offset + c * cellSize;
-        const y = offset + r * cellSize;
-        path += `M${x.toFixed(2)},${y.toFixed(2)}h${cellSize.toFixed(2)}v${cellSize.toFixed(2)}h-${cellSize.toFixed(2)}z `;
-      }
-    }
-  }
-  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${size} ${size}" width="${size}" height="${size}" shape-rendering="crispEdges">
-    <rect width="${size}" height="${size}" fill="#ffffff" rx="12" />
-    <path d="${path}" fill="#15130f" />
-  </svg>`;
-}
-function createQRMatrix(data) {
-  const size = data.length > 50 ? 33 : 29;
-  const grid = Array.from({ length: size }, () => Array(size).fill(false));
-  drawFinderPattern(grid, 0, 0);
-  drawFinderPattern(grid, size - 7, 0);
-  drawFinderPattern(grid, 0, size - 7);
-  for (let i = 8; i < size - 8; i++) {
-    grid[6][i] = i % 2 === 0;
-    grid[i][6] = i % 2 === 0;
-  }
-  const alignPos = size - 7;
-  drawAlignmentPattern(grid, alignPos, alignPos);
-  const dataBytes = encodeUtf8(data);
-  let bitIndex = 0;
-  let byteIndex = 0;
-  for (let col = size - 1; col > 0; col -= 2) {
-    if (col === 6) col--;
-    for (let rowDir = 0; rowDir < size; rowDir++) {
-      const row = col % 4 === 1 ? size - 1 - rowDir : rowDir;
-      for (let cOffset = 0; cOffset < 2; cOffset++) {
-        const c = col - cOffset;
-        if (!isReserved(grid, size, row, c)) {
-          let bit = false;
-          if (byteIndex < dataBytes.length) {
-            bit = (dataBytes[byteIndex] >> 7 - bitIndex & 1) === 1;
-            bitIndex++;
-            if (bitIndex === 8) {
-              bitIndex = 0;
-              byteIndex++;
-            }
-          } else {
-            bit = (row + c) % 2 === 0 || row * c % 3 === 0;
-          }
-          const mask = (row + c) % 2 === 0;
-          grid[row][c] = bit !== mask;
-        }
-      }
-    }
-  }
-  return grid;
-}
-function drawFinderPattern(grid, x, y) {
-  for (let r = 0; r < 7; r++) {
-    for (let c = 0; c < 7; c++) {
-      if (r === 0 || r === 6 || c === 0 || c === 6 || r >= 2 && r <= 4 && c >= 2 && c <= 4) {
-        grid[y + r][x + c] = true;
-      }
-    }
-  }
-}
-function drawAlignmentPattern(grid, x, y) {
-  for (let r = -2; r <= 2; r++) {
-    for (let c = -2; c <= 2; c++) {
-      if (Math.abs(r) === 2 || Math.abs(c) === 2 || r === 0 && c === 0) {
-        grid[y + r][x + c] = true;
-      }
-    }
-  }
-}
-function isReserved(grid, size, r, c) {
-  if (r < 9 && c < 9) return true;
-  if (r < 9 && c >= size - 9) return true;
-  if (r >= size - 9 && c < 9) return true;
-  if (r === 6 || c === 6) return true;
-  const align = size - 7;
-  if (r >= align - 2 && r <= align + 2 && c >= align - 2 && c <= align + 2) return true;
-  return false;
-}
-function encodeUtf8(str) {
-  const bytes = [];
-  for (let i = 0; i < str.length; i++) {
-    const code = str.charCodeAt(i);
-    if (code < 128) {
-      bytes.push(code);
-    } else if (code < 2048) {
-      bytes.push(192 | code >> 6, 128 | code & 63);
-    } else {
-      bytes.push(224 | code >> 12, 128 | code >> 6 & 63, 128 | code & 63);
-    }
-  }
-  return bytes;
-}
-
-// components/KaspiQrModal.tsx
 var import_jsx_runtime4 = __toESM(require_jsx_runtime(), 1);
+var OFFICIAL_KASPI_PAY_LINK = "https://pay.kaspi.kz/pay/ku3aldre";
 function KaspiQrModal({
   isOpen,
   onClose,
@@ -14102,23 +13997,32 @@ function KaspiQrModal({
   totalPrice,
   customerName,
   customerPhone,
+  customerCity = "\u0410\u043A\u0442\u043E\u0431\u0435",
+  customerComment = "",
   onPaymentSuccess
 }) {
   const [isConfirmed, setIsConfirmed] = (0, import_react3.useState)(false);
-  const paymentUrl = (0, import_react3.useMemo)(() => {
-    return `https://kaspi.kz/pay/MaestroMusicStore?amount=${totalPrice}&order=${Date.now()}`;
-  }, [totalPrice]);
-  const qrSvg = (0, import_react3.useMemo)(() => {
-    return generateQRCodeSVG(paymentUrl, 220);
-  }, [paymentUrl]);
   if (!isOpen) return null;
   const handleConfirmPaid = () => {
     setIsConfirmed(true);
+    const fullComment = [
+      customerComment,
+      `\u{1F4B3} [\u041E\u041F\u041B\u0410\u0422\u0410]: \u041A\u043B\u0438\u0435\u043D\u0442 \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0434\u0438\u043B \u043E\u043F\u043B\u0430\u0442\u0443 \u0447\u0435\u0440\u0435\u0437 Kaspi Pay (${OFFICIAL_KASPI_PAY_LINK}). \u041E\u0436\u0438\u0434\u0430\u0435\u0442 \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0435\u043D\u0438\u044F \u0438 \u043E\u0442\u043F\u0440\u0430\u0432\u043A\u0438.`
+    ].filter(Boolean).join("\n");
+    const waUrl = buildWhatsAppOrderUrl({
+      customerName,
+      customerPhone,
+      customerCity,
+      customerComment: fullComment,
+      cartItems,
+      totalPrice
+    });
+    window.open(waUrl, "_blank", "noopener,noreferrer");
     setTimeout(() => {
       onPaymentSuccess();
       setIsConfirmed(false);
       onClose();
-    }, 2e3);
+    }, 2400);
   };
   return /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("div", { className: "modal-backdrop", role: "presentation", onMouseDown: onClose, children: /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)(
     "article",
@@ -14138,11 +14042,11 @@ function KaspiQrModal({
         ] }),
         isConfirmed ? /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "kaspi-success-screen", children: [
           /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("div", { className: "kaspi-success-icon", children: "\u2713" }),
-          /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("h3", { children: "\u0417\u0430\u043A\u0430\u0437 \u0443\u0441\u043F\u0435\u0448\u043D\u043E \u043E\u043F\u043B\u0430\u0447\u0435\u043D!" }),
+          /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("h3", { children: "\u0417\u0430\u043A\u0430\u0437 \u043F\u0440\u0438\u043D\u044F\u0442 \u0432 \u043E\u0431\u0440\u0430\u0431\u043E\u0442\u043A\u0443!" }),
           /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("p", { children: [
-            "\u0421\u043F\u0430\u0441\u0438\u0431\u043E \u0437\u0430 \u043F\u043E\u043A\u0443\u043F\u043A\u0443, ",
+            "\u0421\u043F\u0430\u0441\u0438\u0431\u043E \u0437\u0430 \u043E\u043F\u043B\u0430\u0442\u0443, ",
             /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("strong", { children: customerName || "\u0434\u043E\u0440\u043E\u0433\u043E\u0439 \u043A\u043B\u0438\u0435\u043D\u0442" }),
-            "! \u041C\u0435\u043D\u0435\u0434\u0436\u0435\u0440 \u043C\u0430\u0433\u0430\u0437\u0438\u043D\u0430 \u0443\u0436\u0435 \u043F\u043E\u0434\u0433\u043E\u0442\u0430\u0432\u043B\u0438\u0432\u0430\u0435\u0442 \u0438\u043D\u0441\u0442\u0440\u0443\u043C\u0435\u043D\u0442 \u0438 \u0441\u0432\u044F\u0436\u0435\u0442\u0441\u044F \u0441 \u0432\u0430\u043C\u0438 \u0434\u043B\u044F \u0441\u043E\u0433\u043B\u0430\u0441\u043E\u0432\u0430\u043D\u0438\u044F \u0432\u044B\u0434\u0430\u0447\u0438 \u0438\u043B\u0438 \u0434\u043E\u0441\u0442\u0430\u0432\u043A\u0438."
+            "! \u0417\u0430\u044F\u0432\u043A\u0430 \u043E\u0442\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0430 \u043C\u0435\u043D\u0435\u0434\u0436\u0435\u0440\u0443 \u0432 WhatsApp. \u041C\u044B \u0441\u0432\u044F\u0436\u0435\u043C\u0441\u044F \u0441 \u0432\u0430\u043C\u0438 \u0432 \u0442\u0435\u0447\u0435\u043D\u0438\u0435 5 \u043C\u0438\u043D\u0443\u0442."
           ] }),
           /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "receipt-box", children: [
             /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("span", { children: [
@@ -14176,6 +14080,20 @@ function KaspiQrModal({
               ] })
             ] })
           ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)(
+            "a",
+            {
+              href: OFFICIAL_KASPI_PAY_LINK,
+              target: "_blank",
+              rel: "noopener noreferrer",
+              className: "kaspi-mobile-app-button",
+              children: [
+                /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("span", { className: "kaspi-btn-icon", children: "\u{1F4F2}" }),
+                /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("span", { children: "\u041E\u043F\u043B\u0430\u0442\u0438\u0442\u044C \u0432 \u043F\u0440\u0438\u043B\u043E\u0436\u0435\u043D\u0438\u0438 Kaspi.kz" })
+              ]
+            }
+          ),
+          /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("div", { className: "kaspi-divider-line", children: /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("span", { children: "\u0438\u043B\u0438 \u043E\u0442\u0441\u043A\u0430\u043D\u0438\u0440\u0443\u0439\u0442\u0435 QR \u0441 \u044D\u043A\u0440\u0430\u043D\u0430" }) }),
           /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "kaspi-qr-frame", children: [
             /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("div", { className: "kaspi-official-qr-wrap", children: /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
               "img",
@@ -14190,22 +14108,10 @@ function KaspiQrModal({
           /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "kaspi-steps-list", children: [
             /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "kaspi-step", children: [
               /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("span", { children: "1" }),
-              /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("p", { children: [
-                "\u041E\u0442\u043A\u0440\u043E\u0439\u0442\u0435 \u043F\u0440\u0438\u043B\u043E\u0436\u0435\u043D\u0438\u0435 ",
-                /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("strong", { children: "Kaspi.kz" }),
-                " \u043D\u0430 \u0441\u043C\u0430\u0440\u0442\u0444\u043E\u043D\u0435"
-              ] })
+              /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("p", { children: "\u041E\u043F\u043B\u0430\u0442\u0438\u0442\u0435 \u043F\u043E \u043A\u043D\u043E\u043F\u043A\u0435 \u0432\u044B\u0448\u0435 \u0438\u043B\u0438 \u043E\u0442\u0441\u043A\u0430\u043D\u0438\u0440\u0443\u0439\u0442\u0435 QR-\u043A\u043E\u0434" })
             ] }),
             /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "kaspi-step", children: [
               /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("span", { children: "2" }),
-              /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("p", { children: [
-                "\u041D\u0430\u0436\u043C\u0438\u0442\u0435 ",
-                /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("strong", { children: "Kaspi QR" }),
-                " \u0438 \u043E\u0442\u0441\u043A\u0430\u043D\u0438\u0440\u0443\u0439\u0442\u0435 \u043A\u043E\u0434 \u0441 \u044D\u043A\u0440\u0430\u043D\u0430"
-              ] })
-            ] }),
-            /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "kaspi-step", children: [
-              /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("span", { children: "3" }),
               /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("p", { children: [
                 "\u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 ",
                 /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("strong", { children: "Kaspi Red" }),
@@ -14214,6 +14120,10 @@ function KaspiQrModal({
                 " \u0438\u043B\u0438 ",
                 /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("strong", { children: "\u0420\u0430\u0441\u0441\u0440\u043E\u0447\u043A\u0443 0-0-12" })
               ] })
+            ] }),
+            /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "kaspi-step", children: [
+              /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("span", { children: "3" }),
+              /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("p", { children: "\u041D\u0430\u0436\u043C\u0438\u0442\u0435 \u043A\u043D\u043E\u043F\u043A\u0443 \u043D\u0438\u0436\u0435 \u0434\u043B\u044F \u043E\u0442\u043F\u0440\u0430\u0432\u043A\u0438 \u0447\u0435\u043A\u0430 \u043C\u0435\u043D\u0435\u0434\u0436\u0435\u0440\u0443 \u0432 WhatsApp" })
             ] })
           ] }),
           /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("div", { className: "kaspi-actions", children: /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
@@ -14222,13 +14132,14 @@ function KaspiQrModal({
               type: "button",
               className: "kaspi-confirm-button",
               onClick: handleConfirmPaid,
-              children: "\u2713 \u042F \u043E\u043F\u043B\u0430\u0442\u0438\u043B \u0447\u0435\u0440\u0435\u0437 Kaspi"
+              children: "\u2713 \u042F \u043E\u043F\u043B\u0430\u0442\u0438\u043B \u0447\u0435\u0440\u0435\u0437 Kaspi \u2192 \u041F\u043E\u0434\u0442\u0432\u0435\u0440\u0434\u0438\u0442\u044C \u0437\u0430\u043A\u0430\u0437"
             }
           ) }),
           /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("p", { className: "kaspi-merchant-note", children: [
             "\u041F\u043E\u043B\u0443\u0447\u0430\u0442\u0435\u043B\u044C: ",
             /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("strong", { children: "MAESTRO MUSIC STORE" }),
-            " \xB7 \u041E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u044B\u0439 Kaspi Pay"
+            " \xB7 \u0421\u0441\u044B\u043B\u043A\u0430: ",
+            /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("a", { href: OFFICIAL_KASPI_PAY_LINK, target: "_blank", rel: "noopener noreferrer", style: { color: "var(--kaspi)", textDecoration: "underline" }, children: "pay.kaspi.kz" })
           ] })
         ] })
       ]
@@ -15880,6 +15791,8 @@ function Home() {
         totalPrice: cartTotalPrice,
         customerName,
         customerPhone,
+        customerCity,
+        customerComment,
         onPaymentSuccess: () => {
           setCartItems([]);
           setNotice("\u041E\u043F\u043B\u0430\u0442\u0430 \u0447\u0435\u0440\u0435\u0437 Kaspi \u043F\u0440\u0438\u043D\u044F\u0442\u0430! \u041C\u0435\u043D\u0435\u0434\u0436\u0435\u0440 \u0441\u0432\u044F\u0436\u0435\u0442\u0441\u044F \u0441 \u0432\u0430\u043C\u0438.");
