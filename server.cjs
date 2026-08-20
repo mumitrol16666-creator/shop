@@ -112,6 +112,7 @@ const server = http.createServer((req, res) => {
   // =========================================================================
 
   // =========================================================================
+  // =========================================================================
   // FILE UPLOAD API
   // =========================================================================
   if (pathname === "/api/upload" && req.method === "POST") {
@@ -128,10 +129,12 @@ const server = http.createServer((req, res) => {
         }
 
         const uploadsDir = path.join(PUBLIC_DIR, "uploads");
-        fs.mkdirSync(uploadsDir, { recursive: true });
+        if (!fs.existsSync(uploadsDir)) {
+          fs.mkdirSync(uploadsDir, { recursive: true });
+        }
 
         const ext = path.extname(filename || "photo.jpg") || ".jpg";
-        const cleanBase64 = base64.replace(/^data:image\/\w+;base64,/, "");
+        const cleanBase64 = base64.includes(",") ? base64.split(",")[1] : base64.replace(/^data:[^;]+;base64,/, "");
         const buffer = Buffer.from(cleanBase64, "base64");
         
         const safeName = `img_${Date.now()}_${Math.random().toString(36).substring(2, 7)}${ext.toLowerCase()}`;

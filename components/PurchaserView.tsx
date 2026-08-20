@@ -106,35 +106,73 @@ export function PurchaserView({
     variantIndex?: number;
   } | null>(null);
 
-  const uploadImageFile = (file: File, onSuccess: (url: string) => void) => {
+  const compressImage = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const rawBase64 = e.target?.result as string;
+        if (!file.type.startsWith("image/")) {
+          return resolve(rawBase64);
+        }
+        const img = new Image();
+        img.onload = () => {
+          const maxDim = 1600;
+          let width = img.width;
+          let height = img.height;
+          if (width > maxDim || height > maxDim) {
+            if (width > height) {
+              height = Math.round((height * maxDim) / width);
+              width = maxDim;
+            } else {
+              width = Math.round((width * maxDim) / height);
+              height = maxDim;
+            }
+          }
+          const canvas = document.createElement("canvas");
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext("2d");
+          if (!ctx) {
+            return resolve(rawBase64);
+          }
+          ctx.drawImage(img, 0, 0, width, height);
+          const outputType = file.type === "image/png" ? "image/png" : "image/jpeg";
+          const compressedDataUrl = canvas.toDataURL(outputType, 0.88);
+          resolve(compressedDataUrl);
+        };
+        img.onerror = () => resolve(rawBase64);
+        img.src = rawBase64;
+      };
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  };
+
+  const uploadImageFile = async (file: File, onSuccess: (url: string) => void) => {
     if (!file) return;
     setIsUploadingPhoto(true);
-    const reader = new FileReader();
-    reader.onload = async (e) => {
-      try {
-        const base64 = e.target?.result as string;
-        const res = await fetch("/api/upload", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ filename: file.name, base64 }),
-        });
-        const data = (await res.json()) as { url?: string; error?: string };
-        if (res.ok && data.url) {
-          onSuccess(data.url);
-          setIsDirty(true);
-          setNotice(`✅ Фото успешно загружено: ${file.name}`);
-          setTimeout(() => setNotice(""), 3000);
-        } else {
-          alert(`Ошибка загрузки: ${data.error || "Не удалось сохранить файл"}`);
-        }
-      } catch (err) {
-        console.error("Upload error:", err);
-        alert("Не удалось загрузить изображение.");
-      } finally {
-        setIsUploadingPhoto(false);
+    try {
+      const base64 = await compressImage(file);
+      const res = await fetch("/api/upload", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ filename: file.name, base64 }),
+      });
+      const data = (await res.json()) as { url?: string; error?: string };
+      if (res.ok && data.url) {
+        onSuccess(data.url);
+        setIsDirty(true);
+        setNotice(`✅ Фото успешно загружено: ${file.name}`);
+        setTimeout(() => setNotice(""), 3000);
+      } else {
+        alert(`Ошибка загрузки: ${data.error || "Не удалось сохранить файл"}`);
       }
-    };
-    reader.readAsDataURL(file);
+    } catch (err: any) {
+      console.error("Upload error:", err);
+      alert(`Не удалось загрузить изображение: ${err?.message || "Ошибка соединения"}`);
+    } finally {
+      setIsUploadingPhoto(false);
+    }
   };
 
   // Model variants list (Color & Variant Matrix)

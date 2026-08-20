@@ -16895,35 +16895,72 @@ function PurchaserView({
   const [isPlayingAudioPreview, setIsPlayingAudioPreview] = (0, import_react11.useState)(false);
   const [isUploadingPhoto, setIsUploadingPhoto] = (0, import_react11.useState)(false);
   const [previewPhotoModal, setPreviewPhotoModal] = (0, import_react11.useState)(null);
-  const uploadImageFile = (file, onSuccess) => {
+  const compressImage = (file) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const rawBase64 = e.target?.result;
+        if (!file.type.startsWith("image/")) {
+          return resolve(rawBase64);
+        }
+        const img = new Image();
+        img.onload = () => {
+          const maxDim = 1600;
+          let width = img.width;
+          let height = img.height;
+          if (width > maxDim || height > maxDim) {
+            if (width > height) {
+              height = Math.round(height * maxDim / width);
+              width = maxDim;
+            } else {
+              width = Math.round(width * maxDim / height);
+              height = maxDim;
+            }
+          }
+          const canvas = document.createElement("canvas");
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext("2d");
+          if (!ctx) {
+            return resolve(rawBase64);
+          }
+          ctx.drawImage(img, 0, 0, width, height);
+          const outputType = file.type === "image/png" ? "image/png" : "image/jpeg";
+          const compressedDataUrl = canvas.toDataURL(outputType, 0.88);
+          resolve(compressedDataUrl);
+        };
+        img.onerror = () => resolve(rawBase64);
+        img.src = rawBase64;
+      };
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  };
+  const uploadImageFile = async (file, onSuccess) => {
     if (!file) return;
     setIsUploadingPhoto(true);
-    const reader = new FileReader();
-    reader.onload = async (e) => {
-      try {
-        const base64 = e.target?.result;
-        const res = await fetch("/api/upload", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ filename: file.name, base64 })
-        });
-        const data = await res.json();
-        if (res.ok && data.url) {
-          onSuccess(data.url);
-          setIsDirty(true);
-          setNotice(`\u2705 \u0424\u043E\u0442\u043E \u0443\u0441\u043F\u0435\u0448\u043D\u043E \u0437\u0430\u0433\u0440\u0443\u0436\u0435\u043D\u043E: ${file.name}`);
-          setTimeout(() => setNotice(""), 3e3);
-        } else {
-          alert(`\u041E\u0448\u0438\u0431\u043A\u0430 \u0437\u0430\u0433\u0440\u0443\u0437\u043A\u0438: ${data.error || "\u041D\u0435 \u0443\u0434\u0430\u043B\u043E\u0441\u044C \u0441\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C \u0444\u0430\u0439\u043B"}`);
-        }
-      } catch (err) {
-        console.error("Upload error:", err);
-        alert("\u041D\u0435 \u0443\u0434\u0430\u043B\u043E\u0441\u044C \u0437\u0430\u0433\u0440\u0443\u0437\u0438\u0442\u044C \u0438\u0437\u043E\u0431\u0440\u0430\u0436\u0435\u043D\u0438\u0435.");
-      } finally {
-        setIsUploadingPhoto(false);
+    try {
+      const base64 = await compressImage(file);
+      const res = await fetch("/api/upload", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ filename: file.name, base64 })
+      });
+      const data = await res.json();
+      if (res.ok && data.url) {
+        onSuccess(data.url);
+        setIsDirty(true);
+        setNotice(`\u2705 \u0424\u043E\u0442\u043E \u0443\u0441\u043F\u0435\u0448\u043D\u043E \u0437\u0430\u0433\u0440\u0443\u0436\u0435\u043D\u043E: ${file.name}`);
+        setTimeout(() => setNotice(""), 3e3);
+      } else {
+        alert(`\u041E\u0448\u0438\u0431\u043A\u0430 \u0437\u0430\u0433\u0440\u0443\u0437\u043A\u0438: ${data.error || "\u041D\u0435 \u0443\u0434\u0430\u043B\u043E\u0441\u044C \u0441\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C \u0444\u0430\u0439\u043B"}`);
       }
-    };
-    reader.readAsDataURL(file);
+    } catch (err) {
+      console.error("Upload error:", err);
+      alert(`\u041D\u0435 \u0443\u0434\u0430\u043B\u043E\u0441\u044C \u0437\u0430\u0433\u0440\u0443\u0437\u0438\u0442\u044C \u0438\u0437\u043E\u0431\u0440\u0430\u0436\u0435\u043D\u0438\u0435: ${err?.message || "\u041E\u0448\u0438\u0431\u043A\u0430 \u0441\u043E\u0435\u0434\u0438\u043D\u0435\u043D\u0438\u044F"}`);
+    } finally {
+      setIsUploadingPhoto(false);
+    }
   };
   const [modelVariants, setModelVariants] = (0, import_react11.useState)([
     {
