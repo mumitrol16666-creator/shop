@@ -98,6 +98,9 @@ export const products: Product[] = [
     sku: "EG-ST20",
     badge: "Для начинающих",
     price: 42000,
+    allowProPack: true,
+    allowStringsUpsell: true,
+    attachedCourseId: "course-electric-start",
     description:
       "Универсальная электрогитара формы ST для первых занятий, домашней практики и знакомства с разными стилями музыки.",
     features: ["Форма корпуса ST", "Конфигурация HSS", "6 цветов", "Стандартная мензура"],
@@ -113,6 +116,9 @@ export const products: Product[] = [
     sku: "EG-GR39",
     badge: "Выбор магазина",
     price: 49000,
+    allowProPack: true,
+    allowStringsUpsell: true,
+    attachedCourseId: "course-electric-start",
     description:
       "Полноразмерная электрогитара с эффектной металлической градиентной отделкой и универсальной схемой звукоснимателей.",
     features: ["Размер 39 дюймов", "Конфигурация HSS", "Градиентная отделка", "4 варианта цвета"],
@@ -128,6 +134,9 @@ export const products: Product[] = [
     sku: "UK-KLH23",
     badge: "Комплект",
     price: 18000,
+    allowProPack: false,
+    allowStringsUpsell: false,
+    attachedCourseId: "course-ukulele-fast",
     description:
       "Яркая укулеле концертного формата в комплекте с чехлом и полезными аксессуарами для начала занятий.",
     features: ["Размер 23 дюйма", "Чехол в комплекте", "Каподастр и ремень", "5 цветов"],
@@ -142,6 +151,9 @@ export const products: Product[] = [
     variants: 5,
     sku: "AG-AC41",
     price: 36000,
+    allowProPack: true,
+    allowStringsUpsell: true,
+    attachedCourseId: "course-guitar-starter",
     description:
       "Полноразмерная акустическая гитара с вырезом корпуса. Подходит для аккомпанемента, обучения и домашней игры.",
     features: ["Размер 41 дюйм", "Корпус с вырезом", "Стальные струны", "Глянцевая отделка"],
@@ -157,6 +169,9 @@ export const products: Product[] = [
     sku: "CG-CL39",
     badge: "Мягкие струны",
     price: 34000,
+    allowProPack: true,
+    allowStringsUpsell: false,
+    attachedCourseId: "course-guitar-starter",
     description:
       "Классическая гитара с нейлоновыми струнами. Идеальный выбор для музыкальной школы и комфортного старта.",
     features: ["Нейлоновые струны", "Размеры 38″ и 39″", "Широкий гриф", "4 расцветки"],
@@ -172,6 +187,9 @@ export const products: Product[] = [
     sku: "AG-TG40",
     badge: "Выбор магазина",
     price: 39000,
+    allowProPack: true,
+    allowStringsUpsell: true,
+    attachedCourseId: "course-guitar-starter",
     description:
       "Эффектная акустическая гитара с выразительной текстурой верхней деки и сбалансированным громким звучанием.",
     features: ["Размер 40 дюймов", "Текстура Tiger Flame", "5 цветов", "Вырез корпуса"],
@@ -186,6 +204,9 @@ export const products: Product[] = [
     variants: 3,
     sku: "AG-AC38",
     price: 29000,
+    allowProPack: true,
+    allowStringsUpsell: true,
+    attachedCourseId: "course-guitar-starter",
     description:
       "Компактная акустическая гитара для подростков, путешествий и комфортной ежедневной практики дома.",
     features: ["Размер 38 дюймов", "Легкий корпус", "3 цвета", "Удобный профиль грифа"],
@@ -200,6 +221,9 @@ export const products: Product[] = [
     variants: 1,
     sku: "EG-ST10-BK",
     price: 39000,
+    allowProPack: true,
+    allowStringsUpsell: true,
+    attachedCourseId: "course-electric-start",
     description:
       "Классический стратокастер в полностью черном исполнении с тремя сингловыми звукоснимателями для чистого и читаемого звука.",
     features: ["3 сингла (SSS)", "Черная глянцевая отделка", "Винтажное тремоло", "Кленовый гриф"],
@@ -214,6 +238,9 @@ export const products: Product[] = [
     variants: 2,
     sku: "ST-FOLK",
     price: 3500,
+    allowProPack: false,
+    allowStringsUpsell: false,
+    attachedCourseId: "none",
     description:
       "Комплекты качественных металлических струн для акустических и фолк-гитар с ярким и звонким тембром.",
     features: ["Калибр 10-47 и 11-52", "Фосфорная бронза", "Антикоррозийное покрытие", "10 комплектов"],

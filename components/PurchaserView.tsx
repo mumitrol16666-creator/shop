@@ -445,13 +445,12 @@ export function PurchaserView({
             .split(",")
             .map((feature) => feature.trim())
             .filter(Boolean),
-          targetAudience,
-          attachedCourseId: attachedCourseId === "none" ? "" : attachedCourseId,
-          audioUrl: internalAudioUrl.trim(),
+          attachedCourseId: attachedCourseId,
           allowProPack: internalAllowProPack,
           proPackTitle: internalProPackTitle.trim(),
           proPackPrice: internalProPackPrice,
           allowStringsUpsell: internalAllowStrings,
+          audioUrl: internalAudioUrl.trim() || undefined,
           variant: {
             name: primaryVariant.name,
             sku: primaryVariant.sku,

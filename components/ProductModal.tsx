@@ -40,9 +40,11 @@ export function ProductModal({
   const [isPlayingSound, setIsPlayingSound] = useState(false);
   const [selectedStrings, setSelectedStrings] = useState<"elixir" | "daddario" | null>(null);
 
-  const showProPackOption = selected ? selected.allowProPack !== false : false;
-  const showCourseOption = selected ? selected.attachedCourseId !== "none" : false;
-  const showStringsUpsell = selected ? selected.allowStringsUpsell !== false : false;
+  const showProPackOption = selected ? Boolean(selected.allowProPack === true) : false;
+  const showCourseOption = selected
+    ? Boolean(selected.attachedCourseId && selected.attachedCourseId !== "none")
+    : false;
+  const showStringsUpsell = selected ? Boolean(selected.allowStringsUpsell === true) : false;
   const proPackTitle = selected?.proPackTitle || "Чехол + Ремень + VIP Доступ";
   const proPackPrice = selected?.proPackPrice !== undefined ? selected.proPackPrice : 8900;
 
