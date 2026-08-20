@@ -80,13 +80,66 @@ export function Storefront({
   };
 
   const HERO_PREVIEWS = [
-    { name: "Gradient Blue", color: "#243a5e", image: "/products/02_39_gradient_electric.png", title: "Электрогитара 39″ Gradient", category: "ЭЛЕКТРОГИТАРЫ" },
-    { name: "Night Black", color: "#1c1b18", image: "/products/01_st20_electric.png", title: "Электрогитара ST-20 Black", category: "ЭЛЕКТРОГИТАРЫ" },
-    { name: "Sunburst Folk", color: "#a85421", image: "/products/04_41_acoustic.png", title: "Акустическая гитара 41″ Sunburst", category: "АКУСТИЧЕСКИЕ" },
-    { name: "Flamingo Pink", color: "#e8829c", image: "/products/03_21_soprano_ukulele.png", title: "Укулеле Сопрано 21″ Pastel", category: "УКУЛЕЛЕ" },
+    {
+      name: "Gradient Blue",
+      color: "#243a5e",
+      image: "/products/02_39_gradient_electric.png",
+      title: "Электрогитара 39″ Gradient Blue",
+      category: "ЭЛЕКТРОГИТАРЫ",
+      monthly: 5825,
+      sku: "EG-39GR",
+    },
+    {
+      name: "Night Black",
+      color: "#1c1b18",
+      image: "/products/01_st20_electric.png",
+      title: "Электрогитара ST-20 HSS Black",
+      category: "ЭЛЕКТРОГИТАРЫ",
+      monthly: 5825,
+      sku: "EG-ST20",
+    },
+    {
+      name: "Sunburst Folk",
+      color: "#a85421",
+      image: "/products/04_41_acoustic.png",
+      title: "Акустическая гитара 41″ Sunburst",
+      category: "АКУСТИЧЕСКИЕ ГИТАРЫ",
+      monthly: 3575,
+      sku: "AG-41GL",
+    },
+    {
+      name: "Pastel Flamingo",
+      color: "#e8829c",
+      image: "/products/03_23_ukulele.png",
+      title: "Укулеле Сопрано 21″ Pastel",
+      category: "УКУЛЕЛЕ",
+      monthly: 1575,
+      sku: "UK-KLH23",
+    },
+    {
+      name: "Classic Natural",
+      color: "#d4a373",
+      image: "/products/05_classical_38_39.png",
+      title: "Классическая гитара 39″ Natural",
+      category: "КЛАССИЧЕСКИЕ ГИТАРЫ",
+      monthly: 3241,
+      sku: "CG-39",
+    },
   ];
   const [heroIndex, setHeroIndex] = useState(0);
   const currentHero = HERO_PREVIEWS[heroIndex];
+
+  const matchingHeroProduct = useMemo(() => {
+    return (
+      filteredProducts.find(
+        (p) =>
+          p.sku?.toLowerCase().includes(currentHero.sku.toLowerCase()) ||
+          p.name.toLowerCase().includes(currentHero.sku.toLowerCase()),
+      ) ||
+      featuredProduct ||
+      filteredProducts[0]
+    );
+  }, [filteredProducts, currentHero, featuredProduct]);
 
   return (
     <>
@@ -109,36 +162,50 @@ export function Storefront({
           </div>
           <h1 className="hero-headline">Музыкальные инструменты и гитары Maestro</h1>
           <p className="hero-lead">
-            Электрогитары, акустика, классика, укулеле и гитарное оборудование. Все инструменты проверяются перед выдачей,
-            а заявка оформляется напрямую через менеджера без лишней суеты.
+            Электрогитары, акустика, классика, укулеле и гитарное оборудование. Все инструменты проверяются и настраиваются вручную мастером перед выдачей, а заявка оформляется напрямую в WhatsApp без лишней суеты.
           </p>
           <div className="hero-actions">
-            <a className="primary-button" href="#catalog">
-              <span>Открыть каталог</span>
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            <a
+              href="#catalog"
+              className="hero-primary-btn"
+              onClick={(e) => {
+                e.preventDefault();
+                document.getElementById("catalog")?.scrollIntoView({ behavior: "smooth" });
+              }}
+            >
+              Смотреть каталог
             </a>
-            <a className="secondary-button" href="#academy">
-              <span>🎓 Обучение & Курсы</span>
+            <a
+              href="https://maestro-school.duckdns.org/login"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hero-secondary-btn"
+            >
+              🎓 Обучение & Курсы
             </a>
           </div>
           <div className="hero-stats">
-            <div className="stat-box">
-              <strong>14</strong>
-              <span>моделей в поставке</span>
+            <div className="stat">
+              <strong>{filteredProducts.length}</strong>
+              <small>инструментов на складе</small>
             </div>
-            <div className="stat-box">
-              <strong>85</strong>
-              <span>инструментов на складе</span>
+            <div className="stat">
+              <strong>{categories.length}</strong>
+              <small>основные категории</small>
             </div>
-            <div className="stat-box">
-              <strong>4</strong>
-              <span>основные категории</span>
+            <div className="stat">
+              <strong>100%</strong>
+              <small>ручная отстройка мастером</small>
             </div>
           </div>
         </div>
 
         <div className="hero-visual">
-          <div className="hero-card">
+          <div
+            className="hero-card"
+            style={{ cursor: "pointer" }}
+            onClick={() => matchingHeroProduct && openProduct(matchingHeroProduct)}
+          >
             <div className="hero-card-badges">
               <span className="badge">Выбор недели</span>
               <span className="hero-master-chip">✨ Мастерская отстройка</span>
@@ -157,7 +224,7 @@ export function Storefront({
             </div>
 
             {/* Quick Hero Color Switcher */}
-            <div className="hero-color-switcher">
+            <div className="hero-color-switcher" onClick={(e) => e.stopPropagation()}>
               <span className="hero-color-title">Оттенок:</span>
               <div className="hero-swatch-list">
                 {HERO_PREVIEWS.map((hp, idx) => (
@@ -182,11 +249,17 @@ export function Storefront({
                 <h3>{currentHero.title}</h3>
                 <div className="hero-kaspi-installment">
                   <span className="kaspi-tag">Kaspi 0-0-12</span>
-                  <span>от <strong>4 158 ₸</strong> / мес</span>
+                  <span>от <strong>{money(currentHero.monthly)} ₸</strong> / мес</span>
                 </div>
               </div>
-              {featuredProduct && (
-                <button className="hero-detail-btn" onClick={() => openProduct(featuredProduct)}>
+              {matchingHeroProduct && (
+                <button
+                  className="hero-detail-btn"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    openProduct(matchingHeroProduct);
+                  }}
+                >
                   Подробнее
                 </button>
               )}

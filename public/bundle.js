@@ -14613,13 +14613,59 @@ function Storefront({
     });
   };
   const HERO_PREVIEWS = [
-    { name: "Gradient Blue", color: "#243a5e", image: "/products/02_39_gradient_electric.png", title: "\u042D\u043B\u0435\u043A\u0442\u0440\u043E\u0433\u0438\u0442\u0430\u0440\u0430 39\u2033 Gradient", category: "\u042D\u041B\u0415\u041A\u0422\u0420\u041E\u0413\u0418\u0422\u0410\u0420\u042B" },
-    { name: "Night Black", color: "#1c1b18", image: "/products/01_st20_electric.png", title: "\u042D\u043B\u0435\u043A\u0442\u0440\u043E\u0433\u0438\u0442\u0430\u0440\u0430 ST-20 Black", category: "\u042D\u041B\u0415\u041A\u0422\u0420\u041E\u0413\u0418\u0422\u0410\u0420\u042B" },
-    { name: "Sunburst Folk", color: "#a85421", image: "/products/04_41_acoustic.png", title: "\u0410\u043A\u0443\u0441\u0442\u0438\u0447\u0435\u0441\u043A\u0430\u044F \u0433\u0438\u0442\u0430\u0440\u0430 41\u2033 Sunburst", category: "\u0410\u041A\u0423\u0421\u0422\u0418\u0427\u0415\u0421\u041A\u0418\u0415" },
-    { name: "Flamingo Pink", color: "#e8829c", image: "/products/03_21_soprano_ukulele.png", title: "\u0423\u043A\u0443\u043B\u0435\u043B\u0435 \u0421\u043E\u043F\u0440\u0430\u043D\u043E 21\u2033 Pastel", category: "\u0423\u041A\u0423\u041B\u0415\u041B\u0415" }
+    {
+      name: "Gradient Blue",
+      color: "#243a5e",
+      image: "/products/02_39_gradient_electric.png",
+      title: "\u042D\u043B\u0435\u043A\u0442\u0440\u043E\u0433\u0438\u0442\u0430\u0440\u0430 39\u2033 Gradient Blue",
+      category: "\u042D\u041B\u0415\u041A\u0422\u0420\u041E\u0413\u0418\u0422\u0410\u0420\u042B",
+      monthly: 5825,
+      sku: "EG-39GR"
+    },
+    {
+      name: "Night Black",
+      color: "#1c1b18",
+      image: "/products/01_st20_electric.png",
+      title: "\u042D\u043B\u0435\u043A\u0442\u0440\u043E\u0433\u0438\u0442\u0430\u0440\u0430 ST-20 HSS Black",
+      category: "\u042D\u041B\u0415\u041A\u0422\u0420\u041E\u0413\u0418\u0422\u0410\u0420\u042B",
+      monthly: 5825,
+      sku: "EG-ST20"
+    },
+    {
+      name: "Sunburst Folk",
+      color: "#a85421",
+      image: "/products/04_41_acoustic.png",
+      title: "\u0410\u043A\u0443\u0441\u0442\u0438\u0447\u0435\u0441\u043A\u0430\u044F \u0433\u0438\u0442\u0430\u0440\u0430 41\u2033 Sunburst",
+      category: "\u0410\u041A\u0423\u0421\u0422\u0418\u0427\u0415\u0421\u041A\u0418\u0415 \u0413\u0418\u0422\u0410\u0420\u042B",
+      monthly: 3575,
+      sku: "AG-41GL"
+    },
+    {
+      name: "Pastel Flamingo",
+      color: "#e8829c",
+      image: "/products/03_23_ukulele.png",
+      title: "\u0423\u043A\u0443\u043B\u0435\u043B\u0435 \u0421\u043E\u043F\u0440\u0430\u043D\u043E 21\u2033 Pastel",
+      category: "\u0423\u041A\u0423\u041B\u0415\u041B\u0415",
+      monthly: 1575,
+      sku: "UK-KLH23"
+    },
+    {
+      name: "Classic Natural",
+      color: "#d4a373",
+      image: "/products/05_classical_38_39.png",
+      title: "\u041A\u043B\u0430\u0441\u0441\u0438\u0447\u0435\u0441\u043A\u0430\u044F \u0433\u0438\u0442\u0430\u0440\u0430 39\u2033 Natural",
+      category: "\u041A\u041B\u0410\u0421\u0421\u0418\u0427\u0415\u0421\u041A\u0418\u0415 \u0413\u0418\u0422\u0410\u0420\u042B",
+      monthly: 3241,
+      sku: "CG-39"
+    }
   ];
   const [heroIndex, setHeroIndex] = (0, import_react5.useState)(0);
   const currentHero = HERO_PREVIEWS[heroIndex];
+  const matchingHeroProduct = (0, import_react5.useMemo)(() => {
+    return filteredProducts.find(
+      (p) => p.sku?.toLowerCase().includes(currentHero.sku.toLowerCase()) || p.name.toLowerCase().includes(currentHero.sku.toLowerCase())
+    ) || featuredProduct || filteredProducts[0];
+  }, [filteredProducts, currentHero, featuredProduct]);
   return /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)(import_jsx_runtime6.Fragment, { children: [
     /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("div", { className: "announcement-bar", children: /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "announcement-inner", children: [
       /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("span", { children: [
@@ -14642,78 +14688,116 @@ function Storefront({
           /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "eyebrow", children: "\u041F\u041E\u0421\u0422\u0410\u0412\u041A\u0410 2026 \xB7 \u0418\u041D\u0421\u0422\u0420\u0423\u041C\u0415\u041D\u0422\u042B \u0412 \u041D\u0410\u041B\u0418\u0427\u0418\u0418" })
         ] }),
         /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("h1", { className: "hero-headline", children: "\u041C\u0443\u0437\u044B\u043A\u0430\u043B\u044C\u043D\u044B\u0435 \u0438\u043D\u0441\u0442\u0440\u0443\u043C\u0435\u043D\u0442\u044B \u0438 \u0433\u0438\u0442\u0430\u0440\u044B Maestro" }),
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "hero-lead", children: "\u042D\u043B\u0435\u043A\u0442\u0440\u043E\u0433\u0438\u0442\u0430\u0440\u044B, \u0430\u043A\u0443\u0441\u0442\u0438\u043A\u0430, \u043A\u043B\u0430\u0441\u0441\u0438\u043A\u0430, \u0443\u043A\u0443\u043B\u0435\u043B\u0435 \u0438 \u0433\u0438\u0442\u0430\u0440\u043D\u043E\u0435 \u043E\u0431\u043E\u0440\u0443\u0434\u043E\u0432\u0430\u043D\u0438\u0435. \u0412\u0441\u0435 \u0438\u043D\u0441\u0442\u0440\u0443\u043C\u0435\u043D\u0442\u044B \u043F\u0440\u043E\u0432\u0435\u0440\u044F\u044E\u0442\u0441\u044F \u043F\u0435\u0440\u0435\u0434 \u0432\u044B\u0434\u0430\u0447\u0435\u0439, \u0430 \u0437\u0430\u044F\u0432\u043A\u0430 \u043E\u0444\u043E\u0440\u043C\u043B\u044F\u0435\u0442\u0441\u044F \u043D\u0430\u043F\u0440\u044F\u043C\u0443\u044E \u0447\u0435\u0440\u0435\u0437 \u043C\u0435\u043D\u0435\u0434\u0436\u0435\u0440\u0430 \u0431\u0435\u0437 \u043B\u0438\u0448\u043D\u0435\u0439 \u0441\u0443\u0435\u0442\u044B." }),
+        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "hero-lead", children: "\u042D\u043B\u0435\u043A\u0442\u0440\u043E\u0433\u0438\u0442\u0430\u0440\u044B, \u0430\u043A\u0443\u0441\u0442\u0438\u043A\u0430, \u043A\u043B\u0430\u0441\u0441\u0438\u043A\u0430, \u0443\u043A\u0443\u043B\u0435\u043B\u0435 \u0438 \u0433\u0438\u0442\u0430\u0440\u043D\u043E\u0435 \u043E\u0431\u043E\u0440\u0443\u0434\u043E\u0432\u0430\u043D\u0438\u0435. \u0412\u0441\u0435 \u0438\u043D\u0441\u0442\u0440\u0443\u043C\u0435\u043D\u0442\u044B \u043F\u0440\u043E\u0432\u0435\u0440\u044F\u044E\u0442\u0441\u044F \u0438 \u043D\u0430\u0441\u0442\u0440\u0430\u0438\u0432\u0430\u044E\u0442\u0441\u044F \u0432\u0440\u0443\u0447\u043D\u0443\u044E \u043C\u0430\u0441\u0442\u0435\u0440\u043E\u043C \u043F\u0435\u0440\u0435\u0434 \u0432\u044B\u0434\u0430\u0447\u0435\u0439, \u0430 \u0437\u0430\u044F\u0432\u043A\u0430 \u043E\u0444\u043E\u0440\u043C\u043B\u044F\u0435\u0442\u0441\u044F \u043D\u0430\u043F\u0440\u044F\u043C\u0443\u044E \u0432 WhatsApp \u0431\u0435\u0437 \u043B\u0438\u0448\u043D\u0435\u0439 \u0441\u0443\u0435\u0442\u044B." }),
         /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "hero-actions", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("a", { className: "primary-button", href: "#catalog", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { children: "\u041E\u0442\u043A\u0440\u044B\u0442\u044C \u043A\u0430\u0442\u0430\u043B\u043E\u0433" }),
-            /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("svg", { width: "18", height: "18", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2.5", children: /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("path", { d: "M5 12h14M12 5l7 7-7 7" }) })
-          ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("a", { className: "secondary-button", href: "#academy", children: /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { children: "\u{1F393} \u041E\u0431\u0443\u0447\u0435\u043D\u0438\u0435 & \u041A\u0443\u0440\u0441\u044B" }) })
+          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(
+            "a",
+            {
+              href: "#catalog",
+              className: "hero-primary-btn",
+              onClick: (e) => {
+                e.preventDefault();
+                document.getElementById("catalog")?.scrollIntoView({ behavior: "smooth" });
+              },
+              children: "\u0421\u043C\u043E\u0442\u0440\u0435\u0442\u044C \u043A\u0430\u0442\u0430\u043B\u043E\u0433"
+            }
+          ),
+          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(
+            "a",
+            {
+              href: "https://maestro-school.duckdns.org/login",
+              target: "_blank",
+              rel: "noopener noreferrer",
+              className: "hero-secondary-btn",
+              children: "\u{1F393} \u041E\u0431\u0443\u0447\u0435\u043D\u0438\u0435 & \u041A\u0443\u0440\u0441\u044B"
+            }
+          )
         ] }),
         /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "hero-stats", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "stat-box", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("strong", { children: "14" }),
-            /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { children: "\u043C\u043E\u0434\u0435\u043B\u0435\u0439 \u0432 \u043F\u043E\u0441\u0442\u0430\u0432\u043A\u0435" })
+          /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "stat", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("strong", { children: filteredProducts.length }),
+            /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("small", { children: "\u0438\u043D\u0441\u0442\u0440\u0443\u043C\u0435\u043D\u0442\u043E\u0432 \u043D\u0430 \u0441\u043A\u043B\u0430\u0434\u0435" })
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "stat-box", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("strong", { children: "85" }),
-            /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { children: "\u0438\u043D\u0441\u0442\u0440\u0443\u043C\u0435\u043D\u0442\u043E\u0432 \u043D\u0430 \u0441\u043A\u043B\u0430\u0434\u0435" })
+          /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "stat", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("strong", { children: categories.length }),
+            /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("small", { children: "\u043E\u0441\u043D\u043E\u0432\u043D\u044B\u0435 \u043A\u0430\u0442\u0435\u0433\u043E\u0440\u0438\u0438" })
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "stat-box", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("strong", { children: "4" }),
-            /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { children: "\u043E\u0441\u043D\u043E\u0432\u043D\u044B\u0435 \u043A\u0430\u0442\u0435\u0433\u043E\u0440\u0438\u0438" })
+          /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "stat", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("strong", { children: "100%" }),
+            /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("small", { children: "\u0440\u0443\u0447\u043D\u0430\u044F \u043E\u0442\u0441\u0442\u0440\u043E\u0439\u043A\u0430 \u043C\u0430\u0441\u0442\u0435\u0440\u043E\u043C" })
           ] })
         ] })
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("div", { className: "hero-visual", children: /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "hero-card", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "hero-card-badges", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { className: "badge", children: "\u0412\u044B\u0431\u043E\u0440 \u043D\u0435\u0434\u0435\u043B\u0438" }),
-          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { className: "hero-master-chip", children: "\u2728 \u041C\u0430\u0441\u0442\u0435\u0440\u0441\u043A\u0430\u044F \u043E\u0442\u0441\u0442\u0440\u043E\u0439\u043A\u0430" })
-        ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("div", { className: "hero-image-wrap", children: /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(
-          Image,
-          {
-            src: currentHero.image,
-            alt: currentHero.title,
-            fill: true,
-            unoptimized: true,
-            priority: true,
-            sizes: "(max-width: 900px) 90vw, 420px"
-          },
-          currentHero.image
-        ) }),
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "hero-color-switcher", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { className: "hero-color-title", children: "\u041E\u0442\u0442\u0435\u043D\u043E\u043A:" }),
-          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("div", { className: "hero-swatch-list", children: HERO_PREVIEWS.map((hp, idx) => /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(
-            "button",
-            {
-              type: "button",
-              className: `hero-swatch-dot ${heroIndex === idx ? "active" : ""}`,
-              onClick: () => setHeroIndex(idx),
-              title: hp.name,
-              "aria-label": `\u0412\u044B\u0431\u0440\u0430\u0442\u044C ${hp.name}`,
-              children: /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { style: { backgroundColor: hp.color } })
-            },
-            hp.name
-          )) }),
-          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { className: "hero-color-current", children: currentHero.name })
-        ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "hero-card-meta", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { children: [
-            /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "eyebrow", children: currentHero.category }),
-            /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("h3", { children: currentHero.title }),
-            /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "hero-kaspi-installment", children: [
-              /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { className: "kaspi-tag", children: "Kaspi 0-0-12" }),
-              /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("span", { children: [
-                "\u043E\u0442 ",
-                /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("strong", { children: "4 158 \u20B8" }),
-                " / \u043C\u0435\u0441"
-              ] })
+      /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("div", { className: "hero-visual", children: /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)(
+        "div",
+        {
+          className: "hero-card",
+          style: { cursor: "pointer" },
+          onClick: () => matchingHeroProduct && openProduct(matchingHeroProduct),
+          children: [
+            /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "hero-card-badges", children: [
+              /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { className: "badge", children: "\u0412\u044B\u0431\u043E\u0440 \u043D\u0435\u0434\u0435\u043B\u0438" }),
+              /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { className: "hero-master-chip", children: "\u2728 \u041C\u0430\u0441\u0442\u0435\u0440\u0441\u043A\u0430\u044F \u043E\u0442\u0441\u0442\u0440\u043E\u0439\u043A\u0430" })
+            ] }),
+            /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("div", { className: "hero-image-wrap", children: /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(
+              Image,
+              {
+                src: currentHero.image,
+                alt: currentHero.title,
+                fill: true,
+                unoptimized: true,
+                priority: true,
+                sizes: "(max-width: 900px) 90vw, 420px"
+              },
+              currentHero.image
+            ) }),
+            /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "hero-color-switcher", onClick: (e) => e.stopPropagation(), children: [
+              /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { className: "hero-color-title", children: "\u041E\u0442\u0442\u0435\u043D\u043E\u043A:" }),
+              /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("div", { className: "hero-swatch-list", children: HERO_PREVIEWS.map((hp, idx) => /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(
+                "button",
+                {
+                  type: "button",
+                  className: `hero-swatch-dot ${heroIndex === idx ? "active" : ""}`,
+                  onClick: () => setHeroIndex(idx),
+                  title: hp.name,
+                  "aria-label": `\u0412\u044B\u0431\u0440\u0430\u0442\u044C ${hp.name}`,
+                  children: /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { style: { backgroundColor: hp.color } })
+                },
+                hp.name
+              )) }),
+              /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { className: "hero-color-current", children: currentHero.name })
+            ] }),
+            /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "hero-card-meta", children: [
+              /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { children: [
+                /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "eyebrow", children: currentHero.category }),
+                /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("h3", { children: currentHero.title }),
+                /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "hero-kaspi-installment", children: [
+                  /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { className: "kaspi-tag", children: "Kaspi 0-0-12" }),
+                  /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("span", { children: [
+                    "\u043E\u0442 ",
+                    /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("strong", { children: [
+                      money(currentHero.monthly),
+                      " \u20B8"
+                    ] }),
+                    " / \u043C\u0435\u0441"
+                  ] })
+                ] })
+              ] }),
+              matchingHeroProduct && /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(
+                "button",
+                {
+                  className: "hero-detail-btn",
+                  onClick: (e) => {
+                    e.stopPropagation();
+                    openProduct(matchingHeroProduct);
+                  },
+                  children: "\u041F\u043E\u0434\u0440\u043E\u0431\u043D\u0435\u0435"
+                }
+              )
             ] })
-          ] }),
-          featuredProduct && /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("button", { className: "hero-detail-btn", onClick: () => openProduct(featuredProduct), children: "\u041F\u043E\u0434\u0440\u043E\u0431\u043D\u0435\u0435" })
-        ] })
-      ] }) })
+          ]
+        }
+      ) })
     ] }),
     /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("section", { className: "scenarios-section", "aria-label": "\u0411\u044B\u0441\u0442\u0440\u044B\u0439 \u043F\u043E\u0434\u0431\u043E\u0440 \u0438\u043D\u0441\u0442\u0440\u0443\u043C\u0435\u043D\u0442\u0430", children: [
       /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "section-head", children: [
