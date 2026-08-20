@@ -481,7 +481,7 @@ export function Storefront({
                         aria-label="Выбрать цвет инструмента"
                       >
                         <div className="swatch-dots-row">
-                          {variants.slice(0, 5).map((v) => {
+                          {variants.slice(0, 6).map((v) => {
                             const isSelected =
                               (currentVariant?.id || currentVariant?.sku) === (v.id || v.sku);
                             return (
@@ -514,9 +514,9 @@ export function Storefront({
                               </button>
                             );
                           })}
-                          {variants.length > 5 && (
-                            <span className="swatches-more-pill" title={`Ещё ${variants.length - 5} цветов`}>
-                              +{variants.length - 5}
+                          {variants.length > 6 && (
+                            <span className="swatches-more-pill" title={`Ещё ${variants.length - 6} цветов`}>
+                              +{variants.length - 6}
                             </span>
                           )}
                         </div>
@@ -529,11 +529,6 @@ export function Storefront({
                     <p className="eyebrow">{product.category}</p>
                     <h3>{product.name}</h3>
                     <p className="product-description">{product.description}</p>
-                    <div className="product-specs">
-                      <span>{product.variants} {product.variants === 1 ? "вариант" : "вариантов"}</span>
-                      <span>•</span>
-                      <span>{product.quantity} шт. на складе</span>
-                    </div>
                   </div>
                 </div>
 
@@ -557,7 +552,10 @@ export function Storefront({
                   </div>
                   <button
                     className="card-action-button"
-                    onClick={() => openProduct(product, currentVariant)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      openProduct(product, currentVariant);
+                    }}
                   >
                     Выбрать
                   </button>
