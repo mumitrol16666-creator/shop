@@ -10,6 +10,7 @@ import { PresetManagerModal } from "./PresetManagerModal";
 import { PriceTagPrintModal } from "./PriceTagPrintModal";
 import { CourseEditorModal } from "./CourseEditorModal";
 import { COURSES, type Course } from "../lib/courses-data";
+import { playProductAudio, stopProductAudio } from "../lib/sound-synth";
 
 type PurchaserViewProps = {
   categories: string[];
@@ -94,6 +95,8 @@ export function PurchaserView({
   const [internalProPackTitle, setInternalProPackTitle] = useState<string>("Чехол + Ремень + VIP Доступ");
   const [internalProPackPrice, setInternalProPackPrice] = useState<number>(8900);
   const [internalAllowStrings, setInternalAllowStrings] = useState<boolean>(true);
+  const [activeTab, setActiveTab] = useState<"general" | "bundle" | "matrix" | "pricing">("general");
+  const [isPlayingAudioPreview, setIsPlayingAudioPreview] = useState<boolean>(false);
 
   // Model variants list (Color & Variant Matrix)
   const [modelVariants, setModelVariants] = useState<Variant[]>([
@@ -632,7 +635,7 @@ export function PurchaserView({
         }}
       />
 
-      {/* Merge Modal */}
+      {/* Course Editor Modal */}
       <CourseEditorModal
         isOpen={isCourseModalOpen}
         onClose={() => setIsCourseModalOpen(false)}
@@ -643,11 +646,15 @@ export function PurchaserView({
           setTimeout(() => setNotice(""), 3000);
         }}
       />
+
+      {/* Price Tag Print Modal */}
       <PriceTagPrintModal
         isOpen={isPrintModalOpen}
         onClose={() => setIsPrintModalOpen(false)}
         products={selectedProductIds.size > 0 ? selectedForMerge : displayedInventoryProducts}
       />
+
+      {/* Merge Products Modal */}
       <MergeProductsModal
         isOpen={isMergeModalOpen}
         onClose={() => setIsMergeModalOpen(false)}
@@ -656,743 +663,789 @@ export function PurchaserView({
       />
 
       <div className="purchaser-grid">
-        <section className="calculator-card">
-          {/* Top Live Status Ribbon */}
-          <div className="calculator-status-ribbon">
-            <div className="status-indicator-group">
-              {isDirty ? (
-                <span className="live-status-badge dirty" title="Изменения еще не сохранены в базу">
-                  <i className="status-dot blink" /> Есть несохранённые правки
-                </span>
-              ) : currentPublicationStatus === "published" ? (
-                <span className="live-status-badge published" title="Карточка активна на главной витрине">
-                  <i className="status-dot green" /> Опубликовано на витрине {lastSavedTime && `(${lastSavedTime})`}
-                </span>
-              ) : (
-                <span className="live-status-badge draft" title="Карточка сохранена в черновиках">
-                  <i className="status-dot yellow" /> Черновик {lastSavedTime && `(${lastSavedTime})`}
-                </span>
-              )}
-              <span className="current-model-tag">
-                Текущая модель: <strong>{internalSku}</strong> · {internalName}
-              </span>
-            </div>
-
-            <div className="preset-quick-select">
-              <span className="preset-label">Шаблон расходов:</span>
-              <select
-                value={selectedPresetId}
-                onChange={(e) => handleSelectPresetChange(e.target.value)}
-                aria-label="Выбрать шаблон расходов"
-              >
-                {presets.map((preset) => (
-                  <option key={preset.id} value={preset.id}>
-                    {preset.name} ({preset.purchaseCurrency})
-                  </option>
-                ))}
-              </select>
-              <button
-                type="button"
-                className="preset-manage-btn"
-                onClick={() => setIsPresetModalOpen(true)}
-                title="Редактировать и создавать свои шаблоны"
-              >
-                ⚙️ Шаблоны
-              </button>
-              <button
-                type="button"
-                className="preset-manage-btn course-btn"
-                onClick={() => setIsCourseModalOpen(true)}
-                title="Настройка и добавление онлайн-курсов"
-                style={{ background: "#2a221a", borderColor: "#c87531", color: "#f3e7d8", fontWeight: 600 }}
-              >
-                🎓 Курсы
-              </button>
-              <button
-                type="button"
-                className="preset-manage-btn"
-                onClick={() => setIsPrintModalOpen(true)}
-                title="Печать ценников со штрихкодами"
-              >
-                🖨 Ценники
-              </button>
-            </div>
-          </div>
-
-          {/* 1. Model Info */}
-          <div className="card-subhead">
-            <strong>1. Данные модели</strong>
-            <span>Основная информация, фотографии и характеристики инструмента.</span>
-          </div>
-
-          <div className="model-info-grid">
-            <label>
-              Название модели
-              <input
-                value={internalName}
-                onChange={(e) => {
-                  setInternalName(e.target.value);
-                  setIsDirty(true);
-                }}
-              />
-            </label>
-            <label>
-              Базовый SKU
-              <input
-                value={internalSku}
-                onChange={(e) => {
-                  setInternalSku(e.target.value);
-                  setIsDirty(true);
-                }}
-              />
-            </label>
-            <label>
-              Категория
-              <select
-                value={internalCategory}
-                onChange={(e) => {
-                  setInternalCategory(e.target.value);
-                  setIsDirty(true);
-                }}
-              >
-                {categories
-                  .filter((cat) => cat !== "Все")
-                  .map((cat) => (
-                    <option key={cat} value={cat}>{cat}</option>
-                  ))}
-              </select>
-            </label>
-            <label>
-              Основное фото
-              <input
-                value={internalPhoto}
-                onChange={(e) => {
-                  setInternalPhoto(e.target.value);
-                  setIsDirty(true);
-                }}
-              />
-            </label>
-            <label className="full-width">
-              Описание инструмента
-              <textarea
-                value={internalDescription}
-                onChange={(e) => {
-                  setInternalDescription(e.target.value);
-                  setIsDirty(true);
-                }}
-                rows={2}
-              />
-            </label>
-            <label className="full-width">
-              Характеристики (через запятую)
-              <input
-                value={featuresText}
-                onChange={(e) => {
-                  setFeaturesText(e.target.value);
-                  setIsDirty(true);
-                }}
-              />
-            </label>
-            <label>
-              Бейдж / Сегмент
-              <input
-                value={targetAudience}
-                onChange={(e) => {
-                  setTargetAudience(e.target.value);
-                  setIsDirty(true);
-                }}
-              />
-            </label>
-
-            <label className="full-width">
-              🎓 Подарочный онлайн-курс (в комплекте к инструменту)
-              <select
-                value={attachedCourseId}
-                onChange={(e) => {
-                  setAttachedCourseId(e.target.value);
-                  setIsDirty(true);
-                }}
-              >
-                <option value="auto">✨ Автоматически (по типу: Акустика → с нуля / Электро → риффы / Укулеле → экспресс)</option>
-                <option value="none">❌ Без курса (только гитара)</option>
-                {adminCourses.map((c) => (
-                  <option key={c.id} value={c.id}>
-                    🎓 {c.title} ({c.level}, {c.lessonsCount || 10} уроков)
-                  </option>
-                ))}
-              </select>
-            </label>
-
-            <label className="full-width">
-              🎵 Аудиозапись звучания инструмента (MP3 / Прямая ссылка)
-              <input
-                value={internalAudioUrl}
-                onChange={(e) => {
-                  setInternalAudioUrl(e.target.value);
-                  setIsDirty(true);
-                }}
-                placeholder="например, /audio/st20_preview.mp3 или https://example.com/sound.mp3"
-              />
-              <small style={{ color: "var(--muted)", fontSize: "11.5px", marginTop: "4px", display: "block" }}>
-                💡 Если поле пустое, кнопка «Послушать» на витрине скрыта. Звук воспроизводится только если вы укажете ссылку на реальную запись.
-              </small>
-            </label>
-
-            <div className="bundle-admin-settings-row full-width" style={{
-              background: "#faf7f2",
-              padding: "16px",
-              borderRadius: "14px",
-              border: "1px solid var(--line)",
-              display: "grid",
-              gridTemplateColumns: "1.5fr 1fr",
-              gap: "14px",
-              marginTop: "6px"
-            }}>
-              <label>
-                👑 Состав PRO Комплекта (аксессуары)
-                <input
-                  value={internalProPackTitle}
-                  onChange={(e) => {
-                    setInternalProPackTitle(e.target.value);
-                    setIsDirty(true);
-                  }}
-                  placeholder="Чехол + Ремень + VIP Доступ"
+        <section className="calculator-card modern-editor-card">
+          {/* Top Modern Header */}
+          <div className="modern-editor-header">
+            <div className="editor-title-wrap">
+              <div className="editor-thumb">
+                <Image
+                  src={internalPhoto || "/placeholder.png"}
+                  alt=""
+                  fill
+                  unoptimized
+                  sizes="64px"
                 />
-              </label>
-
-              <label>
-                💰 Доплата за PRO Комплект (₸)
-                <input
-                  type="number"
-                  value={internalProPackPrice}
-                  onChange={(e) => {
-                    setInternalProPackPrice(Number(e.target.value) || 0);
-                    setIsDirty(true);
-                  }}
-                  placeholder="8900"
-                />
-              </label>
-
-              <div style={{ gridColumn: "1 / -1" }}>
-                <label style={{ display: "inline-flex", alignItems: "center", gap: "8px", cursor: "pointer", fontWeight: 700 }}>
-                  <input
-                    type="checkbox"
-                    checked={internalAllowStrings}
-                    onChange={(e) => {
-                      setInternalAllowStrings(e.target.checked);
-                      setIsDirty(true);
-                    }}
-                  />
-                  <span>⚡ Предлагать комплект струн Elixir/D'Addario со скидкой -50% к этой гитаре</span>
-                </label>
               </div>
-            </div>
-          </div>
-
-          {/* 2. Color & Variant Matrix */}
-          <div className="card-subhead between">
-            <div>
-              <strong>2. Матрица цветов и модификаций модели ({modelVariants.length})</strong>
-              <span>Все расцветки гитары хранятся в одной карточке с единой юнит-экономикой.</span>
-            </div>
-            <button type="button" className="primary-button small" onClick={addVariantRow}>
-              + Добавить вариант / цвет
-            </button>
-          </div>
-
-          <div className="variant-matrix-table">
-            <div className="variant-matrix-head">
-              <span>Цвет / Образец</span>
-              <span>Название цвета</span>
-              <span>SKU варианта</span>
-              <span>Штрихкод</span>
-              <span>Размер</span>
-              <span>Остаток</span>
-              <span>Действия</span>
-            </div>
-
-            {modelVariants.map((variant, idx) => (
-              <div className="variant-matrix-row" key={variant.id || idx}>
-                <span className="color-cell">
-                  <input
-                    type="color"
-                    value={variant.color || "#8a8175"}
-                    onChange={(e) => updateVariantRow(idx, { color: e.target.value })}
-                    title="Выбрать HEX цвет"
-                  />
-                  <input
-                    type="text"
-                    className="hex-input"
-                    value={variant.color || "#8a8175"}
-                    onChange={(e) => updateVariantRow(idx, { color: e.target.value })}
-                  />
-                </span>
-                <span>
-                  <input
-                    type="text"
-                    value={variant.name}
-                    onChange={(e) =>
-                      updateVariantRow(idx, { name: e.target.value, colorName: e.target.value })
-                    }
-                    placeholder="Например: Санбёрст"
-                  />
-                </span>
-                <span>
-                  <input
-                    type="text"
-                    value={variant.sku}
-                    onChange={(e) => updateVariantRow(idx, { sku: e.target.value })}
-                  />
-                </span>
-                <span>
-                  <input
-                    type="text"
-                    value={variant.barcode || ""}
-                    onChange={(e) => updateVariantRow(idx, { barcode: e.target.value })}
-                    placeholder="EAN-13"
-                  />
-                </span>
-                <span>
-                  <input
-                    type="text"
-                    value={variant.size || "39″"}
-                    onChange={(e) => updateVariantRow(idx, { size: e.target.value })}
-                  />
-                </span>
-                <span>
-                  <input
-                    type="number"
-                    min="0"
-                    placeholder="0"
-                    value={variant.stock === 0 ? "" : variant.stock}
-                    onFocus={(e) => e.target.select()}
-                    onChange={(e) =>
-                      updateVariantRow(idx, { stock: Math.max(0, +e.target.value) })
-                    }
-                  />
-                </span>
-                <span className="matrix-actions">
-                  <button
-                    type="button"
-                    className="action-icon-btn"
-                    onClick={() => duplicateVariantRow(idx)}
-                    title="Дублировать строку"
-                  >
-                    📋
-                  </button>
-                  <button
-                    type="button"
-                    className="action-icon-btn delete"
-                    onClick={() => removeVariantRow(idx)}
-                    title="Удалить вариант"
-                  >
-                    ✕
-                  </button>
-                </span>
-              </div>
-            ))}
-          </div>
-
-          <div className="matrix-summary-bar">
-            <span>Суммарный остаток по всем цветам модели: <strong>{totalModelStock} шт.</strong></span>
-          </div>
-
-          {/* 3. Direct Costs */}
-          <div className="card-subhead">
-            <strong>3. Прямые расходы на единицу</strong>
-            <span>Себестоимость формируется из цены закупки, логистики и предпродажной подготовки мастера.</span>
-          </div>
-
-          <div className="calculator-form">
-            <label>
-              Валюта закупки
-              <select
-                value={currency}
-                onChange={(e) => {
-                  setCurrency(e.target.value as "CNY" | "USD" | "KZT");
-                  setIsDirty(true);
-                }}
-              >
-                <option value="CNY">Юань (¥, CNY)</option>
-                <option value="USD">Доллар ($, USD)</option>
-                <option value="KZT">Тенге (₸, KZT)</option>
-              </select>
-            </label>
-            <label>
-              Цена закупки
-              <input
-                type="number"
-                placeholder="0"
-                value={purchase === 0 ? "" : purchase}
-                onFocus={(e) => e.target.select()}
-                onChange={(e) => {
-                  setPurchase(+e.target.value);
-                  setIsDirty(true);
-                }}
-              />
-            </label>
-            {currency === "CNY" && (
-              <label>
-                Курс CNY → KZT
-                <input
-                  type="number"
-                  placeholder="0"
-                  value={cnyRate === 0 ? "" : cnyRate}
-                  onFocus={(e) => e.target.select()}
-                  onChange={(e) => {
-                    setCnyRate(+e.target.value);
-                    setIsDirty(true);
-                  }}
-                />
-              </label>
-            )}
-            {currency === "USD" && (
-              <label>
-                Курс USD → KZT
-                <input
-                  type="number"
-                  placeholder="0"
-                  value={usdRate === 0 ? "" : usdRate}
-                  onFocus={(e) => e.target.select()}
-                  onChange={(e) => {
-                    setUsdRate(+e.target.value);
-                    setIsDirty(true);
-                  }}
-                />
-              </label>
-            )}
-            <label>
-              Доставка по Китаю, ₸
-              <input
-                type="number"
-                placeholder="0"
-                value={delivery === 0 ? "" : delivery}
-                onFocus={(e) => e.target.select()}
-                onChange={(e) => {
-                  setDelivery(+e.target.value);
-                  setIsDirty(true);
-                }}
-              />
-            </label>
-            <label>
-              Карго до Актобе, ₸
-              <input
-                type="number"
-                placeholder="0"
-                value={cargo === 0 ? "" : cargo}
-                onFocus={(e) => e.target.select()}
-                onChange={(e) => {
-                  setCargo(+e.target.value);
-                  setIsDirty(true);
-                }}
-              />
-            </label>
-            <label>
-              Таможня / сборы, ₸
-              <input
-                type="number"
-                placeholder="0"
-                value={customs === 0 ? "" : customs}
-                onFocus={(e) => e.target.select()}
-                onChange={(e) => {
-                  setCustoms(+e.target.value);
-                  setIsDirty(true);
-                }}
-              />
-            </label>
-            <label>
-              Упаковка / коробка, ₸
-              <input
-                type="number"
-                placeholder="0"
-                value={packaging === 0 ? "" : packaging}
-                onFocus={(e) => e.target.select()}
-                onChange={(e) => {
-                  setPackaging(+e.target.value);
-                  setIsDirty(true);
-                }}
-              />
-            </label>
-            <label>
-              Доводка мастера / чек, ₸
-              <input
-                type="number"
-                placeholder="0"
-                value={setupCost === 0 ? "" : setupCost}
-                onFocus={(e) => e.target.select()}
-                onChange={(e) => {
-                  setSetupCost(+e.target.value);
-                  setIsDirty(true);
-                }}
-              />
-            </label>
-            <label>
-              Маркетинг на единицу, ₸
-              <input
-                type="number"
-                placeholder="0"
-                value={marketingCost === 0 ? "" : marketingCost}
-                onFocus={(e) => e.target.select()}
-                onChange={(e) => {
-                  setMarketingCost(+e.target.value);
-                  setIsDirty(true);
-                }}
-              />
-            </label>
-            <label>
-              Прочие расходы, ₸
-              <input
-                type="number"
-                placeholder="0"
-                value={other === 0 ? "" : other}
-                onFocus={(e) => e.target.select()}
-                onChange={(e) => {
-                  setOther(+e.target.value);
-                  setIsDirty(true);
-                }}
-              />
-            </label>
-          </div>
-
-          {/* 4. Percent Expenses */}
-          <div className="card-subhead">
-            <strong>4. Процентные расходы и маржинальность</strong>
-            <span>Учитывается налог, комиссия банка за рассрочку, комиссия продавца и желаемая наценка.</span>
-          </div>
-
-          <div className="calculator-form">
-            <label>
-              Налог, %
-              <input
-                type="number"
-                placeholder="0"
-                value={taxPercent === 0 ? "" : taxPercent}
-                onFocus={(e) => e.target.select()}
-                onChange={(e) => {
-                  setTaxPercent(+e.target.value);
-                  setIsDirty(true);
-                }}
-              />
-            </label>
-            <label>
-              Банк / рассрочка, %
-              <input
-                type="number"
-                placeholder="0"
-                value={bankPercent === 0 ? "" : bankPercent}
-                onFocus={(e) => e.target.select()}
-                onChange={(e) => {
-                  setBankPercent(+e.target.value);
-                  setIsDirty(true);
-                }}
-              />
-            </label>
-            <label>
-              Срок рассрочки, мес.
-              <input
-                type="number"
-                min="0"
-                placeholder="0"
-                value={installmentMonths === 0 ? "" : installmentMonths}
-                onFocus={(e) => e.target.select()}
-                onChange={(e) => {
-                  setInstallmentMonths(Math.max(0, +e.target.value));
-                  setIsDirty(true);
-                }}
-              />
-            </label>
-            <label>
-              Продавец, %
-              <input
-                type="number"
-                placeholder="0"
-                value={sellerPercent === 0 ? "" : sellerPercent}
-                onFocus={(e) => e.target.select()}
-                onChange={(e) => {
-                  setSellerPercent(+e.target.value);
-                  setIsDirty(true);
-                }}
-              />
-            </label>
-            <label>
-              Желаемая прибыль, %
-              <input
-                type="number"
-                placeholder="0"
-                value={markup === 0 ? "" : markup}
-                onFocus={(e) => e.target.select()}
-                onChange={(e) => {
-                  setMarkup(+e.target.value);
-                  setIsDirty(true);
-                }}
-              />
-            </label>
-            <label>
-              Итоговая базовая цена, ₸
-              <input
-                type="number"
-                placeholder="0"
-                value={
-                  Math.round(manualPricing ? manualPrice : recommendedPrice) === 0
-                    ? ""
-                    : Math.round(manualPricing ? manualPrice : recommendedPrice)
-                }
-                onFocus={(e) => e.target.select()}
-                onChange={(e) => {
-                  setManualPricing(true);
-                  setManualPrice(+e.target.value);
-                  setIsDirty(true);
-                }}
-              />
-            </label>
-            <label className="toggle-label">
-              Режим цены
-              <button
-                type="button"
-                className={manualPricing ? "toggle-button active" : "toggle-button"}
-                onClick={() => {
-                  setManualPricing((value) => !value);
-                  setManualPrice(Math.round(recommendedPrice));
-                  setIsDirty(true);
-                }}
-              >
-                {manualPricing ? "Ручная" : "Авто"}
-              </button>
-            </label>
-          </div>
-
-          {/* 5. Discount & Promotion */}
-          <div className="card-subhead between">
-            <div>
-              <strong>5. Скидки и промо-акции (Sale)</strong>
-              <span>Установите скидку в процентах или старую зачёркнутую цену для привлечения покупателей.</span>
-            </div>
-            <label className="discount-toggle-label">
-              <input
-                type="checkbox"
-                checked={hasDiscount}
-                onChange={(e) => {
-                  setHasDiscount(e.target.checked);
-                  setIsDirty(true);
-                }}
-              />
-              <span>Включить скидку / акцию</span>
-            </label>
-          </div>
-
-          {hasDiscount && (
-            <div className="calculator-form discount-form">
-              <label>
-                Размер скидки, %
-                <input
-                  type="number"
-                  min="1"
-                  max="90"
-                  placeholder="0"
-                  value={discountPercent === 0 ? "" : discountPercent}
-                  onFocus={(e) => e.target.select()}
-                  onChange={(e) => {
-                    setDiscountPercent(Math.min(90, Math.max(1, +e.target.value)));
-                    setIsDirty(true);
-                  }}
-                />
-              </label>
-              <label>
-                Старая зачёркнутая цена, ₸
-                <input
-                  type="number"
-                  placeholder="0"
-                  value={
-                    (originalPriceInput || Math.round(originalPriceDisplay)) === 0
-                      ? ""
-                      : (originalPriceInput || Math.round(originalPriceDisplay))
-                  }
-                  onFocus={(e) => e.target.select()}
-                  onChange={(e) => {
-                    setOriginalPriceInput(+e.target.value);
-                    setIsDirty(true);
-                  }}
-                />
-              </label>
-              <label>
-                Итоговая цена со скидкой, ₸
-                <input
-                  type="number"
-                  disabled
-                  value={Math.round(retail)}
-                />
-              </label>
-              <label>
-                Выгода покупателя, ₸
-                <input
-                  type="text"
-                  disabled
-                  value={`${money(savingsKzt)} ₸`}
-                />
-              </label>
-            </div>
-          )}
-
-          {/* Model Live Result Card */}
-          <div className="product-profit-card">
-            <div className="profit-preview">
-              <span className="profit-image">
-                <Image src={internalPhoto} alt="" fill unoptimized sizes="140px" />
-              </span>
-              <div>
-                <small>{internalSku}</small>
-                <strong>{internalName}</strong>
-                <p>{internalDescription}</p>
-                <div className="profit-swatches">
-                  {modelVariants.map((v) => (
-                    <span key={v.sku} className="matrix-swatch-mini" title={`${v.name} (${v.stock} шт.)`}>
-                      <i style={{ background: v.color || "#8a8175" }} />
-                      <small>{v.name}</small>
+              <div className="editor-titles">
+                <div className="editor-status-row">
+                  <span className={`status-pill ${currentPublicationStatus === "published" ? "published" : "draft"}`}>
+                    <i className="status-dot" /> {currentPublicationStatus === "published" ? "Опубликовано на витрине" : "В черновиках"}
+                  </span>
+                  {isDirty && (
+                    <span className="status-pill dirty">
+                      ● Есть несохранённые правки
                     </span>
-                  ))}
+                  )}
+                  {lastSavedTime && <small className="last-saved-hint">Сохранено: {lastSavedTime}</small>}
+                </div>
+                <h2>{internalName || "Новая модель инструмента"}</h2>
+                <div className="editor-sku-row">
+                  <span className="sku-badge">SKU: {internalSku}</span>
+                  <span className="category-badge">{internalCategory}</span>
+                  <span className="stock-badge">Остаток: {totalModelStock} шт.</span>
                 </div>
               </div>
             </div>
-            <div className="price-hero">
-              <span>{hasDiscount ? "Цена со скидкой" : "Цена продажи"}</span>
-              <div className="hero-price-row">
-                <strong>{money(retail)} ₸</strong>
-                {hasDiscount && originalPriceDisplay > retail && (
-                  <span className="hero-old-price">{money(originalPriceDisplay)} ₸</span>
-                )}
+
+            <div className="editor-header-actions">
+              <div className="preset-quick-group">
+                <span className="preset-label">Шаблон:</span>
+                <select
+                  value={selectedPresetId}
+                  onChange={(e) => handleSelectPresetChange(e.target.value)}
+                  aria-label="Выбрать шаблон расходов"
+                >
+                  {presets.map((preset) => (
+                    <option key={preset.id} value={preset.id}>
+                      {preset.name} ({preset.purchaseCurrency})
+                    </option>
+                  ))}
+                </select>
+                <button
+                  type="button"
+                  className="icon-tool-btn"
+                  onClick={() => setIsPresetModalOpen(true)}
+                  title="Настройка шаблонов расходов"
+                >
+                  ⚙️
+                </button>
               </div>
-              <small>
-                {hasDiscount
-                  ? `Скидка -${discountPercent}% · Экономия: ${money(savingsKzt)} ₸`
-                  : `Авто-рекомендация: ${money(recommendedPrice)} ₸`}
-              </small>
+
+              <div className="util-btn-group">
+                <button
+                  type="button"
+                  className="util-btn"
+                  onClick={() => setIsCourseModalOpen(true)}
+                >
+                  🎓 Курсы ({adminCourses.length})
+                </button>
+                <button
+                  type="button"
+                  className="util-btn"
+                  onClick={() => setIsPrintModalOpen(true)}
+                >
+                  🖨 Ценники
+                </button>
+              </div>
+
+              <div className="main-save-group">
+                <button
+                  type="button"
+                  className="save-draft-btn"
+                  disabled={saveState === "saving"}
+                  onClick={() => saveProduct(false)}
+                >
+                  Черновик
+                </button>
+                <button
+                  type="button"
+                  className="save-publish-btn"
+                  disabled={saveState === "saving"}
+                  onClick={() => saveProduct(true)}
+                >
+                  {saveState === "saving" ? "Сохраняем..." : "💾 Опубликовать"}
+                </button>
+              </div>
             </div>
           </div>
 
-          {/* 10 Unit Economics Metrics */}
-          <div className="calculation-summary">
-            <div><span>Закупка в тенге</span><strong>{money(purchaseKzt)} ₸</strong></div>
-            <div><span>Фикс. себестоимость</span><strong>{money(fixedCost)} ₸</strong></div>
-            <div><span>Точка безубыточности</span><strong>{money(breakEvenPrice)} ₸</strong></div>
-            <div><span>Налог (3%)</span><strong>{money(taxAmount)} ₸</strong></div>
-            <div><span>Банк / рассрочка</span><strong>{money(bankAmount)} ₸</strong></div>
-            <div><span>Продавец (5%)</span><strong>{money(sellerAmount)} ₸</strong></div>
-            <div><span>Чистая выручка</span><strong>{money(netRevenue)} ₸</strong></div>
-            <div className="accent-result"><span>Прибыль с единицы</span><strong>{money(profit)} ₸</strong></div>
-            <div><span>Маржа / прибыль</span><strong>{margin.toFixed(1)}%</strong></div>
-            <div><span>Наценка к себестоимости</span><strong>{markupOnCost.toFixed(1)}%</strong></div>
+          {/* Segmented Modern Navigation Tabs */}
+          <div className="editor-tabs-bar">
+            <button
+              type="button"
+              className={`editor-tab-btn ${activeTab === "general" ? "active" : ""}`}
+              onClick={() => setActiveTab("general")}
+            >
+              <span>🏷️</span>
+              <strong>1. Карточка и витрина</strong>
+            </button>
+            <button
+              type="button"
+              className={`editor-tab-btn ${activeTab === "bundle" ? "active" : ""}`}
+              onClick={() => setActiveTab("bundle")}
+            >
+              <span>🎁</span>
+              <strong>2. Комплектация и подарки</strong>
+            </button>
+            <button
+              type="button"
+              className={`editor-tab-btn ${activeTab === "matrix" ? "active" : ""}`}
+              onClick={() => setActiveTab("matrix")}
+            >
+              <span>🎨</span>
+              <strong>3. Цвета и склад ({modelVariants.length})</strong>
+            </button>
+            <button
+              type="button"
+              className={`editor-tab-btn ${activeTab === "pricing" ? "active" : ""}`}
+              onClick={() => setActiveTab("pricing")}
+            >
+              <span>💰</span>
+              <strong>4. Экономика и цены ({money(retail)} ₸)</strong>
+            </button>
           </div>
 
-          <p className="formula-note">
-            Автоцена = (фиксированная себестоимость + желаемая прибыль) / (1 − налог − банк − продавец).
-            Все цвета модели наследуют рассчитанную экономику.
-          </p>
+          {/* TAB 1: GENERAL & STOREFRONT */}
+          {activeTab === "general" && (
+            <div className="tab-pane-content">
+              <div className="tab-section-head">
+                <strong>Основная информация о модели</strong>
+                <p>Название, категория, фотографии, звукозапись и описание для покупателей.</p>
+              </div>
 
-          {/* Save / Publish Action Footer */}
+              <div className="model-info-grid">
+                <label>
+                  Название модели
+                  <input
+                    value={internalName}
+                    onChange={(e) => {
+                      setInternalName(e.target.value);
+                      setIsDirty(true);
+                    }}
+                    placeholder="например, Электрогитара ST-20 HSS"
+                  />
+                </label>
+                <label>
+                  Базовый артикул (SKU)
+                  <input
+                    value={internalSku}
+                    onChange={(e) => {
+                      setInternalSku(e.target.value);
+                      setIsDirty(true);
+                    }}
+                    placeholder="EG-ST20"
+                  />
+                </label>
+                <label>
+                  Категория на сайте
+                  <select
+                    value={internalCategory}
+                    onChange={(e) => {
+                      setInternalCategory(e.target.value);
+                      setIsDirty(true);
+                    }}
+                  >
+                    {categories
+                      .filter((cat) => cat !== "Все")
+                      .map((cat) => (
+                        <option key={cat} value={cat}>{cat}</option>
+                      ))}
+                  </select>
+                </label>
+                <label>
+                  Маркетинговый бейдж
+                  <input
+                    value={targetAudience}
+                    onChange={(e) => {
+                      setTargetAudience(e.target.value);
+                      setIsDirty(true);
+                    }}
+                    placeholder="Для начинающих / Хит продаж / Sale"
+                  />
+                </label>
+                <label className="full-width">
+                  Ссылка на главное фото (PNG/JPG)
+                  <input
+                    value={internalPhoto}
+                    onChange={(e) => {
+                      setInternalPhoto(e.target.value);
+                      setIsDirty(true);
+                    }}
+                    placeholder="/products/01_st20_electric.png"
+                  />
+                </label>
+
+                <label className="full-width">
+                  🎵 Аудиозапись звучания инструмента (MP3 / Прямая ссылка)
+                  <div style={{ display: "flex", gap: "10px", marginTop: "4px" }}>
+                    <input
+                      style={{ flex: 1 }}
+                      value={internalAudioUrl}
+                      onChange={(e) => {
+                        setInternalAudioUrl(e.target.value);
+                        setIsDirty(true);
+                      }}
+                      placeholder="например, /audio/st20_preview.mp3 или https://example.com/sound.mp3"
+                    />
+                    {internalAudioUrl.trim() && (
+                      <button
+                        type="button"
+                        className="outline-button small"
+                        style={{ whiteSpace: "nowrap", display: "inline-flex", alignItems: "center", gap: "5px" }}
+                        onClick={() => {
+                          if (isPlayingAudioPreview) {
+                            stopProductAudio();
+                            setIsPlayingAudioPreview(false);
+                          } else {
+                            setIsPlayingAudioPreview(true);
+                            playProductAudio(internalAudioUrl, () => setIsPlayingAudioPreview(false));
+                          }
+                        }}
+                      >
+                        {isPlayingAudioPreview ? "⏹ Остановить" : "▶ Слушать"}
+                      </button>
+                    )}
+                  </div>
+                  <small style={{ color: "var(--muted)", fontSize: "11.5px", marginTop: "4px", display: "block" }}>
+                    💡 Если поле пустое, кнопка «Послушать» на витрине скрыта. Воспроизводится только при наличии ссылки на реальный файл.
+                  </small>
+                </label>
+
+                <label className="full-width">
+                  Краткое описание инструмента
+                  <textarea
+                    rows={3}
+                    value={internalDescription}
+                    onChange={(e) => {
+                      setInternalDescription(e.target.value);
+                      setIsDirty(true);
+                    }}
+                    placeholder="Универсальная электрогитара формы ST для первых занятий..."
+                  />
+                </label>
+                <label className="full-width">
+                  Преимущества и характеристики (через запятую)
+                  <input
+                    value={featuresText}
+                    onChange={(e) => {
+                      setFeaturesText(e.target.value);
+                      setIsDirty(true);
+                    }}
+                    placeholder="Форма корпуса ST, Конфигурация HSS, 6 цветов, Стандартная мензура"
+                  />
+                </label>
+              </div>
+            </div>
+          )}
+
+          {/* TAB 2: BUNDLES & UPSELLS */}
+          {activeTab === "bundle" && (
+            <div className="tab-pane-content">
+              <div className="tab-section-head">
+                <strong>Комплектация, подарки и допродажи</strong>
+                <p>Настройте подарочный онлайн-курс, состав PRO-комплекта и предложение струн со скидкой 50%.</p>
+              </div>
+
+              <div className="bundle-editor-grid">
+                <div className="bundle-config-card">
+                  <div className="bundle-card-top">
+                    <span className="bundle-icon">🎁</span>
+                    <div>
+                      <strong>Подарочный онлайн-курс к инструменту</strong>
+                      <span>Отображается как бесплатный подарок на 19 900 ₸ при покупке.</span>
+                    </div>
+                  </div>
+                  <select
+                    value={attachedCourseId}
+                    onChange={(e) => {
+                      setAttachedCourseId(e.target.value);
+                      setIsDirty(true);
+                    }}
+                  >
+                    <option value="auto">✨ Автоматически (по типу: Акустика → с нуля / Электро → риффы / Укулеле → экспресс)</option>
+                    <option value="none">❌ Без курса (только инструмент)</option>
+                    {adminCourses.map((c) => (
+                      <option key={c.id} value={c.id}>
+                        🎓 {c.title} ({c.level}, {c.lessonsCount || 10} уроков)
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="bundle-config-card">
+                  <div className="bundle-card-top">
+                    <span className="bundle-icon">👑</span>
+                    <div>
+                      <strong>PRO Комплект (Чехол, аксессуары и VIP)</strong>
+                      <span>Дополнительная комплектация с увеличением среднего чека.</span>
+                    </div>
+                  </div>
+                  <div className="two-cols-input">
+                    <label>
+                      Состав аксессуаров в PRO-комплекте
+                      <input
+                        value={internalProPackTitle}
+                        onChange={(e) => {
+                          setInternalProPackTitle(e.target.value);
+                          setIsDirty(true);
+                        }}
+                        placeholder="Чехол + Ремень + VIP Доступ"
+                      />
+                    </label>
+                    <label>
+                      Доплата за PRO-комплект (₸)
+                      <input
+                        type="number"
+                        value={internalProPackPrice}
+                        onChange={(e) => {
+                          setInternalProPackPrice(Number(e.target.value) || 0);
+                          setIsDirty(true);
+                        }}
+                        placeholder="8900"
+                      />
+                    </label>
+                  </div>
+                </div>
+
+                <div className="bundle-config-card">
+                  <div className="bundle-card-top">
+                    <span className="bundle-icon">⚡</span>
+                    <div>
+                      <strong>Допродажа струн со скидкой 50% (Order Bump)</strong>
+                      <span>Показывает выбор Elixir Nanoweb (+4 950 ₸) и D'Addario Pro (+2 450 ₸) при добавлении в корзину.</span>
+                    </div>
+                  </div>
+                  <label className="checkbox-setting-label">
+                    <input
+                      type="checkbox"
+                      checked={internalAllowStrings}
+                      onChange={(e) => {
+                        setInternalAllowStrings(e.target.checked);
+                        setIsDirty(true);
+                      }}
+                    />
+                    <span>Включить предложение запасного комплекта струн (-50%) в карточке этой гитары</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* TAB 3: MATRIX & STOCK */}
+          {activeTab === "matrix" && (
+            <div className="tab-pane-content">
+              <div className="card-subhead between">
+                <div>
+                  <strong>Матрица цветов и модификаций модели ({modelVariants.length})</strong>
+                  <span>Все расцветки и размеры гитары хранятся в одной карточке. Общий остаток: <strong>{totalModelStock} шт.</strong></span>
+                </div>
+                <button type="button" className="primary-button small" onClick={addVariantRow}>
+                  + Добавить вариант / цвет
+                </button>
+              </div>
+
+              <div className="variant-matrix-table">
+                <div className="variant-matrix-head">
+                  <span>Цвет / Образец</span>
+                  <span>Название цвета</span>
+                  <span>SKU варианта</span>
+                  <span>Штрихкод</span>
+                  <span>Размер</span>
+                  <span>Остаток</span>
+                  <span>Действия</span>
+                </div>
+                {modelVariants.map((variant, index) => (
+                  <div className="variant-matrix-row" key={variant.id || `${variant.sku}-${index}`}>
+                    <div className="variant-color-input-wrap">
+                      <input
+                        type="color"
+                        value={variant.color || "#171717"}
+                        onChange={(e) => updateVariantRow(index, { color: e.target.value })}
+                        title="Выбрать цвет"
+                      />
+                      <input
+                        type="text"
+                        placeholder="#171717"
+                        value={variant.color || ""}
+                        onChange={(e) => updateVariantRow(index, { color: e.target.value })}
+                        className="color-hex-text"
+                      />
+                    </div>
+                    <input
+                      type="text"
+                      placeholder="Название цвета"
+                      value={variant.colorName || variant.name}
+                      onChange={(e) => {
+                        updateVariantRow(index, { name: e.target.value, colorName: e.target.value });
+                      }}
+                    />
+                    <input
+                      type="text"
+                      placeholder="SKU"
+                      value={variant.sku}
+                      onChange={(e) => updateVariantRow(index, { sku: e.target.value })}
+                    />
+                    <input
+                      type="text"
+                      placeholder="Штрихкод"
+                      value={variant.barcode || ""}
+                      onChange={(e) => updateVariantRow(index, { barcode: e.target.value })}
+                    />
+                    <input
+                      type="text"
+                      placeholder="39″"
+                      value={variant.size || "39″"}
+                      onChange={(e) => updateVariantRow(index, { size: e.target.value })}
+                      className="size-input"
+                    />
+                    <input
+                      type="number"
+                      min="0"
+                      value={variant.stock === 0 ? "" : variant.stock}
+                      onFocus={(e) => e.target.select()}
+                      onChange={(e) => updateVariantRow(index, { stock: Math.max(0, +e.target.value) })}
+                      className="stock-input"
+                    />
+                    <div className="variant-actions">
+                      <button
+                        type="button"
+                        className="action-icon-btn"
+                        onClick={() => duplicateVariantRow(index)}
+                        title="Дублировать строку"
+                      >
+                        📋
+                      </button>
+                      <button
+                        type="button"
+                        className="action-icon-btn delete"
+                        onClick={() => removeVariantRow(index)}
+                        disabled={modelVariants.length <= 1}
+                        title="Удалить вариант"
+                      >
+                        ✕
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* TAB 4: PRICING & UNIT ECONOMICS */}
+          {activeTab === "pricing" && (
+            <div className="tab-pane-content">
+              <div className="tab-section-head">
+                <strong>Калькулятор себестоимости и Kaspi Рассрочки 0-0-12</strong>
+                <p>Прямой расчет юнит-экономики из Китая с учетом комиссий, налогов и чистой маржи.</p>
+              </div>
+
+              <div className="calculator-form">
+                <label>
+                  Валюта закупки
+                  <select
+                    value={currency}
+                    onChange={(e) => {
+                      setCurrency(e.target.value as "CNY" | "USD" | "KZT");
+                      setIsDirty(true);
+                    }}
+                  >
+                    <option value="CNY">¥ Юань (CNY)</option>
+                    <option value="USD">$ Доллар (USD)</option>
+                    <option value="KZT">₸ Тенге (KZT)</option>
+                  </select>
+                </label>
+                {currency === "CNY" && (
+                  <label>
+                    Курс юаня, ₸
+                    <input
+                      type="number"
+                      step="0.1"
+                      value={cnyRate}
+                      onFocus={(e) => e.target.select()}
+                      onChange={(e) => {
+                        setCnyRate(+e.target.value);
+                        setIsDirty(true);
+                      }}
+                    />
+                  </label>
+                )}
+                {currency === "USD" && (
+                  <label>
+                    Курс доллара, ₸
+                    <input
+                      type="number"
+                      step="1"
+                      value={usdRate}
+                      onFocus={(e) => e.target.select()}
+                      onChange={(e) => {
+                        setUsdRate(+e.target.value);
+                        setIsDirty(true);
+                      }}
+                    />
+                  </label>
+                )}
+                <label>
+                  Закупка за единицу
+                  <input
+                    type="number"
+                    value={purchase === 0 ? "" : purchase}
+                    onFocus={(e) => e.target.select()}
+                    onChange={(e) => {
+                      setPurchase(+e.target.value);
+                      setIsDirty(true);
+                    }}
+                  />
+                </label>
+                <label>
+                  Доставка по Китаю, ₸
+                  <input
+                    type="number"
+                    value={delivery === 0 ? "" : delivery}
+                    onFocus={(e) => e.target.select()}
+                    onChange={(e) => {
+                      setDelivery(+e.target.value);
+                      setIsDirty(true);
+                    }}
+                  />
+                </label>
+                <label>
+                  Карго / Доставка в РК, ₸
+                  <input
+                    type="number"
+                    value={cargo === 0 ? "" : cargo}
+                    onFocus={(e) => e.target.select()}
+                    onChange={(e) => {
+                      setCargo(+e.target.value);
+                      setIsDirty(true);
+                    }}
+                  />
+                </label>
+                <label>
+                  Таможня / Оформление, ₸
+                  <input
+                    type="number"
+                    value={customs === 0 ? "" : customs}
+                    onFocus={(e) => e.target.select()}
+                    onChange={(e) => {
+                      setCustoms(+e.target.value);
+                      setIsDirty(true);
+                    }}
+                  />
+                </label>
+                <label>
+                  Упаковка / Коробка, ₸
+                  <input
+                    type="number"
+                    value={packaging === 0 ? "" : packaging}
+                    onFocus={(e) => e.target.select()}
+                    onChange={(e) => {
+                      setPackaging(+e.target.value);
+                      setIsDirty(true);
+                    }}
+                  />
+                </label>
+                <label>
+                  Доводка / Отстройка мастера, ₸
+                  <input
+                    type="number"
+                    value={setupCost === 0 ? "" : setupCost}
+                    onFocus={(e) => e.target.select()}
+                    onChange={(e) => {
+                      setSetupCost(+e.target.value);
+                      setIsDirty(true);
+                    }}
+                  />
+                </label>
+                <label>
+                  Маркетинг / Лид, ₸
+                  <input
+                    type="number"
+                    value={marketingCost === 0 ? "" : marketingCost}
+                    onFocus={(e) => e.target.select()}
+                    onChange={(e) => {
+                      setMarketingCost(+e.target.value);
+                      setIsDirty(true);
+                    }}
+                  />
+                </label>
+                <label>
+                  Прочие расходы, ₸
+                  <input
+                    type="number"
+                    value={other === 0 ? "" : other}
+                    onFocus={(e) => e.target.select()}
+                    onChange={(e) => {
+                      setOther(+e.target.value);
+                      setIsDirty(true);
+                    }}
+                  />
+                </label>
+                <label>
+                  Налог (УСН), %
+                  <input
+                    type="number"
+                    value={taxPercent === 0 ? "" : taxPercent}
+                    onFocus={(e) => e.target.select()}
+                    onChange={(e) => {
+                      setTaxPercent(+e.target.value);
+                      setIsDirty(true);
+                    }}
+                  />
+                </label>
+                <label>
+                  Kaspi Рассрочка, %
+                  <input
+                    type="number"
+                    value={bankPercent === 0 ? "" : bankPercent}
+                    onFocus={(e) => e.target.select()}
+                    onChange={(e) => {
+                      setBankPercent(+e.target.value);
+                      setIsDirty(true);
+                    }}
+                  />
+                </label>
+                <label>
+                  Срок рассрочки, мес.
+                  <input
+                    type="number"
+                    value={installmentMonths === 0 ? "" : installmentMonths}
+                    onFocus={(e) => e.target.select()}
+                    onChange={(e) => {
+                      setInstallmentMonths(+e.target.value);
+                      setIsDirty(true);
+                    }}
+                  />
+                </label>
+                <label>
+                  Комиссия продавца, %
+                  <input
+                    type="number"
+                    value={sellerPercent === 0 ? "" : sellerPercent}
+                    onFocus={(e) => e.target.select()}
+                    onChange={(e) => {
+                      setSellerPercent(+e.target.value);
+                      setIsDirty(true);
+                    }}
+                  />
+                </label>
+                <label>
+                  Желаемая прибыль (маржа), %
+                  <input
+                    type="number"
+                    value={markup === 0 ? "" : markup}
+                    onFocus={(e) => e.target.select()}
+                    onChange={(e) => {
+                      setMarkup(+e.target.value);
+                      setIsDirty(true);
+                    }}
+                  />
+                </label>
+                <label>
+                  Итоговая розничная цена, ₸
+                  <input
+                    type="number"
+                    value={
+                      Math.round(manualPricing ? manualPrice : recommendedPrice) === 0
+                        ? ""
+                        : Math.round(manualPricing ? manualPrice : recommendedPrice)
+                    }
+                    onFocus={(e) => e.target.select()}
+                    onChange={(e) => {
+                      setManualPricing(true);
+                      setManualPrice(+e.target.value);
+                      setIsDirty(true);
+                    }}
+                  />
+                </label>
+                <label className="toggle-label">
+                  Режим цены
+                  <button
+                    type="button"
+                    className={manualPricing ? "toggle-button active" : "toggle-button"}
+                    onClick={() => {
+                      setManualPricing((value) => !value);
+                      setManualPrice(Math.round(recommendedPrice));
+                      setIsDirty(true);
+                    }}
+                  >
+                    {manualPricing ? "Ручная" : "Автоматическая"}
+                  </button>
+                </label>
+              </div>
+
+              {/* Discount Section */}
+              <div className="card-subhead between" style={{ marginTop: "24px" }}>
+                <div>
+                  <strong>Скидка и старая зачёркнутая цена (Sale)</strong>
+                  <span>Привлечение внимания покупателей на витрине.</span>
+                </div>
+                <label className="discount-toggle-label">
+                  <input
+                    type="checkbox"
+                    checked={hasDiscount}
+                    onChange={(e) => {
+                      setHasDiscount(e.target.checked);
+                      setIsDirty(true);
+                    }}
+                  />
+                  <span>Включить скидку</span>
+                </label>
+              </div>
+
+              {hasDiscount && (
+                <div className="calculator-form discount-form">
+                  <label>
+                    Скидка, %
+                    <input
+                      type="number"
+                      min="1"
+                      max="90"
+                      value={discountPercent === 0 ? "" : discountPercent}
+                      onFocus={(e) => e.target.select()}
+                      onChange={(e) => {
+                        setDiscountPercent(Math.min(90, Math.max(1, +e.target.value)));
+                        setIsDirty(true);
+                      }}
+                    />
+                  </label>
+                  <label>
+                    Старая цена, ₸
+                    <input
+                      type="number"
+                      value={
+                        (originalPriceInput || Math.round(originalPriceDisplay)) === 0
+                          ? ""
+                          : (originalPriceInput || Math.round(originalPriceDisplay))
+                      }
+                      onFocus={(e) => e.target.select()}
+                      onChange={(e) => {
+                        setOriginalPriceInput(+e.target.value);
+                        setIsDirty(true);
+                      }}
+                    />
+                  </label>
+                  <label>
+                    Итого к оплате покупателем
+                    <input type="text" disabled value={`${money(Math.round(retail))} ₸`} />
+                  </label>
+                  <label>
+                    Выгода покупателя
+                    <input type="text" disabled value={`${money(savingsKzt)} ₸`} />
+                  </label>
+                </div>
+              )}
+
+              {/* 10 Unit Economics Metrics */}
+              <div className="calculation-summary" style={{ marginTop: "20px" }}>
+                <div><span>Закупка в тенге</span><strong>{money(purchaseKzt)} ₸</strong></div>
+                <div><span>Фикс. себестоимость</span><strong>{money(fixedCost)} ₸</strong></div>
+                <div><span>Точка безубыточности</span><strong>{money(breakEvenPrice)} ₸</strong></div>
+                <div><span>Налог ({taxPercent}%)</span><strong>{money(taxAmount)} ₸</strong></div>
+                <div><span>Kaspi Рассрочка</span><strong>{money(bankAmount)} ₸</strong></div>
+                <div><span>Продавец ({sellerPercent}%)</span><strong>{money(sellerAmount)} ₸</strong></div>
+                <div><span>Чистая выручка</span><strong>{money(netRevenue)} ₸</strong></div>
+                <div className="accent-result"><span>Прибыль с 1 шт.</span><strong>{money(profit)} ₸</strong></div>
+                <div><span>Маржа</span><strong>{margin.toFixed(1)}%</strong></div>
+                <div><span>Наценка к себестоимости</span><strong>{markupOnCost.toFixed(1)}%</strong></div>
+              </div>
+            </div>
+          )}
+
+          {/* Sticky Bottom Save / Publish Bar */}
           <div className="save-actions">
             <div className={`save-feedback ${saveState}`} aria-live="polite">
-              <strong>{editingProductId ? `Карточка модели ${internalSku}` : "Новая карточка"}</strong>
-              <span>{saveMessage || (isDirty ? "Есть несохранённые правки. Нажмите кнопку справа для сохранения." : "Все изменения сохранены в базе.")}</span>
+              <strong>{editingProductId ? `Модель ${internalSku}` : "Новая карточка"}</strong>
+              <span>{saveMessage || (isDirty ? "Есть несохранённые правки." : "Все изменения сохранены в базе.")}</span>
             </div>
             <button
               type="button"
@@ -1408,7 +1461,7 @@ export function PurchaserView({
               disabled={saveState === "saving"}
               onClick={() => saveProduct(true)}
             >
-              Сохранить и показать на витрине
+              💾 Сохранить и показать на витрине
             </button>
           </div>
         </section>
