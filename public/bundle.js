@@ -17234,6 +17234,7 @@ function PurchaserView({
   const [activeTab, setActiveTab] = (0, import_react12.useState)("general");
   const [isPlayingAudioPreview, setIsPlayingAudioPreview] = (0, import_react12.useState)(false);
   const [isUploadingPhoto, setIsUploadingPhoto] = (0, import_react12.useState)(false);
+  const [previewPhotoModal, setPreviewPhotoModal] = (0, import_react12.useState)(null);
   const uploadImageFile = (file, onSuccess) => {
     if (!file) return;
     setIsUploadingPhoto(true);
@@ -18382,8 +18383,43 @@ function PurchaserView({
                 )
               ] }),
               /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { style: { display: "flex", alignItems: "center", gap: "6px" }, children: [
-                /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("div", { style: { position: "relative", width: "34px", height: "34px", borderRadius: "6px", overflow: "hidden", background: "#faf8f5", border: "1px solid var(--line)", flexShrink: 0 }, children: /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(Image, { src: variant.image || internalPhoto || "/placeholder.png", alt: "", fill: true, unoptimized: true, sizes: "34px", style: { objectFit: "contain" } }) }),
-                /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("label", { style: { cursor: "pointer", fontSize: "11px", padding: "4px 6px", background: "#f4efe9", border: "1px solid var(--line)", borderRadius: "6px", fontWeight: 700 }, title: "\u0417\u0430\u0433\u0440\u0443\u0437\u0438\u0442\u044C \u0444\u043E\u0442\u043E \u0434\u043B\u044F \u044D\u0442\u043E\u0433\u043E \u0446\u0432\u0435\u0442\u0430", children: [
+                /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
+                  "div",
+                  {
+                    style: {
+                      position: "relative",
+                      width: "36px",
+                      height: "36px",
+                      borderRadius: "8px",
+                      overflow: "hidden",
+                      background: "#faf8f5",
+                      border: "1.5px solid var(--line)",
+                      flexShrink: 0,
+                      cursor: "zoom-in",
+                      transition: "transform 0.2s ease, border-color 0.2s ease"
+                    },
+                    className: "variant-thumb-clickable",
+                    onClick: () => setPreviewPhotoModal({
+                      url: variant.image || internalPhoto || "/placeholder.png",
+                      title: `${internalName} \u2014 ${variant.colorName || variant.name}`,
+                      subtitle: `SKU: ${variant.sku || internalSku} \xB7 \u0426\u0432\u0435\u0442: ${variant.color}`,
+                      variantIndex: index
+                    }),
+                    title: "\u{1F50D} \u041D\u0430\u0436\u043C\u0438\u0442\u0435, \u0447\u0442\u043E\u0431\u044B \u043E\u0442\u043A\u0440\u044B\u0442\u044C \u0444\u043E\u0442\u043E \u0432 \u043F\u043E\u043B\u043D\u043E\u043C \u0440\u0430\u0437\u043C\u0435\u0440\u0435",
+                    children: /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
+                      Image,
+                      {
+                        src: variant.image || internalPhoto || "/placeholder.png",
+                        alt: "",
+                        fill: true,
+                        unoptimized: true,
+                        sizes: "36px",
+                        style: { objectFit: "contain" }
+                      }
+                    )
+                  }
+                ),
+                /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("label", { style: { cursor: "pointer", fontSize: "11px", padding: "5px 7px", background: "#f4efe9", border: "1px solid var(--line)", borderRadius: "6px", fontWeight: 700 }, title: "\u0417\u0430\u0433\u0440\u0443\u0437\u0438\u0442\u044C \u0444\u043E\u0442\u043E \u0434\u043B\u044F \u044D\u0442\u043E\u0433\u043E \u0446\u0432\u0435\u0442\u0430", children: [
                   "\u{1F4F7}",
                   /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
                     "input",
@@ -19213,7 +19249,80 @@ function PurchaserView({
           );
         })
       ] })
-    ] })
+    ] }),
+    previewPhotoModal && /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("div", { className: "modal-backdrop", role: "presentation", onMouseDown: () => setPreviewPhotoModal(null), children: /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)(
+      "div",
+      {
+        className: "photo-lightbox-card",
+        role: "dialog",
+        "aria-modal": "true",
+        onMouseDown: (e) => e.stopPropagation(),
+        children: [
+          /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { className: "photo-lightbox-header", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { children: [
+              /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("strong", { children: previewPhotoModal.title }),
+              previewPhotoModal.subtitle && /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("span", { style: { display: "block", fontSize: "12px", color: "var(--muted)" }, children: previewPhotoModal.subtitle })
+            ] }),
+            /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
+              "button",
+              {
+                type: "button",
+                className: "modal-close",
+                onClick: () => setPreviewPhotoModal(null),
+                "aria-label": "\u0417\u0430\u043A\u0440\u044B\u0442\u044C",
+                children: "\xD7"
+              }
+            )
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("div", { className: "photo-lightbox-body", children: /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
+            "img",
+            {
+              src: previewPhotoModal.url,
+              alt: previewPhotoModal.title,
+              className: "photo-lightbox-img"
+            }
+          ) }),
+          /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { className: "photo-lightbox-footer", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("span", { className: "photo-lightbox-path", children: previewPhotoModal.url }),
+            /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { style: { display: "flex", gap: "10px", alignItems: "center" }, children: [
+              /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("label", { className: "primary-button small", style: { cursor: "pointer", display: "inline-flex", alignItems: "center", gap: "6px" }, children: [
+                "\u{1F4C1} \u0417\u0430\u043C\u0435\u043D\u0438\u0442\u044C \u0444\u043E\u0442\u043E",
+                /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
+                  "input",
+                  {
+                    type: "file",
+                    accept: "image/*",
+                    style: { display: "none" },
+                    onChange: (e) => {
+                      const file = e.target.files?.[0];
+                      if (file) {
+                        uploadImageFile(file, (url) => {
+                          if (previewPhotoModal.variantIndex !== void 0) {
+                            updateVariantRow(previewPhotoModal.variantIndex, { image: url });
+                          } else {
+                            setInternalPhoto(url);
+                          }
+                          setPreviewPhotoModal((prev) => prev ? { ...prev, url } : null);
+                        });
+                      }
+                    }
+                  }
+                )
+              ] }),
+              /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
+                "button",
+                {
+                  type: "button",
+                  className: "outline-button small",
+                  onClick: () => setPreviewPhotoModal(null),
+                  children: "\u0417\u0430\u043A\u0440\u044B\u0442\u044C"
+                }
+              )
+            ] })
+          ] })
+        ]
+      }
+    ) })
   ] });
 }
 

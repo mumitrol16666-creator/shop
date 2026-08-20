@@ -99,6 +99,12 @@ export function PurchaserView({
   const [activeTab, setActiveTab] = useState<"general" | "bundle" | "matrix" | "pricing">("general");
   const [isPlayingAudioPreview, setIsPlayingAudioPreview] = useState<boolean>(false);
   const [isUploadingPhoto, setIsUploadingPhoto] = useState<boolean>(false);
+  const [previewPhotoModal, setPreviewPhotoModal] = useState<{
+    url: string;
+    title: string;
+    subtitle?: string;
+    variantIndex?: number;
+  } | null>(null);
 
   const uploadImageFile = (file: File, onSuccess: (url: string) => void) => {
     if (!file) return;
@@ -1220,10 +1226,40 @@ export function PurchaserView({
                     </div>
 
                     <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-                      <div style={{ position: "relative", width: "34px", height: "34px", borderRadius: "6px", overflow: "hidden", background: "#faf8f5", border: "1px solid var(--line)", flexShrink: 0 }}>
-                        <Image src={variant.image || internalPhoto || "/placeholder.png"} alt="" fill unoptimized sizes="34px" style={{ objectFit: "contain" }} />
+                      <div
+                        style={{
+                          position: "relative",
+                          width: "36px",
+                          height: "36px",
+                          borderRadius: "8px",
+                          overflow: "hidden",
+                          background: "#faf8f5",
+                          border: "1.5px solid var(--line)",
+                          flexShrink: 0,
+                          cursor: "zoom-in",
+                          transition: "transform 0.2s ease, border-color 0.2s ease",
+                        }}
+                        className="variant-thumb-clickable"
+                        onClick={() =>
+                          setPreviewPhotoModal({
+                            url: variant.image || internalPhoto || "/placeholder.png",
+                            title: `${internalName} — ${variant.colorName || variant.name}`,
+                            subtitle: `SKU: ${variant.sku || internalSku} · Цвет: ${variant.color}`,
+                            variantIndex: index,
+                          })
+                        }
+                        title="🔍 Нажмите, чтобы открыть фото в полном размере"
+                      >
+                        <Image
+                          src={variant.image || internalPhoto || "/placeholder.png"}
+                          alt=""
+                          fill
+                          unoptimized
+                          sizes="36px"
+                          style={{ objectFit: "contain" }}
+                        />
                       </div>
-                      <label style={{ cursor: "pointer", fontSize: "11px", padding: "4px 6px", background: "#f4efe9", border: "1px solid var(--line)", borderRadius: "6px", fontWeight: 700 }} title="Загрузить фото для этого цвета">
+                      <label style={{ cursor: "pointer", fontSize: "11px", padding: "5px 7px", background: "#f4efe9", border: "1px solid var(--line)", borderRadius: "6px", fontWeight: 700 }} title="Загрузить фото для этого цвета">
                         📷
                         <input
                           type="file"
@@ -1865,6 +1901,75 @@ export function PurchaserView({
           })}
         </div>
       </section>
+
+      {/* PHOTO PREVIEW LIGHTBOX MODAL */}
+      {previewPhotoModal && (
+        <div className="modal-backdrop" role="presentation" onMouseDown={() => setPreviewPhotoModal(null)}>
+          <div
+            className="photo-lightbox-card"
+            role="dialog"
+            aria-modal="true"
+            onMouseDown={(e) => e.stopPropagation()}
+          >
+            <div className="photo-lightbox-header">
+              <div>
+                <strong>{previewPhotoModal.title}</strong>
+                {previewPhotoModal.subtitle && <span style={{ display: "block", fontSize: "12px", color: "var(--muted)" }}>{previewPhotoModal.subtitle}</span>}
+              </div>
+              <button
+                type="button"
+                className="modal-close"
+                onClick={() => setPreviewPhotoModal(null)}
+                aria-label="Закрыть"
+              >
+                ×
+              </button>
+            </div>
+
+            <div className="photo-lightbox-body">
+              <img
+                src={previewPhotoModal.url}
+                alt={previewPhotoModal.title}
+                className="photo-lightbox-img"
+              />
+            </div>
+
+            <div className="photo-lightbox-footer">
+              <span className="photo-lightbox-path">{previewPhotoModal.url}</span>
+              <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
+                <label className="primary-button small" style={{ cursor: "pointer", display: "inline-flex", alignItems: "center", gap: "6px" }}>
+                  📁 Заменить фото
+                  <input
+                    type="file"
+                    accept="image/*"
+                    style={{ display: "none" }}
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (file) {
+                        uploadImageFile(file, (url) => {
+                          if (previewPhotoModal.variantIndex !== undefined) {
+                            updateVariantRow(previewPhotoModal.variantIndex, { image: url });
+                          } else {
+                            setInternalPhoto(url);
+                          }
+                          setPreviewPhotoModal((prev) => (prev ? { ...prev, url } : null));
+                        });
+                      }
+                    }}
+                  />
+                </label>
+                <button
+                  type="button"
+                  className="outline-button small"
+                  onClick={() => setPreviewPhotoModal(null)}
+                >
+                  Закрыть
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 }
