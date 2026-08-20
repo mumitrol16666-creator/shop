@@ -98,6 +98,38 @@ export function PurchaserView({
   const [internalAllowStrings, setInternalAllowStrings] = useState<boolean>(true);
   const [activeTab, setActiveTab] = useState<"general" | "bundle" | "matrix" | "pricing">("general");
   const [isPlayingAudioPreview, setIsPlayingAudioPreview] = useState<boolean>(false);
+  const [isUploadingPhoto, setIsUploadingPhoto] = useState<boolean>(false);
+
+  const uploadImageFile = (file: File, onSuccess: (url: string) => void) => {
+    if (!file) return;
+    setIsUploadingPhoto(true);
+    const reader = new FileReader();
+    reader.onload = async (e) => {
+      try {
+        const base64 = e.target?.result as string;
+        const res = await fetch("/api/upload", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ filename: file.name, base64 }),
+        });
+        const data = (await res.json()) as { url?: string; error?: string };
+        if (res.ok && data.url) {
+          onSuccess(data.url);
+          setIsDirty(true);
+          setNotice(`✅ Фото успешно загружено: ${file.name}`);
+          setTimeout(() => setNotice(""), 3000);
+        } else {
+          alert(`Ошибка загрузки: ${data.error || "Не удалось сохранить файл"}`);
+        }
+      } catch (err) {
+        console.error("Upload error:", err);
+        alert("Не удалось загрузить изображение.");
+      } finally {
+        setIsUploadingPhoto(false);
+      }
+    };
+    reader.readAsDataURL(file);
+  };
 
   // Model variants list (Color & Variant Matrix)
   const [modelVariants, setModelVariants] = useState<Variant[]>([
@@ -858,15 +890,61 @@ export function PurchaserView({
                   />
                 </label>
                 <label className="full-width">
-                  Ссылка на главное фото (PNG/JPG)
-                  <input
-                    value={internalPhoto}
-                    onChange={(e) => {
-                      setInternalPhoto(e.target.value);
-                      setIsDirty(true);
-                    }}
-                    placeholder="/products/01_st20_electric.png"
-                  />
+                  <span>📸 Главное фото инструмента (PNG / JPG / WebP)</span>
+                  <div style={{ display: "flex", gap: "10px", alignItems: "center", marginTop: "4px" }}>
+                    <input
+                      style={{ flex: 1 }}
+                      value={internalPhoto}
+                      onChange={(e) => {
+                        setInternalPhoto(e.target.value);
+                        setIsDirty(true);
+                      }}
+                      placeholder="/products/01_st20_electric.png или вставьте ссылку"
+                    />
+                    <label
+                      className="primary-button small"
+                      style={{
+                        cursor: "pointer",
+                        whiteSpace: "nowrap",
+                        display: "inline-flex",
+                        alignItems: "center",
+                        gap: "6px",
+                        padding: "8px 14px",
+                        borderRadius: "8px",
+                      }}
+                    >
+                      📁 {isUploadingPhoto ? "Загрузка..." : "Загрузить фото"}
+                      <input
+                        type="file"
+                        accept="image/*"
+                        style={{ display: "none" }}
+                        onChange={(e) => {
+                          const file = e.target.files?.[0];
+                          if (file) uploadImageFile(file, (url) => setInternalPhoto(url));
+                        }}
+                      />
+                    </label>
+                  </div>
+                  {internalPhoto && (
+                    <div style={{
+                      marginTop: "8px",
+                      display: "inline-flex",
+                      alignItems: "center",
+                      gap: "12px",
+                      background: "#faf8f5",
+                      padding: "8px 14px",
+                      borderRadius: "12px",
+                      border: "1px solid var(--line)",
+                    }}>
+                      <div style={{ position: "relative", width: "48px", height: "48px", borderRadius: "8px", overflow: "hidden", background: "#fff", border: "1px solid var(--line)" }}>
+                        <Image src={internalPhoto} alt="Превью" fill unoptimized sizes="48px" style={{ objectFit: "contain" }} />
+                      </div>
+                      <div>
+                        <strong style={{ display: "block", fontSize: "12px", color: "var(--ink)" }}>Превью изображения</strong>
+                        <small style={{ color: "var(--muted)", fontSize: "11px" }}>Путь: {internalPhoto}</small>
+                      </div>
+                    </div>
+                  )}
                 </label>
 
                 <label className="full-width">
@@ -1113,8 +1191,9 @@ export function PurchaserView({
               </div>
 
               <div className="variant-matrix-table">
-                <div className="variant-matrix-head">
-                  <span>Цвет / Образец</span>
+                <div className="variant-matrix-head" style={{ gridTemplateColumns: "110px 100px 1.4fr 1.2fr 1.1fr 70px 85px 80px" }}>
+                  <span>Цвет</span>
+                  <span>Фото цвета</span>
                   <span>Название цвета</span>
                   <span>SKU варианта</span>
                   <span>Штрихкод</span>
@@ -1123,7 +1202,7 @@ export function PurchaserView({
                   <span>Действия</span>
                 </div>
                 {modelVariants.map((variant, index) => (
-                  <div className="variant-matrix-row" key={variant.id || `${variant.sku}-${index}`}>
+                  <div className="variant-matrix-row" key={variant.id || `${variant.sku}-${index}`} style={{ gridTemplateColumns: "110px 100px 1.4fr 1.2fr 1.1fr 70px 85px 80px" }}>
                     <div className="variant-color-input-wrap">
                       <input
                         type="color"
@@ -1139,6 +1218,25 @@ export function PurchaserView({
                         className="color-hex-text"
                       />
                     </div>
+
+                    <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                      <div style={{ position: "relative", width: "34px", height: "34px", borderRadius: "6px", overflow: "hidden", background: "#faf8f5", border: "1px solid var(--line)", flexShrink: 0 }}>
+                        <Image src={variant.image || internalPhoto || "/placeholder.png"} alt="" fill unoptimized sizes="34px" style={{ objectFit: "contain" }} />
+                      </div>
+                      <label style={{ cursor: "pointer", fontSize: "11px", padding: "4px 6px", background: "#f4efe9", border: "1px solid var(--line)", borderRadius: "6px", fontWeight: 700 }} title="Загрузить фото для этого цвета">
+                        📷
+                        <input
+                          type="file"
+                          accept="image/*"
+                          style={{ display: "none" }}
+                          onChange={(e) => {
+                            const file = e.target.files?.[0];
+                            if (file) uploadImageFile(file, (url) => updateVariantRow(index, { image: url }));
+                          }}
+                        />
+                      </label>
+                    </div>
+
                     <input
                       type="text"
                       placeholder="Название цвета"

@@ -17332,6 +17332,37 @@ function PurchaserView({
   const [internalAllowStrings, setInternalAllowStrings] = (0, import_react12.useState)(true);
   const [activeTab, setActiveTab] = (0, import_react12.useState)("general");
   const [isPlayingAudioPreview, setIsPlayingAudioPreview] = (0, import_react12.useState)(false);
+  const [isUploadingPhoto, setIsUploadingPhoto] = (0, import_react12.useState)(false);
+  const uploadImageFile = (file, onSuccess) => {
+    if (!file) return;
+    setIsUploadingPhoto(true);
+    const reader = new FileReader();
+    reader.onload = async (e) => {
+      try {
+        const base64 = e.target?.result;
+        const res = await fetch("/api/upload", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ filename: file.name, base64 })
+        });
+        const data = await res.json();
+        if (res.ok && data.url) {
+          onSuccess(data.url);
+          setIsDirty(true);
+          setNotice(`\u2705 \u0424\u043E\u0442\u043E \u0443\u0441\u043F\u0435\u0448\u043D\u043E \u0437\u0430\u0433\u0440\u0443\u0436\u0435\u043D\u043E: ${file.name}`);
+          setTimeout(() => setNotice(""), 3e3);
+        } else {
+          alert(`\u041E\u0448\u0438\u0431\u043A\u0430 \u0437\u0430\u0433\u0440\u0443\u0437\u043A\u0438: ${data.error || "\u041D\u0435 \u0443\u0434\u0430\u043B\u043E\u0441\u044C \u0441\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C \u0444\u0430\u0439\u043B"}`);
+        }
+      } catch (err) {
+        console.error("Upload error:", err);
+        alert("\u041D\u0435 \u0443\u0434\u0430\u043B\u043E\u0441\u044C \u0437\u0430\u0433\u0440\u0443\u0437\u0438\u0442\u044C \u0438\u0437\u043E\u0431\u0440\u0430\u0436\u0435\u043D\u0438\u0435.");
+      } finally {
+        setIsUploadingPhoto(false);
+      }
+    };
+    reader.readAsDataURL(file);
+  };
   const [modelVariants, setModelVariants] = (0, import_react12.useState)([
     {
       id: "var-1",
@@ -18084,18 +18115,71 @@ function PurchaserView({
               )
             ] }),
             /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("label", { className: "full-width", children: [
-              "\u0421\u0441\u044B\u043B\u043A\u0430 \u043D\u0430 \u0433\u043B\u0430\u0432\u043D\u043E\u0435 \u0444\u043E\u0442\u043E (PNG/JPG)",
-              /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
-                "input",
-                {
-                  value: internalPhoto,
-                  onChange: (e) => {
-                    setInternalPhoto(e.target.value);
-                    setIsDirty(true);
-                  },
-                  placeholder: "/products/01_st20_electric.png"
-                }
-              )
+              /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("span", { children: "\u{1F4F8} \u0413\u043B\u0430\u0432\u043D\u043E\u0435 \u0444\u043E\u0442\u043E \u0438\u043D\u0441\u0442\u0440\u0443\u043C\u0435\u043D\u0442\u0430 (PNG / JPG / WebP)" }),
+              /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { style: { display: "flex", gap: "10px", alignItems: "center", marginTop: "4px" }, children: [
+                /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
+                  "input",
+                  {
+                    style: { flex: 1 },
+                    value: internalPhoto,
+                    onChange: (e) => {
+                      setInternalPhoto(e.target.value);
+                      setIsDirty(true);
+                    },
+                    placeholder: "/products/01_st20_electric.png \u0438\u043B\u0438 \u0432\u0441\u0442\u0430\u0432\u044C\u0442\u0435 \u0441\u0441\u044B\u043B\u043A\u0443"
+                  }
+                ),
+                /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)(
+                  "label",
+                  {
+                    className: "primary-button small",
+                    style: {
+                      cursor: "pointer",
+                      whiteSpace: "nowrap",
+                      display: "inline-flex",
+                      alignItems: "center",
+                      gap: "6px",
+                      padding: "8px 14px",
+                      borderRadius: "8px"
+                    },
+                    children: [
+                      "\u{1F4C1} ",
+                      isUploadingPhoto ? "\u0417\u0430\u0433\u0440\u0443\u0437\u043A\u0430..." : "\u0417\u0430\u0433\u0440\u0443\u0437\u0438\u0442\u044C \u0444\u043E\u0442\u043E",
+                      /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
+                        "input",
+                        {
+                          type: "file",
+                          accept: "image/*",
+                          style: { display: "none" },
+                          onChange: (e) => {
+                            const file = e.target.files?.[0];
+                            if (file) uploadImageFile(file, (url) => setInternalPhoto(url));
+                          }
+                        }
+                      )
+                    ]
+                  }
+                )
+              ] }),
+              internalPhoto && /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { style: {
+                marginTop: "8px",
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "12px",
+                background: "#faf8f5",
+                padding: "8px 14px",
+                borderRadius: "12px",
+                border: "1px solid var(--line)"
+              }, children: [
+                /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("div", { style: { position: "relative", width: "48px", height: "48px", borderRadius: "8px", overflow: "hidden", background: "#fff", border: "1px solid var(--line)" }, children: /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(Image, { src: internalPhoto, alt: "\u041F\u0440\u0435\u0432\u044C\u044E", fill: true, unoptimized: true, sizes: "48px", style: { objectFit: "contain" } }) }),
+                /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { children: [
+                  /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("strong", { style: { display: "block", fontSize: "12px", color: "var(--ink)" }, children: "\u041F\u0440\u0435\u0432\u044C\u044E \u0438\u0437\u043E\u0431\u0440\u0430\u0436\u0435\u043D\u0438\u044F" }),
+                  /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("small", { style: { color: "var(--muted)", fontSize: "11px" }, children: [
+                    "\u041F\u0443\u0442\u044C: ",
+                    internalPhoto
+                  ] })
+                ] })
+              ] })
             ] }),
             /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("label", { className: "full-width", children: [
               "\u{1F3B5} \u0410\u0443\u0434\u0438\u043E\u0437\u0430\u043F\u0438\u0441\u044C \u0437\u0432\u0443\u0447\u0430\u043D\u0438\u044F \u0438\u043D\u0441\u0442\u0440\u0443\u043C\u0435\u043D\u0442\u0430 (MP3 / \u041F\u0440\u044F\u043C\u0430\u044F \u0441\u0441\u044B\u043B\u043A\u0430)",
@@ -18364,8 +18448,9 @@ function PurchaserView({
             /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("button", { type: "button", className: "primary-button small", onClick: addVariantRow, children: "+ \u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u0432\u0430\u0440\u0438\u0430\u043D\u0442 / \u0446\u0432\u0435\u0442" })
           ] }),
           /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { className: "variant-matrix-table", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { className: "variant-matrix-head", children: [
-              /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("span", { children: "\u0426\u0432\u0435\u0442 / \u041E\u0431\u0440\u0430\u0437\u0435\u0446" }),
+            /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { className: "variant-matrix-head", style: { gridTemplateColumns: "110px 100px 1.4fr 1.2fr 1.1fr 70px 85px 80px" }, children: [
+              /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("span", { children: "\u0426\u0432\u0435\u0442" }),
+              /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("span", { children: "\u0424\u043E\u0442\u043E \u0446\u0432\u0435\u0442\u0430" }),
               /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("span", { children: "\u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435 \u0446\u0432\u0435\u0442\u0430" }),
               /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("span", { children: "SKU \u0432\u0430\u0440\u0438\u0430\u043D\u0442\u0430" }),
               /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("span", { children: "\u0428\u0442\u0440\u0438\u0445\u043A\u043E\u0434" }),
@@ -18373,7 +18458,7 @@ function PurchaserView({
               /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("span", { children: "\u041E\u0441\u0442\u0430\u0442\u043E\u043A" }),
               /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("span", { children: "\u0414\u0435\u0439\u0441\u0442\u0432\u0438\u044F" })
             ] }),
-            modelVariants.map((variant, index) => /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { className: "variant-matrix-row", children: [
+            modelVariants.map((variant, index) => /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { className: "variant-matrix-row", style: { gridTemplateColumns: "110px 100px 1.4fr 1.2fr 1.1fr 70px 85px 80px" }, children: [
               /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { className: "variant-color-input-wrap", children: [
                 /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
                   "input",
@@ -18394,6 +18479,24 @@ function PurchaserView({
                     className: "color-hex-text"
                   }
                 )
+              ] }),
+              /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { style: { display: "flex", alignItems: "center", gap: "6px" }, children: [
+                /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("div", { style: { position: "relative", width: "34px", height: "34px", borderRadius: "6px", overflow: "hidden", background: "#faf8f5", border: "1px solid var(--line)", flexShrink: 0 }, children: /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(Image, { src: variant.image || internalPhoto || "/placeholder.png", alt: "", fill: true, unoptimized: true, sizes: "34px", style: { objectFit: "contain" } }) }),
+                /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("label", { style: { cursor: "pointer", fontSize: "11px", padding: "4px 6px", background: "#f4efe9", border: "1px solid var(--line)", borderRadius: "6px", fontWeight: 700 }, title: "\u0417\u0430\u0433\u0440\u0443\u0437\u0438\u0442\u044C \u0444\u043E\u0442\u043E \u0434\u043B\u044F \u044D\u0442\u043E\u0433\u043E \u0446\u0432\u0435\u0442\u0430", children: [
+                  "\u{1F4F7}",
+                  /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
+                    "input",
+                    {
+                      type: "file",
+                      accept: "image/*",
+                      style: { display: "none" },
+                      onChange: (e) => {
+                        const file = e.target.files?.[0];
+                        if (file) uploadImageFile(file, (url) => updateVariantRow(index, { image: url }));
+                      }
+                    }
+                  )
+                ] })
               ] }),
               /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
                 "input",

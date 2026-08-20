@@ -110,6 +110,47 @@ const server = http.createServer((req, res) => {
   // =========================================================================
   // API ENDPOINTS
   // =========================================================================
+
+  // =========================================================================
+  // FILE UPLOAD API
+  // =========================================================================
+  if (pathname === "/api/upload" && req.method === "POST") {
+    let body = "";
+    req.on("data", (chunk) => (body += chunk));
+    req.on("end", () => {
+      try {
+        const payload = JSON.parse(body || "{}");
+        const { filename, base64 } = payload;
+        if (!base64) {
+          res.writeHead(400, { "Content-Type": "application/json; charset=utf-8" });
+          res.end(JSON.stringify({ error: "No base64 image data provided" }));
+          return;
+        }
+
+        const uploadsDir = path.join(PUBLIC_DIR, "uploads");
+        fs.mkdirSync(uploadsDir, { recursive: true });
+
+        const ext = path.extname(filename || "photo.jpg") || ".jpg";
+        const cleanBase64 = base64.replace(/^data:image\/\w+;base64,/, "");
+        const buffer = Buffer.from(cleanBase64, "base64");
+        
+        const safeName = `img_${Date.now()}_${Math.random().toString(36).substring(2, 7)}${ext.toLowerCase()}`;
+        const filePath = path.join(uploadsDir, safeName);
+        fs.writeFileSync(filePath, buffer);
+
+        const url = `/uploads/${safeName}`;
+        console.log(`📸 Image uploaded successfully: ${url} (${buffer.length} bytes)`);
+
+        res.writeHead(200, { "Content-Type": "application/json; charset=utf-8" });
+        res.end(JSON.stringify({ success: true, url, filename: safeName }));
+      } catch (err) {
+        console.error("Upload error:", err);
+        res.writeHead(500, { "Content-Type": "application/json; charset=utf-8" });
+        res.end(JSON.stringify({ error: err.message || "Failed to save file" }));
+      }
+    });
+    return;
+  }
   
   // =========================================================================
   // COURSES API
