@@ -9,8 +9,6 @@ type TopbarProps = {
   setQuery: (query: string) => void;
   cartCount: number;
   setCartOpen: (open: boolean) => void;
-  view?: "store" | "academy";
-  setView?: (view: "store" | "academy") => void;
   onSelectProduct?: (product: Product) => void;
 };
 
@@ -19,8 +17,6 @@ export function Topbar({
   setQuery,
   cartCount,
   setCartOpen,
-  view = "store",
-  setView,
   onSelectProduct,
 }: TopbarProps) {
   const [isSearchFocused, setIsSearchFocused] = useState(false);
@@ -53,12 +49,6 @@ export function Topbar({
         href="/"
         className="brand"
         aria-label="На главную"
-        onClick={(e) => {
-          if (setView) {
-            e.preventDefault();
-            setView("store");
-          }
-        }}
       >
         <span className="brand-mark">M</span>
         <span className="brand-titles">
@@ -68,35 +58,23 @@ export function Topbar({
       </Link>
 
       <nav className="main-nav" aria-label="Основная навигация">
-        <button
-          type="button"
-          className={`nav-tab-link ${view === "store" ? "active" : ""}`}
-          onClick={() => setView?.("store")}
-        >
+        <a href="#catalog" className="nav-tab-link active">
           Каталог гитар
-        </button>
-
-        <button
-          type="button"
-          className={`nav-tab-link academy ${view === "academy" ? "active" : ""}`}
-          onClick={() => setView?.("academy")}
-        >
-          🎓 Обучение
-        </button>
+        </a>
 
         <a
           href="https://maestro-school.duckdns.org/login"
           target="_blank"
           rel="noopener noreferrer"
-          className="nav-tab-link student-portal-link"
-          title="Вход в личный кабинет ученика Maestro School"
+          className="nav-tab-link academy"
+          title="Вход на учебную платформу Maestro School"
         >
-          🔑 Кабинет ученика ↗
+          🎓 Академия и курсы ↗
         </a>
 
-        <a href="#pick" onClick={() => setView?.("store")}>🎯 Подбор</a>
-        <a href="#reviews" onClick={() => setView?.("store")}>⭐ Отзывы</a>
-        <a href="#faq" onClick={() => setView?.("store")}>❓ FAQ</a>
+        <a href="#pick">🎯 Подбор</a>
+        <a href="#reviews">⭐ Отзывы</a>
+        <a href="#faq">❓ FAQ</a>
       </nav>
 
       <div className="search-wrap-relative" ref={searchWrapRef}>

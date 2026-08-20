@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { AcademyView } from "../components/AcademyView";
 import { CartDrawer } from "../components/CartDrawer";
 import { KaspiQrModal } from "../components/KaspiQrModal";
 import { ProductModal } from "../components/ProductModal";
@@ -17,7 +16,6 @@ import {
 } from "../lib/catalog-data";
 
 export default function Home() {
-  const [view, setView] = useState<"store" | "academy">("store");
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState("Все");
   const [selected, setSelected] = useState<Product | null>(null);
@@ -199,24 +197,18 @@ export default function Home() {
         setQuery={setQuery}
         cartCount={cartCount}
         setCartOpen={setCartOpen}
-        view={view}
-        setView={setView}
         onSelectProduct={openProduct}
       />
 
-      {view === "academy" ? (
-        <AcademyView onBackToStore={() => setView("store")} />
-      ) : (
-        <Storefront
-          category={category}
-          setCategory={setCategory}
-          categories={categories}
-          filteredProducts={filteredProducts}
-          openProduct={openProduct}
-          chooseCategory={chooseCategory}
-          featuredProduct={mergedProducts[1] ?? mergedProducts[0]}
-        />
-      )}
+      <Storefront
+        category={category}
+        setCategory={setCategory}
+        categories={categories}
+        filteredProducts={filteredProducts}
+        openProduct={openProduct}
+        chooseCategory={chooseCategory}
+        featuredProduct={mergedProducts[1] ?? mergedProducts[0]}
+      />
 
       {/* Floating WhatsApp Master Speed Dial Widget */}
       {!cartOpen && !selected && !kaspiModalOpen && (

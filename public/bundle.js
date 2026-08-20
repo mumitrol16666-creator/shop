@@ -12747,11 +12747,11 @@ var require_jsx_runtime = __commonJS({
 });
 
 // src/main.tsx
-var import_react15 = __toESM(require_react(), 1);
+var import_react14 = __toESM(require_react(), 1);
 var import_client = __toESM(require_client(), 1);
 
 // app/page.tsx
-var import_react7 = __toESM(require_react(), 1);
+var import_react6 = __toESM(require_react(), 1);
 
 // lib/next-image-shim.tsx
 var import_jsx_runtime = __toESM(require_jsx_runtime(), 1);
@@ -12773,230 +12773,8 @@ function Image(props) {
   return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", { src, alt: alt || "", className, style: customStyle, ...rest });
 }
 
-// components/AcademyView.tsx
+// components/CartDrawer.tsx
 var import_react = __toESM(require_react(), 1);
-
-// lib/courses-data.ts
-var COURSES = [
-  {
-    id: "course-1",
-    slug: "guitar-start",
-    title: "\u0413\u0438\u0442\u0430\u0440\u0430 \u0441 \u043D\u0443\u043B\u044F: \u041F\u0435\u0440\u0432\u0430\u044F \u043F\u0435\u0441\u043D\u044F \u0437\u0430 3 \u0434\u043D\u044F",
-    subtitle: "\u041F\u043E\u0448\u0430\u0433\u043E\u0432\u044B\u0439 \u043A\u0443\u0440\u0441 \u0434\u043B\u044F \u0430\u0431\u0441\u043E\u043B\u044E\u0442\u043D\u044B\u0445 \u043D\u043E\u0432\u0438\u0447\u043A\u043E\u0432. \u0411\u0435\u0437 \u043D\u0443\u0434\u043D\u043E\u0439 \u0442\u0435\u043E\u0440\u0438\u0438 \u2014 \u0441\u0440\u0430\u0437\u0443 \u043A \u043A\u0440\u0430\u0441\u0438\u0432\u043E\u0439 \u043C\u0443\u0437\u044B\u043A\u0435.",
-    badge: "\u0425\u0418\u0422 \xB7 \u0412 \u041F\u041E\u0414\u0410\u0420\u041E\u041A \u041A \u0413\u0418\u0422\u0410\u0420\u0415",
-    instrument: "acoustic",
-    level: "\u041D\u0430\u0447\u0438\u043D\u0430\u044E\u0449\u0438\u0439",
-    lessonsCount: 12,
-    durationHours: 6,
-    price: 9900,
-    originalPrice: 19900,
-    image: "/products/04_41_acoustic.png",
-    description: "\u0418\u0434\u0435\u0430\u043B\u044C\u043D\u044B\u0439 \u0441\u0442\u0430\u0440\u0442 \u0434\u043B\u044F \u0442\u0435\u0445, \u043A\u0442\u043E \u0432\u043F\u0435\u0440\u0432\u044B\u0435 \u0432\u0437\u044F\u043B \u0433\u0438\u0442\u0430\u0440\u0443 \u0432 \u0440\u0443\u043A\u0438. \u041D\u0430\u0443\u0447\u0438\u0442\u0435\u0441\u044C \u043F\u0440\u0430\u0432\u0438\u043B\u044C\u043D\u043E\u0439 \u043F\u043E\u0441\u0430\u0434\u043A\u0435, \u0431\u044B\u0441\u0442\u0440\u043E\u0439 \u0441\u043C\u0435\u043D\u0435 \u0430\u043A\u043A\u043E\u0440\u0434\u043E\u0432 \u0438 \u0441\u044B\u0433\u0440\u0430\u0435\u0442\u0435 \u0441\u0432\u043E\u0438 \u043F\u0435\u0440\u0432\u044B\u0435 5 \u0445\u0438\u0442\u043E\u0432.",
-    highlights: [
-      "12 \u0432\u0438\u0434\u0435\u043E\u0443\u0440\u043E\u043A\u043E\u0432 \u0432 \u0432\u044B\u0441\u043E\u043A\u043E\u043C \u043A\u0430\u0447\u0435\u0441\u0442\u0432\u0435 4K",
-      "\u0421\u0445\u0435\u043C\u044B 7 \u0431\u0430\u0437\u043E\u0432\u044B\u0445 \u0430\u043A\u043A\u043E\u0440\u0434\u043E\u0432 (Am, Dm, E, C, G, F, Em)",
-      "3 \u0443\u043D\u0438\u0432\u0435\u0440\u0441\u0430\u043B\u044C\u043D\u044B\u0445 \u0432\u0438\u0434\u0430 \u0431\u043E\u044F (\u0448\u0435\u0441\u0442\u0451\u0440\u043A\u0430, \u0432\u043E\u0441\u044C\u043C\u0451\u0440\u043A\u0430, \u0432\u0430\u043B\u044C\u0441)",
-      "\u0420\u0430\u0437\u0431\u043E\u0440\u044B: \xAB\u041A\u0438\u043D\u043E \u2014 \u041F\u0430\u0447\u043A\u0430 \u0441\u0438\u0433\u0430\u0440\u0435\u0442\xBB, \xAB\u0411\u0430\u0441\u0442\u0430 \u2014 \u0421\u0430\u043D\u0441\u0430\u0440\u0430\xBB, \xAB\u0417\u0432\u0435\u0437\u0434\u0430 \u043F\u043E \u0438\u043C\u0435\u043D\u0438 \u0421\u043E\u043B\u043D\u0446\u0435\xBB",
-      "PDF-\u043F\u0435\u0441\u0435\u043D\u043D\u0438\u043A \u0441 \u0442\u0430\u0431\u0443\u043B\u0430\u0442\u0443\u0440\u0430\u043C\u0438 \u0438 \u0442\u0435\u043A\u0441\u0442\u0430\u043C\u0438"
-    ],
-    instructor: {
-      name: "\u0420\u0443\u0441\u043B\u0430\u043D \u0421\u0430\u0433\u0438\u0442\u043E\u0432",
-      role: "\u041F\u0440\u0435\u043F\u043E\u0434\u0430\u0432\u0430\u0442\u0435\u043B\u044C \u0430\u043A\u0443\u0441\u0442\u0438\u0447\u0435\u0441\u043A\u043E\u0439 \u0433\u0438\u0442\u0430\u0440\u044B Maestro",
-      experience: "\u041E\u043F\u044B\u0442 \u043F\u0440\u0435\u043F\u043E\u0434\u0430\u0432\u0430\u043D\u0438\u044F 11 \u043B\u0435\u0442, \u0431\u043E\u043B\u0435\u0435 1 400 \u0443\u0447\u0435\u043D\u0438\u043A\u043E\u0432",
-      avatar: "\u{1F3B8}"
-    },
-    lessons: [
-      {
-        id: "l-1",
-        title: "\u0423\u0440\u043E\u043A 1: \u041A\u0430\u043A \u043F\u0440\u0430\u0432\u0438\u043B\u044C\u043D\u043E \u0434\u0435\u0440\u0436\u0430\u0442\u044C \u0433\u0438\u0442\u0430\u0440\u0443 \u0438 \u043D\u0430\u0441\u0442\u0440\u0430\u0438\u0432\u0430\u0442\u044C \u0441\u0442\u0440\u0443\u043D\u044B",
-        duration: "14 \u043C\u0438\u043D",
-        isFreePreview: true,
-        description: "\u041F\u043E\u0441\u0430\u0434\u043A\u0430, \u043F\u043E\u043B\u043E\u0436\u0435\u043D\u0438\u0435 \u043F\u0430\u043B\u044C\u0446\u0435\u0432 \u043B\u0435\u0432\u043E\u0439 \u0438 \u043F\u0440\u0430\u0432\u043E\u0439 \u0440\u0443\u043A\u0438, \u043D\u0430\u0441\u0442\u0440\u043E\u0439\u043A\u0430 \u0447\u0435\u0440\u0435\u0437 \u0442\u044E\u043D\u0435\u0440 \u0438 \u043C\u043E\u0431\u0438\u043B\u044C\u043D\u043E\u0435 \u043F\u0440\u0438\u043B\u043E\u0436\u0435\u043D\u0438\u0435.",
-        chords: ["\u041D\u0430\u0441\u0442\u0440\u043E\u0439\u043A\u0430 \u0441\u0442\u0440\u0443\u043D: E-B-G-D-A-E"]
-      },
-      {
-        id: "l-2",
-        title: "\u0423\u0440\u043E\u043A 2: \u041F\u0435\u0440\u0432\u044B\u0435 \u0430\u043A\u043A\u043E\u0440\u0434\u044B Am, Dm, E (\u0437\u043E\u043B\u043E\u0442\u0430\u044F \u0442\u0440\u043E\u0439\u043A\u0430)",
-        duration: "18 \u043C\u0438\u043D",
-        isFreePreview: true,
-        description: "\u0427\u0438\u0441\u0442\u043E\u0435 \u0438\u0437\u0432\u043B\u0435\u0447\u0435\u043D\u0438\u0435 \u0437\u0432\u0443\u043A\u0430 \u0431\u0435\u0437 \u0434\u0440\u0435\u0431\u0435\u0437\u0433\u0430, \u043F\u043E\u0441\u0442\u0430\u043D\u043E\u0432\u043A\u0430 \u0431\u043E\u043B\u044C\u0448\u043E\u0433\u043E \u043F\u0430\u043B\u044C\u0446\u0430 \u0438 \u0443\u043F\u0440\u0430\u0436\u043D\u0435\u043D\u0438\u044F \u043D\u0430 \u043A\u043E\u043E\u0440\u0434\u0438\u043D\u0430\u0446\u0438\u044E.",
-        chords: ["Am (\u041B\u044F \u043C\u0438\u043D\u043E\u0440)", "Dm (\u0420\u0435 \u043C\u0438\u043D\u043E\u0440)", "E (\u041C\u0438 \u043C\u0430\u0436\u043E\u0440)"],
-        tabSnippet: "Am: x02210 | Dm: xx0231 | E: 022100"
-      },
-      {
-        id: "l-3",
-        title: "\u0423\u0440\u043E\u043A 3: \u0411\u043E\u0439 \xAB\u0428\u0435\u0441\u0442\u0451\u0440\u043A\u0430\xBB \u0441 \u0433\u043B\u0443\u0448\u0435\u043D\u0438\u0435\u043C \u0438 \u0431\u0435\u0437",
-        duration: "22 \u043C\u0438\u043D",
-        description: "\u0414\u0432\u0438\u0436\u0435\u043D\u0438\u0435 \u043A\u0438\u0441\u0442\u0438, \u043E\u0449\u0443\u0449\u0435\u043D\u0438\u0435 \u0440\u0438\u0442\u043C\u0430, \u0430\u043A\u0446\u0435\u043D\u0442\u044B \u043D\u0430 \u0441\u0438\u043B\u044C\u043D\u044B\u0435 \u0434\u043E\u043B\u0438 \u0438 \u0447\u0451\u0442\u043A\u043E\u0435 \u0433\u043B\u0443\u0448\u0435\u043D\u0438\u0435 \u0440\u0435\u0431\u0440\u043E\u043C \u043B\u0430\u0434\u043E\u043D\u0438.",
-        chords: ["Am", "Dm", "E", "C"]
-      },
-      {
-        id: "l-4",
-        title: "\u0423\u0440\u043E\u043A 4: \u0420\u0430\u0437\u0431\u043E\u0440 \u043B\u0435\u0433\u0435\u043D\u0434\u0430\u0440\u043D\u043E\u0439 \u043F\u0435\u0441\u043D\u0438 \xAB\u041F\u0430\u0447\u043A\u0430 \u0441\u0438\u0433\u0430\u0440\u0435\u0442\xBB",
-        duration: "25 \u043C\u0438\u043D",
-        description: "\u0421\u043E\u0435\u0434\u0438\u043D\u0435\u043D\u0438\u0435 \u0430\u043A\u043A\u043E\u0440\u0434\u043E\u0432, \u0432\u0441\u0442\u0443\u043F\u043B\u0435\u043D\u0438\u0435 \u0438 \u043F\u043B\u0430\u0432\u043D\u044B\u0439 \u043F\u0435\u0440\u0435\u0445\u043E\u0434 \u043C\u0435\u0436\u0434\u0443 \u043A\u0443\u043F\u043B\u0435\u0442\u043E\u043C \u0438 \u043F\u0440\u0438\u043F\u0435\u0432\u043E\u043C.",
-        chords: ["Em", "C", "Am", "B7"]
-      },
-      {
-        id: "l-5",
-        title: "\u0423\u0440\u043E\u043A 5: \u041F\u0430\u043B\u044C\u0446\u0435\u0432\u044B\u0439 \u043F\u0435\u0440\u0435\u0431\u043E\u0440 (Fingerstyle \u0434\u043B\u044F \u0431\u0430\u043B\u043B\u0430\u0434)",
-        duration: "20 \u043C\u0438\u043D",
-        description: "\u0418\u0433\u0440\u0430 \u043F\u0430\u043B\u044C\u0446\u0430\u043C\u0438: \u0431\u0430\u0441 + 3 \u043D\u0438\u0436\u043D\u0438\u0435 \u0441\u0442\u0440\u0443\u043D\u044B. \u0423\u043F\u0440\u0430\u0436\u043D\u0435\u043D\u0438\u044F \u0434\u043B\u044F \u043D\u0435\u0437\u0430\u0432\u0438\u0441\u0438\u043C\u043E\u0441\u0442\u0438 \u043F\u0430\u043B\u044C\u0446\u0435\u0432.",
-        chords: ["C", "G", "Am", "Fmaj7"]
-      },
-      {
-        id: "l-6",
-        title: "\u0423\u0440\u043E\u043A 6: \u0420\u0430\u0437\u0431\u043E\u0440 \xAB\u0421\u0430\u043D\u0441\u0430\u0440\u0430 \u2014 \u0411\u0430\u0441\u0442\u0430\xBB",
-        duration: "28 \u043C\u0438\u043D",
-        description: "\u041A\u0440\u0430\u0441\u0438\u0432\u044B\u0439 \u043F\u0435\u0440\u0435\u0431\u043E\u0440 \u0432\u043E \u0432\u0441\u0442\u0443\u043F\u043B\u0435\u043D\u0438\u0438 \u0438 \u043C\u043E\u0449\u043D\u044B\u0439 \u0440\u0438\u0442\u043C\u0438\u0447\u0435\u0441\u043A\u0438\u0439 \u0431\u043E\u0439 \u0432 \u043F\u0440\u0438\u043F\u0435\u0432\u0435.",
-        chords: ["Em", "C", "G", "D"]
-      }
-    ]
-  },
-  {
-    id: "course-2",
-    slug: "electric-riffs",
-    title: "\u042D\u043B\u0435\u043A\u0442\u0440\u043E\u0433\u0438\u0442\u0430\u0440\u0430: \u0420\u0438\u0444\u0444\u044B, \u0414\u0440\u0430\u0439\u0432 \u0438 \u0421\u043E\u043B\u043E",
-    subtitle: "\u041E\u0442 \u043F\u0435\u0440\u0432\u044B\u0445 \u043C\u043E\u0449\u043D\u044B\u0445 \u043F\u0430\u0443\u044D\u0440-\u0430\u043A\u043A\u043E\u0440\u0434\u043E\u0432 \u0434\u043E \u0441\u043E\u0447\u043D\u044B\u0445 \u0440\u043E\u043A-\u0441\u043E\u043B\u043E \u0438 \u043D\u0430\u0441\u0442\u0440\u043E\u0439\u043A\u0438 \u043A\u043E\u043C\u0431\u043E\u0443\u0441\u0438\u043B\u0438\u0442\u0435\u043B\u044F.",
-    badge: "\u0414\u041B\u042F \u042D\u041B\u0415\u041A\u0422\u0420\u041E\u0413\u0418\u0422\u0410\u0420\u0418\u0421\u0422\u041E\u0412",
-    instrument: "electric",
-    level: "\u041D\u0430\u0447\u0438\u043D\u0430\u044E\u0449\u0438\u0439 / \u0421\u0440\u0435\u0434\u043D\u0438\u0439",
-    lessonsCount: 16,
-    durationHours: 8,
-    price: 14900,
-    originalPrice: 24900,
-    image: "/products/01_st20_electric.png",
-    description: "\u041A\u0443\u0440\u0441 \u0434\u043B\u044F \u0442\u0435\u0445, \u043A\u0442\u043E \u0445\u043E\u0447\u0435\u0442 \u0438\u0433\u0440\u0430\u0442\u044C \u0434\u0440\u0430\u0439\u0432\u043E\u0432\u044B\u0439 \u0440\u043E\u043A, \u043C\u0435\u0442\u0430\u043B \u0438 \u0444\u0430\u043D\u043A. \u041F\u043E\u0441\u0442\u0430\u043D\u043E\u0432\u043A\u0430 \u043C\u0435\u0434\u0438\u0430\u0442\u043E\u0440\u0430, \u0433\u043B\u0443\u0448\u0435\u043D\u0438\u0435 \u043B\u0430\u0434\u043E\u043D\u044C\u044E (Palm Mute), \u0431\u0435\u043D\u0434\u044B, \u0432\u0438\u0431\u0440\u0430\u0442\u043E \u0438 \u0440\u0430\u0431\u043E\u0442\u0430 \u0441 \u043F\u0435\u0440\u0435\u0433\u0440\u0443\u0437\u043E\u043C.",
-    highlights: [
-      "16 \u0441\u043F\u0435\u0446\u0438\u0430\u043B\u0438\u0437\u0438\u0440\u043E\u0432\u0430\u043D\u043D\u044B\u0445 \u0443\u0440\u043E\u043A\u043E\u0432 \u043F\u043E \u044D\u043B\u0435\u043A\u0442\u0440\u043E\u0433\u0438\u0442\u0430\u0440\u0435",
-      "\u0422\u0435\u0445\u043D\u0438\u043A\u0430 \u043F\u0435\u0440\u0435\u043C\u0435\u043D\u043D\u043E\u0433\u043E \u0448\u0442\u0440\u0438\u0445\u0430 (Alternate Picking) \u043D\u0430 \u0441\u043A\u043E\u0440\u043E\u0441\u0442\u0438",
-      "\u041F\u0430\u0443\u044D\u0440-\u0430\u043A\u043A\u043E\u0440\u0434\u044B (Power Chords 5th) \u043F\u043E \u0432\u0441\u0435\u043C\u0443 \u0433\u0440\u0438\u0444\u0443",
-      "\u0411\u043B\u044E\u0437\u043E\u0432\u0430\u044F \u043F\u0435\u043D\u0442\u0430\u0442\u043E\u043D\u0438\u043A\u0430 \u0434\u043B\u044F \u0441\u0432\u043E\u0431\u043E\u0434\u043D\u043E\u0439 \u0438\u043C\u043F\u0440\u043E\u0432\u0438\u0437\u0430\u0446\u0438\u0438",
-      "\u041D\u0430\u0441\u0442\u0440\u043E\u0439\u043A\u0430 \u0437\u0432\u0443\u043A\u0430 \u043D\u0430 \u043A\u043E\u043C\u0431\u043E\u0443\u0441\u0438\u043B\u0438\u0442\u0435\u043B\u0435 \u0438 \u043F\u0440\u043E\u0446\u0435\u0441\u0441\u043E\u0440\u0435 \u044D\u0444\u0444\u0435\u043A\u0442\u043E\u0432"
-    ],
-    instructor: {
-      name: "\u0414\u0430\u043C\u0438\u0440 \u0422\u0435\u043C\u0438\u0440\u043E\u0432",
-      role: "\u0421\u0435\u0441\u0441\u0438\u043E\u043D\u043D\u044B\u0439 \u0433\u0438\u0442\u0430\u0440\u0438\u0441\u0442 \u0438 \u043F\u0440\u0435\u043F\u043E\u0434\u0430\u0432\u0430\u0442\u0435\u043B\u044C Maestro Studio",
-      experience: "\u041A\u043E\u043D\u0446\u0435\u0440\u0442\u043D\u044B\u0439 \u0441\u0442\u0430\u0436 14 \u043B\u0435\u0442, \u0430\u0432\u0442\u043E\u0440 \u043C\u0435\u0442\u043E\u0434\u0438\u043A \u0441\u043A\u043E\u0440\u043E\u0441\u0442\u043D\u043E\u0439 \u0438\u0433\u0440\u044B",
-      avatar: "\u26A1"
-    },
-    lessons: [
-      {
-        id: "el-1",
-        title: "\u0423\u0440\u043E\u043A 1: \u0425\u0432\u0430\u0442 \u043C\u0435\u0434\u0438\u0430\u0442\u043E\u0440\u0430 \u0438 \u0433\u043B\u0443\u0448\u0435\u043D\u0438\u0435 \u043B\u0438\u0448\u043D\u0438\u0445 \u0441\u0442\u0440\u0443\u043D",
-        duration: "16 \u043C\u0438\u043D",
-        isFreePreview: true,
-        description: "\u041A\u0430\u043A \u0434\u0435\u0440\u0436\u0430\u0442\u044C \u043C\u0435\u0434\u0438\u0430\u0442\u043E\u0440, \u0447\u0442\u043E\u0431\u044B \u0440\u0443\u043A\u0430 \u043D\u0435 \u0437\u0430\u0436\u0438\u043C\u0430\u043B\u0430\u0441\u044C, \u0438 \u0433\u043B\u0443\u0448\u0438\u0442\u044C \u043D\u0435\u0437\u0430\u0434\u0435\u0439\u0441\u0442\u0432\u043E\u0432\u0430\u043D\u043D\u044B\u0435 \u0441\u0442\u0440\u0443\u043D\u044B."
-      },
-      {
-        id: "el-2",
-        title: "\u0423\u0440\u043E\u043A 2: \u041F\u0430\u0443\u044D\u0440-\u0430\u043A\u043A\u043E\u0440\u0434\u044B \u0438 \u0442\u0435\u0445\u043D\u0438\u043A\u0430 Palm Mute (\u0433\u043B\u0443\u0448\u0435\u043D\u0438\u0435 \u043B\u0430\u0434\u043E\u043D\u044C\u044E)",
-        duration: "24 \u043C\u0438\u043D",
-        isFreePreview: true,
-        description: "\u041A\u043B\u0430\u0441\u0441\u0438\u0447\u0435\u0441\u043A\u0438\u0439 \u0440\u043E\u043A\u043E\u0432\u044B\u0439 \xAB\u0434\u0436-\u0434\u0436-\u0434\u0436\xBB \u0437\u0432\u0443\u043A. \u0420\u0430\u0437\u0431\u043E\u0440 \u043A\u0443\u043B\u044C\u0442\u043E\u0432\u044B\u0445 \u0440\u0438\u0444\u0444\u043E\u0432 Metallica \u0438 Nirvana.",
-        chords: ["E5", "G5", "A5", "C5", "D5"]
-      },
-      {
-        id: "el-3",
-        title: "\u0423\u0440\u043E\u043A 3: \u041F\u0435\u043D\u0442\u0430\u0442\u043E\u043D\u0438\u043A\u0430 \u0438 \u043F\u0435\u0440\u0432\u043E\u0435 \u0441\u043E\u043B\u043E \u0441 \u0431\u0435\u043D\u0434\u0430\u043C\u0438",
-        duration: "30 \u043C\u0438\u043D",
-        description: "1-\u044F \u043F\u043E\u0437\u0438\u0446\u0438\u044F \u043C\u0438\u043D\u043E\u0440\u043D\u043E\u0439 \u043F\u0435\u043D\u0442\u0430\u0442\u043E\u043D\u0438\u043A\u0438. \u0422\u043E\u0447\u043D\u044B\u0435 \u0431\u0435\u043D\u0434\u044B \u043D\u0430 \u0442\u043E\u043D \u0438 \u043F\u043E\u043B\u0443\u0442\u043E\u043D \u0441 \u043F\u0440\u0430\u0432\u0438\u043B\u044C\u043D\u044B\u043C \u0432\u0438\u0431\u0440\u0430\u0442\u043E."
-      }
-    ]
-  },
-  {
-    id: "course-3",
-    slug: "ukulele-express",
-    title: "\u0423\u043A\u0443\u043B\u0435\u043B\u0435 \u042D\u043A\u0441\u043F\u0440\u0435\u0441\u0441: 7 \u0448\u0430\u0433\u043E\u0432 \u043A \u043C\u0443\u0437\u044B\u043A\u0435",
-    subtitle: "\u0421\u0430\u043C\u044B\u0439 \u043F\u0440\u043E\u0441\u0442\u043E\u0439 \u0438 \u0432\u0435\u0441\u0451\u043B\u044B\u0439 \u0438\u043D\u0441\u0442\u0440\u0443\u043C\u0435\u043D\u0442. \u041D\u0430\u0443\u0447\u0438\u0442\u0435\u0441\u044C \u0438\u0433\u0440\u0430\u0442\u044C \u043B\u044E\u0431\u0438\u043C\u044B\u0435 \u043F\u0435\u0441\u043D\u0438 \u0437\u0430 1 \u043D\u0435\u0434\u0435\u043B\u044E.",
-    badge: "\u041B\u0415\u0413\u041A\u0418\u0419 \u0421\u0422\u0410\u0420\u0422 \u0417\u0410 7 \u0414\u041D\u0415\u0419",
-    instrument: "ukulele",
-    level: "\u041D\u0430\u0447\u0438\u043D\u0430\u044E\u0449\u0438\u0439",
-    lessonsCount: 8,
-    durationHours: 4,
-    price: 6900,
-    originalPrice: 12900,
-    image: "/products/03_23_ukulele.png",
-    description: "\u0423\u043A\u0443\u043B\u0435\u043B\u0435 \u2014 4 \u043D\u0435\u0439\u043B\u043E\u043D\u043E\u0432\u044B\u0435 \u0441\u0442\u0440\u0443\u043D\u044B, \u043A\u043E\u0442\u043E\u0440\u044B\u0435 \u043D\u0435 \u0440\u0435\u0436\u0443\u0442 \u043F\u0430\u043B\u044C\u0446\u044B. \u0412\u0441\u0435\u0433\u043E 4 \u0430\u043A\u043A\u043E\u0440\u0434\u0430 \u043F\u043E\u0437\u0432\u043E\u043B\u044F\u0442 \u0441\u044B\u0433\u0440\u0430\u0442\u044C \u0441\u043E\u0442\u043D\u0438 \u0438\u0437\u0432\u0435\u0441\u0442\u043D\u044B\u0445 \u043C\u0438\u0440\u043E\u0432\u044B\u0445 \u0438 \u0440\u0443\u0441\u0441\u043A\u043E\u044F\u0437\u044B\u0447\u043D\u044B\u0445 \u0445\u0438\u0442\u043E\u0432.",
-    highlights: [
-      "8 \u043F\u043E\u043D\u044F\u0442\u043D\u044B\u0445 \u0443\u0440\u043E\u043A\u043E\u0432 \u043F\u043E 15 \u043C\u0438\u043D\u0443\u0442",
-      "\u0412\u0441\u0435\u0433\u043E 4 \u0430\u043A\u043A\u043E\u0440\u0434\u0430 (C, G, Am, F) \u0434\u043B\u044F 100+ \u043F\u0435\u0441\u0435\u043D",
-      "\u0413\u0430\u0432\u0430\u0439\u0441\u043A\u0438\u0439 \u0431\u043E\u0439 \u0438 \u0442\u0435\u0445\u043D\u0438\u043A\u0430 \xABChuck\xBB (\u0433\u043B\u0443\u0448\u0435\u043D\u0438\u0435)",
-      "\u0420\u0430\u0437\u0431\u043E\u0440\u044B: \xABRiptide\xBB, \xABSomewhere Over the Rainbow\xBB, \xAB\u041C\u043E\u044F \u0437\u0432\u0435\u0437\u0434\u0430\xBB"
-    ],
-    instructor: {
-      name: "\u0410\u043B\u0438\u043D\u0430 \u041A\u0438\u043C",
-      role: "\u041F\u0440\u0435\u043F\u043E\u0434\u0430\u0432\u0430\u0442\u0435\u043B\u044C \u0443\u043A\u0443\u043B\u0435\u043B\u0435 \u0438 \u0432\u043E\u043A\u0430\u043B\u0430",
-      experience: "\u041E\u043F\u044B\u0442 8 \u043B\u0435\u0442, \u0431\u043E\u043B\u0435\u0435 800 \u0434\u043E\u0432\u043E\u043B\u044C\u043D\u044B\u0445 \u0443\u0447\u0435\u043D\u0438\u043A\u043E\u0432",
-      avatar: "\u{1F33A}"
-    },
-    lessons: [
-      {
-        id: "uk-1",
-        title: "\u0423\u0440\u043E\u043A 1: \u0417\u043D\u0430\u043A\u043E\u043C\u0441\u0442\u0432\u043E \u0441 \u0443\u043A\u0443\u043B\u0435\u043B\u0435 \u0438 \u0430\u043A\u043A\u043E\u0440\u0434\u044B C \u0438 Am \u0437\u0430 5 \u043C\u0438\u043D\u0443\u0442",
-        duration: "12 \u043C\u0438\u043D",
-        isFreePreview: true,
-        description: "\u0417\u0430\u0436\u0438\u043C\u0430\u0435\u043C \u0441\u0442\u0440\u0443\u043D\u044B \u043E\u0434\u043D\u0438\u043C \u043F\u0430\u043B\u044C\u0446\u0435\u043C \u0438 \u0438\u0433\u0440\u0430\u0435\u043C \u043F\u0435\u0440\u0432\u0443\u044E \u043C\u0435\u043B\u043E\u0434\u0438\u044E.",
-        chords: ["C (\u0414\u043E \u043C\u0430\u0436\u043E\u0440)", "Am (\u041B\u044F \u043C\u0438\u043D\u043E\u0440)"]
-      },
-      {
-        id: "uk-2",
-        title: "\u0423\u0440\u043E\u043A 2: \u0410\u043A\u043A\u043E\u0440\u0434\u044B F \u0438 G + \u043F\u0435\u0440\u0432\u044B\u0439 \u043F\u043E\u043B\u043D\u043E\u0446\u0435\u043D\u043D\u044B\u0439 \u0440\u0438\u0442\u043C",
-        duration: "18 \u043C\u0438\u043D",
-        description: "\u041F\u043B\u0430\u0432\u043D\u044B\u0435 \u043F\u0435\u0440\u0435\u0445\u043E\u0434\u044B \u0438 \u0440\u0438\u0442\u043C\u0438\u0447\u043D\u044B\u0439 \u0433\u0430\u0432\u0430\u0439\u0441\u043A\u0438\u0439 \u0431\u043E\u0439.",
-        chords: ["C", "G", "Am", "F"]
-      }
-    ]
-  },
-  {
-    id: "course-4",
-    slug: "vip-mentorship",
-    title: "VIP \u041D\u0430\u0441\u0442\u0430\u0432\u043D\u0438\u0447\u0435\u0441\u0442\u0432\u043E: \u041F\u043E\u043B\u043D\u044B\u0439 \u0434\u043E\u0441\u0442\u0443\u043F + \u041A\u0443\u0440\u0430\u0442\u043E\u0440",
-    subtitle: "\u0412\u0441\u0435 \u043A\u0443\u0440\u0441\u044B Maestro Academy + \u0435\u0436\u0435\u043D\u0435\u0434\u0435\u043B\u044C\u043D\u0430\u044F \u043F\u0440\u043E\u0432\u0435\u0440\u043A\u0430 \u0434\u043E\u043C\u0430\u0448\u043D\u0438\u0445 \u0437\u0430\u0434\u0430\u043D\u0438\u0439 \u043F\u0440\u0435\u043F\u043E\u0434\u0430\u0432\u0430\u0442\u0435\u043B\u0435\u043C.",
-    badge: "\u0412\u0421\u0401 \u0412\u041A\u041B\u042E\u0427\u0415\u041D\u041E \xB7 \u0413\u041E\u0414\u041E\u0412\u041E\u0419 \u0414\u041E\u0421\u0422\u0423\u041F",
-    instrument: "all",
-    level: "\u041F\u0440\u043E\u0434\u0432\u0438\u043D\u0443\u0442\u044B\u0439",
-    lessonsCount: 40,
-    durationHours: 24,
-    price: 28900,
-    originalPrice: 49e3,
-    image: "/products/02_39_gradient_electric.png",
-    description: "\u041C\u0430\u043A\u0441\u0438\u043C\u0430\u043B\u044C\u043D\u044B\u0439 \u043F\u0430\u043A\u0435\u0442: \u0434\u043E\u0441\u0442\u0443\u043F \u043A\u043E \u0432\u0441\u0435\u043C \u043A\u0443\u0440\u0441\u0430\u043C (\u0430\u043A\u0443\u0441\u0442\u0438\u043A\u0430, \u044D\u043B\u0435\u043A\u0442\u0440\u043E\u0433\u0438\u0442\u0430\u0440\u0430, \u0443\u043A\u0443\u043B\u0435\u043B\u0435, \u0442\u0435\u043E\u0440\u0438\u044F), \u0437\u0430\u043A\u0440\u044B\u0442\u044B\u0439 Telegram-\u0447\u0430\u0442 \u0441 \u043A\u0443\u0440\u0430\u0442\u043E\u0440\u0430\u043C\u0438, \u0440\u0430\u0437\u0431\u043E\u0440 \u0432\u0438\u0434\u0435\u043E\u0437\u0430\u043F\u0438\u0441\u0435\u0439 \u0432\u0430\u0448\u0435\u0439 \u0438\u0433\u0440\u044B \u0438 2 \u0438\u043D\u0434\u0438\u0432\u0438\u0434\u0443\u0430\u043B\u044C\u043D\u044B\u0435 \u043E\u043D\u043B\u0430\u0439\u043D-\u043A\u043E\u043D\u0441\u0443\u043B\u044C\u0442\u0430\u0446\u0438\u0438.",
-    highlights: [
-      "\u0411\u0435\u0437\u043B\u0438\u043C\u0438\u0442\u043D\u044B\u0439 \u0433\u043E\u0434\u043E\u0432\u043E\u0439 \u0434\u043E\u0441\u0442\u0443\u043F \u043A\u043E \u0432\u0441\u0435\u043C 40+ \u0443\u0440\u043E\u043A\u0430\u043C \u0430\u043A\u0430\u0434\u0435\u043C\u0438\u0438",
-      "\u041F\u0440\u043E\u0432\u0435\u0440\u043A\u0430 \u0434\u043E\u043C\u0430\u0448\u043D\u0438\u0445 \u0437\u0430\u0434\u0430\u043D\u0438\u0439 \u0441 \u0433\u043E\u043B\u043E\u0441\u043E\u0432\u044B\u043C\u0438 \u0438 \u0432\u0438\u0434\u0435\u043E-\u043A\u043E\u043C\u043C\u0435\u043D\u0442\u0430\u0440\u0438\u044F\u043C\u0438",
-      "2 \u043F\u0435\u0440\u0441\u043E\u043D\u0430\u043B\u044C\u043D\u044B\u0445 \u043E\u043D\u043B\u0430\u0439\u043D-\u0443\u0440\u043E\u043A\u0430 1-\u043D\u0430-1 \u0441 \u0442\u043E\u043F-\u043F\u0440\u0435\u043F\u043E\u0434\u0430\u0432\u0430\u0442\u0435\u043B\u0435\u043C",
-      "\u0421\u0435\u0440\u0442\u0438\u0444\u0438\u043A\u0430\u0442 \u043E\u0431 \u043E\u043A\u043E\u043D\u0447\u0430\u043D\u0438\u0438 \u043A\u0443\u0440\u0441\u0430 Maestro Academy"
-    ],
-    instructor: {
-      name: "\u041A\u043E\u043C\u0430\u043D\u0434\u0430 Maestro Academy",
-      role: "\u0412\u0435\u0434\u0443\u0449\u0438\u0435 \u043F\u0440\u0435\u043F\u043E\u0434\u0430\u0432\u0430\u0442\u0435\u043B\u0438 \u0438 \u043C\u0443\u0437\u044B\u043A\u0430\u043D\u0442\u044B",
-      experience: "\u041F\u043E\u043B\u043D\u0430\u044F \u043F\u043E\u0434\u0434\u0435\u0440\u0436\u043A\u0430 \u0434\u043E \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442\u0430",
-      avatar: "\u{1F451}"
-    },
-    lessons: []
-  }
-];
-function resolveAttachedCourse(product, coursesList = COURSES) {
-  if (product.attachedCourseId === "none" || product.attachedCourseId === "") {
-    return null;
-  }
-  if (product.attachedCourseId && product.attachedCourseId !== "auto") {
-    const found = coursesList.find((c) => c.id === product.attachedCourseId || c.slug === product.attachedCourseId);
-    if (found) return found;
-  }
-  const cat = (product.category || "").toLowerCase();
-  if (cat.includes("\u044D\u043B\u0435\u043A\u0442\u0440\u043E")) {
-    return coursesList.find((c) => c.instrument === "electric") || coursesList[1] || coursesList[0] || null;
-  }
-  if (cat.includes("\u0443\u043A\u0443\u043B\u0435\u043B\u0435")) {
-    return coursesList.find((c) => c.instrument === "ukulele") || coursesList[2] || coursesList[0] || null;
-  }
-  if (cat.includes("\u0430\u043A\u0443\u0441\u0442\u0438\u0447\u0435\u0441\u043A") || cat.includes("\u043A\u043B\u0430\u0441\u0441\u0438\u0447\u0435\u0441\u043A") || cat.includes("\u0433\u0438\u0442\u0430\u0440")) {
-    return coursesList.find((c) => c.instrument === "acoustic") || coursesList[0] || null;
-  }
-  return coursesList[0] || null;
-}
 
 // lib/catalog-data.ts
 var products = [
@@ -13331,367 +13109,8 @@ function buildWhatsAppOrderUrl(params) {
   return `https://wa.me/${cleanPhone}?text=${text}`;
 }
 
-// components/AcademyView.tsx
-var import_jsx_runtime2 = __toESM(require_jsx_runtime(), 1);
-function AcademyView({ onBackToStore }) {
-  const [courses, setCourses] = (0, import_react.useState)(COURSES);
-  const [selectedCourse, setSelectedCourse] = (0, import_react.useState)(COURSES[0]);
-  const [activeLesson, setActiveLesson] = (0, import_react.useState)(COURSES[0].lessons[0] || null);
-  const [isCabinetUnlocked, setIsCabinetUnlocked] = (0, import_react.useState)(false);
-  const [pinCode, setPinCode] = (0, import_react.useState)("");
-  const [completedLessonIds, setCompletedLessonIds] = (0, import_react.useState)(/* @__PURE__ */ new Set(["l-1"]));
-  const [authError, setAuthError] = (0, import_react.useState)("");
-  (0, import_react.useEffect)(() => {
-    let active = true;
-    fetch("/api/courses").then((r) => r.ok ? r.json() : Promise.reject(new Error("Failed"))).then((data) => {
-      if (active && Array.isArray(data.courses) && data.courses.length > 0) {
-        setCourses(data.courses);
-        setSelectedCourse(data.courses[0]);
-        if (data.courses[0].lessons?.[0]) {
-          setActiveLesson(data.courses[0].lessons[0]);
-        }
-      }
-    }).catch(() => {
-    });
-    return () => {
-      active = false;
-    };
-  }, []);
-  const handlePinSubmit = (e) => {
-    e.preventDefault();
-    if (pinCode.trim() === "123456" || pinCode.trim().length >= 4) {
-      setIsCabinetUnlocked(true);
-      setAuthError("");
-    } else {
-      setAuthError("\u0412\u0432\u0435\u0434\u0438\u0442\u0435 \u0432\u0435\u0440\u043D\u044B\u0439 6-\u0437\u043D\u0430\u0447\u043D\u044B\u0439 PIN-\u043A\u043E\u0434 (\u043D\u0430\u043F\u0440\u0438\u043C\u0435\u0440, 123456)");
-    }
-  };
-  const toggleLessonComplete = (id) => {
-    setCompletedLessonIds((current) => {
-      const next = new Set(current);
-      if (next.has(id)) next.delete(id);
-      else next.add(id);
-      return next;
-    });
-  };
-  const handleOrderCourseInWhatsApp = (course) => {
-    const text = encodeURIComponent(
-      `\u0417\u0434\u0440\u0430\u0432\u0441\u0442\u0432\u0443\u0439\u0442\u0435! \u0425\u043E\u0447\u0443 \u043F\u043E\u043B\u0443\u0447\u0438\u0442\u044C \u0434\u043E\u0441\u0442\u0443\u043F \u043A \u043E\u043D\u043B\u0430\u0439\u043D-\u043A\u0443\u0440\u0441\u0443 \xAB${course.title}\xBB (${money(course.price)} \u20B8). \u041F\u043E\u0434\u0441\u043A\u0430\u0436\u0438\u0442\u0435, \u043A\u0430\u043A \u043E\u043F\u043B\u0430\u0442\u0438\u0442\u044C \u0438 \u043F\u043E\u043B\u0443\u0447\u0438\u0442\u044C \u0434\u043E\u0441\u0442\u0443\u043F?`
-    );
-    window.open(`https://wa.me/77775055788?text=${text}`, "_blank", "noopener,noreferrer");
-  };
-  return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "academy-page", children: [
-    /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "academy-hero", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "academy-hero-copy", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "academy-tag-group", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "academy-hero-tag", children: "MAESTRO ACADEMY" }),
-          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "gift-tag", children: "\u{1F381} \u0412 \u043F\u043E\u0434\u0430\u0440\u043E\u043A \u043A \u043A\u0430\u0436\u0434\u043E\u043C\u0443 \u0438\u043D\u0441\u0442\u0440\u0443\u043C\u0435\u043D\u0442\u0443" })
-        ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("h1", { children: "\u041D\u0430\u0443\u0447\u0438\u0442\u0435\u0441\u044C \u0438\u0433\u0440\u0430\u0442\u044C \u043B\u044E\u0431\u0438\u043C\u044B\u0435 \u043F\u0435\u0441\u043D\u0438 \u043D\u0430 \u0433\u0438\u0442\u0430\u0440\u0435 \u0437\u0430 3 \u0434\u043D\u044F" }),
-        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { children: "\u041F\u043E\u0448\u0430\u0433\u043E\u0432\u044B\u0435 \u0432\u0438\u0434\u0435\u043E\u0443\u0440\u043E\u043A\u0438 \u0432 4K, \u0438\u043D\u0442\u0435\u0440\u0430\u043A\u0442\u0438\u0432\u043D\u044B\u0435 \u0441\u0445\u0435\u043C\u044B \u0430\u043A\u043A\u043E\u0440\u0434\u043E\u0432, \u0440\u0430\u0437\u0431\u043E\u0440\u044B \u043F\u043E\u043F\u0443\u043B\u044F\u0440\u043D\u044B\u0445 \u043F\u0435\u0441\u0435\u043D \u0438 \u043F\u043E\u0434\u0434\u0435\u0440\u0436\u043A\u0430 \u043F\u0440\u0435\u043F\u043E\u0434\u0430\u0432\u0430\u0442\u0435\u043B\u044F. \u0414\u043E\u0441\u0442\u0443\u043F \u043D\u0430\u0432\u0441\u0435\u0433\u0434\u0430 \u0441 \u043B\u044E\u0431\u043E\u0433\u043E \u0442\u0435\u043B\u0435\u0444\u043E\u043D\u0430 \u0438\u043B\u0438 \u043A\u043E\u043C\u043F\u044C\u044E\u0442\u0435\u0440\u0430." }),
-        /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "academy-hero-buttons", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("a", { href: "#courses-catalog", className: "primary-button", children: "\u0412\u044B\u0431\u0440\u0430\u0442\u044C \u043A\u0443\u0440\u0441" }),
-          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
-            "button",
-            {
-              type: "button",
-              className: "outline-button",
-              onClick: () => {
-                document.getElementById("student-cabinet")?.scrollIntoView({ behavior: "smooth" });
-              },
-              children: "\u{1F511} \u0412\u043E\u0439\u0442\u0438 \u0432 \u043A\u0430\u0431\u0438\u043D\u0435\u0442 \u0443\u0447\u0435\u043D\u0438\u043A\u0430"
-            }
-          )
-        ] })
-      ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "academy-hero-stats", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "academy-stat-card", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("strong", { children: "1 400+" }),
-          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { children: "\u0443\u0447\u0435\u043D\u0438\u043A\u043E\u0432 \u043D\u0430\u0443\u0447\u0438\u043B\u0438\u0441\u044C \u0438\u0433\u0440\u0430\u0442\u044C" })
-        ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "academy-stat-card", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("strong", { children: "100%" }),
-          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { children: "\u043F\u0440\u0430\u043A\u0442\u0438\u043A\u0438 \u0441 \u043F\u0435\u0440\u0432\u043E\u0433\u043E \u0443\u0440\u043E\u043A\u0430" })
-        ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "academy-stat-card", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("strong", { children: "0 \u20B8" }),
-          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { children: "\u043F\u0435\u0440\u0432\u044B\u0439 \u0432\u0437\u043D\u043E\u0441 \u0432 Kaspi 0-0-12" })
-        ] })
-      ] })
-    ] }),
-    /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("section", { className: "courses-catalog-section", id: "courses-catalog", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "section-head", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { children: [
-        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "eyebrow", children: "\u041E\u0411\u0423\u0427\u0410\u042E\u0429\u0418\u0415 \u041F\u0420\u041E\u0413\u0420\u0410\u041C\u041C\u042B" }),
-        /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("h2", { children: [
-          "\u041A\u0430\u0442\u0430\u043B\u043E\u0433 \u043E\u043D\u043B\u0430\u0439\u043D-\u043A\u0443\u0440\u0441\u043E\u0432 Maestro (",
-          courses.length,
-          ")"
-        ] })
-      ] }) }),
-      /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "courses-grid", children: courses.map((course) => {
-        const isSelected = selectedCourse.id === course.id;
-        const monthly = installment(course.price, 12);
-        return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(
-          "article",
-          {
-            className: `course-card ${isSelected ? "selected" : ""}`,
-            onClick: () => {
-              setSelectedCourse(course);
-              if (course.lessons?.[0]) setActiveLesson(course.lessons[0]);
-            },
-            children: [
-              /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "course-card-top", children: [
-                /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "course-badge", children: course.badge }),
-                /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "course-image-thumb", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Image, { src: course.image, alt: course.title, fill: true, unoptimized: true, sizes: "120px" }) })
-              ] }),
-              /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "course-card-body", children: [
-                /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "course-meta-pills", children: [
-                  /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { children: course.level }),
-                  /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { children: "\u2022" }),
-                  /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { children: [
-                    course.lessonsCount,
-                    " \u0443\u0440\u043E\u043A\u043E\u0432 (",
-                    course.durationHours,
-                    " \u0447.)"
-                  ] })
-                ] }),
-                /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("h3", { children: course.title }),
-                /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "course-subtitle", children: course.subtitle }),
-                /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("ul", { className: "course-highlights-list", children: course.highlights.slice(0, 3).map((h) => /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("li", { children: [
-                  "\u2713 ",
-                  h
-                ] }, h)) }),
-                /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "instructor-snippet", children: [
-                  /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "instructor-avatar", children: course.instructor.avatar }),
-                  /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { children: [
-                    /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("strong", { children: course.instructor.name }),
-                    /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("small", { children: course.instructor.role })
-                  ] })
-                ] })
-              ] }),
-              /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "course-card-footer", children: [
-                /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "course-price-block", children: [
-                  /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "price-row", children: [
-                    /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("strong", { className: "course-price", children: [
-                      money(course.price),
-                      " \u20B8"
-                    ] }),
-                    /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { className: "course-old-price", children: [
-                      money(course.originalPrice),
-                      " \u20B8"
-                    ] })
-                  ] }),
-                  /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "kaspi-installment-mini", children: [
-                    /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "kaspi-badge", children: "0-0-12" }),
-                    /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { children: [
-                      "\u043E\u0442 ",
-                      money(monthly),
-                      " \u20B8/\u043C\u0435\u0441"
-                    ] })
-                  ] })
-                ] }),
-                /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "course-actions", children: [
-                  course.courseUrl && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
-                    "a",
-                    {
-                      href: course.courseUrl,
-                      target: "_blank",
-                      rel: "noopener noreferrer",
-                      className: "outline-button small course-link-btn",
-                      onClick: (e) => e.stopPropagation(),
-                      title: "\u041F\u0435\u0440\u0435\u0439\u0442\u0438 \u043A \u043F\u043B\u0430\u0442\u0444\u043E\u0440\u043C\u0435 \u043A\u0443\u0440\u0441\u0430",
-                      children: "\u{1F517} \u041F\u0435\u0440\u0435\u0439\u0442\u0438 \u043A \u043A\u0443\u0440\u0441\u0443"
-                    }
-                  ),
-                  /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
-                    "button",
-                    {
-                      type: "button",
-                      className: "primary-button small",
-                      onClick: (e) => {
-                        e.stopPropagation();
-                        handleOrderCourseInWhatsApp(course);
-                      },
-                      children: "\u041F\u043E\u043B\u0443\u0447\u0438\u0442\u044C \u043A\u0443\u0440\u0441"
-                    }
-                  )
-                ] })
-              ] })
-            ]
-          },
-          course.id
-        );
-      }) })
-    ] }),
-    /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("section", { className: "student-cabinet-section", id: "student-cabinet", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "cabinet-card", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "cabinet-header", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { children: [
-          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "eyebrow", children: "\u0418\u041D\u0422\u0415\u0420\u0410\u041A\u0422\u0418\u0412\u041D\u042B\u0419 \u041A\u0410\u0411\u0418\u041D\u0415\u0422 \u0423\u0427\u0415\u041D\u0418\u041A\u0410" }),
-          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("h2", { children: selectedCourse.title })
-        ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "cabinet-auth-status", children: [
-          selectedCourse.courseUrl && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
-            "a",
-            {
-              href: selectedCourse.courseUrl,
-              target: "_blank",
-              rel: "noopener noreferrer",
-              className: "course-platform-link",
-              title: "\u041E\u0442\u043A\u0440\u044B\u0442\u044C \u043A\u0443\u0440\u0441 \u043D\u0430 \u043F\u043B\u0430\u0442\u0444\u043E\u0440\u043C\u0435 \u043E\u0431\u0443\u0447\u0435\u043D\u0438\u044F",
-              children: "\u{1F517} \u0421\u0441\u044B\u043B\u043A\u0430 \u043D\u0430 \u043F\u043B\u0430\u0442\u0444\u043E\u0440\u043C\u0443 \u043A\u0443\u0440\u0441\u0430 \u2197"
-            }
-          ),
-          isCabinetUnlocked ? /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "unlocked-badge", children: "\u{1F7E2} \u0414\u043E\u0441\u0442\u0443\u043F \u0430\u043A\u0442\u0438\u0432\u0438\u0440\u043E\u0432\u0430\u043D (\u0423\u0447\u0435\u043D\u0438\u043A Maestro)" }) : /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "locked-badge", children: "\u{1F512} \u0420\u0435\u0436\u0438\u043C \u043F\u0440\u0435\u0434\u043F\u0440\u043E\u0441\u043C\u043E\u0442\u0440\u0430 (\u0414\u0435\u043C\u043E-\u0434\u043E\u0441\u0442\u0443\u043F)" })
-        ] })
-      ] }),
-      !isCabinetUnlocked && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "cabinet-pin-box", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "pin-prompt", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("strong", { children: "\u0415\u0441\u0442\u044C \u043F\u0440\u043E\u043C\u043E\u043A\u043E\u0434 \u0438\u043B\u0438 PIN-\u043A\u043E\u0434 \u0438\u0437 \u0447\u0435\u043A\u0430?" }),
-          /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { children: [
-            "\u0412\u0432\u0435\u0434\u0438\u0442\u0435 6-\u0437\u043D\u0430\u0447\u043D\u044B\u0439 \u043A\u043E\u0434 \u0434\u043B\u044F \u043E\u0442\u043A\u0440\u044B\u0442\u0438\u044F \u0432\u0441\u0435\u0445 \u0443\u0440\u043E\u043A\u043E\u0432 \u043A\u0443\u0440\u0441\u0430 (\u0434\u0435\u043C\u043E-\u043A\u043E\u0434: ",
-            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("code", { children: "123456" }),
-            ")."
-          ] })
-        ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("form", { onSubmit: handlePinSubmit, className: "pin-form", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
-            "input",
-            {
-              type: "text",
-              placeholder: "PIN-\u043A\u043E\u0434 (123456)",
-              value: pinCode,
-              onChange: (e) => setPinCode(e.target.value),
-              maxLength: 10
-            }
-          ),
-          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("button", { type: "submit", className: "primary-button small", children: "\u0410\u043A\u0442\u0438\u0432\u0438\u0440\u043E\u0432\u0430\u0442\u044C \u0434\u043E\u0441\u0442\u0443\u043F" })
-        ] }),
-        authError && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "auth-error-msg", children: authError })
-      ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "cabinet-grid", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "lesson-player-panel", children: activeLesson ? /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "active-lesson-view", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "video-player-mock", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "video-overlay", children: [
-            activeLesson.videoUrl ? /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
-              "a",
-              {
-                href: activeLesson.videoUrl,
-                target: "_blank",
-                rel: "noopener noreferrer",
-                className: "play-big-btn",
-                title: "\u0421\u043C\u043E\u0442\u0440\u0435\u0442\u044C \u0432\u0438\u0434\u0435\u043E \u0443\u0440\u043E\u043A\u0430",
-                children: "\u25B6"
-              }
-            ) : /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "play-big-btn", children: "\u25B6" }),
-            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "video-title-overlay", children: activeLesson.title }),
-            /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { className: "video-duration-badge", children: [
-              activeLesson.duration,
-              " \xB7 4K UltraHD"
-            ] })
-          ] }) }),
-          /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "lesson-info-bar", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { children: [
-              /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("h3", { children: activeLesson.title }),
-              /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { children: activeLesson.description }),
-              activeLesson.videoUrl && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
-                "a",
-                {
-                  href: activeLesson.videoUrl,
-                  target: "_blank",
-                  rel: "noopener noreferrer",
-                  className: "lesson-video-link",
-                  style: {
-                    display: "inline-flex",
-                    alignItems: "center",
-                    gap: "6px",
-                    marginTop: "8px",
-                    fontSize: "12px",
-                    color: "var(--amber-dark)",
-                    fontWeight: 700,
-                    textDecoration: "none"
-                  },
-                  children: "\u{1F4FA} \u0421\u043C\u043E\u0442\u0440\u0435\u0442\u044C \u0432\u0438\u0434\u0435\u043E \u0443\u0440\u043E\u043A\u0430 \u2197"
-                }
-              )
-            ] }),
-            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
-              "button",
-              {
-                type: "button",
-                className: `complete-lesson-btn ${completedLessonIds.has(activeLesson.id) ? "done" : ""}`,
-                onClick: () => toggleLessonComplete(activeLesson.id),
-                children: completedLessonIds.has(activeLesson.id) ? "\u2713 \u0423\u0440\u043E\u043A \u043F\u0440\u043E\u0439\u0434\u0435\u043D" : "\u041E\u0442\u043C\u0435\u0442\u0438\u0442\u044C \u043F\u0440\u043E\u0439\u0434\u0435\u043D\u043D\u044B\u043C"
-              }
-            )
-          ] }),
-          activeLesson.chords && activeLesson.chords.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "interactive-chords-box", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("strong", { children: "\u{1F3B8} \u0410\u043A\u043A\u043E\u0440\u0434\u044B \u0438 \u0430\u043F\u043F\u043B\u0438\u043A\u0430\u0442\u0443\u0440\u044B \u0443\u0440\u043E\u043A\u0430:" }),
-            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "chords-buttons-row", children: activeLesson.chords.map((chord) => /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "chord-sound-pill", children: [
-              /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { children: "\u{1F3BC}" }),
-              /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("strong", { children: chord })
-            ] }, chord)) })
-          ] }),
-          activeLesson.tabSnippet && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "tab-snippet-box", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { children: "\u0422\u0430\u0431\u0443\u043B\u0430\u0442\u0443\u0440\u0430 / \u0410\u043F\u043F\u043B\u0438\u043A\u0430\u0442\u0443\u0440\u0430:" }),
-            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("code", { children: activeLesson.tabSnippet })
-          ] })
-        ] }) : /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "no-lesson-placeholder", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { children: "\u0412 \u044D\u0442\u043E\u043C \u043A\u0443\u0440\u0441\u0435 \u0434\u043E\u0441\u0442\u0443\u043F\u043D\u043E \u0438\u043D\u0434\u0438\u0432\u0438\u0434\u0443\u0430\u043B\u044C\u043D\u043E\u0435 \u0440\u0430\u0441\u043F\u0438\u0441\u0430\u043D\u0438\u0435 \u0441 \u043D\u0430\u0441\u0442\u0430\u0432\u043D\u0438\u043A\u043E\u043C." }) }) }),
-        /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "lessons-sidebar", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "lessons-sidebar-head", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("strong", { children: [
-              "\u041F\u0440\u043E\u0433\u0440\u0430\u043C\u043C\u0430 \u043A\u0443\u0440\u0441\u0430 (",
-              selectedCourse.lessons.length,
-              " \u0443\u0440\u043E\u043A\u043E\u0432)"
-            ] }),
-            /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("small", { children: [
-              "\u041F\u0440\u043E\u0439\u0434\u0435\u043D\u043E: ",
-              completedLessonIds.size,
-              " \u0438\u0437 ",
-              selectedCourse.lessons.length
-            ] })
-          ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "lessons-list", children: selectedCourse.lessons.map((lesson, idx) => {
-            const isActive = activeLesson?.id === lesson.id;
-            const isDone = completedLessonIds.has(lesson.id);
-            const isLocked = !isCabinetUnlocked && !lesson.isFreePreview;
-            return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(
-              "div",
-              {
-                className: `lesson-list-item ${isActive ? "active" : ""} ${isLocked ? "locked" : ""}`,
-                onClick: () => {
-                  if (!isLocked) setActiveLesson(lesson);
-                },
-                children: [
-                  /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "lesson-num", children: idx + 1 }),
-                  /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "lesson-item-text", children: [
-                    /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("strong", { children: lesson.title }),
-                    /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("small", { children: [
-                      lesson.duration,
-                      " ",
-                      lesson.isFreePreview && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "free-tag", children: "\u0411\u0435\u0441\u043F\u043B\u0430\u0442\u043D\u043E\u0435 \u0434\u0435\u043C\u043E" })
-                    ] })
-                  ] }),
-                  /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "lesson-status-icon", children: isDone ? "\u2705" : isLocked ? "\u{1F512}" : "\u25B6" })
-                ]
-              },
-              lesson.id
-            );
-          }) })
-        ] })
-      ] })
-    ] }) }),
-    /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "academy-footer-banner", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { children: [
-        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("strong", { children: "\u0425\u043E\u0442\u0438\u0442\u0435 \u043F\u043E\u043B\u0443\u0447\u0438\u0442\u044C \u043A\u0443\u0440\u0441 \u0431\u0435\u0441\u043F\u043B\u0430\u0442\u043D\u043E?" }),
-        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { children: "\u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u043B\u044E\u0431\u0443\u044E \u0433\u0438\u0442\u0430\u0440\u0443 \u0438\u043B\u0438 \u0443\u043A\u0443\u043B\u0435\u043B\u0435 \u0432 \u043A\u0430\u0442\u0430\u043B\u043E\u0433\u0435 Maestro \u2014 \u0434\u043E\u0441\u0442\u0443\u043F \u043A \u043A\u0443\u0440\u0441\u0443 \u0430\u043A\u0442\u0438\u0432\u0438\u0440\u0443\u0435\u0442\u0441\u044F \u0430\u0432\u0442\u043E\u043C\u0430\u0442\u0438\u0447\u0435\u0441\u043A\u0438!" })
-      ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("button", { type: "button", className: "primary-button", onClick: onBackToStore, children: "\u2190 \u041F\u0435\u0440\u0435\u0439\u0442\u0438 \u043A \u0432\u044B\u0431\u043E\u0440\u0443 \u0433\u0438\u0442\u0430\u0440\u044B" })
-    ] })
-  ] });
-}
-
 // components/CartDrawer.tsx
-var import_react2 = __toESM(require_react(), 1);
-var import_jsx_runtime3 = __toESM(require_jsx_runtime(), 1);
+var import_jsx_runtime2 = __toESM(require_jsx_runtime(), 1);
 function CartDrawer({
   cartOpen,
   setCartOpen,
@@ -13710,8 +13129,8 @@ function CartDrawer({
   onSubmitOrder,
   onOpenKaspiQr
 }) {
-  const [deliveryMethod, setDeliveryMethod] = (0, import_react2.useState)("\u0421\u0430\u043C\u043E\u0432\u044B\u0432\u043E\u0437 \u0432 \u043C\u0430\u0433\u0430\u0437\u0438\u043D\u0435 (\u0410\u043A\u0442\u043E\u0431\u0435)");
-  const [paymentMethod, setPaymentMethod] = (0, import_react2.useState)("Kaspi \u0420\u0430\u0441\u0441\u0440\u043E\u0447\u043A\u0430 0-0-12");
+  const [deliveryMethod, setDeliveryMethod] = (0, import_react.useState)("\u0421\u0430\u043C\u043E\u0432\u044B\u0432\u043E\u0437 \u0432 \u043C\u0430\u0433\u0430\u0437\u0438\u043D\u0435 (\u0410\u043A\u0442\u043E\u0431\u0435)");
+  const [paymentMethod, setPaymentMethod] = (0, import_react.useState)("Kaspi \u0420\u0430\u0441\u0441\u0440\u043E\u0447\u043A\u0430 0-0-12");
   if (!cartOpen) return null;
   const totalPrice = cartItems.reduce(
     (acc, item) => acc + (item.price || 0) * item.quantity,
@@ -13747,7 +13166,7 @@ function CartDrawer({
     }
     onOpenKaspiQr();
   };
-  return /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { className: "cart-drawer-backdrop", role: "presentation", onMouseDown: () => setCartOpen(false), children: /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)(
+  return /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "cart-drawer-backdrop", role: "presentation", onMouseDown: () => setCartOpen(false), children: /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(
     "aside",
     {
       className: "cart-drawer",
@@ -13756,32 +13175,32 @@ function CartDrawer({
       "aria-label": "\u041A\u043E\u0440\u0437\u0438\u043D\u0430 \u0437\u0430\u044F\u0432\u043A\u0438",
       onMouseDown: (e) => e.stopPropagation(),
       children: [
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "cart-head", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { children: [
-            /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("p", { className: "eyebrow", children: "\u0417\u0430\u044F\u0432\u043A\u0430" }),
-            /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("h2", { children: "\u041A\u043E\u0440\u0437\u0438\u043D\u0430 \u043C\u0430\u0433\u0430\u0437\u0438\u043D\u0430" })
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "cart-head", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "eyebrow", children: "\u0417\u0430\u044F\u0432\u043A\u0430" }),
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("h2", { children: "\u041A\u043E\u0440\u0437\u0438\u043D\u0430 \u043C\u0430\u0433\u0430\u0437\u0438\u043D\u0430" })
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("button", { onClick: () => setCartOpen(false), "aria-label": "\u0417\u0430\u043A\u0440\u044B\u0442\u044C \u043A\u043E\u0440\u0437\u0438\u043D\u0443", children: "\xD7" })
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("button", { onClick: () => setCartOpen(false), "aria-label": "\u0417\u0430\u043A\u0440\u044B\u0442\u044C \u043A\u043E\u0440\u0437\u0438\u043D\u0443", children: "\xD7" })
         ] }),
-        cartItems.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "cart-progress-card", children: [
-          totalPrice >= 35e3 ? /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "progress-status-done", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "progress-icon", children: "\u{1F389}" }),
-            /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("span", { children: [
+        cartItems.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "cart-progress-card", children: [
+          totalPrice >= 35e3 ? /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "progress-status-done", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "progress-icon", children: "\u{1F389}" }),
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { children: [
               "\u0412\u0430\u043C \u0434\u043E\u0441\u0442\u0443\u043F\u043D\u0430 ",
-              /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("strong", { children: "\u0411\u0415\u0421\u041F\u041B\u0410\u0422\u041D\u0410\u042F \u0434\u043E\u0441\u0442\u0430\u0432\u043A\u0430" }),
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("strong", { children: "\u0411\u0415\u0421\u041F\u041B\u0410\u0422\u041D\u0410\u042F \u0434\u043E\u0441\u0442\u0430\u0432\u043A\u0430" }),
               " \u0438 \u043D\u0430\u0431\u043E\u0440 \u043C\u0435\u0434\u0438\u0430\u0442\u043E\u0440\u043E\u0432!"
             ] })
-          ] }) : /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "progress-status-pending", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "progress-icon", children: "\u{1F381}" }),
-            /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("span", { children: [
+          ] }) : /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "progress-status-pending", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "progress-icon", children: "\u{1F381}" }),
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { children: [
               "\u0414\u043E \u0431\u0435\u0441\u043F\u043B\u0430\u0442\u043D\u043E\u0439 \u0434\u043E\u0441\u0442\u0430\u0432\u043A\u0438 \u0438 \u043F\u043E\u0434\u0430\u0440\u043A\u0430: ",
-              /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("strong", { children: [
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("strong", { children: [
                 money(35e3 - totalPrice),
                 " \u20B8"
               ] })
             ] })
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { className: "progress-bar-track", children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "progress-bar-track", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
             "div",
             {
               className: "progress-bar-fill",
@@ -13789,17 +13208,17 @@ function CartDrawer({
             }
           ) })
         ] }),
-        cartItems.length ? /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { className: "cart-lines", children: cartItems.map((item) => /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("article", { className: "cart-line", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "cart-thumb", children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(Image, { src: item.image, alt: "", fill: true, unoptimized: true, sizes: "64px" }) }),
-          /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("span", { className: "cart-copy", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("strong", { children: item.name }),
-            /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("small", { children: [
+        cartItems.length ? /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "cart-lines", children: cartItems.map((item) => /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("article", { className: "cart-line", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "cart-thumb", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Image, { src: item.image, alt: "", fill: true, unoptimized: true, sizes: "64px" }) }),
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { className: "cart-copy", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("strong", { children: item.name }),
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("small", { children: [
               item.variantName,
               " \xB7 ",
               item.sku
             ] }),
-            item.bundleTitle && /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "cart-gift-badge", children: item.bundleTitle }),
-            item.stringsUpsell && /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("span", { className: "cart-strings-badge", style: {
+            item.bundleTitle && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "cart-gift-badge", children: item.bundleTitle }),
+            item.stringsUpsell && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { className: "cart-strings-badge", style: {
               display: "inline-block",
               fontSize: "11px",
               fontWeight: 700,
@@ -13812,15 +13231,15 @@ function CartDrawer({
               "\u26A1 + ",
               item.stringsUpsell
             ] }),
-            item.price > 0 && /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("span", { className: "cart-line-price", children: [
+            item.price > 0 && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { className: "cart-line-price", children: [
               money(item.price * item.quantity),
               " \u20B8"
             ] })
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("span", { className: "cart-qty", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("button", { onClick: () => updateCartQuantity(item.key, -1), disabled: item.quantity <= 1, children: "\u2212" }),
-            /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("b", { children: item.quantity }),
-            /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { className: "cart-qty", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("button", { onClick: () => updateCartQuantity(item.key, -1), disabled: item.quantity <= 1, children: "\u2212" }),
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("b", { children: item.quantity }),
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
               "button",
               {
                 onClick: () => updateCartQuantity(item.key, 1),
@@ -13829,7 +13248,7 @@ function CartDrawer({
               }
             )
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
             "button",
             {
               className: "cart-remove",
@@ -13838,14 +13257,14 @@ function CartDrawer({
               children: "\xD7"
             }
           )
-        ] }, item.key)) }) : /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "cart-empty", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("strong", { children: "\u041A\u043E\u0440\u0437\u0438\u043D\u0430 \u043F\u043E\u043A\u0430 \u043F\u0443\u0441\u0442\u0430\u044F" }),
-          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("p", { children: "\u0414\u043E\u0431\u0430\u0432\u044C\u0442\u0435 \u0438\u043D\u0441\u0442\u0440\u0443\u043C\u0435\u043D\u0442 \u0438\u043B\u0438 \u0430\u043A\u0441\u0435\u0441\u0441\u0443\u0430\u0440 \u0438\u0437 \u043A\u0430\u0442\u0430\u043B\u043E\u0433\u0430." })
+        ] }, item.key)) }) : /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "cart-empty", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("strong", { children: "\u041A\u043E\u0440\u0437\u0438\u043D\u0430 \u043F\u043E\u043A\u0430 \u043F\u0443\u0441\u0442\u0430\u044F" }),
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { children: "\u0414\u043E\u0431\u0430\u0432\u044C\u0442\u0435 \u0438\u043D\u0441\u0442\u0440\u0443\u043C\u0435\u043D\u0442 \u0438\u043B\u0438 \u0430\u043A\u0441\u0435\u0441\u0441\u0443\u0430\u0440 \u0438\u0437 \u043A\u0430\u0442\u0430\u043B\u043E\u0433\u0430." })
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "order-form", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("label", { children: [
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "order-form", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("label", { children: [
             "\u0412\u0430\u0448\u0435 \u0438\u043C\u044F",
-            /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
               "input",
               {
                 value: customerName,
@@ -13854,9 +13273,9 @@ function CartDrawer({
               }
             )
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("label", { children: [
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("label", { children: [
             "\u0422\u0435\u043B\u0435\u0444\u043E\u043D / WhatsApp",
-            /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
               "input",
               {
                 value: customerPhone,
@@ -13865,62 +13284,62 @@ function CartDrawer({
               }
             )
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "form-row-two", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("label", { children: [
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "form-row-two", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("label", { children: [
               "\u0413\u043E\u0440\u043E\u0434",
-              /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)(
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(
                 "select",
                 {
                   value: customerCity,
                   onChange: (e) => setCustomerCity(e.target.value),
                   children: [
-                    /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("option", { value: "\u0410\u043A\u0442\u043E\u0431\u0435", children: "\u0410\u043A\u0442\u043E\u0431\u0435" }),
-                    /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("option", { value: "\u0410\u043B\u043C\u0430\u0442\u044B", children: "\u0410\u043B\u043C\u0430\u0442\u044B" }),
-                    /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("option", { value: "\u0410\u0441\u0442\u0430\u043D\u0430", children: "\u0410\u0441\u0442\u0430\u043D\u0430" }),
-                    /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("option", { value: "\u0428\u044B\u043C\u043A\u0435\u043D\u0442", children: "\u0428\u044B\u043C\u043A\u0435\u043D\u0442" }),
-                    /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("option", { value: "\u041A\u0430\u0440\u0430\u0433\u0430\u043D\u0434\u0430", children: "\u041A\u0430\u0440\u0430\u0433\u0430\u043D\u0434\u0430" }),
-                    /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("option", { value: "\u0410\u0442\u044B\u0440\u0430\u0443", children: "\u0410\u0442\u044B\u0440\u0430\u0443" }),
-                    /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("option", { value: "\u0410\u043A\u0442\u0430\u0443", children: "\u0410\u043A\u0442\u0430\u0443" }),
-                    /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("option", { value: "\u0414\u0440\u0443\u0433\u043E\u0439 \u0433\u043E\u0440\u043E\u0434", children: "\u0414\u0440\u0443\u0433\u043E\u0439 \u0433\u043E\u0440\u043E\u0434 (\u043F\u043E \u0420\u041A)" })
+                    /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("option", { value: "\u0410\u043A\u0442\u043E\u0431\u0435", children: "\u0410\u043A\u0442\u043E\u0431\u0435" }),
+                    /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("option", { value: "\u0410\u043B\u043C\u0430\u0442\u044B", children: "\u0410\u043B\u043C\u0430\u0442\u044B" }),
+                    /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("option", { value: "\u0410\u0441\u0442\u0430\u043D\u0430", children: "\u0410\u0441\u0442\u0430\u043D\u0430" }),
+                    /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("option", { value: "\u0428\u044B\u043C\u043A\u0435\u043D\u0442", children: "\u0428\u044B\u043C\u043A\u0435\u043D\u0442" }),
+                    /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("option", { value: "\u041A\u0430\u0440\u0430\u0433\u0430\u043D\u0434\u0430", children: "\u041A\u0430\u0440\u0430\u0433\u0430\u043D\u0434\u0430" }),
+                    /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("option", { value: "\u0410\u0442\u044B\u0440\u0430\u0443", children: "\u0410\u0442\u044B\u0440\u0430\u0443" }),
+                    /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("option", { value: "\u0410\u043A\u0442\u0430\u0443", children: "\u0410\u043A\u0442\u0430\u0443" }),
+                    /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("option", { value: "\u0414\u0440\u0443\u0433\u043E\u0439 \u0433\u043E\u0440\u043E\u0434", children: "\u0414\u0440\u0443\u0433\u043E\u0439 \u0433\u043E\u0440\u043E\u0434 (\u043F\u043E \u0420\u041A)" })
                   ]
                 }
               )
             ] }),
-            /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("label", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("label", { children: [
               "\u0414\u043E\u0441\u0442\u0430\u0432\u043A\u0430",
-              /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)(
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(
                 "select",
                 {
                   value: deliveryMethod,
                   onChange: (e) => setDeliveryMethod(e.target.value),
                   children: [
-                    /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("option", { value: "\u0421\u0430\u043C\u043E\u0432\u044B\u0432\u043E\u0437 \u0432 \u043C\u0430\u0433\u0430\u0437\u0438\u043D\u0435 (\u0410\u043A\u0442\u043E\u0431\u0435)", children: "\u0421\u0430\u043C\u043E\u0432\u044B\u0432\u043E\u0437 (\u0410\u043A\u0442\u043E\u0431\u0435)" }),
-                    /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("option", { value: "\u041A\u0443\u0440\u044C\u0435\u0440 \u043F\u043E \u0433\u043E\u0440\u043E\u0434\u0443", children: "\u041A\u0443\u0440\u044C\u0435\u0440 \u043F\u043E \u0433\u043E\u0440\u043E\u0434\u0443" }),
-                    /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("option", { value: "\u0414\u043E\u0441\u0442\u0430\u0432\u043A\u0430 \u043A\u0443\u0440\u044C\u0435\u0440\u0441\u043A\u043E\u0439 \u0441\u043B\u0443\u0436\u0431\u043E\u0439 \u043F\u043E \u0420\u041A", children: "\u0414\u043E\u0441\u0442\u0430\u0432\u043A\u0430 \u043F\u043E \u0420\u041A" })
+                    /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("option", { value: "\u0421\u0430\u043C\u043E\u0432\u044B\u0432\u043E\u0437 \u0432 \u043C\u0430\u0433\u0430\u0437\u0438\u043D\u0435 (\u0410\u043A\u0442\u043E\u0431\u0435)", children: "\u0421\u0430\u043C\u043E\u0432\u044B\u0432\u043E\u0437 (\u0410\u043A\u0442\u043E\u0431\u0435)" }),
+                    /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("option", { value: "\u041A\u0443\u0440\u044C\u0435\u0440 \u043F\u043E \u0433\u043E\u0440\u043E\u0434\u0443", children: "\u041A\u0443\u0440\u044C\u0435\u0440 \u043F\u043E \u0433\u043E\u0440\u043E\u0434\u0443" }),
+                    /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("option", { value: "\u0414\u043E\u0441\u0442\u0430\u0432\u043A\u0430 \u043A\u0443\u0440\u044C\u0435\u0440\u0441\u043A\u043E\u0439 \u0441\u043B\u0443\u0436\u0431\u043E\u0439 \u043F\u043E \u0420\u041A", children: "\u0414\u043E\u0441\u0442\u0430\u0432\u043A\u0430 \u043F\u043E \u0420\u041A" })
                   ]
                 }
               )
             ] })
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("label", { children: [
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("label", { children: [
             "\u0421\u043F\u043E\u0441\u043E\u0431 \u043E\u043F\u043B\u0430\u0442\u044B",
-            /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)(
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(
               "select",
               {
                 value: paymentMethod,
                 onChange: (e) => setPaymentMethod(e.target.value),
                 children: [
-                  /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("option", { value: "Kaspi \u0420\u0430\u0441\u0441\u0440\u043E\u0447\u043A\u0430 0-0-12", children: "Kaspi \u0420\u0430\u0441\u0441\u0440\u043E\u0447\u043A\u0430 0-0-12" }),
-                  /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("option", { value: "Kaspi Red (3 \u043C\u0435\u0441)", children: "Kaspi Red (3 \u043C\u0435\u0441)" }),
-                  /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("option", { value: "Kaspi QR / \u041E\u043F\u043B\u0430\u0442\u0430 \u043A\u0430\u0440\u0442\u043E\u0439", children: "Kaspi QR / \u041E\u043F\u043B\u0430\u0442\u0430 \u043A\u0430\u0440\u0442\u043E\u0439" }),
-                  /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("option", { value: "\u041E\u043F\u043B\u0430\u0442\u0430 \u043F\u0440\u0438 \u043F\u043E\u043B\u0443\u0447\u0435\u043D\u0438\u0438", children: "\u041E\u043F\u043B\u0430\u0442\u0430 \u043F\u0440\u0438 \u043F\u043E\u043B\u0443\u0447\u0435\u043D\u0438\u0438" })
+                  /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("option", { value: "Kaspi \u0420\u0430\u0441\u0441\u0440\u043E\u0447\u043A\u0430 0-0-12", children: "Kaspi \u0420\u0430\u0441\u0441\u0440\u043E\u0447\u043A\u0430 0-0-12" }),
+                  /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("option", { value: "Kaspi Red (3 \u043C\u0435\u0441)", children: "Kaspi Red (3 \u043C\u0435\u0441)" }),
+                  /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("option", { value: "Kaspi QR / \u041E\u043F\u043B\u0430\u0442\u0430 \u043A\u0430\u0440\u0442\u043E\u0439", children: "Kaspi QR / \u041E\u043F\u043B\u0430\u0442\u0430 \u043A\u0430\u0440\u0442\u043E\u0439" }),
+                  /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("option", { value: "\u041E\u043F\u043B\u0430\u0442\u0430 \u043F\u0440\u0438 \u043F\u043E\u043B\u0443\u0447\u0435\u043D\u0438\u0438", children: "\u041E\u043F\u043B\u0430\u0442\u0430 \u043F\u0440\u0438 \u043F\u043E\u043B\u0443\u0447\u0435\u043D\u0438\u0438" })
                 ]
               }
             )
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("label", { children: [
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("label", { children: [
             "\u041A\u043E\u043C\u043C\u0435\u043D\u0442\u0430\u0440\u0438\u0439 \u043A \u0437\u0430\u043A\u0430\u0437\u0443",
-            /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
               "textarea",
               {
                 value: customerComment,
@@ -13930,29 +13349,29 @@ function CartDrawer({
               }
             )
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "cart-summary", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "cart-totals", children: [
-              /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("span", { children: [
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "cart-summary", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "cart-totals", children: [
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { children: [
                 cartCount,
                 " \u0435\u0434. \u0432 \u0437\u0430\u044F\u0432\u043A\u0435"
               ] }),
-              totalPrice > 0 ? /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("strong", { className: "cart-total-price", children: [
+              totalPrice > 0 ? /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("strong", { className: "cart-total-price", children: [
                 money(totalPrice),
                 " \u20B8"
-              ] }) : /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("strong", { children: "\u0426\u0435\u043D\u0430 \u0443\u0442\u043E\u0447\u043D\u044F\u0435\u0442\u0441\u044F" })
+              ] }) : /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("strong", { children: "\u0426\u0435\u043D\u0430 \u0443\u0442\u043E\u0447\u043D\u044F\u0435\u0442\u0441\u044F" })
             ] }),
-            totalPrice > 0 && /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "cart-installment-hint", children: [
-              /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "kaspi-badge", children: "0-0-12" }),
-              /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("span", { children: [
+            totalPrice > 0 && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "cart-installment-hint", children: [
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "kaspi-badge", children: "0-0-12" }),
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { children: [
                 "\u0418\u043B\u0438 \u0432 \u0440\u0430\u0441\u0441\u0440\u043E\u0447\u043A\u0443 \u043E\u0442 ",
-                /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("strong", { children: [
+                /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("strong", { children: [
                   money(installment(totalPrice, 12)),
                   " \u20B8 / \u043C\u0435\u0441"
                 ] })
               ] })
             ] }),
-            /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "cart-checkout-buttons", children: [
-              /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)(
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "cart-checkout-buttons", children: [
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(
                 "button",
                 {
                   type: "button",
@@ -13960,12 +13379,12 @@ function CartDrawer({
                   onClick: handleKaspiPayClick,
                   disabled: !cartItems.length,
                   children: [
-                    /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "kaspi-badge-small", children: "kaspi" }),
-                    /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { children: "\u041E\u043F\u043B\u0430\u0442\u0438\u0442\u044C \u0447\u0435\u0440\u0435\u0437 Kaspi QR / \u0420\u0430\u0441\u0441\u0440\u043E\u0447\u043A\u0430" })
+                    /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "kaspi-badge-small", children: "kaspi" }),
+                    /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { children: "\u041E\u043F\u043B\u0430\u0442\u0438\u0442\u044C \u0447\u0435\u0440\u0435\u0437 Kaspi QR / \u0420\u0430\u0441\u0441\u0440\u043E\u0447\u043A\u0430" })
                   ]
                 }
               ),
-              /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)(
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(
                 "button",
                 {
                   type: "button",
@@ -13973,15 +13392,15 @@ function CartDrawer({
                   onClick: handleSendToWhatsApp,
                   disabled: !cartItems.length,
                   children: [
-                    /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "wa-icon", children: "\u{1F4AC}" }),
-                    /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { children: "\u041E\u0444\u043E\u0440\u043C\u0438\u0442\u044C \u0437\u0430\u043A\u0430\u0437 \u0432 WhatsApp" })
+                    /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "wa-icon", children: "\u{1F4AC}" }),
+                    /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { children: "\u041E\u0444\u043E\u0440\u043C\u0438\u0442\u044C \u0437\u0430\u043A\u0430\u0437 \u0432 WhatsApp" })
                   ]
                 }
               )
             ] }),
-            /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("p", { className: "cart-direct-contact", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("p", { className: "cart-direct-contact", children: [
               "\u041C\u0435\u043D\u0435\u0434\u0436\u0435\u0440 \u043C\u0430\u0433\u0430\u0437\u0438\u043D\u0430: ",
-              /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("strong", { children: "+7 (777) 505-57-88" })
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("strong", { children: "+7 (777) 505-57-88" })
             ] })
           ] })
         ] })
@@ -13991,8 +13410,8 @@ function CartDrawer({
 }
 
 // components/KaspiQrModal.tsx
-var import_react3 = __toESM(require_react(), 1);
-var import_jsx_runtime4 = __toESM(require_jsx_runtime(), 1);
+var import_react2 = __toESM(require_react(), 1);
+var import_jsx_runtime3 = __toESM(require_jsx_runtime(), 1);
 var OFFICIAL_KASPI_PAY_LINK = "https://pay.kaspi.kz/pay/ku3aldre";
 function KaspiQrModal({
   isOpen,
@@ -14005,7 +13424,7 @@ function KaspiQrModal({
   customerComment = "",
   onPaymentSuccess
 }) {
-  const [isConfirmed, setIsConfirmed] = (0, import_react3.useState)(false);
+  const [isConfirmed, setIsConfirmed] = (0, import_react2.useState)(false);
   if (!isOpen) return null;
   const handleConfirmPaid = () => {
     setIsConfirmed(true);
@@ -14028,7 +13447,7 @@ function KaspiQrModal({
       onClose();
     }, 2400);
   };
-  return /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("div", { className: "modal-backdrop", role: "presentation", onMouseDown: onClose, children: /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)(
+  return /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { className: "modal-backdrop", role: "presentation", onMouseDown: onClose, children: /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)(
     "article",
     {
       className: "kaspi-qr-modal",
@@ -14037,54 +13456,54 @@ function KaspiQrModal({
       "aria-label": "\u041E\u043F\u043B\u0430\u0442\u0430 \u0447\u0435\u0440\u0435\u0437 Kaspi QR",
       onMouseDown: (e) => e.stopPropagation(),
       children: [
-        /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "kaspi-modal-head", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "kaspi-brand-logo", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("span", { className: "kaspi-red-badge", children: "kaspi" }),
-            /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("strong", { children: "Pay \xB7 QR" })
+        /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "kaspi-modal-head", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "kaspi-brand-logo", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "kaspi-red-badge", children: "kaspi" }),
+            /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("strong", { children: "Pay \xB7 QR" })
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("button", { className: "modal-close", onClick: onClose, "aria-label": "\u0417\u0430\u043A\u0440\u044B\u0442\u044C", children: "\xD7" })
+          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("button", { className: "modal-close", onClick: onClose, "aria-label": "\u0417\u0430\u043A\u0440\u044B\u0442\u044C", children: "\xD7" })
         ] }),
-        isConfirmed ? /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "kaspi-success-screen", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("div", { className: "kaspi-success-icon", children: "\u2713" }),
-          /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("h3", { children: "\u0417\u0430\u043A\u0430\u0437 \u043F\u0440\u0438\u043D\u044F\u0442 \u0432 \u043E\u0431\u0440\u0430\u0431\u043E\u0442\u043A\u0443!" }),
-          /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("p", { children: [
+        isConfirmed ? /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "kaspi-success-screen", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { className: "kaspi-success-icon", children: "\u2713" }),
+          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("h3", { children: "\u0417\u0430\u043A\u0430\u0437 \u043F\u0440\u0438\u043D\u044F\u0442 \u0432 \u043E\u0431\u0440\u0430\u0431\u043E\u0442\u043A\u0443!" }),
+          /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("p", { children: [
             "\u0421\u043F\u0430\u0441\u0438\u0431\u043E \u0437\u0430 \u043E\u043F\u043B\u0430\u0442\u0443, ",
-            /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("strong", { children: customerName || "\u0434\u043E\u0440\u043E\u0433\u043E\u0439 \u043A\u043B\u0438\u0435\u043D\u0442" }),
+            /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("strong", { children: customerName || "\u0434\u043E\u0440\u043E\u0433\u043E\u0439 \u043A\u043B\u0438\u0435\u043D\u0442" }),
             "! \u0417\u0430\u044F\u0432\u043A\u0430 \u043E\u0442\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0430 \u043C\u0435\u043D\u0435\u0434\u0436\u0435\u0440\u0443 \u0432 WhatsApp. \u041C\u044B \u0441\u0432\u044F\u0436\u0435\u043C\u0441\u044F \u0441 \u0432\u0430\u043C\u0438 \u0432 \u0442\u0435\u0447\u0435\u043D\u0438\u0435 5 \u043C\u0438\u043D\u0443\u0442."
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "receipt-box", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("span", { children: [
+          /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "receipt-box", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("span", { children: [
               "\u0421\u0443\u043C\u043C\u0430: ",
-              /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("strong", { children: [
+              /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("strong", { children: [
                 money(totalPrice),
                 " \u20B8"
               ] })
             ] }),
-            /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("span", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("span", { children: [
               "\u0422\u043E\u0432\u0430\u0440\u043E\u0432: ",
-              /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("strong", { children: [
+              /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("strong", { children: [
                 cartItems.reduce((a, b) => a + b.quantity, 0),
                 " \u0448\u0442."
               ] })
             ] })
           ] })
-        ] }) : /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "kaspi-modal-body", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "kaspi-amount-box", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("span", { className: "kaspi-amount-label", children: "\u0421\u0443\u043C\u043C\u0430 \u043A \u043E\u043F\u043B\u0430\u0442\u0435" }),
-            /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("strong", { className: "kaspi-amount-val", children: [
+        ] }) : /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "kaspi-modal-body", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "kaspi-amount-box", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "kaspi-amount-label", children: "\u0421\u0443\u043C\u043C\u0430 \u043A \u043E\u043F\u043B\u0430\u0442\u0435" }),
+            /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("strong", { className: "kaspi-amount-val", children: [
               money(totalPrice),
               " \u20B8"
             ] }),
-            /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "kaspi-pills-row", style: { display: "flex", gap: "6px", justifyContent: "center", marginTop: "4px" }, children: [
-              /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("span", { className: "kaspi-installment-pill", children: "Kaspi Red (3 \u043C\u0435\u0441)" }),
-              /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("span", { className: "kaspi-installment-pill", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "kaspi-pills-row", style: { display: "flex", gap: "6px", justifyContent: "center", marginTop: "4px" }, children: [
+              /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "kaspi-installment-pill", children: "Kaspi Red (3 \u043C\u0435\u0441)" }),
+              /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("span", { className: "kaspi-installment-pill", children: [
                 "0-0-12: \u043E\u0442 ",
                 money(installment(totalPrice, 12)),
                 " \u20B8/\u043C\u0435\u0441"
               ] })
             ] })
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)(
+          /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)(
             "a",
             {
               href: OFFICIAL_KASPI_PAY_LINK,
@@ -14092,14 +13511,14 @@ function KaspiQrModal({
               rel: "noopener noreferrer",
               className: "kaspi-mobile-app-button",
               children: [
-                /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("span", { className: "kaspi-btn-icon", children: "\u{1F4F2}" }),
-                /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("span", { children: "\u041E\u043F\u043B\u0430\u0442\u0438\u0442\u044C \u0432 \u043F\u0440\u0438\u043B\u043E\u0436\u0435\u043D\u0438\u0438 Kaspi.kz" })
+                /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "kaspi-btn-icon", children: "\u{1F4F2}" }),
+                /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { children: "\u041E\u043F\u043B\u0430\u0442\u0438\u0442\u044C \u0432 \u043F\u0440\u0438\u043B\u043E\u0436\u0435\u043D\u0438\u0438 Kaspi.kz" })
               ]
             }
           ),
-          /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("div", { className: "kaspi-divider-line", children: /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("span", { children: "\u0438\u043B\u0438 \u043E\u0442\u0441\u043A\u0430\u043D\u0438\u0440\u0443\u0439\u0442\u0435 QR \u0441 \u044D\u043A\u0440\u0430\u043D\u0430" }) }),
-          /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "kaspi-qr-frame", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("div", { className: "kaspi-official-qr-wrap", children: /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
+          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { className: "kaspi-divider-line", children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { children: "\u0438\u043B\u0438 \u043E\u0442\u0441\u043A\u0430\u043D\u0438\u0440\u0443\u0439\u0442\u0435 QR \u0441 \u044D\u043A\u0440\u0430\u043D\u0430" }) }),
+          /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "kaspi-qr-frame", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { className: "kaspi-official-qr-wrap", children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
               "img",
               {
                 src: "/kaspi_pay_qr.png",
@@ -14107,30 +13526,30 @@ function KaspiQrModal({
                 className: "kaspi-official-qr-img"
               }
             ) }),
-            /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("span", { className: "kaspi-qr-scan-hint", children: "\u041E\u0442\u0441\u043A\u0430\u043D\u0438\u0440\u0443\u0439\u0442\u0435 \u043A\u0430\u043C\u0435\u0440\u043E\u0439 \u0432 \u043F\u0440\u0438\u043B\u043E\u0436\u0435\u043D\u0438\u0438 Kaspi.kz" })
+            /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "kaspi-qr-scan-hint", children: "\u041E\u0442\u0441\u043A\u0430\u043D\u0438\u0440\u0443\u0439\u0442\u0435 \u043A\u0430\u043C\u0435\u0440\u043E\u0439 \u0432 \u043F\u0440\u0438\u043B\u043E\u0436\u0435\u043D\u0438\u0438 Kaspi.kz" })
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "kaspi-steps-list", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "kaspi-step", children: [
-              /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("span", { children: "1" }),
-              /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("p", { children: "\u041E\u043F\u043B\u0430\u0442\u0438\u0442\u0435 \u043F\u043E \u043A\u043D\u043E\u043F\u043A\u0435 \u0432\u044B\u0448\u0435 \u0438\u043B\u0438 \u043E\u0442\u0441\u043A\u0430\u043D\u0438\u0440\u0443\u0439\u0442\u0435 QR-\u043A\u043E\u0434" })
+          /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "kaspi-steps-list", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "kaspi-step", children: [
+              /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { children: "1" }),
+              /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("p", { children: "\u041E\u043F\u043B\u0430\u0442\u0438\u0442\u0435 \u043F\u043E \u043A\u043D\u043E\u043F\u043A\u0435 \u0432\u044B\u0448\u0435 \u0438\u043B\u0438 \u043E\u0442\u0441\u043A\u0430\u043D\u0438\u0440\u0443\u0439\u0442\u0435 QR-\u043A\u043E\u0434" })
             ] }),
-            /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "kaspi-step", children: [
-              /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("span", { children: "2" }),
-              /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("p", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "kaspi-step", children: [
+              /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { children: "2" }),
+              /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("p", { children: [
                 "\u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 ",
-                /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("strong", { children: "Kaspi Red" }),
+                /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("strong", { children: "Kaspi Red" }),
                 ", ",
-                /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("strong", { children: "Gold" }),
+                /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("strong", { children: "Gold" }),
                 " \u0438\u043B\u0438 ",
-                /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("strong", { children: "\u0420\u0430\u0441\u0441\u0440\u043E\u0447\u043A\u0443 0-0-12" })
+                /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("strong", { children: "\u0420\u0430\u0441\u0441\u0440\u043E\u0447\u043A\u0443 0-0-12" })
               ] })
             ] }),
-            /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "kaspi-step", children: [
-              /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("span", { children: "3" }),
-              /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("p", { children: "\u041D\u0430\u0436\u043C\u0438\u0442\u0435 \u043A\u043D\u043E\u043F\u043A\u0443 \u043D\u0438\u0436\u0435 \u0434\u043B\u044F \u043E\u0442\u043F\u0440\u0430\u0432\u043A\u0438 \u0447\u0435\u043A\u0430 \u043C\u0435\u043D\u0435\u0434\u0436\u0435\u0440\u0443 \u0432 WhatsApp" })
+            /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "kaspi-step", children: [
+              /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { children: "3" }),
+              /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("p", { children: "\u041D\u0430\u0436\u043C\u0438\u0442\u0435 \u043A\u043D\u043E\u043F\u043A\u0443 \u043D\u0438\u0436\u0435 \u0434\u043B\u044F \u043E\u0442\u043F\u0440\u0430\u0432\u043A\u0438 \u0447\u0435\u043A\u0430 \u043C\u0435\u043D\u0435\u0434\u0436\u0435\u0440\u0443 \u0432 WhatsApp" })
             ] })
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("div", { className: "kaspi-actions", children: /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
+          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { className: "kaspi-actions", children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
             "button",
             {
               type: "button",
@@ -14139,11 +13558,11 @@ function KaspiQrModal({
               children: "\u2713 \u042F \u043E\u043F\u043B\u0430\u0442\u0438\u043B \u0447\u0435\u0440\u0435\u0437 Kaspi \u2192 \u041F\u043E\u0434\u0442\u0432\u0435\u0440\u0434\u0438\u0442\u044C \u0437\u0430\u043A\u0430\u0437"
             }
           ) }),
-          /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("p", { className: "kaspi-merchant-note", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("p", { className: "kaspi-merchant-note", children: [
             "\u041F\u043E\u043B\u0443\u0447\u0430\u0442\u0435\u043B\u044C: ",
-            /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("strong", { children: "MAESTRO MUSIC STORE" }),
+            /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("strong", { children: "MAESTRO MUSIC STORE" }),
             " \xB7 \u0421\u0441\u044B\u043B\u043A\u0430: ",
-            /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("a", { href: OFFICIAL_KASPI_PAY_LINK, target: "_blank", rel: "noopener noreferrer", style: { color: "var(--kaspi)", textDecoration: "underline" }, children: "pay.kaspi.kz" })
+            /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("a", { href: OFFICIAL_KASPI_PAY_LINK, target: "_blank", rel: "noopener noreferrer", style: { color: "var(--kaspi)", textDecoration: "underline" }, children: "pay.kaspi.kz" })
           ] })
         ] })
       ]
@@ -14152,7 +13571,229 @@ function KaspiQrModal({
 }
 
 // components/ProductModal.tsx
-var import_react4 = __toESM(require_react(), 1);
+var import_react3 = __toESM(require_react(), 1);
+
+// lib/courses-data.ts
+var COURSES = [
+  {
+    id: "course-1",
+    slug: "guitar-start",
+    title: "\u0413\u0438\u0442\u0430\u0440\u0430 \u0441 \u043D\u0443\u043B\u044F: \u041F\u0435\u0440\u0432\u0430\u044F \u043F\u0435\u0441\u043D\u044F \u0437\u0430 3 \u0434\u043D\u044F",
+    subtitle: "\u041F\u043E\u0448\u0430\u0433\u043E\u0432\u044B\u0439 \u043A\u0443\u0440\u0441 \u0434\u043B\u044F \u0430\u0431\u0441\u043E\u043B\u044E\u0442\u043D\u044B\u0445 \u043D\u043E\u0432\u0438\u0447\u043A\u043E\u0432. \u0411\u0435\u0437 \u043D\u0443\u0434\u043D\u043E\u0439 \u0442\u0435\u043E\u0440\u0438\u0438 \u2014 \u0441\u0440\u0430\u0437\u0443 \u043A \u043A\u0440\u0430\u0441\u0438\u0432\u043E\u0439 \u043C\u0443\u0437\u044B\u043A\u0435.",
+    badge: "\u0425\u0418\u0422 \xB7 \u0412 \u041F\u041E\u0414\u0410\u0420\u041E\u041A \u041A \u0413\u0418\u0422\u0410\u0420\u0415",
+    instrument: "acoustic",
+    level: "\u041D\u0430\u0447\u0438\u043D\u0430\u044E\u0449\u0438\u0439",
+    lessonsCount: 12,
+    durationHours: 6,
+    price: 9900,
+    originalPrice: 19900,
+    image: "/products/04_41_acoustic.png",
+    description: "\u0418\u0434\u0435\u0430\u043B\u044C\u043D\u044B\u0439 \u0441\u0442\u0430\u0440\u0442 \u0434\u043B\u044F \u0442\u0435\u0445, \u043A\u0442\u043E \u0432\u043F\u0435\u0440\u0432\u044B\u0435 \u0432\u0437\u044F\u043B \u0433\u0438\u0442\u0430\u0440\u0443 \u0432 \u0440\u0443\u043A\u0438. \u041D\u0430\u0443\u0447\u0438\u0442\u0435\u0441\u044C \u043F\u0440\u0430\u0432\u0438\u043B\u044C\u043D\u043E\u0439 \u043F\u043E\u0441\u0430\u0434\u043A\u0435, \u0431\u044B\u0441\u0442\u0440\u043E\u0439 \u0441\u043C\u0435\u043D\u0435 \u0430\u043A\u043A\u043E\u0440\u0434\u043E\u0432 \u0438 \u0441\u044B\u0433\u0440\u0430\u0435\u0442\u0435 \u0441\u0432\u043E\u0438 \u043F\u0435\u0440\u0432\u044B\u0435 5 \u0445\u0438\u0442\u043E\u0432.",
+    highlights: [
+      "12 \u0432\u0438\u0434\u0435\u043E\u0443\u0440\u043E\u043A\u043E\u0432 \u0432 \u0432\u044B\u0441\u043E\u043A\u043E\u043C \u043A\u0430\u0447\u0435\u0441\u0442\u0432\u0435 4K",
+      "\u0421\u0445\u0435\u043C\u044B 7 \u0431\u0430\u0437\u043E\u0432\u044B\u0445 \u0430\u043A\u043A\u043E\u0440\u0434\u043E\u0432 (Am, Dm, E, C, G, F, Em)",
+      "3 \u0443\u043D\u0438\u0432\u0435\u0440\u0441\u0430\u043B\u044C\u043D\u044B\u0445 \u0432\u0438\u0434\u0430 \u0431\u043E\u044F (\u0448\u0435\u0441\u0442\u0451\u0440\u043A\u0430, \u0432\u043E\u0441\u044C\u043C\u0451\u0440\u043A\u0430, \u0432\u0430\u043B\u044C\u0441)",
+      "\u0420\u0430\u0437\u0431\u043E\u0440\u044B: \xAB\u041A\u0438\u043D\u043E \u2014 \u041F\u0430\u0447\u043A\u0430 \u0441\u0438\u0433\u0430\u0440\u0435\u0442\xBB, \xAB\u0411\u0430\u0441\u0442\u0430 \u2014 \u0421\u0430\u043D\u0441\u0430\u0440\u0430\xBB, \xAB\u0417\u0432\u0435\u0437\u0434\u0430 \u043F\u043E \u0438\u043C\u0435\u043D\u0438 \u0421\u043E\u043B\u043D\u0446\u0435\xBB",
+      "PDF-\u043F\u0435\u0441\u0435\u043D\u043D\u0438\u043A \u0441 \u0442\u0430\u0431\u0443\u043B\u0430\u0442\u0443\u0440\u0430\u043C\u0438 \u0438 \u0442\u0435\u043A\u0441\u0442\u0430\u043C\u0438"
+    ],
+    instructor: {
+      name: "\u0420\u0443\u0441\u043B\u0430\u043D \u0421\u0430\u0433\u0438\u0442\u043E\u0432",
+      role: "\u041F\u0440\u0435\u043F\u043E\u0434\u0430\u0432\u0430\u0442\u0435\u043B\u044C \u0430\u043A\u0443\u0441\u0442\u0438\u0447\u0435\u0441\u043A\u043E\u0439 \u0433\u0438\u0442\u0430\u0440\u044B Maestro",
+      experience: "\u041E\u043F\u044B\u0442 \u043F\u0440\u0435\u043F\u043E\u0434\u0430\u0432\u0430\u043D\u0438\u044F 11 \u043B\u0435\u0442, \u0431\u043E\u043B\u0435\u0435 1 400 \u0443\u0447\u0435\u043D\u0438\u043A\u043E\u0432",
+      avatar: "\u{1F3B8}"
+    },
+    lessons: [
+      {
+        id: "l-1",
+        title: "\u0423\u0440\u043E\u043A 1: \u041A\u0430\u043A \u043F\u0440\u0430\u0432\u0438\u043B\u044C\u043D\u043E \u0434\u0435\u0440\u0436\u0430\u0442\u044C \u0433\u0438\u0442\u0430\u0440\u0443 \u0438 \u043D\u0430\u0441\u0442\u0440\u0430\u0438\u0432\u0430\u0442\u044C \u0441\u0442\u0440\u0443\u043D\u044B",
+        duration: "14 \u043C\u0438\u043D",
+        isFreePreview: true,
+        description: "\u041F\u043E\u0441\u0430\u0434\u043A\u0430, \u043F\u043E\u043B\u043E\u0436\u0435\u043D\u0438\u0435 \u043F\u0430\u043B\u044C\u0446\u0435\u0432 \u043B\u0435\u0432\u043E\u0439 \u0438 \u043F\u0440\u0430\u0432\u043E\u0439 \u0440\u0443\u043A\u0438, \u043D\u0430\u0441\u0442\u0440\u043E\u0439\u043A\u0430 \u0447\u0435\u0440\u0435\u0437 \u0442\u044E\u043D\u0435\u0440 \u0438 \u043C\u043E\u0431\u0438\u043B\u044C\u043D\u043E\u0435 \u043F\u0440\u0438\u043B\u043E\u0436\u0435\u043D\u0438\u0435.",
+        chords: ["\u041D\u0430\u0441\u0442\u0440\u043E\u0439\u043A\u0430 \u0441\u0442\u0440\u0443\u043D: E-B-G-D-A-E"]
+      },
+      {
+        id: "l-2",
+        title: "\u0423\u0440\u043E\u043A 2: \u041F\u0435\u0440\u0432\u044B\u0435 \u0430\u043A\u043A\u043E\u0440\u0434\u044B Am, Dm, E (\u0437\u043E\u043B\u043E\u0442\u0430\u044F \u0442\u0440\u043E\u0439\u043A\u0430)",
+        duration: "18 \u043C\u0438\u043D",
+        isFreePreview: true,
+        description: "\u0427\u0438\u0441\u0442\u043E\u0435 \u0438\u0437\u0432\u043B\u0435\u0447\u0435\u043D\u0438\u0435 \u0437\u0432\u0443\u043A\u0430 \u0431\u0435\u0437 \u0434\u0440\u0435\u0431\u0435\u0437\u0433\u0430, \u043F\u043E\u0441\u0442\u0430\u043D\u043E\u0432\u043A\u0430 \u0431\u043E\u043B\u044C\u0448\u043E\u0433\u043E \u043F\u0430\u043B\u044C\u0446\u0430 \u0438 \u0443\u043F\u0440\u0430\u0436\u043D\u0435\u043D\u0438\u044F \u043D\u0430 \u043A\u043E\u043E\u0440\u0434\u0438\u043D\u0430\u0446\u0438\u044E.",
+        chords: ["Am (\u041B\u044F \u043C\u0438\u043D\u043E\u0440)", "Dm (\u0420\u0435 \u043C\u0438\u043D\u043E\u0440)", "E (\u041C\u0438 \u043C\u0430\u0436\u043E\u0440)"],
+        tabSnippet: "Am: x02210 | Dm: xx0231 | E: 022100"
+      },
+      {
+        id: "l-3",
+        title: "\u0423\u0440\u043E\u043A 3: \u0411\u043E\u0439 \xAB\u0428\u0435\u0441\u0442\u0451\u0440\u043A\u0430\xBB \u0441 \u0433\u043B\u0443\u0448\u0435\u043D\u0438\u0435\u043C \u0438 \u0431\u0435\u0437",
+        duration: "22 \u043C\u0438\u043D",
+        description: "\u0414\u0432\u0438\u0436\u0435\u043D\u0438\u0435 \u043A\u0438\u0441\u0442\u0438, \u043E\u0449\u0443\u0449\u0435\u043D\u0438\u0435 \u0440\u0438\u0442\u043C\u0430, \u0430\u043A\u0446\u0435\u043D\u0442\u044B \u043D\u0430 \u0441\u0438\u043B\u044C\u043D\u044B\u0435 \u0434\u043E\u043B\u0438 \u0438 \u0447\u0451\u0442\u043A\u043E\u0435 \u0433\u043B\u0443\u0448\u0435\u043D\u0438\u0435 \u0440\u0435\u0431\u0440\u043E\u043C \u043B\u0430\u0434\u043E\u043D\u0438.",
+        chords: ["Am", "Dm", "E", "C"]
+      },
+      {
+        id: "l-4",
+        title: "\u0423\u0440\u043E\u043A 4: \u0420\u0430\u0437\u0431\u043E\u0440 \u043B\u0435\u0433\u0435\u043D\u0434\u0430\u0440\u043D\u043E\u0439 \u043F\u0435\u0441\u043D\u0438 \xAB\u041F\u0430\u0447\u043A\u0430 \u0441\u0438\u0433\u0430\u0440\u0435\u0442\xBB",
+        duration: "25 \u043C\u0438\u043D",
+        description: "\u0421\u043E\u0435\u0434\u0438\u043D\u0435\u043D\u0438\u0435 \u0430\u043A\u043A\u043E\u0440\u0434\u043E\u0432, \u0432\u0441\u0442\u0443\u043F\u043B\u0435\u043D\u0438\u0435 \u0438 \u043F\u043B\u0430\u0432\u043D\u044B\u0439 \u043F\u0435\u0440\u0435\u0445\u043E\u0434 \u043C\u0435\u0436\u0434\u0443 \u043A\u0443\u043F\u043B\u0435\u0442\u043E\u043C \u0438 \u043F\u0440\u0438\u043F\u0435\u0432\u043E\u043C.",
+        chords: ["Em", "C", "Am", "B7"]
+      },
+      {
+        id: "l-5",
+        title: "\u0423\u0440\u043E\u043A 5: \u041F\u0430\u043B\u044C\u0446\u0435\u0432\u044B\u0439 \u043F\u0435\u0440\u0435\u0431\u043E\u0440 (Fingerstyle \u0434\u043B\u044F \u0431\u0430\u043B\u043B\u0430\u0434)",
+        duration: "20 \u043C\u0438\u043D",
+        description: "\u0418\u0433\u0440\u0430 \u043F\u0430\u043B\u044C\u0446\u0430\u043C\u0438: \u0431\u0430\u0441 + 3 \u043D\u0438\u0436\u043D\u0438\u0435 \u0441\u0442\u0440\u0443\u043D\u044B. \u0423\u043F\u0440\u0430\u0436\u043D\u0435\u043D\u0438\u044F \u0434\u043B\u044F \u043D\u0435\u0437\u0430\u0432\u0438\u0441\u0438\u043C\u043E\u0441\u0442\u0438 \u043F\u0430\u043B\u044C\u0446\u0435\u0432.",
+        chords: ["C", "G", "Am", "Fmaj7"]
+      },
+      {
+        id: "l-6",
+        title: "\u0423\u0440\u043E\u043A 6: \u0420\u0430\u0437\u0431\u043E\u0440 \xAB\u0421\u0430\u043D\u0441\u0430\u0440\u0430 \u2014 \u0411\u0430\u0441\u0442\u0430\xBB",
+        duration: "28 \u043C\u0438\u043D",
+        description: "\u041A\u0440\u0430\u0441\u0438\u0432\u044B\u0439 \u043F\u0435\u0440\u0435\u0431\u043E\u0440 \u0432\u043E \u0432\u0441\u0442\u0443\u043F\u043B\u0435\u043D\u0438\u0438 \u0438 \u043C\u043E\u0449\u043D\u044B\u0439 \u0440\u0438\u0442\u043C\u0438\u0447\u0435\u0441\u043A\u0438\u0439 \u0431\u043E\u0439 \u0432 \u043F\u0440\u0438\u043F\u0435\u0432\u0435.",
+        chords: ["Em", "C", "G", "D"]
+      }
+    ]
+  },
+  {
+    id: "course-2",
+    slug: "electric-riffs",
+    title: "\u042D\u043B\u0435\u043A\u0442\u0440\u043E\u0433\u0438\u0442\u0430\u0440\u0430: \u0420\u0438\u0444\u0444\u044B, \u0414\u0440\u0430\u0439\u0432 \u0438 \u0421\u043E\u043B\u043E",
+    subtitle: "\u041E\u0442 \u043F\u0435\u0440\u0432\u044B\u0445 \u043C\u043E\u0449\u043D\u044B\u0445 \u043F\u0430\u0443\u044D\u0440-\u0430\u043A\u043A\u043E\u0440\u0434\u043E\u0432 \u0434\u043E \u0441\u043E\u0447\u043D\u044B\u0445 \u0440\u043E\u043A-\u0441\u043E\u043B\u043E \u0438 \u043D\u0430\u0441\u0442\u0440\u043E\u0439\u043A\u0438 \u043A\u043E\u043C\u0431\u043E\u0443\u0441\u0438\u043B\u0438\u0442\u0435\u043B\u044F.",
+    badge: "\u0414\u041B\u042F \u042D\u041B\u0415\u041A\u0422\u0420\u041E\u0413\u0418\u0422\u0410\u0420\u0418\u0421\u0422\u041E\u0412",
+    instrument: "electric",
+    level: "\u041D\u0430\u0447\u0438\u043D\u0430\u044E\u0449\u0438\u0439 / \u0421\u0440\u0435\u0434\u043D\u0438\u0439",
+    lessonsCount: 16,
+    durationHours: 8,
+    price: 14900,
+    originalPrice: 24900,
+    image: "/products/01_st20_electric.png",
+    description: "\u041A\u0443\u0440\u0441 \u0434\u043B\u044F \u0442\u0435\u0445, \u043A\u0442\u043E \u0445\u043E\u0447\u0435\u0442 \u0438\u0433\u0440\u0430\u0442\u044C \u0434\u0440\u0430\u0439\u0432\u043E\u0432\u044B\u0439 \u0440\u043E\u043A, \u043C\u0435\u0442\u0430\u043B \u0438 \u0444\u0430\u043D\u043A. \u041F\u043E\u0441\u0442\u0430\u043D\u043E\u0432\u043A\u0430 \u043C\u0435\u0434\u0438\u0430\u0442\u043E\u0440\u0430, \u0433\u043B\u0443\u0448\u0435\u043D\u0438\u0435 \u043B\u0430\u0434\u043E\u043D\u044C\u044E (Palm Mute), \u0431\u0435\u043D\u0434\u044B, \u0432\u0438\u0431\u0440\u0430\u0442\u043E \u0438 \u0440\u0430\u0431\u043E\u0442\u0430 \u0441 \u043F\u0435\u0440\u0435\u0433\u0440\u0443\u0437\u043E\u043C.",
+    highlights: [
+      "16 \u0441\u043F\u0435\u0446\u0438\u0430\u043B\u0438\u0437\u0438\u0440\u043E\u0432\u0430\u043D\u043D\u044B\u0445 \u0443\u0440\u043E\u043A\u043E\u0432 \u043F\u043E \u044D\u043B\u0435\u043A\u0442\u0440\u043E\u0433\u0438\u0442\u0430\u0440\u0435",
+      "\u0422\u0435\u0445\u043D\u0438\u043A\u0430 \u043F\u0435\u0440\u0435\u043C\u0435\u043D\u043D\u043E\u0433\u043E \u0448\u0442\u0440\u0438\u0445\u0430 (Alternate Picking) \u043D\u0430 \u0441\u043A\u043E\u0440\u043E\u0441\u0442\u0438",
+      "\u041F\u0430\u0443\u044D\u0440-\u0430\u043A\u043A\u043E\u0440\u0434\u044B (Power Chords 5th) \u043F\u043E \u0432\u0441\u0435\u043C\u0443 \u0433\u0440\u0438\u0444\u0443",
+      "\u0411\u043B\u044E\u0437\u043E\u0432\u0430\u044F \u043F\u0435\u043D\u0442\u0430\u0442\u043E\u043D\u0438\u043A\u0430 \u0434\u043B\u044F \u0441\u0432\u043E\u0431\u043E\u0434\u043D\u043E\u0439 \u0438\u043C\u043F\u0440\u043E\u0432\u0438\u0437\u0430\u0446\u0438\u0438",
+      "\u041D\u0430\u0441\u0442\u0440\u043E\u0439\u043A\u0430 \u0437\u0432\u0443\u043A\u0430 \u043D\u0430 \u043A\u043E\u043C\u0431\u043E\u0443\u0441\u0438\u043B\u0438\u0442\u0435\u043B\u0435 \u0438 \u043F\u0440\u043E\u0446\u0435\u0441\u0441\u043E\u0440\u0435 \u044D\u0444\u0444\u0435\u043A\u0442\u043E\u0432"
+    ],
+    instructor: {
+      name: "\u0414\u0430\u043C\u0438\u0440 \u0422\u0435\u043C\u0438\u0440\u043E\u0432",
+      role: "\u0421\u0435\u0441\u0441\u0438\u043E\u043D\u043D\u044B\u0439 \u0433\u0438\u0442\u0430\u0440\u0438\u0441\u0442 \u0438 \u043F\u0440\u0435\u043F\u043E\u0434\u0430\u0432\u0430\u0442\u0435\u043B\u044C Maestro Studio",
+      experience: "\u041A\u043E\u043D\u0446\u0435\u0440\u0442\u043D\u044B\u0439 \u0441\u0442\u0430\u0436 14 \u043B\u0435\u0442, \u0430\u0432\u0442\u043E\u0440 \u043C\u0435\u0442\u043E\u0434\u0438\u043A \u0441\u043A\u043E\u0440\u043E\u0441\u0442\u043D\u043E\u0439 \u0438\u0433\u0440\u044B",
+      avatar: "\u26A1"
+    },
+    lessons: [
+      {
+        id: "el-1",
+        title: "\u0423\u0440\u043E\u043A 1: \u0425\u0432\u0430\u0442 \u043C\u0435\u0434\u0438\u0430\u0442\u043E\u0440\u0430 \u0438 \u0433\u043B\u0443\u0448\u0435\u043D\u0438\u0435 \u043B\u0438\u0448\u043D\u0438\u0445 \u0441\u0442\u0440\u0443\u043D",
+        duration: "16 \u043C\u0438\u043D",
+        isFreePreview: true,
+        description: "\u041A\u0430\u043A \u0434\u0435\u0440\u0436\u0430\u0442\u044C \u043C\u0435\u0434\u0438\u0430\u0442\u043E\u0440, \u0447\u0442\u043E\u0431\u044B \u0440\u0443\u043A\u0430 \u043D\u0435 \u0437\u0430\u0436\u0438\u043C\u0430\u043B\u0430\u0441\u044C, \u0438 \u0433\u043B\u0443\u0448\u0438\u0442\u044C \u043D\u0435\u0437\u0430\u0434\u0435\u0439\u0441\u0442\u0432\u043E\u0432\u0430\u043D\u043D\u044B\u0435 \u0441\u0442\u0440\u0443\u043D\u044B."
+      },
+      {
+        id: "el-2",
+        title: "\u0423\u0440\u043E\u043A 2: \u041F\u0430\u0443\u044D\u0440-\u0430\u043A\u043A\u043E\u0440\u0434\u044B \u0438 \u0442\u0435\u0445\u043D\u0438\u043A\u0430 Palm Mute (\u0433\u043B\u0443\u0448\u0435\u043D\u0438\u0435 \u043B\u0430\u0434\u043E\u043D\u044C\u044E)",
+        duration: "24 \u043C\u0438\u043D",
+        isFreePreview: true,
+        description: "\u041A\u043B\u0430\u0441\u0441\u0438\u0447\u0435\u0441\u043A\u0438\u0439 \u0440\u043E\u043A\u043E\u0432\u044B\u0439 \xAB\u0434\u0436-\u0434\u0436-\u0434\u0436\xBB \u0437\u0432\u0443\u043A. \u0420\u0430\u0437\u0431\u043E\u0440 \u043A\u0443\u043B\u044C\u0442\u043E\u0432\u044B\u0445 \u0440\u0438\u0444\u0444\u043E\u0432 Metallica \u0438 Nirvana.",
+        chords: ["E5", "G5", "A5", "C5", "D5"]
+      },
+      {
+        id: "el-3",
+        title: "\u0423\u0440\u043E\u043A 3: \u041F\u0435\u043D\u0442\u0430\u0442\u043E\u043D\u0438\u043A\u0430 \u0438 \u043F\u0435\u0440\u0432\u043E\u0435 \u0441\u043E\u043B\u043E \u0441 \u0431\u0435\u043D\u0434\u0430\u043C\u0438",
+        duration: "30 \u043C\u0438\u043D",
+        description: "1-\u044F \u043F\u043E\u0437\u0438\u0446\u0438\u044F \u043C\u0438\u043D\u043E\u0440\u043D\u043E\u0439 \u043F\u0435\u043D\u0442\u0430\u0442\u043E\u043D\u0438\u043A\u0438. \u0422\u043E\u0447\u043D\u044B\u0435 \u0431\u0435\u043D\u0434\u044B \u043D\u0430 \u0442\u043E\u043D \u0438 \u043F\u043E\u043B\u0443\u0442\u043E\u043D \u0441 \u043F\u0440\u0430\u0432\u0438\u043B\u044C\u043D\u044B\u043C \u0432\u0438\u0431\u0440\u0430\u0442\u043E."
+      }
+    ]
+  },
+  {
+    id: "course-3",
+    slug: "ukulele-express",
+    title: "\u0423\u043A\u0443\u043B\u0435\u043B\u0435 \u042D\u043A\u0441\u043F\u0440\u0435\u0441\u0441: 7 \u0448\u0430\u0433\u043E\u0432 \u043A \u043C\u0443\u0437\u044B\u043A\u0435",
+    subtitle: "\u0421\u0430\u043C\u044B\u0439 \u043F\u0440\u043E\u0441\u0442\u043E\u0439 \u0438 \u0432\u0435\u0441\u0451\u043B\u044B\u0439 \u0438\u043D\u0441\u0442\u0440\u0443\u043C\u0435\u043D\u0442. \u041D\u0430\u0443\u0447\u0438\u0442\u0435\u0441\u044C \u0438\u0433\u0440\u0430\u0442\u044C \u043B\u044E\u0431\u0438\u043C\u044B\u0435 \u043F\u0435\u0441\u043D\u0438 \u0437\u0430 1 \u043D\u0435\u0434\u0435\u043B\u044E.",
+    badge: "\u041B\u0415\u0413\u041A\u0418\u0419 \u0421\u0422\u0410\u0420\u0422 \u0417\u0410 7 \u0414\u041D\u0415\u0419",
+    instrument: "ukulele",
+    level: "\u041D\u0430\u0447\u0438\u043D\u0430\u044E\u0449\u0438\u0439",
+    lessonsCount: 8,
+    durationHours: 4,
+    price: 6900,
+    originalPrice: 12900,
+    image: "/products/03_23_ukulele.png",
+    description: "\u0423\u043A\u0443\u043B\u0435\u043B\u0435 \u2014 4 \u043D\u0435\u0439\u043B\u043E\u043D\u043E\u0432\u044B\u0435 \u0441\u0442\u0440\u0443\u043D\u044B, \u043A\u043E\u0442\u043E\u0440\u044B\u0435 \u043D\u0435 \u0440\u0435\u0436\u0443\u0442 \u043F\u0430\u043B\u044C\u0446\u044B. \u0412\u0441\u0435\u0433\u043E 4 \u0430\u043A\u043A\u043E\u0440\u0434\u0430 \u043F\u043E\u0437\u0432\u043E\u043B\u044F\u0442 \u0441\u044B\u0433\u0440\u0430\u0442\u044C \u0441\u043E\u0442\u043D\u0438 \u0438\u0437\u0432\u0435\u0441\u0442\u043D\u044B\u0445 \u043C\u0438\u0440\u043E\u0432\u044B\u0445 \u0438 \u0440\u0443\u0441\u0441\u043A\u043E\u044F\u0437\u044B\u0447\u043D\u044B\u0445 \u0445\u0438\u0442\u043E\u0432.",
+    highlights: [
+      "8 \u043F\u043E\u043D\u044F\u0442\u043D\u044B\u0445 \u0443\u0440\u043E\u043A\u043E\u0432 \u043F\u043E 15 \u043C\u0438\u043D\u0443\u0442",
+      "\u0412\u0441\u0435\u0433\u043E 4 \u0430\u043A\u043A\u043E\u0440\u0434\u0430 (C, G, Am, F) \u0434\u043B\u044F 100+ \u043F\u0435\u0441\u0435\u043D",
+      "\u0413\u0430\u0432\u0430\u0439\u0441\u043A\u0438\u0439 \u0431\u043E\u0439 \u0438 \u0442\u0435\u0445\u043D\u0438\u043A\u0430 \xABChuck\xBB (\u0433\u043B\u0443\u0448\u0435\u043D\u0438\u0435)",
+      "\u0420\u0430\u0437\u0431\u043E\u0440\u044B: \xABRiptide\xBB, \xABSomewhere Over the Rainbow\xBB, \xAB\u041C\u043E\u044F \u0437\u0432\u0435\u0437\u0434\u0430\xBB"
+    ],
+    instructor: {
+      name: "\u0410\u043B\u0438\u043D\u0430 \u041A\u0438\u043C",
+      role: "\u041F\u0440\u0435\u043F\u043E\u0434\u0430\u0432\u0430\u0442\u0435\u043B\u044C \u0443\u043A\u0443\u043B\u0435\u043B\u0435 \u0438 \u0432\u043E\u043A\u0430\u043B\u0430",
+      experience: "\u041E\u043F\u044B\u0442 8 \u043B\u0435\u0442, \u0431\u043E\u043B\u0435\u0435 800 \u0434\u043E\u0432\u043E\u043B\u044C\u043D\u044B\u0445 \u0443\u0447\u0435\u043D\u0438\u043A\u043E\u0432",
+      avatar: "\u{1F33A}"
+    },
+    lessons: [
+      {
+        id: "uk-1",
+        title: "\u0423\u0440\u043E\u043A 1: \u0417\u043D\u0430\u043A\u043E\u043C\u0441\u0442\u0432\u043E \u0441 \u0443\u043A\u0443\u043B\u0435\u043B\u0435 \u0438 \u0430\u043A\u043A\u043E\u0440\u0434\u044B C \u0438 Am \u0437\u0430 5 \u043C\u0438\u043D\u0443\u0442",
+        duration: "12 \u043C\u0438\u043D",
+        isFreePreview: true,
+        description: "\u0417\u0430\u0436\u0438\u043C\u0430\u0435\u043C \u0441\u0442\u0440\u0443\u043D\u044B \u043E\u0434\u043D\u0438\u043C \u043F\u0430\u043B\u044C\u0446\u0435\u043C \u0438 \u0438\u0433\u0440\u0430\u0435\u043C \u043F\u0435\u0440\u0432\u0443\u044E \u043C\u0435\u043B\u043E\u0434\u0438\u044E.",
+        chords: ["C (\u0414\u043E \u043C\u0430\u0436\u043E\u0440)", "Am (\u041B\u044F \u043C\u0438\u043D\u043E\u0440)"]
+      },
+      {
+        id: "uk-2",
+        title: "\u0423\u0440\u043E\u043A 2: \u0410\u043A\u043A\u043E\u0440\u0434\u044B F \u0438 G + \u043F\u0435\u0440\u0432\u044B\u0439 \u043F\u043E\u043B\u043D\u043E\u0446\u0435\u043D\u043D\u044B\u0439 \u0440\u0438\u0442\u043C",
+        duration: "18 \u043C\u0438\u043D",
+        description: "\u041F\u043B\u0430\u0432\u043D\u044B\u0435 \u043F\u0435\u0440\u0435\u0445\u043E\u0434\u044B \u0438 \u0440\u0438\u0442\u043C\u0438\u0447\u043D\u044B\u0439 \u0433\u0430\u0432\u0430\u0439\u0441\u043A\u0438\u0439 \u0431\u043E\u0439.",
+        chords: ["C", "G", "Am", "F"]
+      }
+    ]
+  },
+  {
+    id: "course-4",
+    slug: "vip-mentorship",
+    title: "VIP \u041D\u0430\u0441\u0442\u0430\u0432\u043D\u0438\u0447\u0435\u0441\u0442\u0432\u043E: \u041F\u043E\u043B\u043D\u044B\u0439 \u0434\u043E\u0441\u0442\u0443\u043F + \u041A\u0443\u0440\u0430\u0442\u043E\u0440",
+    subtitle: "\u0412\u0441\u0435 \u043A\u0443\u0440\u0441\u044B Maestro Academy + \u0435\u0436\u0435\u043D\u0435\u0434\u0435\u043B\u044C\u043D\u0430\u044F \u043F\u0440\u043E\u0432\u0435\u0440\u043A\u0430 \u0434\u043E\u043C\u0430\u0448\u043D\u0438\u0445 \u0437\u0430\u0434\u0430\u043D\u0438\u0439 \u043F\u0440\u0435\u043F\u043E\u0434\u0430\u0432\u0430\u0442\u0435\u043B\u0435\u043C.",
+    badge: "\u0412\u0421\u0401 \u0412\u041A\u041B\u042E\u0427\u0415\u041D\u041E \xB7 \u0413\u041E\u0414\u041E\u0412\u041E\u0419 \u0414\u041E\u0421\u0422\u0423\u041F",
+    instrument: "all",
+    level: "\u041F\u0440\u043E\u0434\u0432\u0438\u043D\u0443\u0442\u044B\u0439",
+    lessonsCount: 40,
+    durationHours: 24,
+    price: 28900,
+    originalPrice: 49e3,
+    image: "/products/02_39_gradient_electric.png",
+    description: "\u041C\u0430\u043A\u0441\u0438\u043C\u0430\u043B\u044C\u043D\u044B\u0439 \u043F\u0430\u043A\u0435\u0442: \u0434\u043E\u0441\u0442\u0443\u043F \u043A\u043E \u0432\u0441\u0435\u043C \u043A\u0443\u0440\u0441\u0430\u043C (\u0430\u043A\u0443\u0441\u0442\u0438\u043A\u0430, \u044D\u043B\u0435\u043A\u0442\u0440\u043E\u0433\u0438\u0442\u0430\u0440\u0430, \u0443\u043A\u0443\u043B\u0435\u043B\u0435, \u0442\u0435\u043E\u0440\u0438\u044F), \u0437\u0430\u043A\u0440\u044B\u0442\u044B\u0439 Telegram-\u0447\u0430\u0442 \u0441 \u043A\u0443\u0440\u0430\u0442\u043E\u0440\u0430\u043C\u0438, \u0440\u0430\u0437\u0431\u043E\u0440 \u0432\u0438\u0434\u0435\u043E\u0437\u0430\u043F\u0438\u0441\u0435\u0439 \u0432\u0430\u0448\u0435\u0439 \u0438\u0433\u0440\u044B \u0438 2 \u0438\u043D\u0434\u0438\u0432\u0438\u0434\u0443\u0430\u043B\u044C\u043D\u044B\u0435 \u043E\u043D\u043B\u0430\u0439\u043D-\u043A\u043E\u043D\u0441\u0443\u043B\u044C\u0442\u0430\u0446\u0438\u0438.",
+    highlights: [
+      "\u0411\u0435\u0437\u043B\u0438\u043C\u0438\u0442\u043D\u044B\u0439 \u0433\u043E\u0434\u043E\u0432\u043E\u0439 \u0434\u043E\u0441\u0442\u0443\u043F \u043A\u043E \u0432\u0441\u0435\u043C 40+ \u0443\u0440\u043E\u043A\u0430\u043C \u0430\u043A\u0430\u0434\u0435\u043C\u0438\u0438",
+      "\u041F\u0440\u043E\u0432\u0435\u0440\u043A\u0430 \u0434\u043E\u043C\u0430\u0448\u043D\u0438\u0445 \u0437\u0430\u0434\u0430\u043D\u0438\u0439 \u0441 \u0433\u043E\u043B\u043E\u0441\u043E\u0432\u044B\u043C\u0438 \u0438 \u0432\u0438\u0434\u0435\u043E-\u043A\u043E\u043C\u043C\u0435\u043D\u0442\u0430\u0440\u0438\u044F\u043C\u0438",
+      "2 \u043F\u0435\u0440\u0441\u043E\u043D\u0430\u043B\u044C\u043D\u044B\u0445 \u043E\u043D\u043B\u0430\u0439\u043D-\u0443\u0440\u043E\u043A\u0430 1-\u043D\u0430-1 \u0441 \u0442\u043E\u043F-\u043F\u0440\u0435\u043F\u043E\u0434\u0430\u0432\u0430\u0442\u0435\u043B\u0435\u043C",
+      "\u0421\u0435\u0440\u0442\u0438\u0444\u0438\u043A\u0430\u0442 \u043E\u0431 \u043E\u043A\u043E\u043D\u0447\u0430\u043D\u0438\u0438 \u043A\u0443\u0440\u0441\u0430 Maestro Academy"
+    ],
+    instructor: {
+      name: "\u041A\u043E\u043C\u0430\u043D\u0434\u0430 Maestro Academy",
+      role: "\u0412\u0435\u0434\u0443\u0449\u0438\u0435 \u043F\u0440\u0435\u043F\u043E\u0434\u0430\u0432\u0430\u0442\u0435\u043B\u0438 \u0438 \u043C\u0443\u0437\u044B\u043A\u0430\u043D\u0442\u044B",
+      experience: "\u041F\u043E\u043B\u043D\u0430\u044F \u043F\u043E\u0434\u0434\u0435\u0440\u0436\u043A\u0430 \u0434\u043E \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442\u0430",
+      avatar: "\u{1F451}"
+    },
+    lessons: []
+  }
+];
+function resolveAttachedCourse(product, coursesList = COURSES) {
+  if (product.attachedCourseId === "none" || product.attachedCourseId === "") {
+    return null;
+  }
+  if (product.attachedCourseId && product.attachedCourseId !== "auto") {
+    const found = coursesList.find((c) => c.id === product.attachedCourseId || c.slug === product.attachedCourseId);
+    if (found) return found;
+  }
+  const cat = (product.category || "").toLowerCase();
+  if (cat.includes("\u044D\u043B\u0435\u043A\u0442\u0440\u043E")) {
+    return coursesList.find((c) => c.instrument === "electric") || coursesList[1] || coursesList[0] || null;
+  }
+  if (cat.includes("\u0443\u043A\u0443\u043B\u0435\u043B\u0435")) {
+    return coursesList.find((c) => c.instrument === "ukulele") || coursesList[2] || coursesList[0] || null;
+  }
+  if (cat.includes("\u0430\u043A\u0443\u0441\u0442\u0438\u0447\u0435\u0441\u043A") || cat.includes("\u043A\u043B\u0430\u0441\u0441\u0438\u0447\u0435\u0441\u043A") || cat.includes("\u0433\u0438\u0442\u0430\u0440")) {
+    return coursesList.find((c) => c.instrument === "acoustic") || coursesList[0] || null;
+  }
+  return coursesList[0] || null;
+}
 
 // lib/sound-synth.ts
 var currentAudio = null;
@@ -14201,7 +13842,7 @@ function stopProductAudio() {
 }
 
 // components/ProductModal.tsx
-var import_jsx_runtime5 = __toESM(require_jsx_runtime(), 1);
+var import_jsx_runtime4 = __toESM(require_jsx_runtime(), 1);
 function ProductModal({
   selected,
   selectedVariant,
@@ -14212,15 +13853,15 @@ function ProductModal({
   onClose,
   onAddToCart
 }) {
-  const [installmentMonths, setInstallmentMonths] = (0, import_react4.useState)(12);
-  const [isPlayingSound, setIsPlayingSound] = (0, import_react4.useState)(false);
-  const [selectedStrings, setSelectedStrings] = (0, import_react4.useState)(null);
+  const [installmentMonths, setInstallmentMonths] = (0, import_react3.useState)(12);
+  const [isPlayingSound, setIsPlayingSound] = (0, import_react3.useState)(false);
+  const [selectedStrings, setSelectedStrings] = (0, import_react3.useState)(null);
   const showProPackOption = selected ? selected.allowProPack !== false : false;
   const showCourseOption = selected ? selected.attachedCourseId !== "none" : false;
   const showStringsUpsell = selected ? selected.allowStringsUpsell !== false : false;
   const proPackTitle = selected?.proPackTitle || "\u0427\u0435\u0445\u043E\u043B + \u0420\u0435\u043C\u0435\u043D\u044C + VIP \u0414\u043E\u0441\u0442\u0443\u043F";
   const proPackPrice = selected?.proPackPrice !== void 0 ? selected.proPackPrice : 8900;
-  const [selectedBundle, setSelectedBundle] = (0, import_react4.useState)(
+  const [selectedBundle, setSelectedBundle] = (0, import_react3.useState)(
     showCourseOption ? "gift_course" : showProPackOption ? "pro_pack" : "base"
   );
   if (!selected) return null;
@@ -14264,12 +13905,12 @@ function ProductModal({
     );
   };
   const currentVariantStock = selectedVariant?.stock ?? selected.quantity ?? 1;
-  return /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "modal-backdrop", role: "presentation", onMouseDown: onClose, children: /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("article", { className: "product-modal modern-product-modal", role: "dialog", "aria-modal": "true", onMouseDown: (e) => e.stopPropagation(), children: [
-    /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("button", { className: "modal-close", onClick: onClose, "aria-label": "\u0417\u0430\u043A\u0440\u044B\u0442\u044C", children: "\xD7" }),
-    /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "modal-scrollable-content", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "modal-image-col", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "modal-image-container", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
+  return /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("div", { className: "modal-backdrop", role: "presentation", onMouseDown: onClose, children: /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("article", { className: "product-modal modern-product-modal", role: "dialog", "aria-modal": "true", onMouseDown: (e) => e.stopPropagation(), children: [
+    /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("button", { className: "modal-close", onClick: onClose, "aria-label": "\u0417\u0430\u043A\u0440\u044B\u0442\u044C", children: "\xD7" }),
+    /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "modal-scrollable-content", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "modal-image-col", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "modal-image-container", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
             Image,
             {
               src: selectedImage,
@@ -14281,12 +13922,12 @@ function ProductModal({
             },
             selectedImage
           ),
-          hasDiscount && /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("span", { className: "modal-discount-pill", children: [
+          hasDiscount && /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("span", { className: "modal-discount-pill", children: [
             "\u0410\u041A\u0426\u0418\u042F -",
             discountPercent,
             "%"
           ] }),
-          selected.audioUrl && /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)(
+          selected.audioUrl && /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)(
             "button",
             {
               type: "button",
@@ -14294,50 +13935,50 @@ function ProductModal({
               onClick: handlePlaySound,
               title: isPlayingSound ? "\u041E\u0441\u0442\u0430\u043D\u043E\u0432\u0438\u0442\u044C" : "\u041F\u043E\u0441\u043B\u0443\u0448\u0430\u0442\u044C \u0440\u0435\u0430\u043B\u044C\u043D\u043E\u0435 \u0437\u0432\u0443\u0447\u0430\u043D\u0438\u0435 \u0438\u043D\u0441\u0442\u0440\u0443\u043C\u0435\u043D\u0442\u0430",
               children: [
-                /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "sound-icon", children: isPlayingSound ? "\u{1F3B5}" : "\u{1F50A}" }),
-                /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { children: isPlayingSound ? "\u0417\u0432\u0443\u0447\u0438\u0442 \u043F\u0440\u0438\u043C\u0435\u0440..." : "\u041F\u043E\u0441\u043B\u0443\u0448\u0430\u0442\u044C \u0437\u0432\u0443\u0447\u0430\u043D\u0438\u0435" }),
-                isPlayingSound && /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("span", { className: "sound-wave-bars", children: [
-                  /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("i", {}),
-                  /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("i", {}),
-                  /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("i", {}),
-                  /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("i", {})
+                /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("span", { className: "sound-icon", children: isPlayingSound ? "\u{1F3B5}" : "\u{1F50A}" }),
+                /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("span", { children: isPlayingSound ? "\u0417\u0432\u0443\u0447\u0438\u0442 \u043F\u0440\u0438\u043C\u0435\u0440..." : "\u041F\u043E\u0441\u043B\u0443\u0448\u0430\u0442\u044C \u0437\u0432\u0443\u0447\u0430\u043D\u0438\u0435" }),
+                isPlayingSound && /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("span", { className: "sound-wave-bars", children: [
+                  /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("i", {}),
+                  /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("i", {}),
+                  /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("i", {}),
+                  /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("i", {})
                 ] })
               ]
             }
           )
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "master-setup-badge", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "badge-icon", children: "\u{1F6E0}" }),
-          /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { children: [
-            /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("strong", { children: "\u0411\u0435\u0441\u043F\u043B\u0430\u0442\u043D\u0430\u044F \u0434\u043E\u0432\u043E\u0434\u043A\u0430 \u043C\u0430\u0441\u0442\u0435\u0440\u043E\u043C" }),
-            /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("small", { children: "\u041E\u0442\u0441\u0442\u0440\u043E\u0439\u043A\u0430 \u043C\u0435\u043D\u0437\u0443\u0440\u044B, \u043C\u044F\u0433\u043A\u0430\u044F \u043F\u043E\u0441\u0430\u0434\u043A\u0430 \u0441\u0442\u0440\u0443\u043D 1.5 \u043C\u043C" })
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "master-setup-badge", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("span", { className: "badge-icon", children: "\u{1F6E0}" }),
+          /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("strong", { children: "\u0411\u0435\u0441\u043F\u043B\u0430\u0442\u043D\u0430\u044F \u0434\u043E\u0432\u043E\u0434\u043A\u0430 \u043C\u0430\u0441\u0442\u0435\u0440\u043E\u043C" }),
+            /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("small", { children: "\u041E\u0442\u0441\u0442\u0440\u043E\u0439\u043A\u0430 \u043C\u0435\u043D\u0437\u0443\u0440\u044B, \u043C\u044F\u0433\u043A\u0430\u044F \u043F\u043E\u0441\u0430\u0434\u043A\u0430 \u0441\u0442\u0440\u0443\u043D 1.5 \u043C\u043C" })
           ] })
         ] })
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "modal-details-col", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "modal-head-row", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "modal-cat-and-stock", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "modal-category-badge", children: selected.category }),
-            /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: `modal-stock-pill ${currentVariantStock > 0 ? "in-stock" : "out"}`, children: currentVariantStock > 0 ? `\u25CF \u0412 \u043D\u0430\u043B\u0438\u0447\u0438\u0438 ${currentVariantStock} \u0448\u0442.` : "\u041F\u043E\u0434 \u0437\u0430\u043A\u0430\u0437" })
+      /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "modal-details-col", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "modal-head-row", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "modal-cat-and-stock", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("span", { className: "modal-category-badge", children: selected.category }),
+            /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("span", { className: `modal-stock-pill ${currentVariantStock > 0 ? "in-stock" : "out"}`, children: currentVariantStock > 0 ? `\u25CF \u0412 \u043D\u0430\u043B\u0438\u0447\u0438\u0438 ${currentVariantStock} \u0448\u0442.` : "\u041F\u043E\u0434 \u0437\u0430\u043A\u0430\u0437" })
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("h2", { className: "modal-product-title", children: selected.name }),
-          /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "modal-sku-bar", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("span", { children: [
+          /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("h2", { className: "modal-product-title", children: selected.name }),
+          /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "modal-sku-bar", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("span", { children: [
               "\u0410\u0440\u0442\u0438\u043A\u0443\u043B: ",
-              /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("code", { children: selectedVariant?.sku ?? selected.sku })
+              /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("code", { children: selectedVariant?.sku ?? selected.sku })
             ] }),
-            selected.badge && /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "modal-highlight-tag", children: selected.badge })
+            selected.badge && /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("span", { className: "modal-highlight-tag", children: selected.badge })
           ] })
         ] }),
-        mode === "buyer" ? /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "modal-interactive-body", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "clean-section-block", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "clean-section-title", children: [
-              /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { children: "1. \u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u0446\u0432\u0435\u0442:" }),
-              /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("strong", { children: selectedVariant?.name || "\u0421\u0442\u0430\u043D\u0434\u0430\u0440\u0442\u043D\u044B\u0439" })
+        mode === "buyer" ? /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "modal-interactive-body", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "clean-section-block", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "clean-section-title", children: [
+              /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("span", { children: "1. \u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u0446\u0432\u0435\u0442:" }),
+              /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("strong", { children: selectedVariant?.name || "\u0421\u0442\u0430\u043D\u0434\u0430\u0440\u0442\u043D\u044B\u0439" })
             ] }),
-            /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "clean-swatches-grid", children: variantsFor(selected).map((variant) => {
+            /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("div", { className: "clean-swatches-grid", children: variantsFor(selected).map((variant) => {
               const isSelected = (selectedVariant?.sku || selectedVariant?.name) === (variant.sku || variant.name);
-              return /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)(
+              return /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)(
                 "button",
                 {
                   type: "button",
@@ -14347,7 +13988,7 @@ function ProductModal({
                     setRequestedQuantity(1);
                   },
                   children: [
-                    /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
+                    /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
                       "i",
                       {
                         style: {
@@ -14355,8 +13996,8 @@ function ProductModal({
                         }
                       }
                     ),
-                    /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "swatch-tile-name", children: variant.name }),
-                    /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("small", { className: "swatch-tile-stock", children: [
+                    /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("span", { className: "swatch-tile-name", children: variant.name }),
+                    /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("small", { className: "swatch-tile-stock", children: [
                       variant.stock,
                       " \u0448\u0442."
                     ] })
@@ -14366,56 +14007,56 @@ function ProductModal({
               );
             }) })
           ] }),
-          (showCourseOption || showProPackOption) && /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "clean-section-block", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "clean-section-title", children: /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { children: "2. \u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u043A\u043E\u043C\u043F\u043B\u0435\u043A\u0442\u0430\u0446\u0438\u044E:" }) }),
-            /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "clean-bundles-grid", children: [
-              /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)(
+          (showCourseOption || showProPackOption) && /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "clean-section-block", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("div", { className: "clean-section-title", children: /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("span", { children: "2. \u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u043A\u043E\u043C\u043F\u043B\u0435\u043A\u0442\u0430\u0446\u0438\u044E:" }) }),
+            /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "clean-bundles-grid", children: [
+              /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)(
                 "button",
                 {
                   type: "button",
                   className: `clean-bundle-card ${selectedBundle === "base" ? "active" : ""}`,
                   onClick: () => setSelectedBundle("base"),
                   children: [
-                    /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "bundle-card-top-row", children: [
-                      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "bundle-card-icon", children: "\u{1F3B8}" }),
-                      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("strong", { className: "bundle-card-name", children: "\u0422\u043E\u043B\u044C\u043A\u043E \u0438\u043D\u0441\u0442\u0440\u0443\u043C\u0435\u043D\u0442" })
+                    /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "bundle-card-top-row", children: [
+                      /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("span", { className: "bundle-card-icon", children: "\u{1F3B8}" }),
+                      /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("strong", { className: "bundle-card-name", children: "\u0422\u043E\u043B\u044C\u043A\u043E \u0438\u043D\u0441\u0442\u0440\u0443\u043C\u0435\u043D\u0442" })
                     ] }),
-                    /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("small", { className: "bundle-card-desc", children: "\u0417\u0430\u0432\u043E\u0434\u0441\u043A\u0430\u044F \u043A\u043E\u0440\u043E\u0431\u043A\u0430 + \u043A\u043B\u044E\u0447\u0438" }),
-                    /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "bundle-card-price-row", children: /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("strong", { children: "+0 \u20B8" }) })
+                    /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("small", { className: "bundle-card-desc", children: "\u0417\u0430\u0432\u043E\u0434\u0441\u043A\u0430\u044F \u043A\u043E\u0440\u043E\u0431\u043A\u0430 + \u043A\u043B\u044E\u0447\u0438" }),
+                    /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("div", { className: "bundle-card-price-row", children: /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("strong", { children: "+0 \u20B8" }) })
                   ]
                 }
               ),
-              showCourseOption && /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)(
+              showCourseOption && /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)(
                 "button",
                 {
                   type: "button",
                   className: `clean-bundle-card gift-highlight ${selectedBundle === "gift_course" ? "active" : ""}`,
                   onClick: () => setSelectedBundle("gift_course"),
                   children: [
-                    /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "bundle-badge-gift", children: "\u041F\u041E\u0414\u0410\u0420\u041E\u041A 0 \u20B8" }),
-                    /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "bundle-card-top-row", children: [
-                      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "bundle-card-icon", children: "\u{1F381}" }),
-                      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("strong", { className: "bundle-card-name", children: "\u0413\u0438\u0442\u0430\u0440\u0430 + \u041A\u0443\u0440\u0441" })
+                    /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("span", { className: "bundle-badge-gift", children: "\u041F\u041E\u0414\u0410\u0420\u041E\u041A 0 \u20B8" }),
+                    /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "bundle-card-top-row", children: [
+                      /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("span", { className: "bundle-card-icon", children: "\u{1F381}" }),
+                      /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("strong", { className: "bundle-card-name", children: "\u0413\u0438\u0442\u0430\u0440\u0430 + \u041A\u0443\u0440\u0441" })
                     ] }),
-                    /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("small", { className: "bundle-card-desc", children: attachedCourse ? `\u041A\u0443\u0440\u0441 \xAB${attachedCourse.title}\xBB` : "\u041E\u043D\u043B\u0430\u0439\u043D-\u043A\u0443\u0440\u0441 \u0432 \u043F\u043E\u0434\u0430\u0440\u043E\u043A" }),
-                    /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "bundle-card-price-row", children: /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("strong", { className: "free-tag", children: "\u0411\u0435\u0441\u043F\u043B\u0430\u0442\u043D\u043E (0 \u20B8)" }) })
+                    /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("small", { className: "bundle-card-desc", children: attachedCourse ? `\u041A\u0443\u0440\u0441 \xAB${attachedCourse.title}\xBB` : "\u041E\u043D\u043B\u0430\u0439\u043D-\u043A\u0443\u0440\u0441 \u0432 \u043F\u043E\u0434\u0430\u0440\u043E\u043A" }),
+                    /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("div", { className: "bundle-card-price-row", children: /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("strong", { className: "free-tag", children: "\u0411\u0435\u0441\u043F\u043B\u0430\u0442\u043D\u043E (0 \u20B8)" }) })
                   ]
                 }
               ),
-              showProPackOption && /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)(
+              showProPackOption && /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)(
                 "button",
                 {
                   type: "button",
                   className: `clean-bundle-card pro-highlight ${selectedBundle === "pro_pack" ? "active" : ""}`,
                   onClick: () => setSelectedBundle("pro_pack"),
                   children: [
-                    /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "bundle-badge-pro", children: "PRO \u041D\u0410\u0411\u041E\u0420" }),
-                    /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "bundle-card-top-row", children: [
-                      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "bundle-card-icon", children: "\u{1F451}" }),
-                      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("strong", { className: "bundle-card-name", children: "PRO \u041A\u043E\u043C\u043F\u043B\u0435\u043A\u0442" })
+                    /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("span", { className: "bundle-badge-pro", children: "PRO \u041D\u0410\u0411\u041E\u0420" }),
+                    /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "bundle-card-top-row", children: [
+                      /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("span", { className: "bundle-card-icon", children: "\u{1F451}" }),
+                      /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("strong", { className: "bundle-card-name", children: "PRO \u041A\u043E\u043C\u043F\u043B\u0435\u043A\u0442" })
                     ] }),
-                    /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("small", { className: "bundle-card-desc", children: proPackTitle }),
-                    /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "bundle-card-price-row", children: /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("strong", { children: [
+                    /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("small", { className: "bundle-card-desc", children: proPackTitle }),
+                    /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("div", { className: "bundle-card-price-row", children: /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("strong", { children: [
                       "+",
                       money(proPackPrice),
                       " \u20B8"
@@ -14425,66 +14066,66 @@ function ProductModal({
               )
             ] })
           ] }),
-          showStringsUpsell && /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "clean-section-block", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "clean-section-title", children: /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { children: "3. \u0421\u043F\u0435\u0446\u043F\u0440\u0435\u0434\u043B\u043E\u0436\u0435\u043D\u0438\u0435 \u043A \u0437\u0430\u043A\u0430\u0437\u0443 (-50%):" }) }),
-            /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "clean-bump-list", children: [
-              /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)(
+          showStringsUpsell && /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "clean-section-block", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("div", { className: "clean-section-title", children: /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("span", { children: "3. \u0421\u043F\u0435\u0446\u043F\u0440\u0435\u0434\u043B\u043E\u0436\u0435\u043D\u0438\u0435 \u043A \u0437\u0430\u043A\u0430\u0437\u0443 (-50%):" }) }),
+            /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "clean-bump-list", children: [
+              /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)(
                 "div",
                 {
                   className: `clean-bump-item ${selectedStrings === "elixir" ? "active" : ""}`,
                   onClick: () => setSelectedStrings(selectedStrings === "elixir" ? null : "elixir"),
                   children: [
-                    /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "bump-check-circle", children: selectedStrings === "elixir" ? "\u2713" : "" }),
-                    /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "bump-text-wrap", children: [
-                      /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("strong", { children: [
+                    /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("div", { className: "bump-check-circle", children: selectedStrings === "elixir" ? "\u2713" : "" }),
+                    /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "bump-text-wrap", children: [
+                      /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("strong", { children: [
                         "\u{1F451} \u0421\u0442\u0440\u0443\u043D\u044B Elixir Nanoweb (\u0421\u0428\u0410) ",
-                        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "discount-tag-red", children: "-50%" })
+                        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("span", { className: "discount-tag-red", children: "-50%" })
                       ] }),
-                      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("small", { children: "\u0421\u043B\u0443\u0436\u0430\u0442 \u0434\u043E 6 \u043C\u0435\u0441\u044F\u0446\u0435\u0432 \xB7 \u0417\u0432\u043E\u043D\u043A\u0438\u0439 \u043F\u0440\u0435\u043C\u0438\u0430\u043B\u044C\u043D\u044B\u0439 \u0442\u043E\u043D" })
+                      /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("small", { children: "\u0421\u043B\u0443\u0436\u0430\u0442 \u0434\u043E 6 \u043C\u0435\u0441\u044F\u0446\u0435\u0432 \xB7 \u0417\u0432\u043E\u043D\u043A\u0438\u0439 \u043F\u0440\u0435\u043C\u0438\u0430\u043B\u044C\u043D\u044B\u0439 \u0442\u043E\u043D" })
                     ] }),
-                    /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "bump-pricing-wrap", children: [
-                      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("del", { children: "9 900 \u20B8" }),
-                      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("strong", { children: "+4 950 \u20B8" })
+                    /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "bump-pricing-wrap", children: [
+                      /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("del", { children: "9 900 \u20B8" }),
+                      /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("strong", { children: "+4 950 \u20B8" })
                     ] })
                   ]
                 }
               ),
-              /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)(
+              /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)(
                 "div",
                 {
                   className: `clean-bump-item ${selectedStrings === "daddario" ? "active" : ""}`,
                   onClick: () => setSelectedStrings(selectedStrings === "daddario" ? null : "daddario"),
                   children: [
-                    /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "bump-check-circle", children: selectedStrings === "daddario" ? "\u2713" : "" }),
-                    /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "bump-text-wrap", children: [
-                      /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("strong", { children: [
+                    /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("div", { className: "bump-check-circle", children: selectedStrings === "daddario" ? "\u2713" : "" }),
+                    /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "bump-text-wrap", children: [
+                      /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("strong", { children: [
                         "\u{1F3B8} \u0421\u0442\u0440\u0443\u043D\u044B D'Addario Pro ",
-                        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "discount-tag-red", children: "-50%" })
+                        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("span", { className: "discount-tag-red", children: "-50%" })
                       ] }),
-                      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("small", { children: "\u041C\u044F\u0433\u043A\u043E\u0435 \u043D\u0430\u0442\u044F\u0436\u0435\u043D\u0438\u0435 \u0434\u043B\u044F \u043B\u0435\u0433\u043A\u0438\u0445 \u043F\u0435\u0440\u0432\u044B\u0445 \u0430\u043A\u043A\u043E\u0440\u0434\u043E\u0432" })
+                      /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("small", { children: "\u041C\u044F\u0433\u043A\u043E\u0435 \u043D\u0430\u0442\u044F\u0436\u0435\u043D\u0438\u0435 \u0434\u043B\u044F \u043B\u0435\u0433\u043A\u0438\u0445 \u043F\u0435\u0440\u0432\u044B\u0445 \u0430\u043A\u043A\u043E\u0440\u0434\u043E\u0432" })
                     ] }),
-                    /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "bump-pricing-wrap", children: [
-                      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("del", { children: "4 900 \u20B8" }),
-                      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("strong", { children: "+2 450 \u20B8" })
+                    /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "bump-pricing-wrap", children: [
+                      /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("del", { children: "4 900 \u20B8" }),
+                      /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("strong", { children: "+2 450 \u20B8" })
                     ] })
                   ]
                 }
               )
             ] })
           ] }),
-          currentPrice > 0 && /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "clean-installment-box", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "installment-box-top", children: [
-              /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "installment-brand", children: [
-                /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "kaspi-red-badge", children: "kaspi" }),
-                /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("strong", { children: "\u0420\u0430\u0441\u0441\u0440\u043E\u0447\u043A\u0430 \u0431\u0435\u0437 \u043F\u0435\u0440\u0435\u043F\u043B\u0430\u0442" })
+          currentPrice > 0 && /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "clean-installment-box", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "installment-box-top", children: [
+              /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "installment-brand", children: [
+                /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("span", { className: "kaspi-red-badge", children: "kaspi" }),
+                /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("strong", { children: "\u0420\u0430\u0441\u0441\u0440\u043E\u0447\u043A\u0430 \u0431\u0435\u0437 \u043F\u0435\u0440\u0435\u043F\u043B\u0430\u0442" })
               ] }),
-              /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("strong", { className: "monthly-figure", children: [
+              /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("strong", { className: "monthly-figure", children: [
                 money(installment(currentPrice, installmentMonths)),
                 " \u20B8 ",
-                /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("small", { children: "/ \u043C\u0435\u0441" })
+                /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("small", { children: "/ \u043C\u0435\u0441" })
               ] })
             ] }),
-            /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "installment-pills-selector", children: [3, 6, 12].map((m) => /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
+            /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("div", { className: "installment-pills-selector", children: [3, 6, 12].map((m) => /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
               "button",
               {
                 type: "button",
@@ -14495,39 +14136,39 @@ function ProductModal({
               m
             )) })
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("details", { className: "clean-details-accordion", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("summary", { children: [
-              /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { children: "\u{1F4CB} \u041E\u043F\u0438\u0441\u0430\u043D\u0438\u0435 \u0438 \u0445\u0430\u0440\u0430\u043A\u0442\u0435\u0440\u0438\u0441\u0442\u0438\u043A\u0438 \u0438\u043D\u0441\u0442\u0440\u0443\u043C\u0435\u043D\u0442\u0430" }),
-              /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "accordion-chevron", children: "\u25BC" })
+          /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("details", { className: "clean-details-accordion", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("summary", { children: [
+              /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("span", { children: "\u{1F4CB} \u041E\u043F\u0438\u0441\u0430\u043D\u0438\u0435 \u0438 \u0445\u0430\u0440\u0430\u043A\u0442\u0435\u0440\u0438\u0441\u0442\u0438\u043A\u0438 \u0438\u043D\u0441\u0442\u0440\u0443\u043C\u0435\u043D\u0442\u0430" }),
+              /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("span", { className: "accordion-chevron", children: "\u25BC" })
             ] }),
-            /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "accordion-content", children: [
-              /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { className: "product-modal-desc", children: selected.description }),
-              /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("ul", { className: "product-features-checklist", children: selected.features.map((feature) => /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("li", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "accordion-content", children: [
+              /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("p", { className: "product-modal-desc", children: selected.description }),
+              /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("ul", { className: "product-features-checklist", children: selected.features.map((feature) => /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("li", { children: [
                 "\u2713 ",
                 feature
               ] }, feature)) })
             ] })
           ] })
-        ] }) : /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "purchaser-mode-notice", children: /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { children: "\u0420\u0435\u0436\u0438\u043C \u0443\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F: \u0440\u0435\u0434\u0430\u043A\u0442\u0438\u0440\u043E\u0432\u0430\u043D\u0438\u0435 \u0447\u0435\u0440\u0435\u0437 \u043F\u0430\u043D\u0435\u043B\u044C \u0437\u0430\u043A\u0443\u043F\u0449\u0438\u043A\u0430" }) })
+        ] }) : /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("div", { className: "purchaser-mode-notice", children: /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("span", { children: "\u0420\u0435\u0436\u0438\u043C \u0443\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F: \u0440\u0435\u0434\u0430\u043A\u0442\u0438\u0440\u043E\u0432\u0430\u043D\u0438\u0435 \u0447\u0435\u0440\u0435\u0437 \u043F\u0430\u043D\u0435\u043B\u044C \u0437\u0430\u043A\u0443\u043F\u0449\u0438\u043A\u0430" }) })
       ] })
     ] }),
-    mode === "buyer" && /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "modal-sticky-bottom-bar", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "bottom-price-summary", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "bottom-price-label", children: "\u0418\u0422\u041E\u0413\u041E \u041A \u041E\u041F\u041B\u0410\u0422\u0415:" }),
-        /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "bottom-price-numbers", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("strong", { className: "bottom-current-price", children: [
+    mode === "buyer" && /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "modal-sticky-bottom-bar", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "bottom-price-summary", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("span", { className: "bottom-price-label", children: "\u0418\u0422\u041E\u0413\u041E \u041A \u041E\u041F\u041B\u0410\u0422\u0415:" }),
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "bottom-price-numbers", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("strong", { className: "bottom-current-price", children: [
             money(currentPrice * requestedQuantity),
             " \u20B8"
           ] }),
-          hasDiscount && originalPrice && /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("del", { className: "bottom-old-price", children: [
+          hasDiscount && originalPrice && /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("del", { className: "bottom-old-price", children: [
             money((originalPrice + bundleDelta + stringsDelta) * requestedQuantity),
             " \u20B8"
           ] })
         ] })
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "bottom-actions-group", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "modal-qty-clean", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "bottom-actions-group", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "modal-qty-clean", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
             "button",
             {
               type: "button",
@@ -14537,8 +14178,8 @@ function ProductModal({
               children: "\u2212"
             }
           ),
-          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { children: requestedQuantity }),
-          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
+          /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("span", { children: requestedQuantity }),
+          /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
             "button",
             {
               type: "button",
@@ -14549,7 +14190,7 @@ function ProductModal({
             }
           )
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
           "button",
           {
             type: "button",
@@ -14564,8 +14205,8 @@ function ProductModal({
 }
 
 // components/Storefront.tsx
-var import_react5 = __toESM(require_react(), 1);
-var import_jsx_runtime6 = __toESM(require_jsx_runtime(), 1);
+var import_react4 = __toESM(require_react(), 1);
+var import_jsx_runtime5 = __toESM(require_jsx_runtime(), 1);
 function Storefront({
   category,
   setCategory,
@@ -14575,11 +14216,11 @@ function Storefront({
   chooseCategory,
   featuredProduct
 }) {
-  const [quickFilter, setQuickFilter] = (0, import_react5.useState)("all");
-  const [sortBy, setSortBy] = (0, import_react5.useState)("popular");
-  const [playingId, setPlayingId] = (0, import_react5.useState)(null);
-  const [selectedVariantsByProduct, setSelectedVariantsByProduct] = (0, import_react5.useState)({});
-  const displayedProducts = (0, import_react5.useMemo)(() => {
+  const [quickFilter, setQuickFilter] = (0, import_react4.useState)("all");
+  const [sortBy, setSortBy] = (0, import_react4.useState)("popular");
+  const [playingId, setPlayingId] = (0, import_react4.useState)(null);
+  const [selectedVariantsByProduct, setSelectedVariantsByProduct] = (0, import_react4.useState)({});
+  const displayedProducts = (0, import_react4.useMemo)(() => {
     let list = [...filteredProducts];
     if (quickFilter === "sale") {
       list = list.filter(
@@ -14659,87 +14300,90 @@ function Storefront({
       sku: "CG-39"
     }
   ];
-  const [heroIndex, setHeroIndex] = (0, import_react5.useState)(0);
+  const [heroIndex, setHeroIndex] = (0, import_react4.useState)(0);
   const currentHero = HERO_PREVIEWS[heroIndex];
-  const matchingHeroProduct = (0, import_react5.useMemo)(() => {
+  const matchingHeroProduct = (0, import_react4.useMemo)(() => {
     return filteredProducts.find(
       (p) => p.sku?.toLowerCase().includes(currentHero.sku.toLowerCase()) || p.name.toLowerCase().includes(currentHero.sku.toLowerCase())
     ) || featuredProduct || filteredProducts[0];
   }, [filteredProducts, currentHero, featuredProduct]);
-  return /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)(import_jsx_runtime6.Fragment, { children: [
-    /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("div", { className: "announcement-bar", children: /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "announcement-inner", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("span", { children: [
+  return /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)(import_jsx_runtime5.Fragment, { children: [
+    /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "announcement-bar", children: /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "announcement-inner", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("span", { children: [
         "\u26A1 ",
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("strong", { children: "\u041F\u043E\u0441\u0442\u0430\u0432\u043A\u0430 2026:" }),
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("strong", { children: "\u041F\u043E\u0441\u0442\u0430\u0432\u043A\u0430 2026:" }),
         " \u0411\u0435\u0441\u043F\u043B\u0430\u0442\u043D\u0430\u044F \u043E\u0442\u0441\u0442\u0440\u043E\u0439\u043A\u0430 \u043C\u0430\u0441\u0442\u0435\u0440\u043E\u043C + \u041E\u043D\u043B\u0430\u0439\u043D-\u043A\u0443\u0440\u0441 \u0432 \u043F\u043E\u0434\u0430\u0440\u043E\u043A \u043A \u043A\u0430\u0436\u0434\u043E\u043C\u0443 \u0438\u043D\u0441\u0442\u0440\u0443\u043C\u0435\u043D\u0442\u0443!"
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { className: "announcement-sep", children: "\u2022" }),
-      /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { children: "\u{1F69A} \u0414\u043E\u0441\u0442\u0430\u0432\u043A\u0430 \u043F\u043E \u041A\u0430\u0437\u0430\u0445\u0441\u0442\u0430\u043D\u0443 \u043E\u0442 1 \u0434\u043D\u044F" }),
-      /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { className: "announcement-sep", children: "\u2022" }),
-      /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("span", { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "announcement-sep", children: "\u2022" }),
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { children: "\u{1F69A} \u0414\u043E\u0441\u0442\u0430\u0432\u043A\u0430 \u043F\u043E \u041A\u0430\u0437\u0430\u0445\u0441\u0442\u0430\u043D\u0443 \u043E\u0442 1 \u0434\u043D\u044F" }),
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "announcement-sep", children: "\u2022" }),
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("span", { children: [
         "\u{1F4DE} \u041A\u043E\u043D\u0441\u0443\u043B\u044C\u0442\u0430\u0446\u0438\u044F \u043C\u0430\u0441\u0442\u0435\u0440\u0430: ",
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("strong", { children: "+7 (777) 505-57-88" })
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("strong", { children: "+7 (777) 505-57-88" })
       ] })
     ] }) }),
-    /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("section", { className: "hero", id: "new", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "hero-copy", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "hero-eyebrow-wrap", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { className: "hero-live-dot" }),
-          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "eyebrow", children: "\u041F\u041E\u0421\u0422\u0410\u0412\u041A\u0410 2026 \xB7 \u0418\u041D\u0421\u0422\u0420\u0423\u041C\u0415\u041D\u0422\u042B \u0412 \u041D\u0410\u041B\u0418\u0427\u0418\u0418" })
+    /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("section", { className: "hero", id: "new", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "hero-copy", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "hero-eyebrow-wrap", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "hero-live-dot" }),
+          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { className: "eyebrow", children: "\u041F\u041E\u0421\u0422\u0410\u0412\u041A\u0410 2026 \xB7 \u0418\u041D\u0421\u0422\u0420\u0423\u041C\u0415\u041D\u0422\u042B \u0412 \u041D\u0410\u041B\u0418\u0427\u0418\u0418" })
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("h1", { className: "hero-headline", children: "\u041C\u0443\u0437\u044B\u043A\u0430\u043B\u044C\u043D\u044B\u0435 \u0438\u043D\u0441\u0442\u0440\u0443\u043C\u0435\u043D\u0442\u044B \u0438 \u0433\u0438\u0442\u0430\u0440\u044B Maestro" }),
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "hero-lead", children: "\u042D\u043B\u0435\u043A\u0442\u0440\u043E\u0433\u0438\u0442\u0430\u0440\u044B, \u0430\u043A\u0443\u0441\u0442\u0438\u043A\u0430, \u043A\u043B\u0430\u0441\u0441\u0438\u043A\u0430, \u0443\u043A\u0443\u043B\u0435\u043B\u0435 \u0438 \u0433\u0438\u0442\u0430\u0440\u043D\u043E\u0435 \u043E\u0431\u043E\u0440\u0443\u0434\u043E\u0432\u0430\u043D\u0438\u0435. \u0412\u0441\u0435 \u0438\u043D\u0441\u0442\u0440\u0443\u043C\u0435\u043D\u0442\u044B \u043F\u0440\u043E\u0432\u0435\u0440\u044F\u044E\u0442\u0441\u044F \u0438 \u043D\u0430\u0441\u0442\u0440\u0430\u0438\u0432\u0430\u044E\u0442\u0441\u044F \u0432\u0440\u0443\u0447\u043D\u0443\u044E \u043C\u0430\u0441\u0442\u0435\u0440\u043E\u043C \u043F\u0435\u0440\u0435\u0434 \u0432\u044B\u0434\u0430\u0447\u0435\u0439, \u0430 \u0437\u0430\u044F\u0432\u043A\u0430 \u043E\u0444\u043E\u0440\u043C\u043B\u044F\u0435\u0442\u0441\u044F \u043D\u0430\u043F\u0440\u044F\u043C\u0443\u044E \u0432 WhatsApp \u0431\u0435\u0437 \u043B\u0438\u0448\u043D\u0435\u0439 \u0441\u0443\u0435\u0442\u044B." }),
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "hero-actions", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("h1", { className: "hero-headline", children: "\u041C\u0443\u0437\u044B\u043A\u0430\u043B\u044C\u043D\u044B\u0435 \u0438\u043D\u0441\u0442\u0440\u0443\u043C\u0435\u043D\u0442\u044B \u0438 \u0433\u0438\u0442\u0430\u0440\u044B Maestro" }),
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { className: "hero-lead", children: "\u042D\u043B\u0435\u043A\u0442\u0440\u043E\u0433\u0438\u0442\u0430\u0440\u044B, \u0430\u043A\u0443\u0441\u0442\u0438\u043A\u0430, \u043A\u043B\u0430\u0441\u0441\u0438\u043A\u0430, \u0443\u043A\u0443\u043B\u0435\u043B\u0435 \u0438 \u0433\u0438\u0442\u0430\u0440\u043D\u043E\u0435 \u043E\u0431\u043E\u0440\u0443\u0434\u043E\u0432\u0430\u043D\u0438\u0435. \u0412\u0441\u0435 \u0438\u043D\u0441\u0442\u0440\u0443\u043C\u0435\u043D\u0442\u044B \u043F\u0440\u043E\u0432\u0435\u0440\u044F\u044E\u0442\u0441\u044F \u0438 \u043D\u0430\u0441\u0442\u0440\u0430\u0438\u0432\u0430\u044E\u0442\u0441\u044F \u0432\u0440\u0443\u0447\u043D\u0443\u044E \u043C\u0430\u0441\u0442\u0435\u0440\u043E\u043C \u043F\u0435\u0440\u0435\u0434 \u0432\u044B\u0434\u0430\u0447\u0435\u0439, \u0430 \u0437\u0430\u044F\u0432\u043A\u0430 \u043E\u0444\u043E\u0440\u043C\u043B\u044F\u0435\u0442\u0441\u044F \u043D\u0430\u043F\u0440\u044F\u043C\u0443\u044E \u0432 WhatsApp \u0431\u0435\u0437 \u043B\u0438\u0448\u043D\u0435\u0439 \u0441\u0443\u0435\u0442\u044B." }),
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "hero-actions", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)(
             "a",
             {
               href: "#catalog",
-              className: "hero-primary-btn",
+              className: "primary-button",
               onClick: (e) => {
                 e.preventDefault();
                 document.getElementById("catalog")?.scrollIntoView({ behavior: "smooth" });
               },
-              children: "\u0421\u043C\u043E\u0442\u0440\u0435\u0442\u044C \u043A\u0430\u0442\u0430\u043B\u043E\u0433"
+              children: [
+                /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { children: "\u0421\u043C\u043E\u0442\u0440\u0435\u0442\u044C \u043A\u0430\u0442\u0430\u043B\u043E\u0433" }),
+                /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("svg", { width: "18", height: "18", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2.5", children: /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("path", { d: "M5 12h14M12 5l7 7-7 7" }) })
+              ]
             }
           ),
-          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(
+          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
             "a",
             {
               href: "https://maestro-school.duckdns.org/login",
               target: "_blank",
               rel: "noopener noreferrer",
-              className: "hero-secondary-btn",
-              children: "\u{1F393} \u041E\u0431\u0443\u0447\u0435\u043D\u0438\u0435 & \u041A\u0443\u0440\u0441\u044B"
+              className: "secondary-button",
+              children: /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { children: "\u{1F393} \u041E\u0431\u0443\u0447\u0435\u043D\u0438\u0435 & \u041A\u0443\u0440\u0441\u044B \u2197" })
             }
           )
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "hero-stats", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "stat", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("strong", { children: filteredProducts.length }),
-            /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("small", { children: "\u0438\u043D\u0441\u0442\u0440\u0443\u043C\u0435\u043D\u0442\u043E\u0432 \u043D\u0430 \u0441\u043A\u043B\u0430\u0434\u0435" })
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "hero-stats", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "stat", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("strong", { children: filteredProducts.length }),
+            /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("small", { children: "\u0438\u043D\u0441\u0442\u0440\u0443\u043C\u0435\u043D\u0442\u043E\u0432 \u043D\u0430 \u0441\u043A\u043B\u0430\u0434\u0435" })
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "stat", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("strong", { children: categories.length }),
-            /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("small", { children: "\u043E\u0441\u043D\u043E\u0432\u043D\u044B\u0435 \u043A\u0430\u0442\u0435\u0433\u043E\u0440\u0438\u0438" })
+          /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "stat", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("strong", { children: categories.length }),
+            /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("small", { children: "\u043E\u0441\u043D\u043E\u0432\u043D\u044B\u0435 \u043A\u0430\u0442\u0435\u0433\u043E\u0440\u0438\u0438" })
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "stat", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("strong", { children: "100%" }),
-            /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("small", { children: "\u0440\u0443\u0447\u043D\u0430\u044F \u043E\u0442\u0441\u0442\u0440\u043E\u0439\u043A\u0430 \u043C\u0430\u0441\u0442\u0435\u0440\u043E\u043C" })
+          /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "stat", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("strong", { children: "100%" }),
+            /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("small", { children: "\u0440\u0443\u0447\u043D\u0430\u044F \u043E\u0442\u0441\u0442\u0440\u043E\u0439\u043A\u0430 \u043C\u0430\u0441\u0442\u0435\u0440\u043E\u043C" })
           ] })
         ] })
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("div", { className: "hero-visual", children: /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)(
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "hero-visual", children: /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)(
         "div",
         {
           className: "hero-card",
           style: { cursor: "pointer" },
           onClick: () => matchingHeroProduct && openProduct(matchingHeroProduct),
           children: [
-            /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "hero-card-badges", children: [
-              /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { className: "badge", children: "\u0412\u044B\u0431\u043E\u0440 \u043D\u0435\u0434\u0435\u043B\u0438" }),
-              /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { className: "hero-master-chip", children: "\u2728 \u041C\u0430\u0441\u0442\u0435\u0440\u0441\u043A\u0430\u044F \u043E\u0442\u0441\u0442\u0440\u043E\u0439\u043A\u0430" })
+            /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "hero-card-badges", children: [
+              /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "badge", children: "\u0412\u044B\u0431\u043E\u0440 \u043D\u0435\u0434\u0435\u043B\u0438" }),
+              /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "hero-master-chip", children: "\u2728 \u041C\u0430\u0441\u0442\u0435\u0440\u0441\u043A\u0430\u044F \u043E\u0442\u0441\u0442\u0440\u043E\u0439\u043A\u0430" })
             ] }),
-            /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("div", { className: "hero-image-wrap", children: /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(
+            /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "hero-image-wrap", children: /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
               Image,
               {
                 src: currentHero.image,
@@ -14751,9 +14395,9 @@ function Storefront({
               },
               currentHero.image
             ) }),
-            /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "hero-color-switcher", onClick: (e) => e.stopPropagation(), children: [
-              /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { className: "hero-color-title", children: "\u041E\u0442\u0442\u0435\u043D\u043E\u043A:" }),
-              /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("div", { className: "hero-swatch-list", children: HERO_PREVIEWS.map((hp, idx) => /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(
+            /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "hero-color-switcher", onClick: (e) => e.stopPropagation(), children: [
+              /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "hero-color-title", children: "\u041E\u0442\u0442\u0435\u043D\u043E\u043A:" }),
+              /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "hero-swatch-list", children: HERO_PREVIEWS.map((hp, idx) => /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
                 "button",
                 {
                   type: "button",
@@ -14761,21 +14405,21 @@ function Storefront({
                   onClick: () => setHeroIndex(idx),
                   title: hp.name,
                   "aria-label": `\u0412\u044B\u0431\u0440\u0430\u0442\u044C ${hp.name}`,
-                  children: /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { style: { backgroundColor: hp.color } })
+                  children: /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { style: { backgroundColor: hp.color } })
                 },
                 hp.name
               )) }),
-              /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { className: "hero-color-current", children: currentHero.name })
+              /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "hero-color-current", children: currentHero.name })
             ] }),
-            /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "hero-card-meta", children: [
-              /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { children: [
-                /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "eyebrow", children: currentHero.category }),
-                /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("h3", { children: currentHero.title }),
-                /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "hero-kaspi-installment", children: [
-                  /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { className: "kaspi-tag", children: "Kaspi 0-0-12" }),
-                  /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("span", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "hero-card-meta", children: [
+              /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { children: [
+                /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { className: "eyebrow", children: currentHero.category }),
+                /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("h3", { children: currentHero.title }),
+                /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "hero-kaspi-installment", children: [
+                  /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "kaspi-tag", children: "Kaspi 0-0-12" }),
+                  /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("span", { children: [
                     "\u043E\u0442 ",
-                    /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("strong", { children: [
+                    /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("strong", { children: [
                       money(currentHero.monthly),
                       " \u20B8"
                     ] }),
@@ -14783,7 +14427,7 @@ function Storefront({
                   ] })
                 ] })
               ] }),
-              matchingHeroProduct && /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(
+              matchingHeroProduct && /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
                 "button",
                 {
                   className: "hero-detail-btn",
@@ -14799,14 +14443,14 @@ function Storefront({
         }
       ) })
     ] }),
-    /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("section", { className: "scenarios-section", "aria-label": "\u0411\u044B\u0441\u0442\u0440\u044B\u0439 \u043F\u043E\u0434\u0431\u043E\u0440 \u0438\u043D\u0441\u0442\u0440\u0443\u043C\u0435\u043D\u0442\u0430", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "section-head", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "eyebrow", children: "\u0411\u042B\u0421\u0422\u0420\u042B\u0419 \u041F\u041E\u0414\u0411\u041E\u0420" }),
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("h2", { children: "\u0414\u043B\u044F \u043A\u043E\u0433\u043E \u0432\u044B \u0432\u044B\u0431\u0438\u0440\u0430\u0435\u0442\u0435 \u0438\u043D\u0441\u0442\u0440\u0443\u043C\u0435\u043D\u0442?" }),
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "scenarios-lead", children: "\u041D\u0430\u0436\u043C\u0438\u0442\u0435 \u043F\u043E\u0434\u0445\u043E\u0434\u044F\u0449\u0438\u0439 \u0441\u0446\u0435\u043D\u0430\u0440\u0438\u0439 \u2014 \u043C\u044B \u043F\u043E\u043A\u0430\u0436\u0435\u043C \u043B\u0443\u0447\u0448\u0438\u0435 \u043C\u043E\u0434\u0435\u043B\u0438 \u0441 \u043A\u0443\u0440\u0441\u043E\u043C \u0432 \u043A\u043E\u043C\u043F\u043B\u0435\u043A\u0442\u0435" })
+    /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("section", { className: "scenarios-section", "aria-label": "\u0411\u044B\u0441\u0442\u0440\u044B\u0439 \u043F\u043E\u0434\u0431\u043E\u0440 \u0438\u043D\u0441\u0442\u0440\u0443\u043C\u0435\u043D\u0442\u0430", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "section-head", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { className: "eyebrow", children: "\u0411\u042B\u0421\u0422\u0420\u042B\u0419 \u041F\u041E\u0414\u0411\u041E\u0420" }),
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("h2", { children: "\u0414\u043B\u044F \u043A\u043E\u0433\u043E \u0432\u044B \u0432\u044B\u0431\u0438\u0440\u0430\u0435\u0442\u0435 \u0438\u043D\u0441\u0442\u0440\u0443\u043C\u0435\u043D\u0442?" }),
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { className: "scenarios-lead", children: "\u041D\u0430\u0436\u043C\u0438\u0442\u0435 \u043F\u043E\u0434\u0445\u043E\u0434\u044F\u0449\u0438\u0439 \u0441\u0446\u0435\u043D\u0430\u0440\u0438\u0439 \u2014 \u043C\u044B \u043F\u043E\u043A\u0430\u0436\u0435\u043C \u043B\u0443\u0447\u0448\u0438\u0435 \u043C\u043E\u0434\u0435\u043B\u0438 \u0441 \u043A\u0443\u0440\u0441\u043E\u043C \u0432 \u043A\u043E\u043C\u043F\u043B\u0435\u043A\u0442\u0435" })
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "scenarios-grid", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)(
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "scenarios-grid", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)(
           "div",
           {
             className: "scenario-card",
@@ -14818,15 +14462,15 @@ function Storefront({
             role: "button",
             tabIndex: 0,
             children: [
-              /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("div", { className: "scenario-icon-wrap", style: { background: "rgba(245, 158, 11, 0.12)" }, children: /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { className: "scenario-emoji", children: "\u{1F3AF}" }) }),
-              /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("div", { className: "scenario-badge", children: "\u0425\u0438\u0442 \u0434\u043B\u044F \u0441\u0442\u0430\u0440\u0442\u0430" }),
-              /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("h3", { children: "\u0414\u043B\u044F \u043D\u043E\u0432\u0438\u0447\u043A\u0430 / \u0421 \u043D\u0443\u043B\u044F" }),
-              /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { children: "\u041C\u044F\u0433\u043A\u0438\u0435 \u0441\u0442\u0440\u0443\u043D\u044B, \u043D\u0438\u0437\u043A\u0430\u044F \u043F\u043E\u0441\u0430\u0434\u043A\u0430 \u0434\u043B\u044F \u043B\u0435\u0433\u043A\u0438\u0445 \u0430\u043A\u043A\u043E\u0440\u0434\u043E\u0432 + \u0432\u0438\u0434\u0435\u043E\u043A\u0443\u0440\u0441 \xAB\u041F\u0435\u0440\u0432\u0430\u044F \u043F\u0435\u0441\u043D\u044F \u0437\u0430 7 \u0434\u043D\u0435\u0439\xBB \u0432 \u043F\u043E\u0434\u0430\u0440\u043E\u043A." }),
-              /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { className: "scenario-link", children: "\u0421\u043C\u043E\u0442\u0440\u0435\u0442\u044C \u0432\u0430\u0440\u0438\u0430\u043D\u0442\u044B \u2192" })
+              /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "scenario-icon-wrap", style: { background: "rgba(245, 158, 11, 0.12)" }, children: /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "scenario-emoji", children: "\u{1F3AF}" }) }),
+              /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "scenario-badge", children: "\u0425\u0438\u0442 \u0434\u043B\u044F \u0441\u0442\u0430\u0440\u0442\u0430" }),
+              /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("h3", { children: "\u0414\u043B\u044F \u043D\u043E\u0432\u0438\u0447\u043A\u0430 / \u0421 \u043D\u0443\u043B\u044F" }),
+              /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { children: "\u041C\u044F\u0433\u043A\u0438\u0435 \u0441\u0442\u0440\u0443\u043D\u044B, \u043D\u0438\u0437\u043A\u0430\u044F \u043F\u043E\u0441\u0430\u0434\u043A\u0430 \u0434\u043B\u044F \u043B\u0435\u0433\u043A\u0438\u0445 \u0430\u043A\u043A\u043E\u0440\u0434\u043E\u0432 + \u0432\u0438\u0434\u0435\u043E\u043A\u0443\u0440\u0441 \xAB\u041F\u0435\u0440\u0432\u0430\u044F \u043F\u0435\u0441\u043D\u044F \u0437\u0430 7 \u0434\u043D\u0435\u0439\xBB \u0432 \u043F\u043E\u0434\u0430\u0440\u043E\u043A." }),
+              /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "scenario-link", children: "\u0421\u043C\u043E\u0442\u0440\u0435\u0442\u044C \u0432\u0430\u0440\u0438\u0430\u043D\u0442\u044B \u2192" })
             ]
           }
         ),
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)(
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)(
           "div",
           {
             className: "scenario-card",
@@ -14838,15 +14482,15 @@ function Storefront({
             role: "button",
             tabIndex: 0,
             children: [
-              /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("div", { className: "scenario-icon-wrap", style: { background: "rgba(59, 130, 246, 0.12)" }, children: /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { className: "scenario-emoji", children: "\u26A1" }) }),
-              /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("div", { className: "scenario-badge blue", children: "\u0414\u0440\u0430\u0439\u0432 \u0438 \u0441\u043E\u043B\u043E" }),
-              /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("h3", { children: "\u0425\u043E\u0447\u0443 \u0440\u043E\u043A \u0438 \u0434\u0440\u0430\u0439\u0432" }),
-              /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { children: "\u042D\u043B\u0435\u043A\u0442\u0440\u043E\u0433\u0438\u0442\u0430\u0440\u044B ST-20 \u0438 Gradient \u0441 \u043C\u043E\u0449\u043D\u044B\u043C\u0438 \u0437\u0432\u0443\u043A\u043E\u0441\u043D\u0438\u043C\u0430\u0442\u0435\u043B\u044F\u043C\u0438 + \u043E\u043D\u043B\u0430\u0439\u043D-\u043A\u0443\u0440\u0441 \u043F\u043E \u0441\u043E\u043B\u043E \u0438 \u0440\u0438\u0444\u0444\u0430\u043C." }),
-              /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { className: "scenario-link", children: "\u0421\u043C\u043E\u0442\u0440\u0435\u0442\u044C \u044D\u043B\u0435\u043A\u0442\u0440\u043E\u0433\u0438\u0442\u0430\u0440\u044B \u2192" })
+              /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "scenario-icon-wrap", style: { background: "rgba(59, 130, 246, 0.12)" }, children: /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "scenario-emoji", children: "\u26A1" }) }),
+              /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "scenario-badge blue", children: "\u0414\u0440\u0430\u0439\u0432 \u0438 \u0441\u043E\u043B\u043E" }),
+              /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("h3", { children: "\u0425\u043E\u0447\u0443 \u0440\u043E\u043A \u0438 \u0434\u0440\u0430\u0439\u0432" }),
+              /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { children: "\u042D\u043B\u0435\u043A\u0442\u0440\u043E\u0433\u0438\u0442\u0430\u0440\u044B ST-20 \u0438 Gradient \u0441 \u043C\u043E\u0449\u043D\u044B\u043C\u0438 \u0437\u0432\u0443\u043A\u043E\u0441\u043D\u0438\u043C\u0430\u0442\u0435\u043B\u044F\u043C\u0438 + \u043E\u043D\u043B\u0430\u0439\u043D-\u043A\u0443\u0440\u0441 \u043F\u043E \u0441\u043E\u043B\u043E \u0438 \u0440\u0438\u0444\u0444\u0430\u043C." }),
+              /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "scenario-link", children: "\u0421\u043C\u043E\u0442\u0440\u0435\u0442\u044C \u044D\u043B\u0435\u043A\u0442\u0440\u043E\u0433\u0438\u0442\u0430\u0440\u044B \u2192" })
             ]
           }
         ),
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)(
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)(
           "div",
           {
             className: "scenario-card",
@@ -14858,15 +14502,15 @@ function Storefront({
             role: "button",
             tabIndex: 0,
             children: [
-              /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("div", { className: "scenario-icon-wrap", style: { background: "rgba(236, 72, 153, 0.12)" }, children: /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { className: "scenario-emoji", children: "\u{1F380}" }) }),
-              /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("div", { className: "scenario-badge pink", children: "\u0414\u043B\u044F \u0434\u0435\u0442\u0435\u0439 \u0438 \u0441\u0435\u043C\u044C\u0438" }),
-              /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("h3", { children: "\u0412 \u043F\u043E\u0434\u0430\u0440\u043E\u043A \u0440\u0435\u0431\u0435\u043D\u043A\u0443" }),
-              /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { children: "\u042F\u0440\u043A\u0438\u0435 \u0443\u043A\u0443\u043B\u0435\u043B\u0435 \u0438 \u043A\u043B\u0430\u0441\u0441\u0438\u043A\u0430 \u0441 \u043D\u0435\u0439\u043B\u043E\u043D\u043E\u0432\u044B\u043C\u0438 \u0441\u0442\u0440\u0443\u043D\u0430\u043C\u0438: \u043F\u0430\u043B\u044C\u0446\u044B \u043D\u0435 \u0431\u043E\u043B\u044F\u0442, \u0443\u0447\u0438\u0442\u044C\u0441\u044F \u043B\u0435\u0433\u043A\u043E \u0438 \u0432\u0435\u0441\u0435\u043B\u043E." }),
-              /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { className: "scenario-link", children: "\u0421\u043C\u043E\u0442\u0440\u0435\u0442\u044C \u0443\u043A\u0443\u043B\u0435\u043B\u0435 \u2192" })
+              /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "scenario-icon-wrap", style: { background: "rgba(236, 72, 153, 0.12)" }, children: /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "scenario-emoji", children: "\u{1F380}" }) }),
+              /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "scenario-badge pink", children: "\u0414\u043B\u044F \u0434\u0435\u0442\u0435\u0439 \u0438 \u0441\u0435\u043C\u044C\u0438" }),
+              /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("h3", { children: "\u0412 \u043F\u043E\u0434\u0430\u0440\u043E\u043A \u0440\u0435\u0431\u0435\u043D\u043A\u0443" }),
+              /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { children: "\u042F\u0440\u043A\u0438\u0435 \u0443\u043A\u0443\u043B\u0435\u043B\u0435 \u0438 \u043A\u043B\u0430\u0441\u0441\u0438\u043A\u0430 \u0441 \u043D\u0435\u0439\u043B\u043E\u043D\u043E\u0432\u044B\u043C\u0438 \u0441\u0442\u0440\u0443\u043D\u0430\u043C\u0438: \u043F\u0430\u043B\u044C\u0446\u044B \u043D\u0435 \u0431\u043E\u043B\u044F\u0442, \u0443\u0447\u0438\u0442\u044C\u0441\u044F \u043B\u0435\u0433\u043A\u043E \u0438 \u0432\u0435\u0441\u0435\u043B\u043E." }),
+              /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "scenario-link", children: "\u0421\u043C\u043E\u0442\u0440\u0435\u0442\u044C \u0443\u043A\u0443\u043B\u0435\u043B\u0435 \u2192" })
             ]
           }
         ),
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)(
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)(
           "div",
           {
             className: "scenario-card",
@@ -14878,79 +14522,79 @@ function Storefront({
             role: "button",
             tabIndex: 0,
             children: [
-              /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("div", { className: "scenario-icon-wrap", style: { background: "rgba(16, 185, 129, 0.12)" }, children: /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { className: "scenario-emoji", children: "\u{1F525}" }) }),
-              /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("div", { className: "scenario-badge green", children: "\u0412\u044B\u0433\u043E\u0434\u0430 \u0434\u043E 30%" }),
-              /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("h3", { children: "\u041F\u043E \u0430\u043A\u0446\u0438\u0438 / Sale" }),
-              /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { children: "\u0421\u043F\u0435\u0446\u0438\u0430\u043B\u044C\u043D\u044B\u0435 \u043F\u0440\u0435\u0434\u043B\u043E\u0436\u0435\u043D\u0438\u044F \u0441\u0435\u0437\u043E\u043D\u0430: \u043C\u0430\u043A\u0441\u0438\u043C\u0430\u043B\u044C\u043D\u044B\u0435 \u0441\u043A\u0438\u0434\u043A\u0438 \u043D\u0430 \u043A\u043E\u043C\u043F\u043B\u0435\u043A\u0442\u044B \u0441 \u043F\u043E\u0434\u0430\u0440\u043A\u0430\u043C\u0438 \u0438 \u0447\u0435\u0445\u043B\u0430\u043C\u0438." }),
-              /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { className: "scenario-link", children: "\u041E\u0442\u043A\u0440\u044B\u0442\u044C \u0430\u043A\u0446\u0438\u0438 \u2192" })
+              /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "scenario-icon-wrap", style: { background: "rgba(16, 185, 129, 0.12)" }, children: /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "scenario-emoji", children: "\u{1F525}" }) }),
+              /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "scenario-badge green", children: "\u0412\u044B\u0433\u043E\u0434\u0430 \u0434\u043E 30%" }),
+              /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("h3", { children: "\u041F\u043E \u0430\u043A\u0446\u0438\u0438 / Sale" }),
+              /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { children: "\u0421\u043F\u0435\u0446\u0438\u0430\u043B\u044C\u043D\u044B\u0435 \u043F\u0440\u0435\u0434\u043B\u043E\u0436\u0435\u043D\u0438\u044F \u0441\u0435\u0437\u043E\u043D\u0430: \u043C\u0430\u043A\u0441\u0438\u043C\u0430\u043B\u044C\u043D\u044B\u0435 \u0441\u043A\u0438\u0434\u043A\u0438 \u043D\u0430 \u043A\u043E\u043C\u043F\u043B\u0435\u043A\u0442\u044B \u0441 \u043F\u043E\u0434\u0430\u0440\u043A\u0430\u043C\u0438 \u0438 \u0447\u0435\u0445\u043B\u0430\u043C\u0438." }),
+              /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "scenario-link", children: "\u041E\u0442\u043A\u0440\u044B\u0442\u044C \u0430\u043A\u0446\u0438\u0438 \u2192" })
             ]
           }
         )
       ] })
     ] }),
-    /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("section", { className: "trust-strip", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "trust-item", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("strong", { children: "\u041F\u0440\u043E\u0432\u0435\u0440\u043A\u0430 \u043A\u0430\u0436\u0434\u043E\u0433\u043E \u0438\u043D\u0441\u0442\u0440\u0443\u043C\u0435\u043D\u0442\u0430" }),
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { children: "\u041E\u0442\u0441\u0442\u0440\u043E\u0439\u043A\u0430 \u0433\u0440\u0438\u0444\u0430, \u0432\u0438\u0437\u0443\u0430\u043B\u044C\u043D\u044B\u0439 \u043A\u043E\u043D\u0442\u0440\u043E\u043B\u044C \u043F\u043E\u043A\u0440\u044B\u0442\u0438\u044F \u0438 \u043F\u0440\u043E\u0432\u0435\u0440\u043A\u0430 \u0444\u0443\u0440\u043D\u0438\u0442\u0443\u0440\u044B." })
+    /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("section", { className: "trust-strip", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "trust-item", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("strong", { children: "\u041F\u0440\u043E\u0432\u0435\u0440\u043A\u0430 \u043A\u0430\u0436\u0434\u043E\u0433\u043E \u0438\u043D\u0441\u0442\u0440\u0443\u043C\u0435\u043D\u0442\u0430" }),
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { children: "\u041E\u0442\u0441\u0442\u0440\u043E\u0439\u043A\u0430 \u0433\u0440\u0438\u0444\u0430, \u0432\u0438\u0437\u0443\u0430\u043B\u044C\u043D\u044B\u0439 \u043A\u043E\u043D\u0442\u0440\u043E\u043B\u044C \u043F\u043E\u043A\u0440\u044B\u0442\u0438\u044F \u0438 \u043F\u0440\u043E\u0432\u0435\u0440\u043A\u0430 \u0444\u0443\u0440\u043D\u0438\u0442\u0443\u0440\u044B." })
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "trust-item", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("strong", { children: "Kaspi Red \u0438 \u0420\u0430\u0441\u0441\u0440\u043E\u0447\u043A\u0430 0-0-12" }),
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { children: "Kaspi Red (3 \u043C\u0435\u0441) \u0438 Kaspi \u0420\u0430\u0441\u0441\u0440\u043E\u0447\u043A\u0430 (\u0434\u043E 12 \u043C\u0435\u0441) \u0431\u0435\u0437 \u043F\u0440\u043E\u0446\u0435\u043D\u0442\u043E\u0432 \u0438 \u043F\u0435\u0440\u0435\u043F\u043B\u0430\u0442." })
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "trust-item", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("strong", { children: "Kaspi Red \u0438 \u0420\u0430\u0441\u0441\u0440\u043E\u0447\u043A\u0430 0-0-12" }),
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { children: "Kaspi Red (3 \u043C\u0435\u0441) \u0438 Kaspi \u0420\u0430\u0441\u0441\u0440\u043E\u0447\u043A\u0430 (\u0434\u043E 12 \u043C\u0435\u0441) \u0431\u0435\u0437 \u043F\u0440\u043E\u0446\u0435\u043D\u0442\u043E\u0432 \u0438 \u043F\u0435\u0440\u0435\u043F\u043B\u0430\u0442." })
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "trust-item", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("strong", { children: "\u0414\u043E\u0441\u0442\u0430\u0432\u043A\u0430 \u043F\u043E \u041A\u0430\u0437\u0430\u0445\u0441\u0442\u0430\u043D\u0443" }),
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { children: "\u0411\u0435\u0440\u0435\u0436\u043D\u0430\u044F \u0443\u043F\u0430\u043A\u043E\u0432\u043A\u0430 \u0438 \u043E\u0442\u043F\u0440\u0430\u0432\u043A\u0430 \u043F\u0440\u043E\u0432\u0435\u0440\u0435\u043D\u043D\u044B\u043C\u0438 \u043A\u0443\u0440\u044C\u0435\u0440\u0441\u043A\u0438\u043C\u0438 \u0441\u043B\u0443\u0436\u0431\u0430\u043C\u0438." })
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "trust-item", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("strong", { children: "\u0414\u043E\u0441\u0442\u0430\u0432\u043A\u0430 \u043F\u043E \u041A\u0430\u0437\u0430\u0445\u0441\u0442\u0430\u043D\u0443" }),
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { children: "\u0411\u0435\u0440\u0435\u0436\u043D\u0430\u044F \u0443\u043F\u0430\u043A\u043E\u0432\u043A\u0430 \u0438 \u043E\u0442\u043F\u0440\u0430\u0432\u043A\u0430 \u043F\u0440\u043E\u0432\u0435\u0440\u0435\u043D\u043D\u044B\u043C\u0438 \u043A\u0443\u0440\u044C\u0435\u0440\u0441\u043A\u0438\u043C\u0438 \u0441\u043B\u0443\u0436\u0431\u0430\u043C\u0438." })
       ] })
     ] }),
-    /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("section", { className: "store-flow", "aria-label": "\u041A\u0430\u043A \u043E\u0444\u043E\u0440\u043C\u0438\u0442\u044C \u0437\u0430\u043A\u0430\u0437", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "flow-step", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { className: "step-num", children: "01" }),
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("strong", { children: "\u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u0438\u043D\u0441\u0442\u0440\u0443\u043C\u0435\u043D\u0442" }),
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { children: "\u041F\u043E\u0434\u0431\u0435\u0440\u0438\u0442\u0435 \u043C\u043E\u0434\u0435\u043B\u044C, \u0446\u0432\u0435\u0442 \u0438 \u043A\u043E\u043C\u043F\u043B\u0435\u043A\u0442\u0430\u0446\u0438\u044E \u0432 \u043A\u0430\u0442\u0430\u043B\u043E\u0433\u0435." })
+    /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("section", { className: "store-flow", "aria-label": "\u041A\u0430\u043A \u043E\u0444\u043E\u0440\u043C\u0438\u0442\u044C \u0437\u0430\u043A\u0430\u0437", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "flow-step", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "step-num", children: "01" }),
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("strong", { children: "\u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u0438\u043D\u0441\u0442\u0440\u0443\u043C\u0435\u043D\u0442" }),
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { children: "\u041F\u043E\u0434\u0431\u0435\u0440\u0438\u0442\u0435 \u043C\u043E\u0434\u0435\u043B\u044C, \u0446\u0432\u0435\u0442 \u0438 \u043A\u043E\u043C\u043F\u043B\u0435\u043A\u0442\u0430\u0446\u0438\u044E \u0432 \u043A\u0430\u0442\u0430\u043B\u043E\u0433\u0435." })
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "flow-step", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { className: "step-num", children: "02" }),
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("strong", { children: "\u0421\u043E\u0431\u0435\u0440\u0438\u0442\u0435 \u0437\u0430\u044F\u0432\u043A\u0443" }),
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { children: "\u0414\u043E\u0431\u0430\u0432\u044C\u0442\u0435 \u043D\u0443\u0436\u043D\u044B\u0435 \u043F\u043E\u0437\u0438\u0446\u0438\u0438 \u0432 \u043A\u043E\u0440\u0437\u0438\u043D\u0443 \u0438 \u043E\u0441\u0442\u0430\u0432\u044C\u0442\u0435 \u043A\u043E\u043D\u0442\u0430\u043A\u0442\u043D\u044B\u0435 \u0434\u0430\u043D\u043D\u044B\u0435." })
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "flow-step", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "step-num", children: "02" }),
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("strong", { children: "\u0421\u043E\u0431\u0435\u0440\u0438\u0442\u0435 \u0437\u0430\u044F\u0432\u043A\u0443" }),
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { children: "\u0414\u043E\u0431\u0430\u0432\u044C\u0442\u0435 \u043D\u0443\u0436\u043D\u044B\u0435 \u043F\u043E\u0437\u0438\u0446\u0438\u0438 \u0432 \u043A\u043E\u0440\u0437\u0438\u043D\u0443 \u0438 \u043E\u0441\u0442\u0430\u0432\u044C\u0442\u0435 \u043A\u043E\u043D\u0442\u0430\u043A\u0442\u043D\u044B\u0435 \u0434\u0430\u043D\u043D\u044B\u0435." })
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "flow-step", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { className: "step-num", children: "03" }),
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("strong", { children: "\u041F\u043E\u0434\u0442\u0432\u0435\u0440\u0434\u0438\u0442\u0435 \u0441 \u043C\u0435\u043D\u0435\u0434\u0436\u0435\u0440\u043E\u043C" }),
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { children: "\u0421\u0432\u044F\u0436\u0435\u043C\u0441\u044F, \u0443\u0442\u043E\u0447\u043D\u0438\u043C \u0434\u0435\u0442\u0430\u043B\u0438, \u0437\u0430\u0431\u0440\u043E\u043D\u0438\u0440\u0443\u0435\u043C \u0438\u043D\u0441\u0442\u0440\u0443\u043C\u0435\u043D\u0442 \u0438 \u0441\u043E\u0433\u043B\u0430\u0441\u0443\u0435\u043C \u043E\u0442\u043F\u0440\u0430\u0432\u043A\u0443." })
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "flow-step", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "step-num", children: "03" }),
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("strong", { children: "\u041F\u043E\u0434\u0442\u0432\u0435\u0440\u0434\u0438\u0442\u0435 \u0441 \u043C\u0435\u043D\u0435\u0434\u0436\u0435\u0440\u043E\u043C" }),
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { children: "\u0421\u0432\u044F\u0436\u0435\u043C\u0441\u044F, \u0443\u0442\u043E\u0447\u043D\u0438\u043C \u0434\u0435\u0442\u0430\u043B\u0438, \u0437\u0430\u0431\u0440\u043E\u043D\u0438\u0440\u0443\u0435\u043C \u0438\u043D\u0441\u0442\u0440\u0443\u043C\u0435\u043D\u0442 \u0438 \u0441\u043E\u0433\u043B\u0430\u0441\u0443\u0435\u043C \u043E\u0442\u043F\u0440\u0430\u0432\u043A\u0443." })
       ] })
     ] }),
-    /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("section", { className: "instrument-picker", id: "picker", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("div", { className: "section-head", children: /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { children: [
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "eyebrow", children: "\u041F\u041E\u0414\u0411\u041E\u0420" }),
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("h2", { children: "\u0421 \u0447\u0435\u0433\u043E \u043D\u0430\u0447\u0430\u0442\u044C \u0432\u044B\u0431\u043E\u0440?" })
+    /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("section", { className: "instrument-picker", id: "picker", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "section-head", children: /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { children: [
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { className: "eyebrow", children: "\u041F\u041E\u0414\u0411\u041E\u0420" }),
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("h2", { children: "\u0421 \u0447\u0435\u0433\u043E \u043D\u0430\u0447\u0430\u0442\u044C \u0432\u044B\u0431\u043E\u0440?" })
       ] }) }),
-      /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("div", { className: "picker-grid", children: instrumentChoices.map((choice) => /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)(
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "picker-grid", children: instrumentChoices.map((choice) => /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)(
         "button",
         {
           className: "picker-card",
           onClick: () => chooseCategory(choice.title),
           children: [
-            /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { className: "picker-thumb", children: /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(Image, { src: choice.image, alt: choice.title, fill: true, unoptimized: true, sizes: "120px" }) }),
-            /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "picker-text", children: [
-              /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("strong", { children: choice.title }),
-              /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { children: choice.caption })
+            /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "picker-thumb", children: /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(Image, { src: choice.image, alt: choice.title, fill: true, unoptimized: true, sizes: "120px" }) }),
+            /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "picker-text", children: [
+              /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("strong", { children: choice.title }),
+              /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { children: choice.caption })
             ] })
           ]
         },
         choice.title
       )) })
     ] }),
-    /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("section", { className: "catalog-section", id: "catalog", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "section-head", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { children: [
-          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "eyebrow", children: "\u041A\u0410\u0422\u0410\u041B\u041E\u0413" }),
-          /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("h2", { children: [
+    /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("section", { className: "catalog-section", id: "catalog", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "section-head", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { children: [
+          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { className: "eyebrow", children: "\u041A\u0410\u0422\u0410\u041B\u041E\u0413" }),
+          /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("h2", { children: [
             "\u0418\u043D\u0441\u0442\u0440\u0443\u043C\u0435\u043D\u0442\u044B \u0438 \u0430\u043A\u0441\u0435\u0441\u0441\u0443\u0430\u0440\u044B (",
             displayedProducts.length,
             ")"
           ] })
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("div", { className: "category-filter", role: "tablist", "aria-label": "\u041A\u0430\u0442\u0435\u0433\u043E\u0440\u0438\u0438", children: categories.map((item) => /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "category-filter", role: "tablist", "aria-label": "\u041A\u0430\u0442\u0435\u0433\u043E\u0440\u0438\u0438", children: categories.map((item) => /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
           "button",
           {
             role: "tab",
@@ -14962,9 +14606,9 @@ function Storefront({
           item
         )) })
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "catalog-control-bar", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "quick-filter-pills", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "catalog-control-bar", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "quick-filter-pills", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
             "button",
             {
               type: "button",
@@ -14973,7 +14617,7 @@ function Storefront({
               children: "\u0412\u0441\u0435 \u0442\u043E\u0432\u0430\u0440\u044B"
             }
           ),
-          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(
+          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
             "button",
             {
               type: "button",
@@ -14982,7 +14626,7 @@ function Storefront({
               children: "\u{1F525} \u0422\u043E\u043B\u044C\u043A\u043E \u043F\u043E \u0430\u043A\u0446\u0438\u0438 (Sale)"
             }
           ),
-          /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)(
+          /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)(
             "button",
             {
               type: "button",
@@ -14996,25 +14640,25 @@ function Storefront({
             }
           )
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "catalog-sort-group", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { className: "sort-label", children: "\u0421\u043E\u0440\u0442\u0438\u0440\u043E\u0432\u043A\u0430:" }),
-          /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)(
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "catalog-sort-group", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "sort-label", children: "\u0421\u043E\u0440\u0442\u0438\u0440\u043E\u0432\u043A\u0430:" }),
+          /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)(
             "select",
             {
               value: sortBy,
               onChange: (e) => setSortBy(e.target.value),
               "aria-label": "\u0421\u043E\u0440\u0442\u0438\u0440\u043E\u0432\u043A\u0430 \u043A\u0430\u0442\u0430\u043B\u043E\u0433\u0430",
               children: [
-                /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("option", { value: "popular", children: "\u041F\u043E \u043F\u043E\u043F\u0443\u043B\u044F\u0440\u043D\u043E\u0441\u0442\u0438" }),
-                /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("option", { value: "price_asc", children: "\u0421\u043D\u0430\u0447\u0430\u043B\u0430 \u043D\u0435\u0434\u043E\u0440\u043E\u0433\u0438\u0435" }),
-                /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("option", { value: "price_desc", children: "\u0421\u043D\u0430\u0447\u0430\u043B\u0430 \u043F\u0440\u0435\u043C\u0438\u0443\u043C" }),
-                /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("option", { value: "discount", children: "\u041F\u043E \u0440\u0430\u0437\u043C\u0435\u0440\u0443 \u0441\u043A\u0438\u0434\u043A\u0438" })
+                /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("option", { value: "popular", children: "\u041F\u043E \u043F\u043E\u043F\u0443\u043B\u044F\u0440\u043D\u043E\u0441\u0442\u0438" }),
+                /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("option", { value: "price_asc", children: "\u0421\u043D\u0430\u0447\u0430\u043B\u0430 \u043D\u0435\u0434\u043E\u0440\u043E\u0433\u0438\u0435" }),
+                /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("option", { value: "price_desc", children: "\u0421\u043D\u0430\u0447\u0430\u043B\u0430 \u043F\u0440\u0435\u043C\u0438\u0443\u043C" }),
+                /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("option", { value: "discount", children: "\u041F\u043E \u0440\u0430\u0437\u043C\u0435\u0440\u0443 \u0441\u043A\u0438\u0434\u043A\u0438" })
               ]
             }
           )
         ] })
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("div", { className: "products-grid", children: displayedProducts.map((product) => {
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "products-grid", children: displayedProducts.map((product) => {
         const productPrice = product.price ?? 0;
         const hasDiscount = Boolean(
           product.originalPrice && product.price && product.originalPrice > product.price || product.discountPercent && product.discountPercent > 0
@@ -15026,8 +14670,8 @@ function Storefront({
         const currentVariant = selectedVariantsByProduct[product.id] || variants[0] || null;
         const displayImage = currentVariant?.image || product.image;
         const attachedCourse = resolveAttachedCourse(product);
-        return /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("article", { className: "product-card", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)(
+        return /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("article", { className: "product-card", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)(
             "div",
             {
               className: "product-card-body",
@@ -15036,8 +14680,8 @@ function Storefront({
               tabIndex: 0,
               "aria-label": `\u041E\u0442\u043A\u0440\u044B\u0442\u044C \u043A\u0430\u0440\u0442\u043E\u0447\u043A\u0443: ${product.name}`,
               children: [
-                /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "card-image-wrap", children: [
-                  /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(
+                /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "card-image-wrap", children: [
+                  /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
                     Image,
                     {
                       src: displayImage,
@@ -15048,14 +14692,14 @@ function Storefront({
                     },
                     displayImage
                   ),
-                  hasDiscount && /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("span", { className: "discount-tag", children: [
+                  hasDiscount && /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("span", { className: "discount-tag", children: [
                     "-",
                     discountPercent,
                     "%"
                   ] }),
-                  product.badge && /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { className: "product-badge", children: product.badge }),
-                  attachedCourse && /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { className: "card-gift-tag", children: "\u{1F381} \u041A\u0443\u0440\u0441 \u0432 \u043F\u043E\u0434\u0430\u0440\u043E\u043A" }),
-                  product.audioUrl && /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)(
+                  product.badge && /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "product-badge", children: product.badge }),
+                  attachedCourse && /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "card-gift-tag", children: "\u{1F381} \u041A\u0443\u0440\u0441 \u0432 \u043F\u043E\u0434\u0430\u0440\u043E\u043A" }),
+                  product.audioUrl && /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)(
                     "button",
                     {
                       type: "button",
@@ -15063,29 +14707,29 @@ function Storefront({
                       onClick: (e) => handleCardSoundPlay(e, product),
                       title: isPlaying ? "\u041E\u0441\u0442\u0430\u043D\u043E\u0432\u0438\u0442\u044C" : "\u041F\u043E\u0441\u043B\u0443\u0448\u0430\u0442\u044C \u0437\u0432\u0443\u0447\u0430\u043D\u0438\u0435 \u0438\u043D\u0441\u0442\u0440\u0443\u043C\u0435\u043D\u0442\u0430",
                       children: [
-                        isPlaying ? /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("span", { className: "soundwave-equalizer", "aria-hidden": "true", children: [
-                          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { className: "sw-bar sw-1" }),
-                          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { className: "sw-bar sw-2" }),
-                          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { className: "sw-bar sw-3" }),
-                          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { className: "sw-bar sw-4" })
-                        ] }) : /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { className: "sound-icon", children: "\u{1F50A}" }),
-                        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("small", { children: isPlaying ? "\u0417\u0432\u0443\u0447\u0438\u0442" : "\u0417\u0432\u0443\u043A" })
+                        isPlaying ? /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("span", { className: "soundwave-equalizer", "aria-hidden": "true", children: [
+                          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "sw-bar sw-1" }),
+                          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "sw-bar sw-2" }),
+                          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "sw-bar sw-3" }),
+                          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "sw-bar sw-4" })
+                        ] }) : /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "sound-icon", children: "\u{1F50A}" }),
+                        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("small", { children: isPlaying ? "\u0417\u0432\u0443\u0447\u0438\u0442" : "\u0417\u0432\u0443\u043A" })
                       ]
                     }
                   )
                 ] }),
-                /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "product-card-meta", children: [
-                  variants.length > 1 && /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)(
+                /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "product-card-meta", children: [
+                  variants.length > 1 && /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)(
                     "div",
                     {
                       className: "card-swatches-strip",
                       onClick: (e) => e.stopPropagation(),
                       "aria-label": "\u0412\u044B\u0431\u0440\u0430\u0442\u044C \u0446\u0432\u0435\u0442 \u0438\u043D\u0441\u0442\u0440\u0443\u043C\u0435\u043D\u0442\u0430",
                       children: [
-                        /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "swatch-dots-row", children: [
+                        /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "swatch-dots-row", children: [
                           variants.slice(0, 6).map((v) => {
                             const isSelected = (currentVariant?.id || currentVariant?.sku) === (v.id || v.sku);
-                            return /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(
+                            return /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
                               "button",
                               {
                                 type: "button",
@@ -15104,7 +14748,7 @@ function Storefront({
                                   }));
                                 },
                                 title: `${v.name} (${v.stock} \u0448\u0442.)`,
-                                children: /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(
+                                children: /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
                                   "i",
                                   {
                                     style: {
@@ -15116,42 +14760,42 @@ function Storefront({
                               v.sku || v.name
                             );
                           }),
-                          variants.length > 6 && /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("span", { className: "swatches-more-pill", title: `\u0415\u0449\u0451 ${variants.length - 6} \u0446\u0432\u0435\u0442\u043E\u0432`, children: [
+                          variants.length > 6 && /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("span", { className: "swatches-more-pill", title: `\u0415\u0449\u0451 ${variants.length - 6} \u0446\u0432\u0435\u0442\u043E\u0432`, children: [
                             "+",
                             variants.length - 6
                           ] })
                         ] }),
-                        currentVariant?.name && /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { className: "current-color-label", children: currentVariant.name })
+                        currentVariant?.name && /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "current-color-label", children: currentVariant.name })
                       ]
                     }
                   ),
-                  /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "eyebrow", children: product.category }),
-                  /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("h3", { children: product.name }),
-                  /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "product-description", children: product.description })
+                  /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { className: "eyebrow", children: product.category }),
+                  /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("h3", { children: product.name }),
+                  /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { className: "product-description", children: product.description })
                 ] })
               ]
             }
           ),
-          /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "product-card-actions", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "price-tag", children: [
-              /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("small", { children: hasDiscount ? "\u0410\u043A\u0446\u0438\u044F" : "\u0426\u0435\u043D\u0430" }),
-              /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "price-row", children: [
-                /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("strong", { className: "current-price", children: productPrice ? `${money(productPrice)} \u20B8` : "\u041F\u043E \u0437\u0430\u043F\u0440\u043E\u0441\u0443" }),
-                hasDiscount && originalPrice && /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("span", { className: "old-price", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "product-card-actions", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "price-tag", children: [
+              /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("small", { children: hasDiscount ? "\u0410\u043A\u0446\u0438\u044F" : "\u0426\u0435\u043D\u0430" }),
+              /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "price-row", children: [
+                /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("strong", { className: "current-price", children: productPrice ? `${money(productPrice)} \u20B8` : "\u041F\u043E \u0437\u0430\u043F\u0440\u043E\u0441\u0443" }),
+                hasDiscount && originalPrice && /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("span", { className: "old-price", children: [
                   money(originalPrice),
                   " \u20B8"
                 ] })
               ] }),
-              productPrice > 0 ? /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "installment-chip", title: "Kaspi Red \u0438 \u0420\u0430\u0441\u0441\u0440\u043E\u0447\u043A\u0430 0-0-12", children: [
-                /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { className: "kaspi-badge", children: "0-0-12" }),
-                /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("span", { children: [
+              productPrice > 0 ? /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "installment-chip", title: "Kaspi Red \u0438 \u0420\u0430\u0441\u0441\u0440\u043E\u0447\u043A\u0430 0-0-12", children: [
+                /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "kaspi-badge", children: "0-0-12" }),
+                /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("span", { children: [
                   "\u043E\u0442 ",
                   money(installment(productPrice, 12)),
                   " \u20B8/\u043C\u0435\u0441"
                 ] })
               ] }) : null
             ] }),
-            /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(
+            /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
               "button",
               {
                 className: "card-action-button",
@@ -15166,108 +14810,108 @@ function Storefront({
         ] }, product.id);
       }) })
     ] }),
-    /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("section", { className: "workshop-section", id: "workshop", children: /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "workshop-inner", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "workshop-header", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { className: "eyebrow", children: "\u041C\u0410\u0421\u0422\u0415\u0420\u0421\u041A\u0410\u042F MAESTRO" }),
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("h2", { children: "\u041A\u0430\u0436\u0434\u0430\u044F \u0433\u0438\u0442\u0430\u0440\u0430 \u043F\u0440\u043E\u0445\u043E\u0434\u0438\u0442 3 \u044D\u0442\u0430\u043F\u0430 \u0434\u043E\u0432\u043E\u0434\u043A\u0438 \u043C\u0430\u0441\u0442\u0435\u0440\u043E\u043C" }),
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "workshop-subtitle", children: "\u041C\u044B \u043D\u0435 \u043E\u0442\u043F\u0440\u0430\u0432\u043B\u044F\u0435\u043C \u0437\u0430\u043F\u0435\u0447\u0430\u0442\u0430\u043D\u043D\u044B\u0435 \u0444\u0430\u0431\u0440\u0438\u0447\u043D\u044B\u0435 \u043A\u043E\u0440\u043E\u0431\u043A\u0438 \u0432\u0441\u043B\u0435\u043F\u0443\u044E. \u0418\u043D\u0441\u0442\u0440\u0443\u043C\u0435\u043D\u0442 \u0434\u043E\u0441\u0442\u0430\u0435\u0442\u0441\u044F, \u043F\u0440\u043E\u0432\u0435\u0440\u044F\u0435\u0442\u0441\u044F \u0438 \u043E\u0442\u0441\u0442\u0440\u0430\u0438\u0432\u0430\u0435\u0442\u0441\u044F \u0432\u0440\u0443\u0447\u043D\u0443\u044E \u043F\u0435\u0440\u0435\u0434 \u043E\u0442\u043F\u0440\u0430\u0432\u043A\u043E\u0439." })
+    /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("section", { className: "workshop-section", id: "workshop", children: /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "workshop-inner", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "workshop-header", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "eyebrow", children: "\u041C\u0410\u0421\u0422\u0415\u0420\u0421\u041A\u0410\u042F MAESTRO" }),
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("h2", { children: "\u041A\u0430\u0436\u0434\u0430\u044F \u0433\u0438\u0442\u0430\u0440\u0430 \u043F\u0440\u043E\u0445\u043E\u0434\u0438\u0442 3 \u044D\u0442\u0430\u043F\u0430 \u0434\u043E\u0432\u043E\u0434\u043A\u0438 \u043C\u0430\u0441\u0442\u0435\u0440\u043E\u043C" }),
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { className: "workshop-subtitle", children: "\u041C\u044B \u043D\u0435 \u043E\u0442\u043F\u0440\u0430\u0432\u043B\u044F\u0435\u043C \u0437\u0430\u043F\u0435\u0447\u0430\u0442\u0430\u043D\u043D\u044B\u0435 \u0444\u0430\u0431\u0440\u0438\u0447\u043D\u044B\u0435 \u043A\u043E\u0440\u043E\u0431\u043A\u0438 \u0432\u0441\u043B\u0435\u043F\u0443\u044E. \u0418\u043D\u0441\u0442\u0440\u0443\u043C\u0435\u043D\u0442 \u0434\u043E\u0441\u0442\u0430\u0435\u0442\u0441\u044F, \u043F\u0440\u043E\u0432\u0435\u0440\u044F\u0435\u0442\u0441\u044F \u0438 \u043E\u0442\u0441\u0442\u0440\u0430\u0438\u0432\u0430\u0435\u0442\u0441\u044F \u0432\u0440\u0443\u0447\u043D\u0443\u044E \u043F\u0435\u0440\u0435\u0434 \u043E\u0442\u043F\u0440\u0430\u0432\u043A\u043E\u0439." })
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "workshop-steps-grid", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "workshop-step-card", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("div", { className: "workshop-step-num", children: "01" }),
-          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("div", { className: "workshop-step-icon", children: "\u{1F4D0}" }),
-          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("h3", { children: "\u041E\u0442\u0441\u0442\u0440\u043E\u0439\u043A\u0430 \u0430\u043D\u043A\u0435\u0440\u0430 \u0438 \u0432\u044B\u0441\u043E\u0442\u044B \u0441\u0442\u0440\u0443\u043D" }),
-          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { children: "\u0412\u044B\u0441\u0442\u0430\u0432\u043B\u044F\u0435\u043C \u043C\u0438\u043D\u0438\u043C\u0430\u043B\u044C\u043D\u044B\u0439 \u0437\u0430\u0437\u043E\u0440 \u043D\u0430\u0434 \u043B\u0430\u0434\u0430\u043C\u0438 (1.5\u20132 \u043C\u043C), \u0447\u0442\u043E\u0431\u044B \u0430\u043A\u043A\u043E\u0440\u0434\u044B \u0437\u0430\u0436\u0438\u043C\u0430\u043B\u0438\u0441\u044C \u043B\u0435\u0433\u043A\u043E \u0438 \u043F\u0430\u043B\u044C\u0446\u044B \u043D\u0435 \u0431\u043E\u043B\u0435\u043B\u0438 \u0434\u0430\u0436\u0435 \u0443 \u043D\u043E\u0432\u0438\u0447\u043A\u0430." })
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "workshop-steps-grid", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "workshop-step-card", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "workshop-step-num", children: "01" }),
+          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "workshop-step-icon", children: "\u{1F4D0}" }),
+          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("h3", { children: "\u041E\u0442\u0441\u0442\u0440\u043E\u0439\u043A\u0430 \u0430\u043D\u043A\u0435\u0440\u0430 \u0438 \u0432\u044B\u0441\u043E\u0442\u044B \u0441\u0442\u0440\u0443\u043D" }),
+          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { children: "\u0412\u044B\u0441\u0442\u0430\u0432\u043B\u044F\u0435\u043C \u043C\u0438\u043D\u0438\u043C\u0430\u043B\u044C\u043D\u044B\u0439 \u0437\u0430\u0437\u043E\u0440 \u043D\u0430\u0434 \u043B\u0430\u0434\u0430\u043C\u0438 (1.5\u20132 \u043C\u043C), \u0447\u0442\u043E\u0431\u044B \u0430\u043A\u043A\u043E\u0440\u0434\u044B \u0437\u0430\u0436\u0438\u043C\u0430\u043B\u0438\u0441\u044C \u043B\u0435\u0433\u043A\u043E \u0438 \u043F\u0430\u043B\u044C\u0446\u044B \u043D\u0435 \u0431\u043E\u043B\u0435\u043B\u0438 \u0434\u0430\u0436\u0435 \u0443 \u043D\u043E\u0432\u0438\u0447\u043A\u0430." })
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "workshop-step-card", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("div", { className: "workshop-step-num", children: "02" }),
-          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("div", { className: "workshop-step-icon", children: "\u2728" }),
-          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("h3", { children: "\u0428\u043B\u0438\u0444\u043E\u0432\u043A\u0430 \u0438 \u0442\u043E\u0440\u0446\u0435\u0432\u0430\u043D\u0438\u0435 \u043B\u0430\u0434\u043E\u0432" }),
-          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { children: "\u041E\u0431\u0440\u0430\u0431\u0430\u0442\u044B\u0432\u0430\u0435\u043C \u043A\u0440\u0430\u044F \u043C\u0435\u0442\u0430\u043B\u043B\u0438\u0447\u0435\u0441\u043A\u043E\u0433\u043E \u043B\u0430\u0434\u043E\u0432\u043E\u0433\u043E \u043F\u0440\u043E\u0444\u0438\u043B\u044F. \u0420\u0443\u043A\u0430 \u0441\u043A\u043E\u043B\u044C\u0437\u0438\u0442 \u043F\u043E \u0433\u0440\u0438\u0444\u0443 \u0438\u0434\u0435\u0430\u043B\u044C\u043D\u043E \u0433\u043B\u0430\u0434\u043A\u043E, \u0431\u0435\u0437 \u043C\u0438\u043A\u0440\u043E\u0446\u0430\u0440\u0430\u043F\u0438\u043D \u0438 \u0437\u0430\u0446\u0435\u043F\u043E\u0432." })
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "workshop-step-card", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "workshop-step-num", children: "02" }),
+          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "workshop-step-icon", children: "\u2728" }),
+          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("h3", { children: "\u0428\u043B\u0438\u0444\u043E\u0432\u043A\u0430 \u0438 \u0442\u043E\u0440\u0446\u0435\u0432\u0430\u043D\u0438\u0435 \u043B\u0430\u0434\u043E\u0432" }),
+          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { children: "\u041E\u0431\u0440\u0430\u0431\u0430\u0442\u044B\u0432\u0430\u0435\u043C \u043A\u0440\u0430\u044F \u043C\u0435\u0442\u0430\u043B\u043B\u0438\u0447\u0435\u0441\u043A\u043E\u0433\u043E \u043B\u0430\u0434\u043E\u0432\u043E\u0433\u043E \u043F\u0440\u043E\u0444\u0438\u043B\u044F. \u0420\u0443\u043A\u0430 \u0441\u043A\u043E\u043B\u044C\u0437\u0438\u0442 \u043F\u043E \u0433\u0440\u0438\u0444\u0443 \u0438\u0434\u0435\u0430\u043B\u044C\u043D\u043E \u0433\u043B\u0430\u0434\u043A\u043E, \u0431\u0435\u0437 \u043C\u0438\u043A\u0440\u043E\u0446\u0430\u0440\u0430\u043F\u0438\u043D \u0438 \u0437\u0430\u0446\u0435\u043F\u043E\u0432." })
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "workshop-step-card", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("div", { className: "workshop-step-num", children: "03" }),
-          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("div", { className: "workshop-step-icon", children: "\u{1F39B}\uFE0F" }),
-          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("h3", { children: "\u041A\u0430\u043B\u0438\u0431\u0440\u043E\u0432\u043A\u0430 \u043C\u0435\u043D\u0437\u0443\u0440\u044B \u0438 \u044D\u043B\u0435\u043A\u0442\u0440\u043E\u043D\u0438\u043A\u0438" }),
-          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { children: "\u041F\u0440\u043E\u0432\u0435\u0440\u044F\u0435\u043C \u0442\u043E\u0447\u043D\u043E\u0441\u0442\u044C \u0441\u0442\u0440\u043E\u044F \u043F\u043E \u0432\u0441\u0435\u043C \u043B\u0430\u0434\u0430\u043C \u043E\u0442 1 \u0434\u043E 24, \u0442\u0435\u0441\u0442\u0438\u0440\u0443\u0435\u043C \u043A\u043E\u043B\u043A\u0438, \u0437\u0432\u0443\u043A\u043E\u0441\u043D\u0438\u043C\u0430\u0442\u0435\u043B\u0438 \u0438 \u043F\u043E\u0442\u0435\u043D\u0446\u0438\u043E\u043C\u0435\u0442\u0440\u044B \u0431\u0435\u0437 \u0444\u043E\u043D\u0430 \u0438 \u0448\u0443\u043C\u043E\u0432." })
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "workshop-step-card", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "workshop-step-num", children: "03" }),
+          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "workshop-step-icon", children: "\u{1F39B}\uFE0F" }),
+          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("h3", { children: "\u041A\u0430\u043B\u0438\u0431\u0440\u043E\u0432\u043A\u0430 \u043C\u0435\u043D\u0437\u0443\u0440\u044B \u0438 \u044D\u043B\u0435\u043A\u0442\u0440\u043E\u043D\u0438\u043A\u0438" }),
+          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { children: "\u041F\u0440\u043E\u0432\u0435\u0440\u044F\u0435\u043C \u0442\u043E\u0447\u043D\u043E\u0441\u0442\u044C \u0441\u0442\u0440\u043E\u044F \u043F\u043E \u0432\u0441\u0435\u043C \u043B\u0430\u0434\u0430\u043C \u043E\u0442 1 \u0434\u043E 24, \u0442\u0435\u0441\u0442\u0438\u0440\u0443\u0435\u043C \u043A\u043E\u043B\u043A\u0438, \u0437\u0432\u0443\u043A\u043E\u0441\u043D\u0438\u043C\u0430\u0442\u0435\u043B\u0438 \u0438 \u043F\u043E\u0442\u0435\u043D\u0446\u0438\u043E\u043C\u0435\u0442\u0440\u044B \u0431\u0435\u0437 \u0444\u043E\u043D\u0430 \u0438 \u0448\u0443\u043C\u043E\u0432." })
         ] })
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "workshop-cta-card", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "workshop-cta-copy", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { className: "live-video-badge", children: "\u{1F3A5} \u0412\u0438\u0434\u0435\u043E \u043F\u0435\u0440\u0435\u0434 \u043E\u0442\u043F\u0440\u0430\u0432\u043A\u043E\u0439" }),
-          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("h3", { children: "\u0425\u043E\u0442\u0438\u0442\u0435 \u0443\u0441\u043B\u044B\u0448\u0430\u0442\u044C \u0437\u0432\u0443\u043A \u043A\u043E\u043D\u043A\u0440\u0435\u0442\u043D\u043E\u0433\u043E \u0438\u043D\u0441\u0442\u0440\u0443\u043C\u0435\u043D\u0442\u0430?" }),
-          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { children: "\u041D\u0430\u043F\u0438\u0448\u0438\u0442\u0435 \u043C\u0430\u0441\u0442\u0435\u0440\u0443 \u0432 WhatsApp \u2014 \u0437\u0430\u043F\u0438\u0448\u0435\u043C \u043F\u0435\u0440\u0441\u043E\u043D\u0430\u043B\u044C\u043D\u043E\u0435 \u0432\u0438\u0434\u0435\u043E \u0441\u043E \u0437\u0432\u0443\u043A\u043E\u043C \u0438\u043C\u0435\u043D\u043D\u043E \u0432\u0430\u0448\u0435\u0439 \u0433\u0438\u0442\u0430\u0440\u044B \u043F\u0435\u0440\u0435\u0434 \u0443\u043F\u0430\u043A\u043E\u0432\u043A\u043E\u0439!" })
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "workshop-cta-card", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "workshop-cta-copy", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "live-video-badge", children: "\u{1F3A5} \u0412\u0438\u0434\u0435\u043E \u043F\u0435\u0440\u0435\u0434 \u043E\u0442\u043F\u0440\u0430\u0432\u043A\u043E\u0439" }),
+          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("h3", { children: "\u0425\u043E\u0442\u0438\u0442\u0435 \u0443\u0441\u043B\u044B\u0448\u0430\u0442\u044C \u0437\u0432\u0443\u043A \u043A\u043E\u043D\u043A\u0440\u0435\u0442\u043D\u043E\u0433\u043E \u0438\u043D\u0441\u0442\u0440\u0443\u043C\u0435\u043D\u0442\u0430?" }),
+          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { children: "\u041D\u0430\u043F\u0438\u0448\u0438\u0442\u0435 \u043C\u0430\u0441\u0442\u0435\u0440\u0443 \u0432 WhatsApp \u2014 \u0437\u0430\u043F\u0438\u0448\u0435\u043C \u043F\u0435\u0440\u0441\u043E\u043D\u0430\u043B\u044C\u043D\u043E\u0435 \u0432\u0438\u0434\u0435\u043E \u0441\u043E \u0437\u0432\u0443\u043A\u043E\u043C \u0438\u043C\u0435\u043D\u043D\u043E \u0432\u0430\u0448\u0435\u0439 \u0433\u0438\u0442\u0430\u0440\u044B \u043F\u0435\u0440\u0435\u0434 \u0443\u043F\u0430\u043A\u043E\u0432\u043A\u043E\u0439!" })
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
           "a",
           {
             className: "workshop-wa-button",
             href: "https://wa.me/77775055788?text=%D0%97%D0%B4%D1%80%D0%B0%D0%B2%D1%81%D1%82%D0%B2%D1%83%D0%B9%D1%82%D0%B5!%20%D0%A5%D0%BE%D1%87%D1%83%20%D0%BF%D0%BE%D1%81%D0%BC%D0%BE%D1%82%D1%80%D0%B5%D1%82%D1%8C%20%D0%B8%20%D0%BF%D0%BE%D1%81%D0%BB%D1%83%D1%88%D0%B0%D1%82%D1%8C%20%D0%B3%D0%B8%D1%82%D0%B0%D1%80%D1%83%20%D0%BF%D0%B5%D1%80%D0%B5%D0%B4%20%D0%BF%D0%BE%D0%BA%D1%83%D0%BF%D0%BA%D0%BE%D0%B9",
             target: "_blank",
             rel: "noopener noreferrer",
-            children: /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { children: "\u{1F4AC} \u041D\u0430\u043F\u0438\u0441\u0430\u0442\u044C \u043C\u0430\u0441\u0442\u0435\u0440\u0443 \u0432 WhatsApp" })
+            children: /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { children: "\u{1F4AC} \u041D\u0430\u043F\u0438\u0441\u0430\u0442\u044C \u043C\u0430\u0441\u0442\u0435\u0440\u0443 \u0432 WhatsApp" })
           }
         )
       ] })
     ] }) }),
-    /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("section", { className: "reviews-section", id: "reviews", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "section-head text-center", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "eyebrow", children: "\u041E\u0422\u0417\u042B\u0412\u042B \u041F\u041E\u041A\u0423\u041F\u0410\u0422\u0415\u041B\u0415\u0419" }),
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("h2", { children: "\u0427\u0442\u043E \u0433\u043E\u0432\u043E\u0440\u044F\u0442 \u043C\u0443\u0437\u044B\u043A\u0430\u043D\u0442\u044B \u0438 \u0440\u043E\u0434\u0438\u0442\u0435\u043B\u0438" }),
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "reviews-subtitle", children: "\u0411\u043E\u043B\u0435\u0435 1 400 \u0434\u043E\u0432\u043E\u043B\u044C\u043D\u044B\u0445 \u043A\u043B\u0438\u0435\u043D\u0442\u043E\u0432 \u043F\u043E \u0432\u0441\u0435\u043C\u0443 \u041A\u0430\u0437\u0430\u0445\u0441\u0442\u0430\u043D\u0443" })
+    /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("section", { className: "reviews-section", id: "reviews", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "section-head text-center", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { className: "eyebrow", children: "\u041E\u0422\u0417\u042B\u0412\u042B \u041F\u041E\u041A\u0423\u041F\u0410\u0422\u0415\u041B\u0415\u0419" }),
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("h2", { children: "\u0427\u0442\u043E \u0433\u043E\u0432\u043E\u0440\u044F\u0442 \u043C\u0443\u0437\u044B\u043A\u0430\u043D\u0442\u044B \u0438 \u0440\u043E\u0434\u0438\u0442\u0435\u043B\u0438" }),
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { className: "reviews-subtitle", children: "\u0411\u043E\u043B\u0435\u0435 1 400 \u0434\u043E\u0432\u043E\u043B\u044C\u043D\u044B\u0445 \u043A\u043B\u0438\u0435\u043D\u0442\u043E\u0432 \u043F\u043E \u0432\u0441\u0435\u043C\u0443 \u041A\u0430\u0437\u0430\u0445\u0441\u0442\u0430\u043D\u0443" })
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "reviews-grid", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("article", { className: "review-card", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "review-rating", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "reviews-grid", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("article", { className: "review-card", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "review-rating", children: [
             "\u2605\u2605\u2605\u2605\u2605 ",
-            /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { className: "verified-badge", children: "\u2713 \u041F\u0440\u043E\u0432\u0435\u0440\u0435\u043D\u043D\u044B\u0439 \u0437\u0430\u043A\u0430\u0437" })
+            /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "verified-badge", children: "\u2713 \u041F\u0440\u043E\u0432\u0435\u0440\u0435\u043D\u043D\u044B\u0439 \u0437\u0430\u043A\u0430\u0437" })
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "review-quote", children: "\xAB\u0417\u0430\u043A\u0430\u0437\u044B\u0432\u0430\u043B\u0430 \u0433\u0438\u0442\u0430\u0440\u0443 41\u2033 \u0434\u043E\u0447\u043A\u0435 \u0432 \u043F\u043E\u0434\u0430\u0440\u043E\u043A. \u041F\u0440\u0438\u0448\u043B\u0430 \u0443\u0436\u0435 \u0438\u0434\u0435\u0430\u043B\u044C\u043D\u043E \u043D\u0430\u0441\u0442\u0440\u043E\u0435\u043D\u043D\u0430\u044F, \u0441\u0442\u0440\u0443\u043D\u044B \u043C\u044F\u0433\u043A\u0438\u0435, \u043F\u0430\u043B\u044C\u0446\u044B \u043D\u0435 \u0440\u0435\u0436\u0435\u0442. \u041F\u043E \u043F\u043E\u0434\u0430\u0440\u043E\u0447\u043D\u043E\u043C\u0443 \u043A\u0443\u0440\u0441\u0443 \u0437\u0430 4 \u0434\u043D\u044F \u0432\u044B\u0443\u0447\u0438\u043B\u0438 \u043F\u0435\u0440\u0432\u0443\u044E \u043F\u0435\u0441\u043D\u044E!\xBB" }),
-          /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "reviewer-meta", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { className: "reviewer-avatar", children: "\u{1F469}\u{1F3FB}\u200D\u{1F4BC}" }),
-            /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { children: [
-              /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("strong", { children: "\u0410\u0439\u0433\u0435\u0440\u0438\u043C \u0421." }),
-              /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("small", { children: "\u0433. \u0410\u0441\u0442\u0430\u043D\u0430 \xB7 \u0410\u043A\u0443\u0441\u0442\u0438\u0447\u0435\u0441\u043A\u0430\u044F \u0433\u0438\u0442\u0430\u0440\u0430 41\u2033" })
+          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { className: "review-quote", children: "\xAB\u0417\u0430\u043A\u0430\u0437\u044B\u0432\u0430\u043B\u0430 \u0433\u0438\u0442\u0430\u0440\u0443 41\u2033 \u0434\u043E\u0447\u043A\u0435 \u0432 \u043F\u043E\u0434\u0430\u0440\u043E\u043A. \u041F\u0440\u0438\u0448\u043B\u0430 \u0443\u0436\u0435 \u0438\u0434\u0435\u0430\u043B\u044C\u043D\u043E \u043D\u0430\u0441\u0442\u0440\u043E\u0435\u043D\u043D\u0430\u044F, \u0441\u0442\u0440\u0443\u043D\u044B \u043C\u044F\u0433\u043A\u0438\u0435, \u043F\u0430\u043B\u044C\u0446\u044B \u043D\u0435 \u0440\u0435\u0436\u0435\u0442. \u041F\u043E \u043F\u043E\u0434\u0430\u0440\u043E\u0447\u043D\u043E\u043C\u0443 \u043A\u0443\u0440\u0441\u0443 \u0437\u0430 4 \u0434\u043D\u044F \u0432\u044B\u0443\u0447\u0438\u043B\u0438 \u043F\u0435\u0440\u0432\u0443\u044E \u043F\u0435\u0441\u043D\u044E!\xBB" }),
+          /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "reviewer-meta", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "reviewer-avatar", children: "\u{1F469}\u{1F3FB}\u200D\u{1F4BC}" }),
+            /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { children: [
+              /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("strong", { children: "\u0410\u0439\u0433\u0435\u0440\u0438\u043C \u0421." }),
+              /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("small", { children: "\u0433. \u0410\u0441\u0442\u0430\u043D\u0430 \xB7 \u0410\u043A\u0443\u0441\u0442\u0438\u0447\u0435\u0441\u043A\u0430\u044F \u0433\u0438\u0442\u0430\u0440\u0430 41\u2033" })
             ] })
           ] })
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("article", { className: "review-card", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "review-rating", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("article", { className: "review-card", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "review-rating", children: [
             "\u2605\u2605\u2605\u2605\u2605 ",
-            /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { className: "verified-badge", children: "\u2713 \u041F\u0440\u043E\u0432\u0435\u0440\u0435\u043D\u043D\u044B\u0439 \u0437\u0430\u043A\u0430\u0437" })
+            /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "verified-badge", children: "\u2713 \u041F\u0440\u043E\u0432\u0435\u0440\u0435\u043D\u043D\u044B\u0439 \u0437\u0430\u043A\u0430\u0437" })
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "review-quote", children: "\xAB\u042D\u043B\u0435\u043A\u0442\u0440\u043E\u0433\u0438\u0442\u0430\u0440\u0430 ST-20 \u043F\u0440\u0435\u0432\u0437\u043E\u0448\u043B\u0430 \u043E\u0436\u0438\u0434\u0430\u043D\u0438\u044F. \u0414\u0435\u0440\u0435\u0432\u043E \u043F\u043B\u043E\u0442\u043D\u043E\u0435, \u0437\u0432\u0443\u043A\u043E\u0441\u043D\u0438\u043C\u0430\u0442\u0435\u043B\u0438 \u0431\u0435\u0437 \u0444\u043E\u043D\u0430, \u0433\u0440\u0438\u0444 \u043E\u0442\u0441\u0442\u0440\u043E\u0435\u043D \u043C\u0430\u0441\u0442\u0435\u0440\u043E\u043C \u043D\u0430 10/10. \u041E\u0442\u0434\u0435\u043B\u044C\u043D\u043E\u0435 \u0441\u043F\u0430\u0441\u0438\u0431\u043E \u0437\u0430 \u043A\u043E\u043C\u043F\u043B\u0435\u043A\u0442 \u0441\u0442\u0440\u0443\u043D Elixir \u0441\u043E \u0441\u043A\u0438\u0434\u043A\u043E\u0439 50%!\xBB" }),
-          /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "reviewer-meta", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { className: "reviewer-avatar", children: "\u{1F3B8}" }),
-            /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { children: [
-              /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("strong", { children: "\u0414\u0430\u043D\u0438\u044F\u0440 \u041A." }),
-              /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("small", { children: "\u0433. \u0410\u043B\u043C\u0430\u0442\u044B \xB7 ST-20 + \u0421\u0442\u0440\u0443\u043D\u044B Elixir" })
+          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { className: "review-quote", children: "\xAB\u042D\u043B\u0435\u043A\u0442\u0440\u043E\u0433\u0438\u0442\u0430\u0440\u0430 ST-20 \u043F\u0440\u0435\u0432\u0437\u043E\u0448\u043B\u0430 \u043E\u0436\u0438\u0434\u0430\u043D\u0438\u044F. \u0414\u0435\u0440\u0435\u0432\u043E \u043F\u043B\u043E\u0442\u043D\u043E\u0435, \u0437\u0432\u0443\u043A\u043E\u0441\u043D\u0438\u043C\u0430\u0442\u0435\u043B\u0438 \u0431\u0435\u0437 \u0444\u043E\u043D\u0430, \u0433\u0440\u0438\u0444 \u043E\u0442\u0441\u0442\u0440\u043E\u0435\u043D \u043C\u0430\u0441\u0442\u0435\u0440\u043E\u043C \u043D\u0430 10/10. \u041E\u0442\u0434\u0435\u043B\u044C\u043D\u043E\u0435 \u0441\u043F\u0430\u0441\u0438\u0431\u043E \u0437\u0430 \u043A\u043E\u043C\u043F\u043B\u0435\u043A\u0442 \u0441\u0442\u0440\u0443\u043D Elixir \u0441\u043E \u0441\u043A\u0438\u0434\u043A\u043E\u0439 50%!\xBB" }),
+          /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "reviewer-meta", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "reviewer-avatar", children: "\u{1F3B8}" }),
+            /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { children: [
+              /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("strong", { children: "\u0414\u0430\u043D\u0438\u044F\u0440 \u041A." }),
+              /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("small", { children: "\u0433. \u0410\u043B\u043C\u0430\u0442\u044B \xB7 ST-20 + \u0421\u0442\u0440\u0443\u043D\u044B Elixir" })
             ] })
           ] })
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("article", { className: "review-card", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "review-rating", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("article", { className: "review-card", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "review-rating", children: [
             "\u2605\u2605\u2605\u2605\u2605 ",
-            /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { className: "verified-badge", children: "\u2713 \u041F\u0440\u043E\u0432\u0435\u0440\u0435\u043D\u043D\u044B\u0439 \u0437\u0430\u043A\u0430\u0437" })
+            /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "verified-badge", children: "\u2713 \u041F\u0440\u043E\u0432\u0435\u0440\u0435\u043D\u043D\u044B\u0439 \u0437\u0430\u043A\u0430\u0437" })
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "review-quote", children: "\xAB\u041A\u0443\u043F\u0438\u043B \u0443\u043A\u0443\u043B\u0435\u043B\u0435 \u0441\u044B\u043D\u0443. \u0414\u043E\u0441\u0442\u0430\u0432\u0438\u043B\u0438 \u0432 \u0428\u044B\u043C\u043A\u0435\u043D\u0442 \u0437\u0430 2 \u0434\u043D\u044F \u0432 \u0431\u0440\u043E\u043D\u0435\u0431\u043E\u0439\u043D\u043E\u0439 \u0443\u043F\u0430\u043A\u043E\u0432\u043A\u0435. \u041E\u0447\u0435\u043D\u044C \u0434\u043E\u0432\u043E\u043B\u0435\u043D \u0441\u0435\u0440\u0432\u0438\u0441\u043E\u043C, \u0431\u044B\u0441\u0442\u0440\u043E\u0439 \u043A\u043E\u043D\u0441\u0443\u043B\u044C\u0442\u0430\u0446\u0438\u0435\u0439 \u0432 WhatsApp \u0438 \u043F\u043E\u0434\u0430\u0440\u043E\u0447\u043D\u044B\u043C\u0438 \u0432\u0438\u0434\u0435\u043E\u0443\u0440\u043E\u043A\u0430\u043C\u0438!\xBB" }),
-          /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "reviewer-meta", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { className: "reviewer-avatar", children: "\u{1F468}\u{1F3FB}\u200D\u{1F4BB}" }),
-            /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { children: [
-              /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("strong", { children: "\u041D\u0443\u0440\u043B\u0430\u043D \u041C." }),
-              /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("small", { children: "\u0433. \u0428\u044B\u043C\u043A\u0435\u043D\u0442 \xB7 \u0423\u043A\u0443\u043B\u0435\u043B\u0435 21\u2033 Pastel" })
+          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { className: "review-quote", children: "\xAB\u041A\u0443\u043F\u0438\u043B \u0443\u043A\u0443\u043B\u0435\u043B\u0435 \u0441\u044B\u043D\u0443. \u0414\u043E\u0441\u0442\u0430\u0432\u0438\u043B\u0438 \u0432 \u0428\u044B\u043C\u043A\u0435\u043D\u0442 \u0437\u0430 2 \u0434\u043D\u044F \u0432 \u0431\u0440\u043E\u043D\u0435\u0431\u043E\u0439\u043D\u043E\u0439 \u0443\u043F\u0430\u043A\u043E\u0432\u043A\u0435. \u041E\u0447\u0435\u043D\u044C \u0434\u043E\u0432\u043E\u043B\u0435\u043D \u0441\u0435\u0440\u0432\u0438\u0441\u043E\u043C, \u0431\u044B\u0441\u0442\u0440\u043E\u0439 \u043A\u043E\u043D\u0441\u0443\u043B\u044C\u0442\u0430\u0446\u0438\u0435\u0439 \u0432 WhatsApp \u0438 \u043F\u043E\u0434\u0430\u0440\u043E\u0447\u043D\u044B\u043C\u0438 \u0432\u0438\u0434\u0435\u043E\u0443\u0440\u043E\u043A\u0430\u043C\u0438!\xBB" }),
+          /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "reviewer-meta", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "reviewer-avatar", children: "\u{1F468}\u{1F3FB}\u200D\u{1F4BB}" }),
+            /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { children: [
+              /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("strong", { children: "\u041D\u0443\u0440\u043B\u0430\u043D \u041C." }),
+              /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("small", { children: "\u0433. \u0428\u044B\u043C\u043A\u0435\u043D\u0442 \xB7 \u0423\u043A\u0443\u043B\u0435\u043B\u0435 21\u2033 Pastel" })
             ] })
           ] })
         ] })
       ] })
     ] }),
-    /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("section", { className: "faq-section", id: "faq", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "section-head text-center", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "eyebrow", children: "\u0427\u0410\u0421\u0422\u042B\u0415 \u0412\u041E\u041F\u0420\u041E\u0421\u042B" }),
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("h2", { children: "\u041E\u0442\u0432\u0435\u0442\u044B \u043D\u0430 \u043F\u043E\u043F\u0443\u043B\u044F\u0440\u043D\u044B\u0435 \u0432\u043E\u043F\u0440\u043E\u0441\u044B" }),
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "faq-subtitle", children: "\u0412\u0441\u0451 \u043E \u0434\u043E\u0441\u0442\u0430\u0432\u043A\u0435, \u043D\u0430\u0441\u0442\u0440\u043E\u0439\u043A\u0435, \u0433\u0430\u0440\u0430\u043D\u0442\u0438\u0438 \u0438 \u043F\u043E\u0434\u0430\u0440\u043E\u0447\u043D\u044B\u0445 \u043A\u0443\u0440\u0441\u0430\u0445" })
+    /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("section", { className: "faq-section", id: "faq", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "section-head text-center", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { className: "eyebrow", children: "\u0427\u0410\u0421\u0422\u042B\u0415 \u0412\u041E\u041F\u0420\u041E\u0421\u042B" }),
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("h2", { children: "\u041E\u0442\u0432\u0435\u0442\u044B \u043D\u0430 \u043F\u043E\u043F\u0443\u043B\u044F\u0440\u043D\u044B\u0435 \u0432\u043E\u043F\u0440\u043E\u0441\u044B" }),
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { className: "faq-subtitle", children: "\u0412\u0441\u0451 \u043E \u0434\u043E\u0441\u0442\u0430\u0432\u043A\u0435, \u043D\u0430\u0441\u0442\u0440\u043E\u0439\u043A\u0435, \u0433\u0430\u0440\u0430\u043D\u0442\u0438\u0438 \u0438 \u043F\u043E\u0434\u0430\u0440\u043E\u0447\u043D\u044B\u0445 \u043A\u0443\u0440\u0441\u0430\u0445" })
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("div", { className: "faq-accordion-list", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "faq-accordion-list", children: [
         {
           q: "\u0411\u043E\u043B\u044C\u043D\u043E \u043B\u0438 \u0437\u0430\u0436\u0438\u043C\u0430\u0442\u044C \u0441\u0442\u0440\u0443\u043D\u044B \u0432 \u043D\u0430\u0447\u0430\u043B\u0435 \u043E\u0431\u0443\u0447\u0435\u043D\u0438\u044F?",
           a: "\u041D\u0435\u0442! \u0412 \u043E\u0442\u043B\u0438\u0447\u0438\u0435 \u043E\u0442 \u043E\u0431\u044B\u0447\u043D\u044B\u0445 \u043C\u0430\u0433\u0430\u0437\u0438\u043D\u043E\u0432, \u043D\u0430\u0448 \u043C\u0430\u0441\u0442\u0435\u0440 \u0432\u0440\u0443\u0447\u043D\u0443\u044E \u043E\u0442\u0441\u0442\u0440\u0430\u0438\u0432\u0430\u0435\u0442 \u0432\u044B\u0441\u043E\u0442\u0443 \u0441\u0442\u0440\u0443\u043D \u0434\u043E 1.5\u20132 \u043C\u043C \u043D\u0430\u0434 \u043B\u0430\u0434\u0430\u043C\u0438. \u0417\u0430\u0436\u0438\u043C\u0430\u0442\u044C \u0430\u043A\u043A\u043E\u0440\u0434\u044B \u043B\u0435\u0433\u043A\u043E \u0438 \u043A\u043E\u043C\u0444\u043E\u0440\u0442\u043D\u043E \u0434\u0430\u0436\u0435 \u0434\u0435\u0442\u044F\u043C \u0438 \u043D\u0435\u0436\u043D\u044B\u043C \u0440\u0443\u043A\u0430\u043C \u0441 \u043F\u0435\u0440\u0432\u043E\u0433\u043E \u0434\u043D\u044F."
@@ -15288,53 +14932,53 @@ function Storefront({
           q: "\u041F\u043E\u0447\u0435\u043C\u0443 \u0441\u0442\u0440\u0443\u043D\u044B Elixir \u0441\u043E \u0441\u043A\u0438\u0434\u043A\u043E\u0439 50% \u0432\u044B\u0433\u043E\u0434\u043D\u0435\u0435 \u0432\u0437\u044F\u0442\u044C \u0441\u0440\u0430\u0437\u0443?",
           a: "\u0421\u0442\u0440\u0443\u043D\u044B Elixir Nanoweb \u0438\u043C\u0435\u044E\u0442 \u0444\u0438\u0440\u043C\u0435\u043D\u043D\u043E\u0435 \u043F\u043E\u043B\u0438\u043C\u0435\u0440\u043D\u043E\u0435 \u043D\u0430\u043D\u043E-\u043F\u043E\u043A\u0440\u044B\u0442\u0438\u0435 \u0438 \u0441\u043B\u0443\u0436\u0430\u0442 \u0432 3\u20135 \u0440\u0430\u0437 \u0434\u043E\u043B\u044C\u0448\u0435 \u043E\u0431\u044B\u0447\u043D\u044B\u0445 (\u0434\u043E 6 \u043C\u0435\u0441\u044F\u0446\u0435\u0432). \u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u0438\u0445 \u043A \u0437\u0430\u043A\u0430\u0437\u0443 \u043F\u043E \u0441\u043F\u0435\u0446\u0446\u0435\u043D\u0435 -50% \u2014 \u0441\u0430\u043C\u0430\u044F \u0432\u044B\u0433\u043E\u0434\u043D\u0430\u044F \u0432\u043E\u0437\u043C\u043E\u0436\u043D\u043E\u0441\u0442\u044C \u0434\u043B\u044F \u043F\u043E\u043A\u0443\u043F\u0430\u0442\u0435\u043B\u044F."
         }
-      ].map((item, idx) => /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("details", { className: "faq-item", open: idx === 0, children: [
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("summary", { className: "faq-summary", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { children: item.q }),
-          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { className: "faq-chevron", children: "\u25BC" })
+      ].map((item, idx) => /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("details", { className: "faq-item", open: idx === 0, children: [
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("summary", { className: "faq-summary", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { children: item.q }),
+          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "faq-chevron", children: "\u25BC" })
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("div", { className: "faq-answer", children: /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { children: item.a }) })
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "faq-answer", children: /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { children: item.a }) })
       ] }, item.q)) })
     ] }),
-    /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("section", { className: "delivery-section", id: "delivery", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("div", { className: "section-head", children: /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { children: [
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "eyebrow", children: "\u0421\u0415\u0420\u0412\u0418\u0421" }),
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("h2", { children: "\u0414\u043E\u0441\u0442\u0430\u0432\u043A\u0430 \u0438 \u043E\u0444\u043E\u0440\u043C\u043B\u0435\u043D\u0438\u0435" })
+    /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("section", { className: "delivery-section", id: "delivery", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "section-head", children: /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { children: [
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { className: "eyebrow", children: "\u0421\u0415\u0420\u0412\u0418\u0421" }),
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("h2", { children: "\u0414\u043E\u0441\u0442\u0430\u0432\u043A\u0430 \u0438 \u043E\u0444\u043E\u0440\u043C\u043B\u0435\u043D\u0438\u0435" })
       ] }) }),
-      /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "delivery-grid", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("article", { className: "delivery-card", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("h3", { children: "\u0421\u0430\u043C\u043E\u0432\u044B\u0432\u043E\u0437 \u0438 \u043F\u0440\u0438\u043C\u0435\u0440\u043A\u0430" }),
-          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { children: "\u041C\u043E\u0436\u043D\u043E \u043E\u0441\u043C\u043E\u0442\u0440\u0435\u0442\u044C \u0438\u043D\u0441\u0442\u0440\u0443\u043C\u0435\u043D\u0442, \u043E\u0446\u0435\u043D\u0438\u0442\u044C \u0443\u0434\u043E\u0431\u0441\u0442\u0432\u043E \u0433\u0440\u0438\u0444\u0430 \u0438 \u0437\u0432\u0443\u0447\u0430\u043D\u0438\u0435 \u043F\u0435\u0440\u0435\u0434 \u043F\u043E\u043A\u0443\u043F\u043A\u043E\u0439 \u0432 \u0448\u043E\u0443\u0440\u0443\u043C\u0435." })
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "delivery-grid", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("article", { className: "delivery-card", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("h3", { children: "\u0421\u0430\u043C\u043E\u0432\u044B\u0432\u043E\u0437 \u0438 \u043F\u0440\u0438\u043C\u0435\u0440\u043A\u0430" }),
+          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { children: "\u041C\u043E\u0436\u043D\u043E \u043E\u0441\u043C\u043E\u0442\u0440\u0435\u0442\u044C \u0438\u043D\u0441\u0442\u0440\u0443\u043C\u0435\u043D\u0442, \u043E\u0446\u0435\u043D\u0438\u0442\u044C \u0443\u0434\u043E\u0431\u0441\u0442\u0432\u043E \u0433\u0440\u0438\u0444\u0430 \u0438 \u0437\u0432\u0443\u0447\u0430\u043D\u0438\u0435 \u043F\u0435\u0440\u0435\u0434 \u043F\u043E\u043A\u0443\u043F\u043A\u043E\u0439 \u0432 \u0448\u043E\u0443\u0440\u0443\u043C\u0435." })
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("article", { className: "delivery-card", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("h3", { children: "\u041A\u0443\u0440\u044C\u0435\u0440\u0441\u043A\u0430\u044F \u0434\u043E\u0441\u0442\u0430\u0432\u043A\u0430" }),
-          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { children: "\u041E\u0442\u043F\u0440\u0430\u0432\u043B\u044F\u0435\u043C \u043F\u043E \u0433\u043E\u0440\u043E\u0434\u0430\u043C \u041A\u0430\u0437\u0430\u0445\u0441\u0442\u0430\u043D\u0430 \u043D\u0430\u0434\u0435\u0436\u043D\u044B\u043C\u0438 \u043A\u0443\u0440\u044C\u0435\u0440\u0441\u043A\u0438\u043C\u0438 \u0441\u043B\u0443\u0436\u0431\u0430\u043C\u0438 \u0441 \u0436\u0435\u0441\u0442\u043A\u043E\u0439 \u0443\u043F\u0430\u043A\u043E\u0432\u043A\u043E\u0439." })
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("article", { className: "delivery-card", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("h3", { children: "\u041A\u0443\u0440\u044C\u0435\u0440\u0441\u043A\u0430\u044F \u0434\u043E\u0441\u0442\u0430\u0432\u043A\u0430" }),
+          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { children: "\u041E\u0442\u043F\u0440\u0430\u0432\u043B\u044F\u0435\u043C \u043F\u043E \u0433\u043E\u0440\u043E\u0434\u0430\u043C \u041A\u0430\u0437\u0430\u0445\u0441\u0442\u0430\u043D\u0430 \u043D\u0430\u0434\u0435\u0436\u043D\u044B\u043C\u0438 \u043A\u0443\u0440\u044C\u0435\u0440\u0441\u043A\u0438\u043C\u0438 \u0441\u043B\u0443\u0436\u0431\u0430\u043C\u0438 \u0441 \u0436\u0435\u0441\u0442\u043A\u043E\u0439 \u0443\u043F\u0430\u043A\u043E\u0432\u043A\u043E\u0439." })
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("article", { className: "delivery-card", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("h3", { children: "\u041E\u043F\u043B\u0430\u0442\u0430 \u0438 \u0440\u0430\u0441\u0441\u0440\u043E\u0447\u043A\u0430" }),
-          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { children: "\u0414\u043E\u0441\u0442\u0443\u043F\u043D\u0430 \u043E\u043F\u043B\u0430\u0442\u0430 Kaspi QR, Kaspi Red, \u0430 \u0442\u0430\u043A\u0436\u0435 \u043E\u043D\u043B\u0430\u0439\u043D-\u0440\u0430\u0441\u0441\u0440\u043E\u0447\u043A\u0430 Kaspi 0-0-12 \u0431\u0435\u0437 \u043F\u0435\u0440\u0435\u043F\u043B\u0430\u0442." })
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("article", { className: "delivery-card", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("h3", { children: "\u041E\u043F\u043B\u0430\u0442\u0430 \u0438 \u0440\u0430\u0441\u0441\u0440\u043E\u0447\u043A\u0430" }),
+          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { children: "\u0414\u043E\u0441\u0442\u0443\u043F\u043D\u0430 \u043E\u043F\u043B\u0430\u0442\u0430 Kaspi QR, Kaspi Red, \u0430 \u0442\u0430\u043A\u0436\u0435 \u043E\u043D\u043B\u0430\u0439\u043D-\u0440\u0430\u0441\u0441\u0440\u043E\u0447\u043A\u0430 Kaspi 0-0-12 \u0431\u0435\u0437 \u043F\u0435\u0440\u0435\u043F\u043B\u0430\u0442." })
         ] })
       ] })
     ] }),
-    /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("footer", { className: "site-footer", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "footer-left", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("strong", { children: "MAESTRO MUSIC STORE & ACADEMY" }),
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { children: "\u041C\u0443\u0437\u044B\u043A\u0430\u043B\u044C\u043D\u044B\u0435 \u0438\u043D\u0441\u0442\u0440\u0443\u043C\u0435\u043D\u0442\u044B, \u043E\u0431\u043E\u0440\u0443\u0434\u043E\u0432\u0430\u043D\u0438\u0435, \u043E\u043D\u043B\u0430\u0439\u043D-\u043A\u0443\u0440\u0441\u044B \u0438 \u0430\u043A\u0441\u0435\u0441\u0441\u0443\u0430\u0440\u044B \u043F\u043E\u0441\u0442\u0430\u0432\u043A\u0438 2026 \u0433\u043E\u0434\u0430." })
+    /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("footer", { className: "site-footer", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "footer-left", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("strong", { children: "MAESTRO MUSIC STORE & ACADEMY" }),
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { children: "\u041C\u0443\u0437\u044B\u043A\u0430\u043B\u044C\u043D\u044B\u0435 \u0438\u043D\u0441\u0442\u0440\u0443\u043C\u0435\u043D\u0442\u044B, \u043E\u0431\u043E\u0440\u0443\u0434\u043E\u0432\u0430\u043D\u0438\u0435, \u043E\u043D\u043B\u0430\u0439\u043D-\u043A\u0443\u0440\u0441\u044B \u0438 \u0430\u043A\u0441\u0435\u0441\u0441\u0443\u0430\u0440\u044B \u043F\u043E\u0441\u0442\u0430\u0432\u043A\u0438 2026 \u0433\u043E\u0434\u0430." })
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "footer-right", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { children: "\u0413\u043E\u0440\u043E\u0434: \u0410\u043A\u0442\u043E\u0431\u0435 / \u0414\u043E\u0441\u0442\u0430\u0432\u043A\u0430 \u043F\u043E \u0432\u0441\u0435\u043C\u0443 \u041A\u0430\u0437\u0430\u0445\u0441\u0442\u0430\u043D\u0443" }),
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("span", { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "footer-right", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { children: "\u0413\u043E\u0440\u043E\u0434: \u0410\u043A\u0442\u043E\u0431\u0435 / \u0414\u043E\u0441\u0442\u0430\u0432\u043A\u0430 \u043F\u043E \u0432\u0441\u0435\u043C\u0443 \u041A\u0430\u0437\u0430\u0445\u0441\u0442\u0430\u043D\u0443" }),
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("span", { children: [
           "\u0421\u0432\u044F\u0437\u044C: ",
-          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("a", { href: "https://wa.me/77775055788", target: "_blank", rel: "noopener noreferrer", className: "footer-wa-link", children: "WhatsApp +7 (777) 505-57-88" })
+          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("a", { href: "https://wa.me/77775055788", target: "_blank", rel: "noopener noreferrer", className: "footer-wa-link", children: "WhatsApp +7 (777) 505-57-88" })
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("a", { href: "/admin/pricing", className: "footer-admin-link", children: "\u{1F512} \u041F\u0430\u043D\u0435\u043B\u044C \u0437\u0430\u043A\u0443\u043F\u0449\u0438\u043A\u0430 \u0438 \u0441\u043A\u043B\u0430\u0434" })
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("a", { href: "/admin/pricing", className: "footer-admin-link", children: "\u{1F512} \u041F\u0430\u043D\u0435\u043B\u044C \u0437\u0430\u043A\u0443\u043F\u0449\u0438\u043A\u0430 \u0438 \u0441\u043A\u043B\u0430\u0434" })
       ] })
     ] })
   ] });
 }
 
 // lib/next-link-shim.tsx
-var import_jsx_runtime7 = __toESM(require_jsx_runtime(), 1);
+var import_jsx_runtime6 = __toESM(require_jsx_runtime(), 1);
 function Link(props) {
   const { href, children, className, onClick, ...rest } = props;
   const handleClick = (e) => {
@@ -15345,28 +14989,26 @@ function Link(props) {
       window.dispatchEvent(new PopStateEvent("popstate"));
     }
   };
-  return /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("a", { href, className, onClick: handleClick, ...rest, children });
+  return /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("a", { href, className, onClick: handleClick, ...rest, children });
 }
 
 // components/Topbar.tsx
-var import_react6 = __toESM(require_react(), 1);
-var import_jsx_runtime8 = __toESM(require_jsx_runtime(), 1);
+var import_react5 = __toESM(require_react(), 1);
+var import_jsx_runtime7 = __toESM(require_jsx_runtime(), 1);
 function Topbar({
   query,
   setQuery,
   cartCount,
   setCartOpen,
-  view = "store",
-  setView,
   onSelectProduct
 }) {
-  const [isSearchFocused, setIsSearchFocused] = (0, import_react6.useState)(false);
-  const searchWrapRef = (0, import_react6.useRef)(null);
+  const [isSearchFocused, setIsSearchFocused] = (0, import_react5.useState)(false);
+  const searchWrapRef = (0, import_react5.useRef)(null);
   const searchResults = query.trim().length >= 2 ? products.filter((p) => {
     const q = query.toLowerCase();
     return p.name.toLowerCase().includes(q) || p.category.toLowerCase().includes(q) || p.description && p.description.toLowerCase().includes(q);
   }).slice(0, 4) : [];
-  (0, import_react6.useEffect)(() => {
+  (0, import_react5.useEffect)(() => {
     const handleClickOutside = (e) => {
       if (searchWrapRef.current && !searchWrapRef.current.contains(e.target)) {
         setIsSearchFocused(false);
@@ -15375,66 +15017,43 @@ function Topbar({
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
-  return /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("header", { className: "topbar", children: [
-    /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)(
+  return /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("header", { className: "topbar", children: [
+    /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)(
       Link,
       {
         href: "/",
         className: "brand",
         "aria-label": "\u041D\u0430 \u0433\u043B\u0430\u0432\u043D\u0443\u044E",
-        onClick: (e) => {
-          if (setView) {
-            e.preventDefault();
-            setView("store");
-          }
-        },
         children: [
-          /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("span", { className: "brand-mark", children: "M" }),
-          /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("span", { className: "brand-titles", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("strong", { children: "MAESTRO" }),
-            /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("small", { children: "MUSIC STORE & ACADEMY" })
+          /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("span", { className: "brand-mark", children: "M" }),
+          /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("span", { className: "brand-titles", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("strong", { children: "MAESTRO" }),
+            /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("small", { children: "MUSIC STORE & ACADEMY" })
           ] })
         ]
       }
     ),
-    /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("nav", { className: "main-nav", "aria-label": "\u041E\u0441\u043D\u043E\u0432\u043D\u0430\u044F \u043D\u0430\u0432\u0438\u0433\u0430\u0446\u0438\u044F", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(
-        "button",
-        {
-          type: "button",
-          className: `nav-tab-link ${view === "store" ? "active" : ""}`,
-          onClick: () => setView?.("store"),
-          children: "\u041A\u0430\u0442\u0430\u043B\u043E\u0433 \u0433\u0438\u0442\u0430\u0440"
-        }
-      ),
-      /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(
-        "button",
-        {
-          type: "button",
-          className: `nav-tab-link academy ${view === "academy" ? "active" : ""}`,
-          onClick: () => setView?.("academy"),
-          children: "\u{1F393} \u041E\u0431\u0443\u0447\u0435\u043D\u0438\u0435"
-        }
-      ),
-      /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(
+    /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("nav", { className: "main-nav", "aria-label": "\u041E\u0441\u043D\u043E\u0432\u043D\u0430\u044F \u043D\u0430\u0432\u0438\u0433\u0430\u0446\u0438\u044F", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("a", { href: "#catalog", className: "nav-tab-link active", children: "\u041A\u0430\u0442\u0430\u043B\u043E\u0433 \u0433\u0438\u0442\u0430\u0440" }),
+      /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
         "a",
         {
           href: "https://maestro-school.duckdns.org/login",
           target: "_blank",
           rel: "noopener noreferrer",
-          className: "nav-tab-link student-portal-link",
-          title: "\u0412\u0445\u043E\u0434 \u0432 \u043B\u0438\u0447\u043D\u044B\u0439 \u043A\u0430\u0431\u0438\u043D\u0435\u0442 \u0443\u0447\u0435\u043D\u0438\u043A\u0430 Maestro School",
-          children: "\u{1F511} \u041A\u0430\u0431\u0438\u043D\u0435\u0442 \u0443\u0447\u0435\u043D\u0438\u043A\u0430 \u2197"
+          className: "nav-tab-link academy",
+          title: "\u0412\u0445\u043E\u0434 \u043D\u0430 \u0443\u0447\u0435\u0431\u043D\u0443\u044E \u043F\u043B\u0430\u0442\u0444\u043E\u0440\u043C\u0443 Maestro School",
+          children: "\u{1F393} \u0410\u043A\u0430\u0434\u0435\u043C\u0438\u044F \u0438 \u043A\u0443\u0440\u0441\u044B \u2197"
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("a", { href: "#pick", onClick: () => setView?.("store"), children: "\u{1F3AF} \u041F\u043E\u0434\u0431\u043E\u0440" }),
-      /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("a", { href: "#reviews", onClick: () => setView?.("store"), children: "\u2B50 \u041E\u0442\u0437\u044B\u0432\u044B" }),
-      /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("a", { href: "#faq", onClick: () => setView?.("store"), children: "\u2753 FAQ" })
+      /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("a", { href: "#pick", children: "\u{1F3AF} \u041F\u043E\u0434\u0431\u043E\u0440" }),
+      /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("a", { href: "#reviews", children: "\u2B50 \u041E\u0442\u0437\u044B\u0432\u044B" }),
+      /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("a", { href: "#faq", children: "\u2753 FAQ" })
     ] }),
-    /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("div", { className: "search-wrap-relative", ref: searchWrapRef, children: [
-      /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("label", { className: "search-box", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("span", { className: "search-icon", children: "\u{1F50D}" }),
-        /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(
+    /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { className: "search-wrap-relative", ref: searchWrapRef, children: [
+      /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("label", { className: "search-box", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("span", { className: "search-icon", children: "\u{1F50D}" }),
+        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
           "input",
           {
             value: query,
@@ -15448,7 +15067,7 @@ function Topbar({
             "aria-label": "\u041F\u043E\u0438\u0441\u043A \u043F\u043E \u043A\u0430\u0442\u0430\u043B\u043E\u0433\u0443"
           }
         ),
-        query.trim().length > 0 && /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(
+        query.trim().length > 0 && /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
           "button",
           {
             type: "button",
@@ -15459,9 +15078,9 @@ function Topbar({
           }
         )
       ] }),
-      isSearchFocused && searchResults.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("div", { className: "search-live-dropdown", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("div", { className: "search-dropdown-header", children: /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("span", { children: "\u041D\u0430\u0439\u0434\u0435\u043D\u043E \u0432 \u043A\u0430\u0442\u0430\u043B\u043E\u0433\u0435:" }) }),
-        searchResults.map((item) => /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)(
+      isSearchFocused && searchResults.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { className: "search-live-dropdown", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("div", { className: "search-dropdown-header", children: /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("span", { children: "\u041D\u0430\u0439\u0434\u0435\u043D\u043E \u0432 \u043A\u0430\u0442\u0430\u043B\u043E\u0433\u0435:" }) }),
+        searchResults.map((item) => /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)(
           "div",
           {
             className: "search-dropdown-item",
@@ -15475,12 +15094,12 @@ function Topbar({
               }
             },
             children: [
-              /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("div", { className: "search-item-thumb", children: /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("img", { src: item.image, alt: item.name }) }),
-              /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("div", { className: "search-item-info", children: [
-                /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("strong", { children: item.name }),
-                /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("small", { children: item.category })
+              /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("div", { className: "search-item-thumb", children: /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("img", { src: item.image, alt: item.name }) }),
+              /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { className: "search-item-info", children: [
+                /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("strong", { children: item.name }),
+                /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("small", { children: item.category })
               ] }),
-              /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("div", { className: "search-item-price", children: /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("span", { children: [
+              /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("div", { className: "search-item-price", children: /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("span", { children: [
                 money(item.price),
                 " \u20B8"
               ] }) })
@@ -15490,8 +15109,8 @@ function Topbar({
         ))
       ] })
     ] }),
-    /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("div", { className: "topbar-right-actions", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)(
+    /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { className: "topbar-right-actions", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)(
         "a",
         {
           href: `https://wa.me/${DEFAULT_WHATSAPP_PHONE}`,
@@ -15500,27 +15119,27 @@ function Topbar({
           className: "wa-header-btn",
           title: "\u041D\u0430\u043F\u0438\u0441\u0430\u0442\u044C \u043C\u0435\u043D\u0435\u0434\u0436\u0435\u0440\u0443 \u0432 WhatsApp",
           children: [
-            /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("span", { className: "wa-icon", children: "\u{1F4AC}" }),
-            /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("span", { className: "wa-text", children: DISPLAY_WHATSAPP_PHONE })
+            /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("span", { className: "wa-icon", children: "\u{1F4AC}" }),
+            /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("span", { className: "wa-text", children: DISPLAY_WHATSAPP_PHONE })
           ]
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)(
+      /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)(
         "button",
         {
           className: "cart-button",
           onClick: () => setCartOpen(true),
           "aria-label": `\u041A\u043E\u0440\u0437\u0438\u043D\u0430, ${cartCount} \u0442\u043E\u0432\u0430\u0440\u043E\u0432`,
           children: [
-            /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("span", { className: "cart-label", children: "\u{1F6D2}" }),
-            /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("span", { className: "cart-text", children: "\u0417\u0430\u044F\u0432\u043A\u0430" }),
-            /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("span", { className: "cart-btn-badge", children: cartCount })
+            /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("span", { className: "cart-label", children: "\u{1F6D2}" }),
+            /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("span", { className: "cart-text", children: "\u0417\u0430\u044F\u0432\u043A\u0430" }),
+            /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("span", { className: "cart-btn-badge", children: cartCount })
           ]
         }
       )
     ] }),
-    /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("div", { className: "mobile-nav-strip", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)(
+    /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { className: "mobile-nav-strip", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)(
         "button",
         {
           type: "button",
@@ -15530,12 +15149,12 @@ function Topbar({
             window.scrollTo({ top: 0, behavior: "smooth" });
           },
           children: [
-            /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("span", { children: "\u{1F3B8}" }),
-            /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("small", { children: "\u041A\u0430\u0442\u0430\u043B\u043E\u0433" })
+            /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("span", { children: "\u{1F3B8}" }),
+            /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("small", { children: "\u041A\u0430\u0442\u0430\u043B\u043E\u0433" })
           ]
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)(
+      /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)(
         "button",
         {
           type: "button",
@@ -15545,12 +15164,12 @@ function Topbar({
             window.scrollTo({ top: 0, behavior: "smooth" });
           },
           children: [
-            /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("span", { children: "\u{1F393}" }),
-            /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("small", { children: "\u041E\u0431\u0443\u0447\u0435\u043D\u0438\u0435" })
+            /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("span", { children: "\u{1F393}" }),
+            /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("small", { children: "\u041E\u0431\u0443\u0447\u0435\u043D\u0438\u0435" })
           ]
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)(
+      /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)(
         "a",
         {
           href: "https://maestro-school.duckdns.org/login",
@@ -15558,20 +15177,20 @@ function Topbar({
           rel: "noopener noreferrer",
           className: "mobile-nav-btn",
           children: [
-            /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("span", { children: "\u{1F511}" }),
-            /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("small", { children: "\u041A\u0430\u0431\u0438\u043D\u0435\u0442" })
+            /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("span", { children: "\u{1F511}" }),
+            /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("small", { children: "\u041A\u0430\u0431\u0438\u043D\u0435\u0442" })
           ]
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)(
+      /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)(
         "button",
         {
           type: "button",
           className: "mobile-nav-btn",
           onClick: () => setCartOpen(true),
           children: [
-            /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("span", { children: "\u{1F6D2}" }),
-            /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("small", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("span", { children: "\u{1F6D2}" }),
+            /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("small", { children: [
               "\u041A\u043E\u0440\u0437\u0438\u043D\u0430 (",
               cartCount,
               ")"
@@ -15584,24 +15203,23 @@ function Topbar({
 }
 
 // app/page.tsx
-var import_jsx_runtime9 = __toESM(require_jsx_runtime(), 1);
+var import_jsx_runtime8 = __toESM(require_jsx_runtime(), 1);
 function Home() {
-  const [view, setView] = (0, import_react7.useState)("store");
-  const [query, setQuery] = (0, import_react7.useState)("");
-  const [category, setCategory] = (0, import_react7.useState)("\u0412\u0441\u0435");
-  const [selected, setSelected] = (0, import_react7.useState)(null);
-  const [selectedVariant, setSelectedVariant] = (0, import_react7.useState)(null);
-  const [requestedQuantity, setRequestedQuantity] = (0, import_react7.useState)(1);
-  const [cartOpen, setCartOpen] = (0, import_react7.useState)(false);
-  const [kaspiModalOpen, setKaspiModalOpen] = (0, import_react7.useState)(false);
-  const [cartItems, setCartItems] = (0, import_react7.useState)([]);
-  const [customerName, setCustomerName] = (0, import_react7.useState)("");
-  const [customerPhone, setCustomerPhone] = (0, import_react7.useState)("");
-  const [customerCity, setCustomerCity] = (0, import_react7.useState)("\u0410\u043A\u0442\u043E\u0431\u0435");
-  const [customerComment, setCustomerComment] = (0, import_react7.useState)("");
-  const [notice, setNotice] = (0, import_react7.useState)("");
-  const [storedProducts, setStoredProducts] = (0, import_react7.useState)([]);
-  (0, import_react7.useEffect)(() => {
+  const [query, setQuery] = (0, import_react6.useState)("");
+  const [category, setCategory] = (0, import_react6.useState)("\u0412\u0441\u0435");
+  const [selected, setSelected] = (0, import_react6.useState)(null);
+  const [selectedVariant, setSelectedVariant] = (0, import_react6.useState)(null);
+  const [requestedQuantity, setRequestedQuantity] = (0, import_react6.useState)(1);
+  const [cartOpen, setCartOpen] = (0, import_react6.useState)(false);
+  const [kaspiModalOpen, setKaspiModalOpen] = (0, import_react6.useState)(false);
+  const [cartItems, setCartItems] = (0, import_react6.useState)([]);
+  const [customerName, setCustomerName] = (0, import_react6.useState)("");
+  const [customerPhone, setCustomerPhone] = (0, import_react6.useState)("");
+  const [customerCity, setCustomerCity] = (0, import_react6.useState)("\u0410\u043A\u0442\u043E\u0431\u0435");
+  const [customerComment, setCustomerComment] = (0, import_react6.useState)("");
+  const [notice, setNotice] = (0, import_react6.useState)("");
+  const [storedProducts, setStoredProducts] = (0, import_react6.useState)([]);
+  (0, import_react6.useEffect)(() => {
     let active = true;
     fetch("/api/products?scope=all").then((res) => res.ok ? res.json() : Promise.reject(new Error("Failed"))).then((data) => {
       if (active && Array.isArray(data.products)) {
@@ -15613,16 +15231,16 @@ function Home() {
       active = false;
     };
   }, []);
-  const mergedProducts = (0, import_react7.useMemo)(() => {
+  const mergedProducts = (0, import_react6.useMemo)(() => {
     const list = mergeBySku(products, storedProducts);
     return list.filter(
       (product) => !product.isStored || product.publicationStatus === "published" || !product.publicationStatus
     );
   }, [storedProducts]);
-  const categories = (0, import_react7.useMemo)(() => {
+  const categories = (0, import_react6.useMemo)(() => {
     return ["\u0412\u0441\u0435", ...new Set(mergedProducts.map((p) => p.category))];
   }, [mergedProducts]);
-  const filteredProducts = (0, import_react7.useMemo)(() => {
+  const filteredProducts = (0, import_react6.useMemo)(() => {
     const term = query.trim().toLowerCase();
     return mergedProducts.filter((product) => {
       const matchCategory = category === "\u0412\u0441\u0435" || product.category === category;
@@ -15639,11 +15257,11 @@ function Home() {
       return haystack.includes(term);
     });
   }, [mergedProducts, category, query]);
-  const cartCount = (0, import_react7.useMemo)(
+  const cartCount = (0, import_react6.useMemo)(
     () => cartItems.reduce((acc, item) => acc + item.quantity, 0),
     [cartItems]
   );
-  const cartTotalPrice = (0, import_react7.useMemo)(
+  const cartTotalPrice = (0, import_react6.useMemo)(
     () => cartItems.reduce((acc, item) => acc + (item.price || 0) * item.quantity, 0),
     [cartItems]
   );
@@ -15720,20 +15338,18 @@ function Home() {
     setCartOpen(false);
     window.setTimeout(() => setNotice(""), 3600);
   };
-  return /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)("main", { className: "site-shell", children: [
-    /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(
+  return /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("main", { className: "site-shell", children: [
+    /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(
       Topbar,
       {
         query,
         setQuery,
         cartCount,
         setCartOpen,
-        view,
-        setView,
         onSelectProduct: openProduct
       }
     ),
-    view === "academy" ? /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(AcademyView, { onBackToStore: () => setView("store") }) : /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(
+    /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(
       Storefront,
       {
         category,
@@ -15745,7 +15361,7 @@ function Home() {
         featuredProduct: mergedProducts[1] ?? mergedProducts[0]
       }
     ),
-    !cartOpen && !selected && !kaspiModalOpen && /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)(
+    !cartOpen && !selected && !kaspiModalOpen && /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)(
       "a",
       {
         href: "https://wa.me/77775055788?text=%D0%97%D0%B4%D1%80%D0%B0%D0%B2%D1%81%D1%82%D0%B2%D1%83%D0%B9%D1%82%D0%B5!%20%D0%9F%D0%BE%D0%BC%D0%BE%D0%B3%D0%B8%D1%82%D0%B5%2C%20%D0%BF%D0%BE%D0%B6%D0%B0%D0%BB%D1%83%D0%B9%D1%81%D1%82%D0%B0%2C%20%D0%BF%D0%BE%D0%B4%D0%BE%D0%B1%D1%80%D0%B0%D1%82%D1%8C%20%D0%B3%D0%B8%D1%82%D0%B0%D1%80%D1%83.",
@@ -15754,15 +15370,15 @@ function Home() {
         className: "floating-whatsapp-widget",
         title: "\u041D\u0430\u043F\u0438\u0441\u0430\u0442\u044C \u043C\u0430\u0441\u0442\u0435\u0440\u0443 \u0432 WhatsApp",
         children: [
-          /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)("div", { className: "floating-wa-bubble", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("span", { className: "floating-wa-dot" }),
-            /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("span", { children: "\u041C\u0430\u0441\u0442\u0435\u0440 \u043E\u043D\u043B\u0430\u0439\u043D \xB7 \u041E\u0442\u0432\u0435\u0442\u0438\u043C \u0437\u0430 1 \u043C\u0438\u043D" })
+          /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("div", { className: "floating-wa-bubble", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("span", { className: "floating-wa-dot" }),
+            /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("span", { children: "\u041C\u0430\u0441\u0442\u0435\u0440 \u043E\u043D\u043B\u0430\u0439\u043D \xB7 \u041E\u0442\u0432\u0435\u0442\u0438\u043C \u0437\u0430 1 \u043C\u0438\u043D" })
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("div", { className: "floating-wa-icon-btn", children: "\u{1F4AC}" })
+          /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("div", { className: "floating-wa-icon-btn", children: "\u{1F4AC}" })
         ]
       }
     ),
-    /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(
+    /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(
       ProductModal,
       {
         selected,
@@ -15775,7 +15391,7 @@ function Home() {
         onAddToCart: addToCart
       }
     ),
-    /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(
+    /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(
       CartDrawer,
       {
         cartOpen,
@@ -15799,7 +15415,7 @@ function Home() {
         }
       }
     ),
-    /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(
+    /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(
       KaspiQrModal,
       {
         isOpen: kaspiModalOpen,
@@ -15817,15 +15433,15 @@ function Home() {
         }
       }
     ),
-    notice && /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("div", { className: "toast", children: notice })
+    notice && /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("div", { className: "toast", children: notice })
   ] });
 }
 
 // app/admin/pricing/page.tsx
-var import_react13 = __toESM(require_react(), 1);
+var import_react12 = __toESM(require_react(), 1);
 
 // components/PurchaserView.tsx
-var import_react12 = __toESM(require_react(), 1);
+var import_react11 = __toESM(require_react(), 1);
 
 // lib/presets.ts
 var DEFAULT_PRESETS = [
@@ -16015,15 +15631,15 @@ function calculateProductPricing(input) {
 }
 
 // components/MergeProductsModal.tsx
-var import_react8 = __toESM(require_react(), 1);
-var import_jsx_runtime10 = __toESM(require_jsx_runtime(), 1);
+var import_react7 = __toESM(require_react(), 1);
+var import_jsx_runtime9 = __toESM(require_jsx_runtime(), 1);
 function MergeProductsModal({
   isOpen,
   onClose,
   selectedProducts,
   onConfirmMerge
 }) {
-  const [masterIndex, setMasterIndex] = (0, import_react8.useState)(0);
+  const [masterIndex, setMasterIndex] = (0, import_react7.useState)(0);
   if (!isOpen || selectedProducts.length < 2) return null;
   const masterProduct = selectedProducts[masterIndex] || selectedProducts[0];
   const combinedVariants = selectedProducts.flatMap((p) => variantsFor(p));
@@ -16041,7 +15657,7 @@ function MergeProductsModal({
     onConfirmMerge(merged, obsoleteIds);
     onClose();
   };
-  return /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("div", { className: "modal-backdrop", role: "presentation", onMouseDown: onClose, children: /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)(
+  return /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("div", { className: "modal-backdrop", role: "presentation", onMouseDown: onClose, children: /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)(
     "article",
     {
       className: "merge-modal",
@@ -16049,35 +15665,35 @@ function MergeProductsModal({
       "aria-modal": "true",
       onMouseDown: (e) => e.stopPropagation(),
       children: [
-        /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("div", { className: "modal-header-row", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("div", { children: [
-            /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("p", { className: "eyebrow", children: "\u041E\u043F\u0442\u0438\u043C\u0438\u0437\u0430\u0446\u0438\u044F \u043A\u0430\u0442\u0430\u043B\u043E\u0433\u0430" }),
-            /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("h2", { children: "\u041E\u0431\u044A\u0435\u0434\u0438\u043D\u0435\u043D\u0438\u0435 \u0442\u043E\u0432\u0430\u0440\u043E\u0432 \u0432 \u043E\u0434\u043D\u0443 \u043C\u043E\u0434\u0435\u043B\u044C" })
+        /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)("div", { className: "modal-header-row", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)("div", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("p", { className: "eyebrow", children: "\u041E\u043F\u0442\u0438\u043C\u0438\u0437\u0430\u0446\u0438\u044F \u043A\u0430\u0442\u0430\u043B\u043E\u0433\u0430" }),
+            /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("h2", { children: "\u041E\u0431\u044A\u0435\u0434\u0438\u043D\u0435\u043D\u0438\u0435 \u0442\u043E\u0432\u0430\u0440\u043E\u0432 \u0432 \u043E\u0434\u043D\u0443 \u043C\u043E\u0434\u0435\u043B\u044C" })
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("button", { className: "modal-close", onClick: onClose, "aria-label": "\u0417\u0430\u043A\u0440\u044B\u0442\u044C", children: "\xD7" })
+          /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("button", { className: "modal-close", onClick: onClose, "aria-label": "\u0417\u0430\u043A\u0440\u044B\u0442\u044C", children: "\xD7" })
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("p", { className: "merge-intro", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)("p", { className: "merge-intro", children: [
           "\u0412\u044B \u0432\u044B\u0431\u0440\u0430\u043B\u0438 ",
-          /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("strong", { children: [
+          /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)("strong", { children: [
             selectedProducts.length,
             " \u043F\u043E\u0437\u0438\u0446\u0438\u0439"
           ] }),
           ". \u0412\u0441\u0435 \u0438\u0445 \u0446\u0432\u0435\u0442\u043E\u0432\u044B\u0435 \u043C\u043E\u0434\u0438\u0444\u0438\u043A\u0430\u0446\u0438\u0438 \u0438 \u043E\u0441\u0442\u0430\u0442\u043A\u0438 (\u0441\u0443\u043C\u043C\u0430\u0440\u043D\u043E ",
-          /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("strong", { children: [
+          /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)("strong", { children: [
             totalStock,
             " \u0448\u0442."
           ] }),
           ") \u0431\u0443\u0434\u0443\u0442 \u043E\u0431\u044A\u0435\u0434\u0438\u043D\u0435\u043D\u044B \u0432 \u0435\u0434\u0438\u043D\u0443\u044E \u043A\u0430\u0440\u0442\u043E\u0447\u043A\u0443 \u0442\u043E\u0432\u0430\u0440\u0430 \u0441 \u043F\u0435\u0440\u0435\u043A\u043B\u044E\u0447\u0430\u0442\u0435\u043B\u0435\u043C \u0446\u0432\u0435\u0442\u043E\u0432."
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("div", { className: "merge-master-picker", children: /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("label", { children: [
-          /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("strong", { children: "\u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u043E\u0441\u043D\u043E\u0432\u043D\u0443\u044E \u043C\u043E\u0434\u0435\u043B\u044C (\u043C\u0430\u0441\u0442\u0435\u0440-\u043A\u0430\u0440\u0442\u043E\u0447\u043A\u0443):" }),
-          /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("div", { className: "merge-master-picker", children: /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)("label", { children: [
+          /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("strong", { children: "\u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u043E\u0441\u043D\u043E\u0432\u043D\u0443\u044E \u043C\u043E\u0434\u0435\u043B\u044C (\u043C\u0430\u0441\u0442\u0435\u0440-\u043A\u0430\u0440\u0442\u043E\u0447\u043A\u0443):" }),
+          /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(
             "select",
             {
               value: masterIndex,
               onChange: (e) => setMasterIndex(+e.target.value),
               className: "merge-select",
-              children: selectedProducts.map((p, idx) => /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("option", { value: idx, children: [
+              children: selectedProducts.map((p, idx) => /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)("option", { value: idx, children: [
                 p.name,
                 " (",
                 p.sku,
@@ -16090,29 +15706,29 @@ function MergeProductsModal({
             }
           )
         ] }) }),
-        /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("div", { className: "merge-preview-card", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("div", { className: "merge-master-preview", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("span", { className: "merge-thumb", children: /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(Image, { src: masterProduct.image, alt: "", fill: true, unoptimized: true, sizes: "72px" }) }),
-            /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("div", { children: [
-              /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("small", { children: [
+        /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)("div", { className: "merge-preview-card", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)("div", { className: "merge-master-preview", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("span", { className: "merge-thumb", children: /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(Image, { src: masterProduct.image, alt: "", fill: true, unoptimized: true, sizes: "72px" }) }),
+            /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)("div", { children: [
+              /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)("small", { children: [
                 masterProduct.category,
                 " \xB7 ",
                 masterProduct.sku
               ] }),
-              /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("strong", { children: masterProduct.name }),
-              /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("p", { children: masterProduct.description })
+              /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("strong", { children: masterProduct.name }),
+              /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("p", { children: masterProduct.description })
             ] })
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("div", { className: "merge-variants-list", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("strong", { children: [
+          /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)("div", { className: "merge-variants-list", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)("strong", { children: [
               "\u0418\u0442\u043E\u0433\u043E\u0432\u044B\u0439 \u0441\u043F\u0438\u0441\u043E\u043A \u0432\u0430\u0440\u0438\u0430\u043D\u0442\u043E\u0432 (",
               combinedVariants.length,
               "):"
             ] }),
-            /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("div", { className: "merge-variants-chips", children: combinedVariants.map((v, i) => /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("div", { className: "merge-var-chip", children: [
-              /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("i", { style: { background: v.color || "#8a8175" } }),
-              /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("span", { children: v.name }),
-              /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("small", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("div", { className: "merge-variants-chips", children: combinedVariants.map((v, i) => /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)("div", { className: "merge-var-chip", children: [
+              /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("i", { style: { background: v.color || "#8a8175" } }),
+              /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("span", { children: v.name }),
+              /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)("small", { children: [
                 "(",
                 v.sku,
                 ", ",
@@ -16122,9 +15738,9 @@ function MergeProductsModal({
             ] }, `${v.sku}-${i}`)) })
           ] })
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("div", { className: "modal-actions-row", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("button", { type: "button", className: "outline-button", onClick: onClose, children: "\u041E\u0442\u043C\u0435\u043D\u0430" }),
-          /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("button", { type: "button", className: "primary-button", onClick: handleExecuteMerge, children: "\u{1F517} \u041F\u043E\u0434\u0442\u0432\u0435\u0440\u0434\u0438\u0442\u044C \u0438 \u043E\u0431\u044A\u0435\u0434\u0438\u043D\u0438\u0442\u044C" })
+        /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)("div", { className: "modal-actions-row", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("button", { type: "button", className: "outline-button", onClick: onClose, children: "\u041E\u0442\u043C\u0435\u043D\u0430" }),
+          /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("button", { type: "button", className: "primary-button", onClick: handleExecuteMerge, children: "\u{1F517} \u041F\u043E\u0434\u0442\u0432\u0435\u0440\u0434\u0438\u0442\u044C \u0438 \u043E\u0431\u044A\u0435\u0434\u0438\u043D\u0438\u0442\u044C" })
         ] })
       ]
     }
@@ -16132,8 +15748,8 @@ function MergeProductsModal({
 }
 
 // components/PresetManagerModal.tsx
-var import_react9 = __toESM(require_react(), 1);
-var import_jsx_runtime11 = __toESM(require_jsx_runtime(), 1);
+var import_react8 = __toESM(require_react(), 1);
+var import_jsx_runtime10 = __toESM(require_jsx_runtime(), 1);
 function PresetManagerModal({
   isOpen,
   onClose,
@@ -16142,8 +15758,8 @@ function PresetManagerModal({
   onApplyPreset,
   currentCalculatorValues
 }) {
-  const [editingPreset, setEditingPreset] = (0, import_react9.useState)(null);
-  const [isCreating, setIsCreating] = (0, import_react9.useState)(false);
+  const [editingPreset, setEditingPreset] = (0, import_react8.useState)(null);
+  const [isCreating, setIsCreating] = (0, import_react8.useState)(false);
   if (!isOpen) return null;
   const startCreate = () => {
     const newPreset = {
@@ -16200,7 +15816,7 @@ function PresetManagerModal({
       setEditingPreset(null);
     }
   };
-  return /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("div", { className: "modal-backdrop", role: "presentation", onMouseDown: onClose, children: /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)(
+  return /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("div", { className: "modal-backdrop", role: "presentation", onMouseDown: onClose, children: /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)(
     "article",
     {
       className: "preset-modal",
@@ -16208,17 +15824,17 @@ function PresetManagerModal({
       "aria-modal": "true",
       onMouseDown: (e) => e.stopPropagation(),
       children: [
-        /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("div", { className: "modal-header-row", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("div", { children: [
-            /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("p", { className: "eyebrow", children: "\u042E\u041D\u0418\u0422-\u042D\u041A\u041E\u041D\u041E\u041C\u0418\u041A\u0410" }),
-            /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("h2", { children: "\u041A\u043E\u043D\u0441\u0442\u0440\u0443\u043A\u0442\u043E\u0440 \u0448\u0430\u0431\u043B\u043E\u043D\u043E\u0432 \u0440\u0430\u0441\u0445\u043E\u0434\u043E\u0432" })
+        /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("div", { className: "modal-header-row", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("div", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("p", { className: "eyebrow", children: "\u042E\u041D\u0418\u0422-\u042D\u041A\u041E\u041D\u041E\u041C\u0418\u041A\u0410" }),
+            /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("h2", { children: "\u041A\u043E\u043D\u0441\u0442\u0440\u0443\u043A\u0442\u043E\u0440 \u0448\u0430\u0431\u043B\u043E\u043D\u043E\u0432 \u0440\u0430\u0441\u0445\u043E\u0434\u043E\u0432" })
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("button", { className: "modal-close", onClick: onClose, "aria-label": "\u0417\u0430\u043A\u0440\u044B\u0442\u044C", children: "\xD7" })
+          /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("button", { className: "modal-close", onClick: onClose, "aria-label": "\u0417\u0430\u043A\u0440\u044B\u0442\u044C", children: "\xD7" })
         ] }),
-        editingPreset ? /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("form", { onSubmit: handleSavePreset, className: "preset-edit-form", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("div", { className: "preset-form-head", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("h3", { children: isCreating ? "\u2795 \u0421\u043E\u0437\u0434\u0430\u043D\u0438\u0435 \u043D\u043E\u0432\u043E\u0433\u043E \u0448\u0430\u0431\u043B\u043E\u043D\u0430" : `\u270F\uFE0F \u0420\u0435\u0434\u0430\u043A\u0442\u0438\u0440\u043E\u0432\u0430\u043D\u0438\u0435: ${editingPreset.name}` }),
-            /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(
+        editingPreset ? /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("form", { onSubmit: handleSavePreset, className: "preset-edit-form", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("div", { className: "preset-form-head", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("h3", { children: isCreating ? "\u2795 \u0421\u043E\u0437\u0434\u0430\u043D\u0438\u0435 \u043D\u043E\u0432\u043E\u0433\u043E \u0448\u0430\u0431\u043B\u043E\u043D\u0430" : `\u270F\uFE0F \u0420\u0435\u0434\u0430\u043A\u0442\u0438\u0440\u043E\u0432\u0430\u043D\u0438\u0435: ${editingPreset.name}` }),
+            /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(
               "button",
               {
                 type: "button",
@@ -16231,10 +15847,10 @@ function PresetManagerModal({
               }
             )
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("div", { className: "calculator-form", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("label", { className: "full-width", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("div", { className: "calculator-form", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("label", { className: "full-width", children: [
               "\u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435 \u0448\u0430\u0431\u043B\u043E\u043D\u0430",
-              /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(
+              /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(
                 "input",
                 {
                   required: true,
@@ -16244,9 +15860,9 @@ function PresetManagerModal({
                 }
               )
             ] }),
-            /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("label", { className: "full-width", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("label", { className: "full-width", children: [
               "\u041A\u0440\u0430\u0442\u043A\u043E\u0435 \u043E\u043F\u0438\u0441\u0430\u043D\u0438\u0435 / \u043F\u043E\u0434\u0441\u043A\u0430\u0437\u043A\u0430",
-              /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(
+              /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(
                 "input",
                 {
                   value: editingPreset.description || "",
@@ -16255,9 +15871,9 @@ function PresetManagerModal({
                 }
               )
             ] }),
-            /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("label", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("label", { children: [
               "\u0412\u0430\u043B\u044E\u0442\u0430 \u0437\u0430\u043A\u0443\u043F\u043A\u0438",
-              /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)(
+              /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)(
                 "select",
                 {
                   value: editingPreset.purchaseCurrency,
@@ -16266,16 +15882,16 @@ function PresetManagerModal({
                     purchaseCurrency: e.target.value
                   }),
                   children: [
-                    /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("option", { value: "CNY", children: "\u042E\u0430\u043D\u044C (\xA5, CNY)" }),
-                    /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("option", { value: "USD", children: "\u0414\u043E\u043B\u043B\u0430\u0440 ($, USD)" }),
-                    /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("option", { value: "KZT", children: "\u0422\u0435\u043D\u0433\u0435 (\u20B8, KZT)" })
+                    /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("option", { value: "CNY", children: "\u042E\u0430\u043D\u044C (\xA5, CNY)" }),
+                    /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("option", { value: "USD", children: "\u0414\u043E\u043B\u043B\u0430\u0440 ($, USD)" }),
+                    /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("option", { value: "KZT", children: "\u0422\u0435\u043D\u0433\u0435 (\u20B8, KZT)" })
                   ]
                 }
               )
             ] }),
-            /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("label", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("label", { children: [
               "\u0414\u043E\u0441\u0442\u0430\u0432\u043A\u0430 \u043F\u043E \u041A\u0438\u0442\u0430\u044E, \u20B8",
-              /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(
+              /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(
                 "input",
                 {
                   type: "number",
@@ -16286,9 +15902,9 @@ function PresetManagerModal({
                 }
               )
             ] }),
-            /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("label", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("label", { children: [
               "\u041A\u0430\u0440\u0433\u043E \u0434\u043E \u0410\u043A\u0442\u043E\u0431\u0435, \u20B8",
-              /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(
+              /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(
                 "input",
                 {
                   type: "number",
@@ -16299,9 +15915,9 @@ function PresetManagerModal({
                 }
               )
             ] }),
-            /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("label", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("label", { children: [
               "\u0422\u0430\u043C\u043E\u0436\u043D\u044F / \u0441\u0431\u043E\u0440\u044B, \u20B8",
-              /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(
+              /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(
                 "input",
                 {
                   type: "number",
@@ -16312,9 +15928,9 @@ function PresetManagerModal({
                 }
               )
             ] }),
-            /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("label", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("label", { children: [
               "\u0423\u043F\u0430\u043A\u043E\u0432\u043A\u0430 / \u043A\u043E\u0440\u043E\u0431\u043A\u0430, \u20B8",
-              /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(
+              /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(
                 "input",
                 {
                   type: "number",
@@ -16325,9 +15941,9 @@ function PresetManagerModal({
                 }
               )
             ] }),
-            /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("label", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("label", { children: [
               "\u0414\u043E\u0432\u043E\u0434\u043A\u0430 \u043C\u0430\u0441\u0442\u0435\u0440\u0430 / \u0447\u0435\u043A, \u20B8",
-              /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(
+              /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(
                 "input",
                 {
                   type: "number",
@@ -16338,9 +15954,9 @@ function PresetManagerModal({
                 }
               )
             ] }),
-            /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("label", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("label", { children: [
               "\u041C\u0430\u0440\u043A\u0435\u0442\u0438\u043D\u0433 \u043D\u0430 \u0435\u0434\u0438\u043D\u0438\u0446\u0443, \u20B8",
-              /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(
+              /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(
                 "input",
                 {
                   type: "number",
@@ -16351,9 +15967,9 @@ function PresetManagerModal({
                 }
               )
             ] }),
-            /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("label", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("label", { children: [
               "\u041F\u0440\u043E\u0447\u0438\u0435 \u0440\u0430\u0441\u0445\u043E\u0434\u044B, \u20B8",
-              /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(
+              /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(
                 "input",
                 {
                   type: "number",
@@ -16364,9 +15980,9 @@ function PresetManagerModal({
                 }
               )
             ] }),
-            /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("label", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("label", { children: [
               "\u041D\u0430\u043B\u043E\u0433, %",
-              /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(
+              /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(
                 "input",
                 {
                   type: "number",
@@ -16377,9 +15993,9 @@ function PresetManagerModal({
                 }
               )
             ] }),
-            /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("label", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("label", { children: [
               "\u0411\u0430\u043D\u043A / \u0440\u0430\u0441\u0441\u0440\u043E\u0447\u043A\u0430, %",
-              /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(
+              /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(
                 "input",
                 {
                   type: "number",
@@ -16390,9 +16006,9 @@ function PresetManagerModal({
                 }
               )
             ] }),
-            /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("label", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("label", { children: [
               "\u0421\u0440\u043E\u043A \u0440\u0430\u0441\u0441\u0440\u043E\u0447\u043A\u0438, \u043C\u0435\u0441.",
-              /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(
+              /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(
                 "input",
                 {
                   type: "number",
@@ -16403,9 +16019,9 @@ function PresetManagerModal({
                 }
               )
             ] }),
-            /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("label", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("label", { children: [
               "\u041F\u0440\u043E\u0434\u0430\u0432\u0435\u0446, %",
-              /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(
+              /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(
                 "input",
                 {
                   type: "number",
@@ -16416,9 +16032,9 @@ function PresetManagerModal({
                 }
               )
             ] }),
-            /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("label", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("label", { children: [
               "\u0416\u0435\u043B\u0430\u0435\u043C\u0430\u044F \u043F\u0440\u0438\u0431\u044B\u043B\u044C, %",
-              /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(
+              /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(
                 "input",
                 {
                   type: "number",
@@ -16430,8 +16046,8 @@ function PresetManagerModal({
               )
             ] })
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("div", { className: "preset-form-actions", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(
+          /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("div", { className: "preset-form-actions", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(
               "button",
               {
                 type: "button",
@@ -16443,54 +16059,54 @@ function PresetManagerModal({
                 children: "\u041E\u0442\u043C\u0435\u043D\u0430"
               }
             ),
-            /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("button", { type: "submit", className: "primary-button", children: isCreating ? "\u2795 \u0421\u043E\u0437\u0434\u0430\u0442\u044C \u0448\u0430\u0431\u043B\u043E\u043D" : "\u{1F4BE} \u0421\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C \u0438\u0437\u043C\u0435\u043D\u0435\u043D\u0438\u044F" })
+            /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("button", { type: "submit", className: "primary-button", children: isCreating ? "\u2795 \u0421\u043E\u0437\u0434\u0430\u0442\u044C \u0448\u0430\u0431\u043B\u043E\u043D" : "\u{1F4BE} \u0421\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C \u0438\u0437\u043C\u0435\u043D\u0435\u043D\u0438\u044F" })
           ] })
-        ] }) : /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("div", { className: "preset-list-view", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("p", { className: "preset-note", children: [
+        ] }) : /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("div", { className: "preset-list-view", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("p", { className: "preset-note", children: [
             "\u{1F4A1} ",
-            /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("strong", { children: "\u0428\u0430\u0431\u043B\u043E\u043D\u044B \u0440\u0430\u0441\u0445\u043E\u0434\u043E\u0432" }),
+            /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("strong", { children: "\u0428\u0430\u0431\u043B\u043E\u043D\u044B \u0440\u0430\u0441\u0445\u043E\u0434\u043E\u0432" }),
             " \u043F\u043E\u0437\u0432\u043E\u043B\u044F\u044E\u0442 \u0432 \u043E\u0434\u0438\u043D \u043A\u043B\u0438\u043A \u043F\u043E\u0434\u0441\u0442\u0430\u0432\u043B\u044F\u0442\u044C \u043B\u043E\u0433\u0438\u0441\u0442\u0438\u043A\u0443, \u043E\u0442\u0441\u0442\u0440\u043E\u0439\u043A\u0443 \u043C\u0430\u0441\u0442\u0435\u0440\u0430, \u043A\u0430\u0440\u0433\u043E \u0438 \u043D\u0430\u0446\u0435\u043D\u043A\u0443 \u043F\u043E\u0434 \u0440\u0430\u0437\u043D\u044B\u0435 \u043A\u0430\u0442\u0435\u0433\u043E\u0440\u0438\u0438 \u0438\u043D\u0441\u0442\u0440\u0443\u043C\u0435\u043D\u0442\u043E\u0432."
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("div", { className: "preset-cards-grid", children: presets.map((preset) => {
+          /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("div", { className: "preset-cards-grid", children: presets.map((preset) => {
             const totalDirectExpenses = preset.chinaDeliveryKzt + preset.cargoKzt + preset.customsKzt + preset.packagingKzt + preset.setupKzt + preset.marketingKzt + preset.otherCostsKzt;
-            return /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("div", { className: "preset-card-item", children: [
-              /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("div", { className: "preset-item-head", children: [
-                /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("strong", { className: "preset-title", children: preset.name }),
-                /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("span", { className: "currency-pill", children: preset.purchaseCurrency === "CNY" ? "\xA5 CNY" : preset.purchaseCurrency === "USD" ? "$ USD" : "\u20B8 KZT" })
+            return /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("div", { className: "preset-card-item", children: [
+              /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("div", { className: "preset-item-head", children: [
+                /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("strong", { className: "preset-title", children: preset.name }),
+                /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("span", { className: "currency-pill", children: preset.purchaseCurrency === "CNY" ? "\xA5 CNY" : preset.purchaseCurrency === "USD" ? "$ USD" : "\u20B8 KZT" })
               ] }),
-              preset.description && /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("p", { className: "preset-desc", children: preset.description }),
-              /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("div", { className: "preset-breakdown-tags", children: [
-                /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("span", { className: "tag-pill overhead", title: "\u0421\u0443\u043C\u043C\u0430\u0440\u043D\u044B\u0435 \u043F\u0440\u044F\u043C\u044B\u0435 \u043D\u0430\u043A\u043B\u0430\u0434\u043D\u044B\u0435 \u0440\u0430\u0441\u0445\u043E\u0434\u044B", children: [
+              preset.description && /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("p", { className: "preset-desc", children: preset.description }),
+              /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("div", { className: "preset-breakdown-tags", children: [
+                /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("span", { className: "tag-pill overhead", title: "\u0421\u0443\u043C\u043C\u0430\u0440\u043D\u044B\u0435 \u043F\u0440\u044F\u043C\u044B\u0435 \u043D\u0430\u043A\u043B\u0430\u0434\u043D\u044B\u0435 \u0440\u0430\u0441\u0445\u043E\u0434\u044B", children: [
                   "\u{1F4E6} \u041D\u0430\u043A\u043B\u0430\u0434\u043D\u044B\u0435: ",
-                  /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("strong", { children: [
+                  /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("strong", { children: [
                     totalDirectExpenses.toLocaleString("ru-RU"),
                     " \u20B8"
                   ] })
                 ] }),
-                /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("span", { className: "tag-pill setup", title: "\u0421\u0442\u043E\u0438\u043C\u043E\u0441\u0442\u044C \u043F\u0440\u0435\u0434\u043F\u0440\u043E\u0434\u0430\u0436\u043D\u043E\u0439 \u043E\u0442\u0441\u0442\u0440\u043E\u0439\u043A\u0438 \u043C\u0430\u0441\u0442\u0435\u0440\u043E\u043C", children: [
+                /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("span", { className: "tag-pill setup", title: "\u0421\u0442\u043E\u0438\u043C\u043E\u0441\u0442\u044C \u043F\u0440\u0435\u0434\u043F\u0440\u043E\u0434\u0430\u0436\u043D\u043E\u0439 \u043E\u0442\u0441\u0442\u0440\u043E\u0439\u043A\u0438 \u043C\u0430\u0441\u0442\u0435\u0440\u043E\u043C", children: [
                   "\u{1F527} \u0414\u043E\u0432\u043E\u0434\u043A\u0430: ",
-                  /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("strong", { children: [
+                  /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("strong", { children: [
                     preset.setupKzt.toLocaleString("ru-RU"),
                     " \u20B8"
                   ] })
                 ] }),
-                /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("span", { className: "tag-pill margin", title: "\u0426\u0435\u043B\u0435\u0432\u0430\u044F \u043C\u0430\u0440\u0436\u0438\u043D\u0430\u043B\u044C\u043D\u043E\u0441\u0442\u044C", children: [
+                /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("span", { className: "tag-pill margin", title: "\u0426\u0435\u043B\u0435\u0432\u0430\u044F \u043C\u0430\u0440\u0436\u0438\u043D\u0430\u043B\u044C\u043D\u043E\u0441\u0442\u044C", children: [
                   "\u{1F4C8} \u041C\u0430\u0440\u0436\u0430: ",
-                  /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("strong", { children: [
+                  /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("strong", { children: [
                     preset.targetProfitPercent,
                     "%"
                   ] })
                 ] }),
-                /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("span", { className: "tag-pill bank", title: "\u041A\u043E\u043C\u0438\u0441\u0441\u0438\u044F \u0431\u0430\u043D\u043A\u0430 \u0437\u0430 \u0440\u0430\u0441\u0441\u0440\u043E\u0447\u043A\u0443 Kaspi", children: [
+                /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("span", { className: "tag-pill bank", title: "\u041A\u043E\u043C\u0438\u0441\u0441\u0438\u044F \u0431\u0430\u043D\u043A\u0430 \u0437\u0430 \u0440\u0430\u0441\u0441\u0440\u043E\u0447\u043A\u0443 Kaspi", children: [
                   "\u{1F4B3} \u0420\u0430\u0441\u0441\u0440\u043E\u0447\u043A\u0430: ",
-                  /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("strong", { children: [
+                  /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("strong", { children: [
                     preset.bankInstallmentPercent,
                     "%"
                   ] })
                 ] })
               ] }),
-              /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("div", { className: "preset-item-actions", children: [
-                /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(
+              /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("div", { className: "preset-item-actions", children: [
+                /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(
                   "button",
                   {
                     type: "button",
@@ -16502,7 +16118,7 @@ function PresetManagerModal({
                     children: "\u26A1 \u041F\u0440\u0438\u043C\u0435\u043D\u0438\u0442\u044C"
                   }
                 ),
-                /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(
+                /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(
                   "button",
                   {
                     type: "button",
@@ -16514,7 +16130,7 @@ function PresetManagerModal({
                     children: "\u270F\uFE0F \u0418\u0437\u043C\u0435\u043D\u0438\u0442\u044C"
                   }
                 ),
-                /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(
+                /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(
                   "button",
                   {
                     type: "button",
@@ -16527,9 +16143,9 @@ function PresetManagerModal({
               ] })
             ] }, preset.id);
           }) }),
-          /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("div", { className: "preset-footer-actions", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("button", { type: "button", className: "outline-button reset-btn", onClick: handleResetDefaults, children: "\u{1F504} \u0421\u0431\u0440\u043E\u0441\u0438\u0442\u044C \u043A \u0437\u0430\u0432\u043E\u0434\u0441\u043A\u0438\u043C" }),
-            /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("button", { type: "button", className: "primary-button", onClick: startCreate, children: "\u2795 \u0421\u043E\u0437\u0434\u0430\u0442\u044C \u043D\u043E\u0432\u044B\u0439 \u0448\u0430\u0431\u043B\u043E\u043D" })
+          /* @__PURE__ */ (0, import_jsx_runtime10.jsxs)("div", { className: "preset-footer-actions", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("button", { type: "button", className: "outline-button reset-btn", onClick: handleResetDefaults, children: "\u{1F504} \u0421\u0431\u0440\u043E\u0441\u0438\u0442\u044C \u043A \u0437\u0430\u0432\u043E\u0434\u0441\u043A\u0438\u043C" }),
+            /* @__PURE__ */ (0, import_jsx_runtime10.jsx)("button", { type: "button", className: "primary-button", onClick: startCreate, children: "\u2795 \u0421\u043E\u0437\u0434\u0430\u0442\u044C \u043D\u043E\u0432\u044B\u0439 \u0448\u0430\u0431\u043B\u043E\u043D" })
           ] })
         ] })
       ]
@@ -16538,17 +16154,17 @@ function PresetManagerModal({
 }
 
 // components/PriceTagPrintModal.tsx
-var import_react10 = __toESM(require_react(), 1);
-var import_jsx_runtime12 = __toESM(require_jsx_runtime(), 1);
+var import_react9 = __toESM(require_react(), 1);
+var import_jsx_runtime11 = __toESM(require_jsx_runtime(), 1);
 function PriceTagPrintModal({ isOpen, onClose, products: products2 }) {
-  const [tagType, setTagType] = (0, import_react10.useState)("showroom");
-  const [includeKaspi, setIncludeKaspi] = (0, import_react10.useState)(true);
-  const [includeBarcode, setIncludeBarcode] = (0, import_react10.useState)(true);
+  const [tagType, setTagType] = (0, import_react9.useState)("showroom");
+  const [includeKaspi, setIncludeKaspi] = (0, import_react9.useState)(true);
+  const [includeBarcode, setIncludeBarcode] = (0, import_react9.useState)(true);
   if (!isOpen) return null;
   const handlePrint = () => {
     window.print();
   };
-  return /* @__PURE__ */ (0, import_jsx_runtime12.jsx)("div", { className: "modal-backdrop", role: "presentation", onMouseDown: onClose, children: /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)(
+  return /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("div", { className: "modal-backdrop", role: "presentation", onMouseDown: onClose, children: /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)(
     "div",
     {
       className: "print-modal-content",
@@ -16556,22 +16172,22 @@ function PriceTagPrintModal({ isOpen, onClose, products: products2 }) {
       "aria-modal": "true",
       onMouseDown: (e) => e.stopPropagation(),
       children: [
-        /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)("div", { className: "print-modal-header no-print", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)("div", { children: [
-            /* @__PURE__ */ (0, import_jsx_runtime12.jsx)("h2", { children: "\u{1F5A8} \u0413\u0435\u043D\u0435\u0440\u0430\u0442\u043E\u0440 \u0446\u0435\u043D\u043D\u0438\u043A\u043E\u0432 \u0438 \u044D\u0442\u0438\u043A\u0435\u0442\u043E\u043A" }),
-            /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)("p", { children: [
+        /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("div", { className: "print-modal-header no-print", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("div", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("h2", { children: "\u{1F5A8} \u0413\u0435\u043D\u0435\u0440\u0430\u0442\u043E\u0440 \u0446\u0435\u043D\u043D\u0438\u043A\u043E\u0432 \u0438 \u044D\u0442\u0438\u043A\u0435\u0442\u043E\u043A" }),
+            /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("p", { children: [
               "\u041F\u0435\u0447\u0430\u0442\u044C \u0434\u043B\u044F \u0442\u043E\u0440\u0433\u043E\u0432\u043E\u0433\u043E \u0437\u0430\u043B\u0430, \u0432\u0438\u0442\u0440\u0438\u043D \u0438 \u0441\u043A\u043B\u0430\u0434\u0441\u043A\u043E\u0439 \u043C\u0430\u0440\u043A\u0438\u0440\u043E\u0432\u043A\u0438 (",
               products2.length,
               " \u043F\u043E\u0437\u0438\u0446\u0438\u0439)"
             ] })
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime12.jsx)("button", { className: "modal-close", onClick: onClose, "aria-label": "\u0417\u0430\u043A\u0440\u044B\u0442\u044C", children: "\xD7" })
+          /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("button", { className: "modal-close", onClick: onClose, "aria-label": "\u0417\u0430\u043A\u0440\u044B\u0442\u044C", children: "\xD7" })
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)("div", { className: "print-controls-toolbar no-print", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)("div", { className: "control-group", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime12.jsx)("span", { className: "control-label", children: "\u0424\u043E\u0440\u043C\u0430\u0442 \u0446\u0435\u043D\u043D\u0438\u043A\u0430:" }),
-            /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)("div", { className: "format-buttons", children: [
-              /* @__PURE__ */ (0, import_jsx_runtime12.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("div", { className: "print-controls-toolbar no-print", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("div", { className: "control-group", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("span", { className: "control-label", children: "\u0424\u043E\u0440\u043C\u0430\u0442 \u0446\u0435\u043D\u043D\u0438\u043A\u0430:" }),
+            /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("div", { className: "format-buttons", children: [
+              /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(
                 "button",
                 {
                   type: "button",
@@ -16580,7 +16196,7 @@ function PriceTagPrintModal({ isOpen, onClose, products: products2 }) {
                   children: "\u0412\u0438\u0442\u0440\u0438\u043D\u043D\u044B\u0439 (\u0441 \u0440\u0430\u0441\u0441\u0440\u043E\u0447\u043A\u043E\u0439 Kaspi)"
                 }
               ),
-              /* @__PURE__ */ (0, import_jsx_runtime12.jsx)(
+              /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(
                 "button",
                 {
                   type: "button",
@@ -16589,7 +16205,7 @@ function PriceTagPrintModal({ isOpen, onClose, products: products2 }) {
                   children: "\u0421\u043A\u043B\u0430\u0434\u0441\u043A\u043E\u0439 \u0441\u043E \u0448\u0442\u0440\u0438\u0445\u043A\u043E\u0434\u043E\u043C (EAN-13)"
                 }
               ),
-              /* @__PURE__ */ (0, import_jsx_runtime12.jsx)(
+              /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(
                 "button",
                 {
                   type: "button",
@@ -16600,9 +16216,9 @@ function PriceTagPrintModal({ isOpen, onClose, products: products2 }) {
               )
             ] })
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)("div", { className: "control-group checkboxes", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)("label", { children: [
-              /* @__PURE__ */ (0, import_jsx_runtime12.jsx)(
+          /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("div", { className: "control-group checkboxes", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("label", { children: [
+              /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(
                 "input",
                 {
                   type: "checkbox",
@@ -16612,8 +16228,8 @@ function PriceTagPrintModal({ isOpen, onClose, products: products2 }) {
               ),
               "\u0411\u043B\u043E\u043A Kaspi 0-0-12"
             ] }),
-            /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)("label", { children: [
-              /* @__PURE__ */ (0, import_jsx_runtime12.jsx)(
+            /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("label", { children: [
+              /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(
                 "input",
                 {
                   type: "checkbox",
@@ -16624,84 +16240,84 @@ function PriceTagPrintModal({ isOpen, onClose, products: products2 }) {
               "\u0428\u0442\u0440\u0438\u0445\u043A\u043E\u0434 / EAN-13"
             ] })
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime12.jsx)("button", { type: "button", className: "primary-button print-action-btn", onClick: handlePrint, children: "\u{1F5A8} \u041E\u0442\u043F\u0440\u0430\u0432\u0438\u0442\u044C \u043D\u0430 \u043F\u0435\u0447\u0430\u0442\u044C" })
+          /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("button", { type: "button", className: "primary-button print-action-btn", onClick: handlePrint, children: "\u{1F5A8} \u041E\u0442\u043F\u0440\u0430\u0432\u0438\u0442\u044C \u043D\u0430 \u043F\u0435\u0447\u0430\u0442\u044C" })
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime12.jsx)("div", { className: `printable-sheet format-${tagType}`, children: products2.map((product) => {
+        /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("div", { className: `printable-sheet format-${tagType}`, children: products2.map((product) => {
           const price = product.price || 0;
           const originalPrice = product.originalPrice;
           const hasDiscount = Boolean(originalPrice && originalPrice > price);
           const monthlyPayment = installment(price, 12);
           const primaryVariant = product.variantItems?.[0];
           if (tagType === "showroom") {
-            return /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)("div", { className: "price-tag-showroom", children: [
-              /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)("div", { className: "tag-brand-row", children: [
-                /* @__PURE__ */ (0, import_jsx_runtime12.jsx)("span", { className: "tag-logo", children: "MAESTRO" }),
-                /* @__PURE__ */ (0, import_jsx_runtime12.jsx)("span", { className: "tag-category", children: product.category })
+            return /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("div", { className: "price-tag-showroom", children: [
+              /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("div", { className: "tag-brand-row", children: [
+                /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("span", { className: "tag-logo", children: "MAESTRO" }),
+                /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("span", { className: "tag-category", children: product.category })
               ] }),
-              /* @__PURE__ */ (0, import_jsx_runtime12.jsx)("h3", { className: "tag-title", children: product.name }),
-              /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)("div", { className: "tag-sku-row", children: [
-                /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)("span", { children: [
+              /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("h3", { className: "tag-title", children: product.name }),
+              /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("div", { className: "tag-sku-row", children: [
+                /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("span", { children: [
                   "\u0410\u0420\u0422\u0418\u041A\u0423\u041B: ",
-                  /* @__PURE__ */ (0, import_jsx_runtime12.jsx)("strong", { children: product.sku })
+                  /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("strong", { children: product.sku })
                 ] }),
-                primaryVariant?.colorName && /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)("span", { children: [
+                primaryVariant?.colorName && /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("span", { children: [
                   "\u0426\u0412\u0415\u0422: ",
-                  /* @__PURE__ */ (0, import_jsx_runtime12.jsx)("strong", { children: primaryVariant.colorName })
+                  /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("strong", { children: primaryVariant.colorName })
                 ] })
               ] }),
-              /* @__PURE__ */ (0, import_jsx_runtime12.jsx)("div", { className: "tag-features-list", children: product.features.slice(0, 3).map((f) => /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)("span", { children: [
+              /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("div", { className: "tag-features-list", children: product.features.slice(0, 3).map((f) => /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("span", { children: [
                 "\u2022 ",
                 f
               ] }, f)) }),
-              /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)("div", { className: "tag-price-block", children: [
-                hasDiscount && /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)("span", { className: "tag-old-price", children: [
+              /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("div", { className: "tag-price-block", children: [
+                hasDiscount && /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("span", { className: "tag-old-price", children: [
                   money(originalPrice),
                   " \u20B8"
                 ] }),
-                /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)("strong", { className: "tag-main-price", children: [
+                /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("strong", { className: "tag-main-price", children: [
                   money(price),
                   " \u20B8"
                 ] })
               ] }),
-              includeKaspi && price > 0 && /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)("div", { className: "tag-kaspi-pill", children: [
-                /* @__PURE__ */ (0, import_jsx_runtime12.jsx)("span", { className: "tag-kaspi-badge", children: "Kaspi 0-0-12" }),
-                /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)("strong", { children: [
+              includeKaspi && price > 0 && /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("div", { className: "tag-kaspi-pill", children: [
+                /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("span", { className: "tag-kaspi-badge", children: "Kaspi 0-0-12" }),
+                /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("strong", { children: [
                   money(monthlyPayment),
                   " \u20B8 / \u043C\u0435\u0441"
                 ] })
               ] }),
-              includeBarcode && /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)("div", { className: "tag-barcode-visual", children: [
-                /* @__PURE__ */ (0, import_jsx_runtime12.jsx)("div", { className: "mock-barcode-lines" }),
-                /* @__PURE__ */ (0, import_jsx_runtime12.jsx)("span", { className: "barcode-number", children: primaryVariant?.barcode || `2000${product.id}0001` })
+              includeBarcode && /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("div", { className: "tag-barcode-visual", children: [
+                /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("div", { className: "mock-barcode-lines" }),
+                /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("span", { className: "barcode-number", children: primaryVariant?.barcode || `2000${product.id}0001` })
               ] }),
-              /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)("div", { className: "tag-footer-info", children: [
-                /* @__PURE__ */ (0, import_jsx_runtime12.jsx)("span", { children: "\u0413\u0430\u0440\u0430\u043D\u0442\u0438\u044F Maestro Store" }),
-                /* @__PURE__ */ (0, import_jsx_runtime12.jsx)("span", { children: "\u0433. \u0410\u043A\u0442\u043E\u0431\u0435" })
+              /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("div", { className: "tag-footer-info", children: [
+                /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("span", { children: "\u0413\u0430\u0440\u0430\u043D\u0442\u0438\u044F Maestro Store" }),
+                /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("span", { children: "\u0433. \u0410\u043A\u0442\u043E\u0431\u0435" })
               ] })
             ] }, product.id);
           }
           if (tagType === "barcode") {
-            return /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)("div", { className: "barcode-sticker", children: [
-              /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)("div", { className: "sticker-header", children: [
-                /* @__PURE__ */ (0, import_jsx_runtime12.jsx)("strong", { children: "MAESTRO MUSIC" }),
-                /* @__PURE__ */ (0, import_jsx_runtime12.jsx)("span", { children: product.sku })
+            return /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("div", { className: "barcode-sticker", children: [
+              /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("div", { className: "sticker-header", children: [
+                /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("strong", { children: "MAESTRO MUSIC" }),
+                /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("span", { children: product.sku })
               ] }),
-              /* @__PURE__ */ (0, import_jsx_runtime12.jsx)("p", { className: "sticker-name", children: product.name }),
-              /* @__PURE__ */ (0, import_jsx_runtime12.jsx)("div", { className: "mock-barcode-lines tall" }),
-              /* @__PURE__ */ (0, import_jsx_runtime12.jsx)("span", { className: "sticker-code", children: primaryVariant?.barcode || `2000${product.id}0001` }),
-              /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)("div", { className: "sticker-price", children: [
-                /* @__PURE__ */ (0, import_jsx_runtime12.jsx)("span", { children: "\u0420\u041E\u0417\u041D\u0418\u0426\u0410:" }),
-                /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)("strong", { children: [
+              /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("p", { className: "sticker-name", children: product.name }),
+              /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("div", { className: "mock-barcode-lines tall" }),
+              /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("span", { className: "sticker-code", children: primaryVariant?.barcode || `2000${product.id}0001` }),
+              /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("div", { className: "sticker-price", children: [
+                /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("span", { children: "\u0420\u041E\u0417\u041D\u0418\u0426\u0410:" }),
+                /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("strong", { children: [
                   money(price),
                   " \u20B8"
                 ] })
               ] })
             ] }, product.id);
           }
-          return /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)("div", { className: "compact-sticker", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime12.jsx)("strong", { children: product.name }),
-            /* @__PURE__ */ (0, import_jsx_runtime12.jsx)("small", { children: product.sku }),
-            /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)("div", { className: "compact-price", children: [
+          return /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("div", { className: "compact-sticker", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("strong", { children: product.name }),
+            /* @__PURE__ */ (0, import_jsx_runtime11.jsx)("small", { children: product.sku }),
+            /* @__PURE__ */ (0, import_jsx_runtime11.jsxs)("div", { className: "compact-price", children: [
               money(price),
               " \u20B8"
             ] })
@@ -16713,8 +16329,8 @@ function PriceTagPrintModal({ isOpen, onClose, products: products2 }) {
 }
 
 // components/CourseEditorModal.tsx
-var import_react11 = __toESM(require_react(), 1);
-var import_jsx_runtime13 = __toESM(require_jsx_runtime(), 1);
+var import_react10 = __toESM(require_react(), 1);
+var import_jsx_runtime12 = __toESM(require_jsx_runtime(), 1);
 function CourseEditorModal({
   isOpen,
   onClose,
@@ -16722,32 +16338,32 @@ function CourseEditorModal({
   setCourses,
   onSavedNotice
 }) {
-  const [selectedCourseId, setSelectedCourseId] = (0, import_react11.useState)(courses[0]?.id || "");
-  const [isCreatingNew, setIsCreatingNew] = (0, import_react11.useState)(false);
+  const [selectedCourseId, setSelectedCourseId] = (0, import_react10.useState)(courses[0]?.id || "");
+  const [isCreatingNew, setIsCreatingNew] = (0, import_react10.useState)(false);
   const activeCourse = isCreatingNew ? null : courses.find((c) => c.id === selectedCourseId) || courses[0];
-  const [title, setTitle] = (0, import_react11.useState)(activeCourse?.title || "");
-  const [subtitle, setSubtitle] = (0, import_react11.useState)(activeCourse?.subtitle || "");
-  const [badge, setBadge] = (0, import_react11.useState)(activeCourse?.badge || "");
-  const [courseUrl, setCourseUrl] = (0, import_react11.useState)(activeCourse?.courseUrl || "");
-  const [instrument, setInstrument] = (0, import_react11.useState)(
+  const [title, setTitle] = (0, import_react10.useState)(activeCourse?.title || "");
+  const [subtitle, setSubtitle] = (0, import_react10.useState)(activeCourse?.subtitle || "");
+  const [badge, setBadge] = (0, import_react10.useState)(activeCourse?.badge || "");
+  const [courseUrl, setCourseUrl] = (0, import_react10.useState)(activeCourse?.courseUrl || "");
+  const [instrument, setInstrument] = (0, import_react10.useState)(
     activeCourse?.instrument || "acoustic"
   );
-  const [level, setLevel] = (0, import_react11.useState)(
+  const [level, setLevel] = (0, import_react10.useState)(
     activeCourse?.level || "\u041D\u0430\u0447\u0438\u043D\u0430\u044E\u0449\u0438\u0439"
   );
-  const [price, setPrice] = (0, import_react11.useState)(activeCourse?.price || 9900);
-  const [originalPrice, setOriginalPrice] = (0, import_react11.useState)(activeCourse?.originalPrice || 19900);
-  const [description, setDescription] = (0, import_react11.useState)(activeCourse?.description || "");
-  const [highlightsText, setHighlightsText] = (0, import_react11.useState)((activeCourse?.highlights || []).join("\n"));
-  const [instructorName, setInstructorName] = (0, import_react11.useState)(activeCourse?.instructor?.name || "");
-  const [instructorRole, setInstructorRole] = (0, import_react11.useState)(activeCourse?.instructor?.role || "");
-  const [instructorExp, setInstructorExp] = (0, import_react11.useState)(activeCourse?.instructor?.experience || "");
-  const [instructorAvatar, setInstructorAvatar] = (0, import_react11.useState)(activeCourse?.instructor?.avatar || "\u{1F3B8}");
-  const [lessons, setLessons] = (0, import_react11.useState)(activeCourse?.lessons || []);
-  const [isSaving, setIsSaving] = (0, import_react11.useState)(false);
-  const [isDeleting, setIsDeleting] = (0, import_react11.useState)(false);
-  const [statusMsg, setStatusMsg] = (0, import_react11.useState)("");
-  (0, import_react11.useEffect)(() => {
+  const [price, setPrice] = (0, import_react10.useState)(activeCourse?.price || 9900);
+  const [originalPrice, setOriginalPrice] = (0, import_react10.useState)(activeCourse?.originalPrice || 19900);
+  const [description, setDescription] = (0, import_react10.useState)(activeCourse?.description || "");
+  const [highlightsText, setHighlightsText] = (0, import_react10.useState)((activeCourse?.highlights || []).join("\n"));
+  const [instructorName, setInstructorName] = (0, import_react10.useState)(activeCourse?.instructor?.name || "");
+  const [instructorRole, setInstructorRole] = (0, import_react10.useState)(activeCourse?.instructor?.role || "");
+  const [instructorExp, setInstructorExp] = (0, import_react10.useState)(activeCourse?.instructor?.experience || "");
+  const [instructorAvatar, setInstructorAvatar] = (0, import_react10.useState)(activeCourse?.instructor?.avatar || "\u{1F3B8}");
+  const [lessons, setLessons] = (0, import_react10.useState)(activeCourse?.lessons || []);
+  const [isSaving, setIsSaving] = (0, import_react10.useState)(false);
+  const [isDeleting, setIsDeleting] = (0, import_react10.useState)(false);
+  const [statusMsg, setStatusMsg] = (0, import_react10.useState)("");
+  (0, import_react10.useEffect)(() => {
     if (isOpen && (!courses || courses.length === 0)) {
       fetch("/api/courses").then((r) => r.ok ? r.json() : Promise.reject(new Error("Failed"))).then((data) => {
         if (Array.isArray(data.courses) && data.courses.length > 0) {
@@ -16923,7 +16539,7 @@ function CourseEditorModal({
       setIsDeleting(false);
     }
   };
-  return /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("div", { className: "modal-backdrop", role: "presentation", onMouseDown: onClose, children: /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)(
+  return /* @__PURE__ */ (0, import_jsx_runtime12.jsx)("div", { className: "modal-backdrop", role: "presentation", onMouseDown: onClose, children: /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)(
     "div",
     {
       className: "course-editor-modal-content",
@@ -16931,24 +16547,24 @@ function CourseEditorModal({
       "aria-modal": "true",
       onMouseDown: (e) => e.stopPropagation(),
       children: [
-        /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "modal-header", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { children: [
-            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("h2", { children: "\u{1F393} \u041D\u0430\u0441\u0442\u0440\u043E\u0439\u043A\u0430 \u0438 \u0434\u043E\u0431\u0430\u0432\u043B\u0435\u043D\u0438\u0435 \u043E\u043D\u043B\u0430\u0439\u043D-\u043A\u0443\u0440\u0441\u043E\u0432" }),
-            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("p", { children: "\u0423\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435 \u043F\u0440\u043E\u0433\u0440\u0430\u043C\u043C\u0430\u043C\u0438 \u043E\u0431\u0443\u0447\u0435\u043D\u0438\u044F, \u0441\u0441\u044B\u043B\u043A\u0430\u043C\u0438 \u043D\u0430 \u043F\u043B\u0430\u0442\u0444\u043E\u0440\u043C\u0443, \u0446\u0435\u043D\u0430\u043C\u0438, \u0443\u0440\u043E\u043A\u0430\u043C\u0438 \u0438 \u043F\u0440\u0435\u043F\u043E\u0434\u0430\u0432\u0430\u0442\u0435\u043B\u044F\u043C\u0438 Maestro Academy" })
+        /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)("div", { className: "modal-header", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)("div", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime12.jsx)("h2", { children: "\u{1F393} \u041D\u0430\u0441\u0442\u0440\u043E\u0439\u043A\u0430 \u0438 \u0434\u043E\u0431\u0430\u0432\u043B\u0435\u043D\u0438\u0435 \u043E\u043D\u043B\u0430\u0439\u043D-\u043A\u0443\u0440\u0441\u043E\u0432" }),
+            /* @__PURE__ */ (0, import_jsx_runtime12.jsx)("p", { children: "\u0423\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435 \u043F\u0440\u043E\u0433\u0440\u0430\u043C\u043C\u0430\u043C\u0438 \u043E\u0431\u0443\u0447\u0435\u043D\u0438\u044F, \u0441\u0441\u044B\u043B\u043A\u0430\u043C\u0438 \u043D\u0430 \u043F\u043B\u0430\u0442\u0444\u043E\u0440\u043C\u0443, \u0446\u0435\u043D\u0430\u043C\u0438, \u0443\u0440\u043E\u043A\u0430\u043C\u0438 \u0438 \u043F\u0440\u0435\u043F\u043E\u0434\u0430\u0432\u0430\u0442\u0435\u043B\u044F\u043C\u0438 Maestro Academy" })
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("button", { className: "modal-close", onClick: onClose, "aria-label": "\u0417\u0430\u043A\u0440\u044B\u0442\u044C", children: "\xD7" })
+          /* @__PURE__ */ (0, import_jsx_runtime12.jsx)("button", { className: "modal-close", onClick: onClose, "aria-label": "\u0417\u0430\u043A\u0440\u044B\u0442\u044C", children: "\xD7" })
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "course-picker-tabs", children: [
-          courses.map((c) => /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)(
+        /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)("div", { className: "course-picker-tabs", children: [
+          courses.map((c) => /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)(
             "button",
             {
               type: "button",
               className: `course-tab-pill ${!isCreatingNew && c.id === selectedCourseId ? "active" : ""}`,
               onClick: () => handleSelectCourse(c.id),
               children: [
-                /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { children: c.instructor?.avatar || "\u{1F393}" }),
-                /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("strong", { children: c.title }),
-                /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("small", { children: [
+                /* @__PURE__ */ (0, import_jsx_runtime12.jsx)("span", { children: c.instructor?.avatar || "\u{1F393}" }),
+                /* @__PURE__ */ (0, import_jsx_runtime12.jsx)("strong", { children: c.title }),
+                /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)("small", { children: [
                   money(c.price),
                   " \u20B8"
                 ] })
@@ -16956,7 +16572,7 @@ function CourseEditorModal({
             },
             c.id
           )),
-          /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)(
+          /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)(
             "button",
             {
               type: "button",
@@ -16964,25 +16580,25 @@ function CourseEditorModal({
               onClick: handleStartCreateNew,
               title: "\u0421\u043E\u0437\u0434\u0430\u0442\u044C \u043D\u043E\u0432\u044B\u0439 \u043A\u0443\u0440\u0441",
               children: [
-                /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { children: "\u2795" }),
-                /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("strong", { children: "+ \u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u043D\u043E\u0432\u044B\u0439 \u043A\u0443\u0440\u0441" }),
-                /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("small", { children: "\u0421\u043E\u0437\u0434\u0430\u0442\u044C \u0441 \u043D\u0443\u043B\u044F" })
+                /* @__PURE__ */ (0, import_jsx_runtime12.jsx)("span", { children: "\u2795" }),
+                /* @__PURE__ */ (0, import_jsx_runtime12.jsx)("strong", { children: "+ \u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u043D\u043E\u0432\u044B\u0439 \u043A\u0443\u0440\u0441" }),
+                /* @__PURE__ */ (0, import_jsx_runtime12.jsx)("small", { children: "\u0421\u043E\u0437\u0434\u0430\u0442\u044C \u0441 \u043D\u0443\u043B\u044F" })
               ]
             }
           )
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "course-form-grid", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("label", { className: "full-width", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)("div", { className: "course-form-grid", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)("label", { className: "full-width", children: [
             "\u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435 \u043A\u0443\u0440\u0441\u0430",
-            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("input", { value: title, onChange: (e) => setTitle(e.target.value), placeholder: "\u041D\u0430\u043F\u0440\u0438\u043C\u0435\u0440: \u0410\u043A\u0443\u0441\u0442\u0438\u0447\u0435\u0441\u043A\u0430\u044F \u0433\u0438\u0442\u0430\u0440\u0430 \u0441 \u043D\u0443\u043B\u044F" })
+            /* @__PURE__ */ (0, import_jsx_runtime12.jsx)("input", { value: title, onChange: (e) => setTitle(e.target.value), placeholder: "\u041D\u0430\u043F\u0440\u0438\u043C\u0435\u0440: \u0410\u043A\u0443\u0441\u0442\u0438\u0447\u0435\u0441\u043A\u0430\u044F \u0433\u0438\u0442\u0430\u0440\u0430 \u0441 \u043D\u0443\u043B\u044F" })
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("label", { className: "full-width", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)("label", { className: "full-width", children: [
             "\u041F\u043E\u0434\u0437\u0430\u0433\u043E\u043B\u043E\u0432\u043E\u043A (\u043A\u0440\u0430\u0442\u043A\u043E\u0435 \u0423\u0422\u041F)",
-            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("input", { value: subtitle, onChange: (e) => setSubtitle(e.target.value), placeholder: "\u041F\u043E\u0448\u0430\u0433\u043E\u0432\u044B\u0439 \u043A\u0443\u0440\u0441 \u0434\u043B\u044F \u0430\u0431\u0441\u043E\u043B\u044E\u0442\u043D\u044B\u0445 \u043D\u043E\u0432\u0438\u0447\u043A\u043E\u0432" })
+            /* @__PURE__ */ (0, import_jsx_runtime12.jsx)("input", { value: subtitle, onChange: (e) => setSubtitle(e.target.value), placeholder: "\u041F\u043E\u0448\u0430\u0433\u043E\u0432\u044B\u0439 \u043A\u0443\u0440\u0441 \u0434\u043B\u044F \u0430\u0431\u0441\u043E\u043B\u044E\u0442\u043D\u044B\u0445 \u043D\u043E\u0432\u0438\u0447\u043A\u043E\u0432" })
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("label", { className: "full-width highlight-field", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)("label", { className: "full-width highlight-field", children: [
             "\u{1F517} \u0421\u0441\u044B\u043B\u043A\u0430 \u043D\u0430 \u043A\u0443\u0440\u0441 / \u043F\u043B\u0430\u0442\u0444\u043E\u0440\u043C\u0443 \u043E\u0431\u0443\u0447\u0435\u043D\u0438\u044F (URL)",
-            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(
+            /* @__PURE__ */ (0, import_jsx_runtime12.jsx)(
               "input",
               {
                 value: courseUrl,
@@ -16991,30 +16607,30 @@ function CourseEditorModal({
               }
             )
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("label", { children: [
+          /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)("label", { children: [
             "\u0411\u0435\u0439\u0434\u0436 / \u043F\u043B\u0430\u0448\u043A\u0430",
-            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("input", { value: badge, onChange: (e) => setBadge(e.target.value), placeholder: "\u0425\u0418\u0422 \xB7 \u0412 \u041F\u041E\u0414\u0410\u0420\u041E\u041A" })
+            /* @__PURE__ */ (0, import_jsx_runtime12.jsx)("input", { value: badge, onChange: (e) => setBadge(e.target.value), placeholder: "\u0425\u0418\u0422 \xB7 \u0412 \u041F\u041E\u0414\u0410\u0420\u041E\u041A" })
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("label", { children: [
+          /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)("label", { children: [
             "\u0422\u0438\u043F \u0438\u043D\u0441\u0442\u0440\u0443\u043C\u0435\u043D\u0442\u0430",
-            /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("select", { value: instrument, onChange: (e) => setInstrument(e.target.value), children: [
-              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("option", { value: "acoustic", children: "\u0410\u043A\u0443\u0441\u0442\u0438\u0447\u0435\u0441\u043A\u0430\u044F \u0433\u0438\u0442\u0430\u0440\u0430" }),
-              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("option", { value: "electric", children: "\u042D\u043B\u0435\u043A\u0442\u0440\u043E\u0433\u0438\u0442\u0430\u0440\u0430" }),
-              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("option", { value: "ukulele", children: "\u0423\u043A\u0443\u043B\u0435\u043B\u0435" }),
-              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("option", { value: "all", children: "\u0412\u0441\u0435 \u0438\u043D\u0441\u0442\u0440\u0443\u043C\u0435\u043D\u0442\u044B" })
+            /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)("select", { value: instrument, onChange: (e) => setInstrument(e.target.value), children: [
+              /* @__PURE__ */ (0, import_jsx_runtime12.jsx)("option", { value: "acoustic", children: "\u0410\u043A\u0443\u0441\u0442\u0438\u0447\u0435\u0441\u043A\u0430\u044F \u0433\u0438\u0442\u0430\u0440\u0430" }),
+              /* @__PURE__ */ (0, import_jsx_runtime12.jsx)("option", { value: "electric", children: "\u042D\u043B\u0435\u043A\u0442\u0440\u043E\u0433\u0438\u0442\u0430\u0440\u0430" }),
+              /* @__PURE__ */ (0, import_jsx_runtime12.jsx)("option", { value: "ukulele", children: "\u0423\u043A\u0443\u043B\u0435\u043B\u0435" }),
+              /* @__PURE__ */ (0, import_jsx_runtime12.jsx)("option", { value: "all", children: "\u0412\u0441\u0435 \u0438\u043D\u0441\u0442\u0440\u0443\u043C\u0435\u043D\u0442\u044B" })
             ] })
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("label", { children: [
+          /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)("label", { children: [
             "\u0423\u0440\u043E\u0432\u0435\u043D\u044C",
-            /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("select", { value: level, onChange: (e) => setLevel(e.target.value), children: [
-              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("option", { value: "\u041D\u0430\u0447\u0438\u043D\u0430\u044E\u0449\u0438\u0439", children: "\u041D\u0430\u0447\u0438\u043D\u0430\u044E\u0449\u0438\u0439" }),
-              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("option", { value: "\u0421\u0440\u0435\u0434\u043D\u0438\u0439", children: "\u0421\u0440\u0435\u0434\u043D\u0438\u0439" }),
-              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("option", { value: "\u041F\u0440\u043E\u0434\u0432\u0438\u043D\u0443\u0442\u044B\u0439", children: "\u041F\u0440\u043E\u0434\u0432\u0438\u043D\u0443\u0442\u044B\u0439" })
+            /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)("select", { value: level, onChange: (e) => setLevel(e.target.value), children: [
+              /* @__PURE__ */ (0, import_jsx_runtime12.jsx)("option", { value: "\u041D\u0430\u0447\u0438\u043D\u0430\u044E\u0449\u0438\u0439", children: "\u041D\u0430\u0447\u0438\u043D\u0430\u044E\u0449\u0438\u0439" }),
+              /* @__PURE__ */ (0, import_jsx_runtime12.jsx)("option", { value: "\u0421\u0440\u0435\u0434\u043D\u0438\u0439", children: "\u0421\u0440\u0435\u0434\u043D\u0438\u0439" }),
+              /* @__PURE__ */ (0, import_jsx_runtime12.jsx)("option", { value: "\u041F\u0440\u043E\u0434\u0432\u0438\u043D\u0443\u0442\u044B\u0439", children: "\u041F\u0440\u043E\u0434\u0432\u0438\u043D\u0443\u0442\u044B\u0439" })
             ] })
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("label", { children: [
+          /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)("label", { children: [
             "\u0426\u0435\u043D\u0430 \u043A\u0443\u0440\u0441\u0430, \u20B8",
-            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(
+            /* @__PURE__ */ (0, import_jsx_runtime12.jsx)(
               "input",
               {
                 type: "number",
@@ -17025,9 +16641,9 @@ function CourseEditorModal({
               }
             )
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("label", { children: [
+          /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)("label", { children: [
             "\u0421\u0442\u0430\u0440\u0430\u044F \u0446\u0435\u043D\u0430, \u20B8 (\u0437\u0430\u0447\u0451\u0440\u043A\u043D\u0443\u0442\u0430\u044F)",
-            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(
+            /* @__PURE__ */ (0, import_jsx_runtime12.jsx)(
               "input",
               {
                 type: "number",
@@ -17038,9 +16654,9 @@ function CourseEditorModal({
               }
             )
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("label", { className: "full-width", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)("label", { className: "full-width", children: [
             "\u041F\u043E\u0434\u0440\u043E\u0431\u043D\u043E\u0435 \u043E\u043F\u0438\u0441\u0430\u043D\u0438\u0435 \u043A\u0443\u0440\u0441\u0430",
-            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(
+            /* @__PURE__ */ (0, import_jsx_runtime12.jsx)(
               "textarea",
               {
                 rows: 3,
@@ -17050,9 +16666,9 @@ function CourseEditorModal({
               }
             )
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("label", { className: "full-width", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)("label", { className: "full-width", children: [
             "\u041A\u043B\u044E\u0447\u0435\u0432\u044B\u0435 \u043F\u0443\u043D\u043A\u0442\u044B \u043F\u0440\u043E\u0433\u0440\u0430\u043C\u043C\u044B (\u043F\u043E \u043E\u0434\u043D\u043E\u043C\u0443 \u043D\u0430 \u0441\u0442\u0440\u043E\u043A\u0443)",
-            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(
+            /* @__PURE__ */ (0, import_jsx_runtime12.jsx)(
               "textarea",
               {
                 rows: 4,
@@ -17062,44 +16678,44 @@ function CourseEditorModal({
               }
             )
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "instructor-edit-card full-width", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("strong", { children: "\u{1F468}\u200D\u{1F3EB} \u041F\u0440\u0435\u043F\u043E\u0434\u0430\u0432\u0430\u0442\u0435\u043B\u044C \u043A\u0443\u0440\u0441\u0430" }),
-            /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "instructor-inputs-grid", children: [
-              /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("label", { children: [
+          /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)("div", { className: "instructor-edit-card full-width", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime12.jsx)("strong", { children: "\u{1F468}\u200D\u{1F3EB} \u041F\u0440\u0435\u043F\u043E\u0434\u0430\u0432\u0430\u0442\u0435\u043B\u044C \u043A\u0443\u0440\u0441\u0430" }),
+            /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)("div", { className: "instructor-inputs-grid", children: [
+              /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)("label", { children: [
                 "\u0418\u043C\u044F \u043F\u0440\u0435\u043F\u043E\u0434\u0430\u0432\u0430\u0442\u0435\u043B\u044F",
-                /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("input", { value: instructorName, onChange: (e) => setInstructorName(e.target.value), placeholder: "\u0420\u0443\u0441\u043B\u0430\u043D \u0421\u0430\u0433\u0438\u0442\u043E\u0432" })
+                /* @__PURE__ */ (0, import_jsx_runtime12.jsx)("input", { value: instructorName, onChange: (e) => setInstructorName(e.target.value), placeholder: "\u0420\u0443\u0441\u043B\u0430\u043D \u0421\u0430\u0433\u0438\u0442\u043E\u0432" })
               ] }),
-              /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("label", { children: [
+              /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)("label", { children: [
                 "\u0414\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u044C / \u0421\u043F\u0435\u0446\u0438\u0430\u043B\u0438\u0437\u0430\u0446\u0438\u044F",
-                /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("input", { value: instructorRole, onChange: (e) => setInstructorRole(e.target.value), placeholder: "\u041F\u0440\u0435\u043F\u043E\u0434\u0430\u0432\u0430\u0442\u0435\u043B\u044C \u0433\u0438\u0442\u0430\u0440\u044B" })
+                /* @__PURE__ */ (0, import_jsx_runtime12.jsx)("input", { value: instructorRole, onChange: (e) => setInstructorRole(e.target.value), placeholder: "\u041F\u0440\u0435\u043F\u043E\u0434\u0430\u0432\u0430\u0442\u0435\u043B\u044C \u0433\u0438\u0442\u0430\u0440\u044B" })
               ] }),
-              /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("label", { children: [
+              /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)("label", { children: [
                 "\u041E\u043F\u044B\u0442 \u0438 \u0440\u0435\u0433\u0430\u043B\u0438\u0438",
-                /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("input", { value: instructorExp, onChange: (e) => setInstructorExp(e.target.value), placeholder: "\u041E\u043F\u044B\u0442 \u043F\u0440\u0435\u043F\u043E\u0434\u0430\u0432\u0430\u043D\u0438\u044F 10+ \u043B\u0435\u0442" })
+                /* @__PURE__ */ (0, import_jsx_runtime12.jsx)("input", { value: instructorExp, onChange: (e) => setInstructorExp(e.target.value), placeholder: "\u041E\u043F\u044B\u0442 \u043F\u0440\u0435\u043F\u043E\u0434\u0430\u0432\u0430\u043D\u0438\u044F 10+ \u043B\u0435\u0442" })
               ] }),
-              /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("label", { children: [
+              /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)("label", { children: [
                 "\u0418\u043A\u043E\u043D\u043A\u0430 / \u042D\u043C\u043E\u0434\u0437\u0438",
-                /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("input", { value: instructorAvatar, onChange: (e) => setInstructorAvatar(e.target.value), maxLength: 4, placeholder: "\u{1F3B8}" })
+                /* @__PURE__ */ (0, import_jsx_runtime12.jsx)("input", { value: instructorAvatar, onChange: (e) => setInstructorAvatar(e.target.value), maxLength: 4, placeholder: "\u{1F3B8}" })
               ] })
             ] })
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "lessons-edit-card full-width", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "card-subhead between", children: [
-              /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("strong", { children: [
+          /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)("div", { className: "lessons-edit-card full-width", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)("div", { className: "card-subhead between", children: [
+              /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)("strong", { children: [
                 "\u{1F4DA} \u041C\u043E\u0434\u0443\u043B\u0438 \u0438 \u0432\u0438\u0434\u0435\u043E\u0443\u0440\u043E\u043A\u0438 \u043A\u0443\u0440\u0441\u0430 (",
                 lessons.length,
                 ")"
               ] }),
-              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("button", { type: "button", className: "primary-button small", onClick: handleAddLesson, children: "+ \u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u0443\u0440\u043E\u043A" })
+              /* @__PURE__ */ (0, import_jsx_runtime12.jsx)("button", { type: "button", className: "primary-button small", onClick: handleAddLesson, children: "+ \u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u0443\u0440\u043E\u043A" })
             ] }),
-            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("div", { className: "lessons-edit-table", children: lessons.map((lesson, idx) => /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "lesson-edit-row", children: [
-              /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("span", { className: "lesson-idx", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime12.jsx)("div", { className: "lessons-edit-table", children: lessons.map((lesson, idx) => /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)("div", { className: "lesson-edit-row", children: [
+              /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)("span", { className: "lesson-idx", children: [
                 "#",
                 idx + 1
               ] }),
-              /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("label", { className: "lesson-title-field", children: [
+              /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)("label", { className: "lesson-title-field", children: [
                 "\u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435",
-                /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(
+                /* @__PURE__ */ (0, import_jsx_runtime12.jsx)(
                   "input",
                   {
                     value: lesson.title,
@@ -17107,9 +16723,9 @@ function CourseEditorModal({
                   }
                 )
               ] }),
-              /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("label", { className: "lesson-dur-field", children: [
+              /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)("label", { className: "lesson-dur-field", children: [
                 "\u0414\u043B\u0438\u0442\u0435\u043B\u044C\u043D\u043E\u0441\u0442\u044C",
-                /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(
+                /* @__PURE__ */ (0, import_jsx_runtime12.jsx)(
                   "input",
                   {
                     value: lesson.duration,
@@ -17117,9 +16733,9 @@ function CourseEditorModal({
                   }
                 )
               ] }),
-              /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("label", { className: "lesson-url-field", children: [
+              /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)("label", { className: "lesson-url-field", children: [
                 "\u0421\u0441\u044B\u043B\u043A\u0430 \u043D\u0430 \u0432\u0438\u0434\u0435\u043E / \u0443\u0440\u043E\u043A",
-                /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(
+                /* @__PURE__ */ (0, import_jsx_runtime12.jsx)(
                   "input",
                   {
                     value: lesson.videoUrl || "",
@@ -17128,8 +16744,8 @@ function CourseEditorModal({
                   }
                 )
               ] }),
-              /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("label", { className: "lesson-demo-field", children: [
-                /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(
+              /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)("label", { className: "lesson-demo-field", children: [
+                /* @__PURE__ */ (0, import_jsx_runtime12.jsx)(
                   "input",
                   {
                     type: "checkbox",
@@ -17139,7 +16755,7 @@ function CourseEditorModal({
                 ),
                 "\u0411\u0435\u0441\u043F\u043B\u0430\u0442\u043D\u043E\u0435 \u0434\u0435\u043C\u043E"
               ] }),
-              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(
+              /* @__PURE__ */ (0, import_jsx_runtime12.jsx)(
                 "button",
                 {
                   type: "button",
@@ -17152,10 +16768,10 @@ function CourseEditorModal({
             ] }, lesson.id || idx)) })
           ] })
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "modal-footer-bar", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { className: "editor-status-text", children: statusMsg }),
-          /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "footer-actions", children: [
-            !isCreatingNew && activeCourse && /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)("div", { className: "modal-footer-bar", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime12.jsx)("span", { className: "editor-status-text", children: statusMsg }),
+          /* @__PURE__ */ (0, import_jsx_runtime12.jsxs)("div", { className: "footer-actions", children: [
+            !isCreatingNew && activeCourse && /* @__PURE__ */ (0, import_jsx_runtime12.jsx)(
               "button",
               {
                 type: "button",
@@ -17166,8 +16782,8 @@ function CourseEditorModal({
                 children: isDeleting ? "\u0423\u0434\u0430\u043B\u044F\u0435\u043C..." : "\u{1F5D1} \u0423\u0434\u0430\u043B\u0438\u0442\u044C \u043A\u0443\u0440\u0441"
               }
             ),
-            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("button", { type: "button", className: "outline-button", onClick: onClose, children: "\u0417\u0430\u043A\u0440\u044B\u0442\u044C" }),
-            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(
+            /* @__PURE__ */ (0, import_jsx_runtime12.jsx)("button", { type: "button", className: "outline-button", onClick: onClose, children: "\u0417\u0430\u043A\u0440\u044B\u0442\u044C" }),
+            /* @__PURE__ */ (0, import_jsx_runtime12.jsx)(
               "button",
               {
                 type: "button",
@@ -17185,7 +16801,7 @@ function CourseEditorModal({
 }
 
 // components/PurchaserView.tsx
-var import_jsx_runtime14 = __toESM(require_jsx_runtime(), 1);
+var import_jsx_runtime13 = __toESM(require_jsx_runtime(), 1);
 function PurchaserView({
   categories,
   filteredProducts,
@@ -17198,60 +16814,60 @@ function PurchaserView({
   setQuery,
   setNotice
 }) {
-  const [presets, setPresets] = (0, import_react12.useState)([]);
-  const [selectedPresetId, setSelectedPresetId] = (0, import_react12.useState)("");
-  const [isPresetModalOpen, setIsPresetModalOpen] = (0, import_react12.useState)(false);
-  const [selectedProductIds, setSelectedProductIds] = (0, import_react12.useState)(/* @__PURE__ */ new Set());
-  const [isMergeModalOpen, setIsMergeModalOpen] = (0, import_react12.useState)(false);
-  const [isPrintModalOpen, setIsPrintModalOpen] = (0, import_react12.useState)(false);
-  const [isCourseModalOpen, setIsCourseModalOpen] = (0, import_react12.useState)(false);
-  const [adminCourses, setAdminCourses] = (0, import_react12.useState)(COURSES);
-  const [bulkPresetId, setBulkPresetId] = (0, import_react12.useState)("");
-  const [statusFilter, setStatusFilter] = (0, import_react12.useState)("all");
-  const [currency, setCurrency] = (0, import_react12.useState)("CNY");
-  const [cnyRate, setCnyRate] = (0, import_react12.useState)(70);
-  const [usdRate, setUsdRate] = (0, import_react12.useState)(500);
-  const [purchase, setPurchase] = (0, import_react12.useState)(220);
-  const [delivery, setDelivery] = (0, import_react12.useState)(1200);
-  const [cargo, setCargo] = (0, import_react12.useState)(2800);
-  const [customs, setCustoms] = (0, import_react12.useState)(500);
-  const [packaging, setPackaging] = (0, import_react12.useState)(700);
-  const [setupCost, setSetupCost] = (0, import_react12.useState)(2500);
-  const [marketingCost, setMarketingCost] = (0, import_react12.useState)(1200);
-  const [other, setOther] = (0, import_react12.useState)(300);
-  const [taxPercent, setTaxPercent] = (0, import_react12.useState)(3);
-  const [bankPercent, setBankPercent] = (0, import_react12.useState)(11);
-  const [installmentMonths, setInstallmentMonths] = (0, import_react12.useState)(12);
-  const [sellerPercent, setSellerPercent] = (0, import_react12.useState)(5);
-  const [markup, setMarkup] = (0, import_react12.useState)(35);
-  const [manualPricing, setManualPricing] = (0, import_react12.useState)(false);
-  const [manualPrice, setManualPrice] = (0, import_react12.useState)(41e3);
-  const [hasDiscount, setHasDiscount] = (0, import_react12.useState)(false);
-  const [discountPercent, setDiscountPercent] = (0, import_react12.useState)(15);
-  const [originalPriceInput, setOriginalPriceInput] = (0, import_react12.useState)(0);
-  const [editingProductId, setEditingProductId] = (0, import_react12.useState)();
-  const [currentPublicationStatus, setCurrentPublicationStatus] = (0, import_react12.useState)("draft");
-  const [internalName, setInternalName] = (0, import_react12.useState)("\u042D\u043B\u0435\u043A\u0442\u0440\u043E\u0433\u0438\u0442\u0430\u0440\u0430 ST-20 HSS");
-  const [internalSku, setInternalSku] = (0, import_react12.useState)("EG-ST20");
-  const [internalCategory, setInternalCategory] = (0, import_react12.useState)("\u042D\u043B\u0435\u043A\u0442\u0440\u043E\u0433\u0438\u0442\u0430\u0440\u044B");
-  const [internalPhoto, setInternalPhoto] = (0, import_react12.useState)("/products/01_st20_electric.png");
-  const [internalDescription, setInternalDescription] = (0, import_react12.useState)(
+  const [presets, setPresets] = (0, import_react11.useState)([]);
+  const [selectedPresetId, setSelectedPresetId] = (0, import_react11.useState)("");
+  const [isPresetModalOpen, setIsPresetModalOpen] = (0, import_react11.useState)(false);
+  const [selectedProductIds, setSelectedProductIds] = (0, import_react11.useState)(/* @__PURE__ */ new Set());
+  const [isMergeModalOpen, setIsMergeModalOpen] = (0, import_react11.useState)(false);
+  const [isPrintModalOpen, setIsPrintModalOpen] = (0, import_react11.useState)(false);
+  const [isCourseModalOpen, setIsCourseModalOpen] = (0, import_react11.useState)(false);
+  const [adminCourses, setAdminCourses] = (0, import_react11.useState)(COURSES);
+  const [bulkPresetId, setBulkPresetId] = (0, import_react11.useState)("");
+  const [statusFilter, setStatusFilter] = (0, import_react11.useState)("all");
+  const [currency, setCurrency] = (0, import_react11.useState)("CNY");
+  const [cnyRate, setCnyRate] = (0, import_react11.useState)(70);
+  const [usdRate, setUsdRate] = (0, import_react11.useState)(500);
+  const [purchase, setPurchase] = (0, import_react11.useState)(220);
+  const [delivery, setDelivery] = (0, import_react11.useState)(1200);
+  const [cargo, setCargo] = (0, import_react11.useState)(2800);
+  const [customs, setCustoms] = (0, import_react11.useState)(500);
+  const [packaging, setPackaging] = (0, import_react11.useState)(700);
+  const [setupCost, setSetupCost] = (0, import_react11.useState)(2500);
+  const [marketingCost, setMarketingCost] = (0, import_react11.useState)(1200);
+  const [other, setOther] = (0, import_react11.useState)(300);
+  const [taxPercent, setTaxPercent] = (0, import_react11.useState)(3);
+  const [bankPercent, setBankPercent] = (0, import_react11.useState)(11);
+  const [installmentMonths, setInstallmentMonths] = (0, import_react11.useState)(12);
+  const [sellerPercent, setSellerPercent] = (0, import_react11.useState)(5);
+  const [markup, setMarkup] = (0, import_react11.useState)(35);
+  const [manualPricing, setManualPricing] = (0, import_react11.useState)(false);
+  const [manualPrice, setManualPrice] = (0, import_react11.useState)(41e3);
+  const [hasDiscount, setHasDiscount] = (0, import_react11.useState)(false);
+  const [discountPercent, setDiscountPercent] = (0, import_react11.useState)(15);
+  const [originalPriceInput, setOriginalPriceInput] = (0, import_react11.useState)(0);
+  const [editingProductId, setEditingProductId] = (0, import_react11.useState)();
+  const [currentPublicationStatus, setCurrentPublicationStatus] = (0, import_react11.useState)("draft");
+  const [internalName, setInternalName] = (0, import_react11.useState)("\u042D\u043B\u0435\u043A\u0442\u0440\u043E\u0433\u0438\u0442\u0430\u0440\u0430 ST-20 HSS");
+  const [internalSku, setInternalSku] = (0, import_react11.useState)("EG-ST20");
+  const [internalCategory, setInternalCategory] = (0, import_react11.useState)("\u042D\u043B\u0435\u043A\u0442\u0440\u043E\u0433\u0438\u0442\u0430\u0440\u044B");
+  const [internalPhoto, setInternalPhoto] = (0, import_react11.useState)("/products/01_st20_electric.png");
+  const [internalDescription, setInternalDescription] = (0, import_react11.useState)(
     "\u0423\u043D\u0438\u0432\u0435\u0440\u0441\u0430\u043B\u044C\u043D\u0430\u044F \u044D\u043B\u0435\u043A\u0442\u0440\u043E\u0433\u0438\u0442\u0430\u0440\u0430 \u0444\u043E\u0440\u043C\u044B ST \u0434\u043B\u044F \u043F\u0435\u0440\u0432\u044B\u0445 \u0437\u0430\u043D\u044F\u0442\u0438\u0439 \u0438 \u0434\u043E\u043C\u0430\u0448\u043D\u0435\u0439 \u043F\u0440\u0430\u043A\u0442\u0438\u043A\u0438."
   );
-  const [featuresText, setFeaturesText] = (0, import_react12.useState)(
+  const [featuresText, setFeaturesText] = (0, import_react11.useState)(
     "\u0424\u043E\u0440\u043C\u0430 \u043A\u043E\u0440\u043F\u0443\u0441\u0430 ST, \u041A\u043E\u043D\u0444\u0438\u0433\u0443\u0440\u0430\u0446\u0438\u044F HSS, 6 \u0446\u0432\u0435\u0442\u043E\u0432, \u0421\u0442\u0430\u043D\u0434\u0430\u0440\u0442\u043D\u0430\u044F \u043C\u0435\u043D\u0437\u0443\u0440\u0430"
   );
-  const [targetAudience, setTargetAudience] = (0, import_react12.useState)("\u0414\u043B\u044F \u043D\u0430\u0447\u0438\u043D\u0430\u044E\u0449\u0438\u0445");
-  const [attachedCourseId, setAttachedCourseId] = (0, import_react12.useState)("auto");
-  const [internalAudioUrl, setInternalAudioUrl] = (0, import_react12.useState)("");
-  const [internalAllowProPack, setInternalAllowProPack] = (0, import_react12.useState)(true);
-  const [internalProPackTitle, setInternalProPackTitle] = (0, import_react12.useState)("\u0427\u0435\u0445\u043E\u043B + \u0420\u0435\u043C\u0435\u043D\u044C + VIP \u0414\u043E\u0441\u0442\u0443\u043F");
-  const [internalProPackPrice, setInternalProPackPrice] = (0, import_react12.useState)(8900);
-  const [internalAllowStrings, setInternalAllowStrings] = (0, import_react12.useState)(true);
-  const [activeTab, setActiveTab] = (0, import_react12.useState)("general");
-  const [isPlayingAudioPreview, setIsPlayingAudioPreview] = (0, import_react12.useState)(false);
-  const [isUploadingPhoto, setIsUploadingPhoto] = (0, import_react12.useState)(false);
-  const [previewPhotoModal, setPreviewPhotoModal] = (0, import_react12.useState)(null);
+  const [targetAudience, setTargetAudience] = (0, import_react11.useState)("\u0414\u043B\u044F \u043D\u0430\u0447\u0438\u043D\u0430\u044E\u0449\u0438\u0445");
+  const [attachedCourseId, setAttachedCourseId] = (0, import_react11.useState)("auto");
+  const [internalAudioUrl, setInternalAudioUrl] = (0, import_react11.useState)("");
+  const [internalAllowProPack, setInternalAllowProPack] = (0, import_react11.useState)(true);
+  const [internalProPackTitle, setInternalProPackTitle] = (0, import_react11.useState)("\u0427\u0435\u0445\u043E\u043B + \u0420\u0435\u043C\u0435\u043D\u044C + VIP \u0414\u043E\u0441\u0442\u0443\u043F");
+  const [internalProPackPrice, setInternalProPackPrice] = (0, import_react11.useState)(8900);
+  const [internalAllowStrings, setInternalAllowStrings] = (0, import_react11.useState)(true);
+  const [activeTab, setActiveTab] = (0, import_react11.useState)("general");
+  const [isPlayingAudioPreview, setIsPlayingAudioPreview] = (0, import_react11.useState)(false);
+  const [isUploadingPhoto, setIsUploadingPhoto] = (0, import_react11.useState)(false);
+  const [previewPhotoModal, setPreviewPhotoModal] = (0, import_react11.useState)(null);
   const uploadImageFile = (file, onSuccess) => {
     if (!file) return;
     setIsUploadingPhoto(true);
@@ -17282,7 +16898,7 @@ function PurchaserView({
     };
     reader.readAsDataURL(file);
   };
-  const [modelVariants, setModelVariants] = (0, import_react12.useState)([
+  const [modelVariants, setModelVariants] = (0, import_react11.useState)([
     {
       id: "var-1",
       name: "\u0421\u0430\u043D\u0431\u0451\u0440\u0441\u0442",
@@ -17314,11 +16930,11 @@ function PurchaserView({
       image: "/product-variants/eg-st20-wht.jpg"
     }
   ]);
-  const [isDirty, setIsDirty] = (0, import_react12.useState)(false);
-  const [lastSavedTime, setLastSavedTime] = (0, import_react12.useState)("");
-  const [saveState, setSaveState] = (0, import_react12.useState)("idle");
-  const [saveMessage, setSaveMessage] = (0, import_react12.useState)("");
-  (0, import_react12.useEffect)(() => {
+  const [isDirty, setIsDirty] = (0, import_react11.useState)(false);
+  const [lastSavedTime, setLastSavedTime] = (0, import_react11.useState)("");
+  const [saveState, setSaveState] = (0, import_react11.useState)("idle");
+  const [saveMessage, setSaveMessage] = (0, import_react11.useState)("");
+  (0, import_react11.useEffect)(() => {
     const loaded = loadPresets();
     setPresets(loaded);
     if (loaded[0]) {
@@ -17328,7 +16944,7 @@ function PurchaserView({
   }, []);
   const rate = currency === "CNY" ? cnyRate : currency === "USD" ? usdRate : 1;
   const percentExpenses = taxPercent + bankPercent + sellerPercent;
-  const calculation = (0, import_react12.useMemo)(() => {
+  const calculation = (0, import_react11.useMemo)(() => {
     try {
       return calculateProductPricing({
         purchasePrice: purchase,
@@ -17522,7 +17138,7 @@ function PurchaserView({
     setModelVariants([...modelVariants, duplicated]);
     setIsDirty(true);
   };
-  const totalModelStock = (0, import_react12.useMemo)(() => {
+  const totalModelStock = (0, import_react11.useMemo)(() => {
     return modelVariants.reduce((acc, v) => acc + (v.stock || 0), 0);
   }, [modelVariants]);
   const saveProduct = async (publish) => {
@@ -17718,14 +17334,14 @@ function PurchaserView({
     setNotice(`\u{1F3F7} \u0428\u0430\u0431\u043B\u043E\u043D \xAB${preset.name}\xBB \u043F\u0440\u0438\u043C\u0435\u043D\u0435\u043D \u043A ${count} \u0442\u043E\u0432\u0430\u0440\u0430\u043C`);
     window.setTimeout(() => setNotice(""), 3e3);
   };
-  const displayedInventoryProducts = (0, import_react12.useMemo)(() => {
+  const displayedInventoryProducts = (0, import_react11.useMemo)(() => {
     return filteredProducts.filter((p) => {
       if (statusFilter === "published") return p.publicationStatus === "published";
       if (statusFilter === "draft") return p.publicationStatus === "draft";
       return true;
     });
   }, [filteredProducts, statusFilter]);
-  const selectedForMerge = (0, import_react12.useMemo)(() => {
+  const selectedForMerge = (0, import_react11.useMemo)(() => {
     return filteredProducts.filter((p) => selectedProductIds.has(p.id));
   }, [filteredProducts, selectedProductIds]);
   const handleConfirmMerge = (mergedMaster, obsoleteIds) => {
@@ -17739,8 +17355,8 @@ function PurchaserView({
     window.setTimeout(() => setNotice(""), 3200);
   };
   const isAllSelected = displayedInventoryProducts.length > 0 && selectedProductIds.size === displayedInventoryProducts.length;
-  return /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("section", { className: "purchaser-view", children: [
-    /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
+  return /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("section", { className: "purchaser-view", children: [
+    /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(
       PresetManagerModal,
       {
         isOpen: isPresetModalOpen,
@@ -17765,7 +17381,7 @@ function PurchaserView({
         }
       }
     ),
-    /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
+    /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(
       CourseEditorModal,
       {
         isOpen: isCourseModalOpen,
@@ -17778,7 +17394,7 @@ function PurchaserView({
         }
       }
     ),
-    /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
+    /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(
       PriceTagPrintModal,
       {
         isOpen: isPrintModalOpen,
@@ -17786,7 +17402,7 @@ function PurchaserView({
         products: selectedProductIds.size > 0 ? selectedForMerge : displayedInventoryProducts
       }
     ),
-    /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
+    /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(
       MergeProductsModal,
       {
         isOpen: isMergeModalOpen,
@@ -17795,11 +17411,11 @@ function PurchaserView({
         onConfirmMerge: handleConfirmMerge
       }
     ),
-    /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { className: "purchaser-grid", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("section", { className: "calculator-card modern-editor-card", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { className: "modern-editor-header", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { className: "editor-title-wrap", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("div", { className: "editor-thumb", children: /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
+    /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "purchaser-grid", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("section", { className: "calculator-card modern-editor-card", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "modern-editor-header", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "editor-title-wrap", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("div", { className: "editor-thumb", children: /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(
               Image,
               {
                 src: internalPhoto || "/placeholder.png",
@@ -17809,27 +17425,27 @@ function PurchaserView({
                 sizes: "64px"
               }
             ) }),
-            /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { className: "editor-titles", children: [
-              /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { className: "editor-status-row", children: [
-                /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("span", { className: `status-pill ${currentPublicationStatus === "published" ? "published" : "draft"}`, children: [
-                  /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("i", { className: "status-dot" }),
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "editor-titles", children: [
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "editor-status-row", children: [
+                /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("span", { className: `status-pill ${currentPublicationStatus === "published" ? "published" : "draft"}`, children: [
+                  /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("i", { className: "status-dot" }),
                   " ",
                   currentPublicationStatus === "published" ? "\u041E\u043F\u0443\u0431\u043B\u0438\u043A\u043E\u0432\u0430\u043D\u043E \u043D\u0430 \u0432\u0438\u0442\u0440\u0438\u043D\u0435" : "\u0412 \u0447\u0435\u0440\u043D\u043E\u0432\u0438\u043A\u0430\u0445"
                 ] }),
-                isDirty && /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("span", { className: "status-pill dirty", children: "\u25CF \u0415\u0441\u0442\u044C \u043D\u0435\u0441\u043E\u0445\u0440\u0430\u043D\u0451\u043D\u043D\u044B\u0435 \u043F\u0440\u0430\u0432\u043A\u0438" }),
-                lastSavedTime && /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("small", { className: "last-saved-hint", children: [
+                isDirty && /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { className: "status-pill dirty", children: "\u25CF \u0415\u0441\u0442\u044C \u043D\u0435\u0441\u043E\u0445\u0440\u0430\u043D\u0451\u043D\u043D\u044B\u0435 \u043F\u0440\u0430\u0432\u043A\u0438" }),
+                lastSavedTime && /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("small", { className: "last-saved-hint", children: [
                   "\u0421\u043E\u0445\u0440\u0430\u043D\u0435\u043D\u043E: ",
                   lastSavedTime
                 ] })
               ] }),
-              /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("h2", { children: internalName || "\u041D\u043E\u0432\u0430\u044F \u043C\u043E\u0434\u0435\u043B\u044C \u0438\u043D\u0441\u0442\u0440\u0443\u043C\u0435\u043D\u0442\u0430" }),
-              /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { className: "editor-sku-row", children: [
-                /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("span", { className: "sku-badge", children: [
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("h2", { children: internalName || "\u041D\u043E\u0432\u0430\u044F \u043C\u043E\u0434\u0435\u043B\u044C \u0438\u043D\u0441\u0442\u0440\u0443\u043C\u0435\u043D\u0442\u0430" }),
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "editor-sku-row", children: [
+                /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("span", { className: "sku-badge", children: [
                   "SKU: ",
                   internalSku
                 ] }),
-                /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("span", { className: "category-badge", children: internalCategory }),
-                /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("span", { className: "stock-badge", children: [
+                /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { className: "category-badge", children: internalCategory }),
+                /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("span", { className: "stock-badge", children: [
                   "\u041E\u0441\u0442\u0430\u0442\u043E\u043A: ",
                   totalModelStock,
                   " \u0448\u0442."
@@ -17837,16 +17453,16 @@ function PurchaserView({
               ] })
             ] })
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { className: "editor-header-actions", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { className: "preset-quick-group", children: [
-              /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("span", { className: "preset-label", children: "\u0428\u0430\u0431\u043B\u043E\u043D:" }),
-              /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "editor-header-actions", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "preset-quick-group", children: [
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { className: "preset-label", children: "\u0428\u0430\u0431\u043B\u043E\u043D:" }),
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(
                 "select",
                 {
                   value: selectedPresetId,
                   onChange: (e) => handleSelectPresetChange(e.target.value),
                   "aria-label": "\u0412\u044B\u0431\u0440\u0430\u0442\u044C \u0448\u0430\u0431\u043B\u043E\u043D \u0440\u0430\u0441\u0445\u043E\u0434\u043E\u0432",
-                  children: presets.map((preset) => /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("option", { value: preset.id, children: [
+                  children: presets.map((preset) => /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("option", { value: preset.id, children: [
                     preset.name,
                     " (",
                     preset.purchaseCurrency,
@@ -17854,7 +17470,7 @@ function PurchaserView({
                   ] }, preset.id))
                 }
               ),
-              /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(
                 "button",
                 {
                   type: "button",
@@ -17865,8 +17481,8 @@ function PurchaserView({
                 }
               )
             ] }),
-            /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { className: "util-btn-group", children: [
-              /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "util-btn-group", children: [
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(
                 "button",
                 {
                   type: "button",
@@ -17876,7 +17492,7 @@ function PurchaserView({
                   children: "\u{1F4CA} \u0410\u043D\u0430\u043B\u0438\u0442\u0438\u043A\u0430 \u0441\u043A\u043B\u0430\u0434\u0430"
                 }
               ),
-              /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)(
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)(
                 "button",
                 {
                   type: "button",
@@ -17889,7 +17505,7 @@ function PurchaserView({
                   ]
                 }
               ),
-              /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(
                 "button",
                 {
                   type: "button",
@@ -17899,8 +17515,8 @@ function PurchaserView({
                 }
               )
             ] }),
-            /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { className: "main-save-group", children: [
-              /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "main-save-group", children: [
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(
                 "button",
                 {
                   type: "button",
@@ -17910,7 +17526,7 @@ function PurchaserView({
                   children: "\u0427\u0435\u0440\u043D\u043E\u0432\u0438\u043A"
                 }
               ),
-              /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(
                 "button",
                 {
                   type: "button",
@@ -17923,40 +17539,40 @@ function PurchaserView({
             ] })
           ] })
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { className: "editor-tabs-bar", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)(
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "editor-tabs-bar", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)(
             "button",
             {
               type: "button",
               className: `editor-tab-btn ${activeTab === "general" ? "active" : ""}`,
               onClick: () => setActiveTab("general"),
               children: [
-                /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("span", { children: "\u{1F3F7}\uFE0F" }),
-                /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("strong", { children: "1. \u041A\u0430\u0440\u0442\u043E\u0447\u043A\u0430 \u0438 \u0432\u0438\u0442\u0440\u0438\u043D\u0430" })
+                /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { children: "\u{1F3F7}\uFE0F" }),
+                /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("strong", { children: "1. \u041A\u0430\u0440\u0442\u043E\u0447\u043A\u0430 \u0438 \u0432\u0438\u0442\u0440\u0438\u043D\u0430" })
               ]
             }
           ),
-          /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)(
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)(
             "button",
             {
               type: "button",
               className: `editor-tab-btn ${activeTab === "bundle" ? "active" : ""}`,
               onClick: () => setActiveTab("bundle"),
               children: [
-                /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("span", { children: "\u{1F381}" }),
-                /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("strong", { children: "2. \u041A\u043E\u043C\u043F\u043B\u0435\u043A\u0442\u0430\u0446\u0438\u044F \u0438 \u043F\u043E\u0434\u0430\u0440\u043A\u0438" })
+                /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { children: "\u{1F381}" }),
+                /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("strong", { children: "2. \u041A\u043E\u043C\u043F\u043B\u0435\u043A\u0442\u0430\u0446\u0438\u044F \u0438 \u043F\u043E\u0434\u0430\u0440\u043A\u0438" })
               ]
             }
           ),
-          /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)(
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)(
             "button",
             {
               type: "button",
               className: `editor-tab-btn ${activeTab === "matrix" ? "active" : ""}`,
               onClick: () => setActiveTab("matrix"),
               children: [
-                /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("span", { children: "\u{1F3A8}" }),
-                /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("strong", { children: [
+                /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { children: "\u{1F3A8}" }),
+                /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("strong", { children: [
                   "3. \u0426\u0432\u0435\u0442\u0430 \u0438 \u0441\u043A\u043B\u0430\u0434 (",
                   modelVariants.length,
                   ")"
@@ -17964,15 +17580,15 @@ function PurchaserView({
               ]
             }
           ),
-          /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)(
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)(
             "button",
             {
               type: "button",
               className: `editor-tab-btn ${activeTab === "pricing" ? "active" : ""}`,
               onClick: () => setActiveTab("pricing"),
               children: [
-                /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("span", { children: "\u{1F4B0}" }),
-                /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("strong", { children: [
+                /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { children: "\u{1F4B0}" }),
+                /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("strong", { children: [
                   "4. \u042D\u043A\u043E\u043D\u043E\u043C\u0438\u043A\u0430 \u0438 \u0446\u0435\u043D\u044B (",
                   money(retail),
                   " \u20B8)"
@@ -17981,15 +17597,15 @@ function PurchaserView({
             }
           )
         ] }),
-        activeTab === "general" && /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { className: "tab-pane-content", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { className: "tab-section-head", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("strong", { children: "\u041E\u0441\u043D\u043E\u0432\u043D\u0430\u044F \u0438\u043D\u0444\u043E\u0440\u043C\u0430\u0446\u0438\u044F \u043E \u043C\u043E\u0434\u0435\u043B\u0438" }),
-            /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("p", { children: "\u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435, \u043A\u0430\u0442\u0435\u0433\u043E\u0440\u0438\u044F, \u0444\u043E\u0442\u043E\u0433\u0440\u0430\u0444\u0438\u0438, \u0437\u0432\u0443\u043A\u043E\u0437\u0430\u043F\u0438\u0441\u044C \u0438 \u043E\u043F\u0438\u0441\u0430\u043D\u0438\u0435 \u0434\u043B\u044F \u043F\u043E\u043A\u0443\u043F\u0430\u0442\u0435\u043B\u0435\u0439." })
+        activeTab === "general" && /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "tab-pane-content", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "tab-section-head", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("strong", { children: "\u041E\u0441\u043D\u043E\u0432\u043D\u0430\u044F \u0438\u043D\u0444\u043E\u0440\u043C\u0430\u0446\u0438\u044F \u043E \u043C\u043E\u0434\u0435\u043B\u0438" }),
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("p", { children: "\u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435, \u043A\u0430\u0442\u0435\u0433\u043E\u0440\u0438\u044F, \u0444\u043E\u0442\u043E\u0433\u0440\u0430\u0444\u0438\u0438, \u0437\u0432\u0443\u043A\u043E\u0437\u0430\u043F\u0438\u0441\u044C \u0438 \u043E\u043F\u0438\u0441\u0430\u043D\u0438\u0435 \u0434\u043B\u044F \u043F\u043E\u043A\u0443\u043F\u0430\u0442\u0435\u043B\u0435\u0439." })
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { className: "model-info-grid", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("label", { children: [
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "model-info-grid", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("label", { children: [
               "\u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435 \u043C\u043E\u0434\u0435\u043B\u0438",
-              /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(
                 "input",
                 {
                   value: internalName,
@@ -18001,9 +17617,9 @@ function PurchaserView({
                 }
               )
             ] }),
-            /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("label", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("label", { children: [
               "\u0411\u0430\u0437\u043E\u0432\u044B\u0439 \u0430\u0440\u0442\u0438\u043A\u0443\u043B (SKU)",
-              /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(
                 "input",
                 {
                   value: internalSku,
@@ -18015,9 +17631,9 @@ function PurchaserView({
                 }
               )
             ] }),
-            /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("label", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("label", { children: [
               "\u041A\u0430\u0442\u0435\u0433\u043E\u0440\u0438\u044F \u043D\u0430 \u0441\u0430\u0439\u0442\u0435",
-              /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(
                 "select",
                 {
                   value: internalCategory,
@@ -18025,13 +17641,13 @@ function PurchaserView({
                     setInternalCategory(e.target.value);
                     setIsDirty(true);
                   },
-                  children: categories.filter((cat) => cat !== "\u0412\u0441\u0435").map((cat) => /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("option", { value: cat, children: cat }, cat))
+                  children: categories.filter((cat) => cat !== "\u0412\u0441\u0435").map((cat) => /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("option", { value: cat, children: cat }, cat))
                 }
               )
             ] }),
-            /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("label", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("label", { children: [
               "\u041C\u0430\u0440\u043A\u0435\u0442\u0438\u043D\u0433\u043E\u0432\u044B\u0439 \u0431\u0435\u0439\u0434\u0436",
-              /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(
                 "input",
                 {
                   value: targetAudience,
@@ -18043,10 +17659,10 @@ function PurchaserView({
                 }
               )
             ] }),
-            /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("label", { className: "full-width", children: [
-              /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("span", { children: "\u{1F4F8} \u0413\u043B\u0430\u0432\u043D\u043E\u0435 \u0444\u043E\u0442\u043E \u0438\u043D\u0441\u0442\u0440\u0443\u043C\u0435\u043D\u0442\u0430 (PNG / JPG / WebP)" }),
-              /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { style: { display: "flex", gap: "10px", alignItems: "center", marginTop: "4px" }, children: [
-                /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("label", { className: "full-width", children: [
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { children: "\u{1F4F8} \u0413\u043B\u0430\u0432\u043D\u043E\u0435 \u0444\u043E\u0442\u043E \u0438\u043D\u0441\u0442\u0440\u0443\u043C\u0435\u043D\u0442\u0430 (PNG / JPG / WebP)" }),
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { style: { display: "flex", gap: "10px", alignItems: "center", marginTop: "4px" }, children: [
+                /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(
                   "input",
                   {
                     style: { flex: 1 },
@@ -18058,7 +17674,7 @@ function PurchaserView({
                     placeholder: "/products/01_st20_electric.png \u0438\u043B\u0438 \u0432\u0441\u0442\u0430\u0432\u044C\u0442\u0435 \u0441\u0441\u044B\u043B\u043A\u0443"
                   }
                 ),
-                /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)(
+                /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)(
                   "label",
                   {
                     className: "primary-button small",
@@ -18074,7 +17690,7 @@ function PurchaserView({
                     children: [
                       "\u{1F4C1} ",
                       isUploadingPhoto ? "\u0417\u0430\u0433\u0440\u0443\u0437\u043A\u0430..." : "\u0417\u0430\u0433\u0440\u0443\u0437\u0438\u0442\u044C \u0444\u043E\u0442\u043E",
-                      /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
+                      /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(
                         "input",
                         {
                           type: "file",
@@ -18090,7 +17706,7 @@ function PurchaserView({
                   }
                 )
               ] }),
-              internalPhoto && /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { style: {
+              internalPhoto && /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { style: {
                 marginTop: "8px",
                 display: "inline-flex",
                 alignItems: "center",
@@ -18100,20 +17716,20 @@ function PurchaserView({
                 borderRadius: "12px",
                 border: "1px solid var(--line)"
               }, children: [
-                /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("div", { style: { position: "relative", width: "48px", height: "48px", borderRadius: "8px", overflow: "hidden", background: "#fff", border: "1px solid var(--line)" }, children: /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(Image, { src: internalPhoto, alt: "\u041F\u0440\u0435\u0432\u044C\u044E", fill: true, unoptimized: true, sizes: "48px", style: { objectFit: "contain" } }) }),
-                /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { children: [
-                  /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("strong", { style: { display: "block", fontSize: "12px", color: "var(--ink)" }, children: "\u041F\u0440\u0435\u0432\u044C\u044E \u0438\u0437\u043E\u0431\u0440\u0430\u0436\u0435\u043D\u0438\u044F" }),
-                  /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("small", { style: { color: "var(--muted)", fontSize: "11px" }, children: [
+                /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("div", { style: { position: "relative", width: "48px", height: "48px", borderRadius: "8px", overflow: "hidden", background: "#fff", border: "1px solid var(--line)" }, children: /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Image, { src: internalPhoto, alt: "\u041F\u0440\u0435\u0432\u044C\u044E", fill: true, unoptimized: true, sizes: "48px", style: { objectFit: "contain" } }) }),
+                /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { children: [
+                  /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("strong", { style: { display: "block", fontSize: "12px", color: "var(--ink)" }, children: "\u041F\u0440\u0435\u0432\u044C\u044E \u0438\u0437\u043E\u0431\u0440\u0430\u0436\u0435\u043D\u0438\u044F" }),
+                  /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("small", { style: { color: "var(--muted)", fontSize: "11px" }, children: [
                     "\u041F\u0443\u0442\u044C: ",
                     internalPhoto
                   ] })
                 ] })
               ] })
             ] }),
-            /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("label", { className: "full-width", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("label", { className: "full-width", children: [
               "\u{1F3B5} \u0410\u0443\u0434\u0438\u043E\u0437\u0430\u043F\u0438\u0441\u044C \u0437\u0432\u0443\u0447\u0430\u043D\u0438\u044F \u0438\u043D\u0441\u0442\u0440\u0443\u043C\u0435\u043D\u0442\u0430 (MP3 / \u041F\u0440\u044F\u043C\u0430\u044F \u0441\u0441\u044B\u043B\u043A\u0430)",
-              /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { style: { display: "flex", gap: "10px", marginTop: "4px" }, children: [
-                /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { style: { display: "flex", gap: "10px", marginTop: "4px" }, children: [
+                /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(
                   "input",
                   {
                     style: { flex: 1 },
@@ -18125,7 +17741,7 @@ function PurchaserView({
                     placeholder: "\u043D\u0430\u043F\u0440\u0438\u043C\u0435\u0440, /audio/st20_preview.mp3 \u0438\u043B\u0438 https://example.com/sound.mp3"
                   }
                 ),
-                internalAudioUrl.trim() && /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
+                internalAudioUrl.trim() && /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(
                   "button",
                   {
                     type: "button",
@@ -18144,11 +17760,11 @@ function PurchaserView({
                   }
                 )
               ] }),
-              /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("small", { style: { color: "var(--muted)", fontSize: "11.5px", marginTop: "4px", display: "block" }, children: "\u{1F4A1} \u0415\u0441\u043B\u0438 \u043F\u043E\u043B\u0435 \u043F\u0443\u0441\u0442\u043E\u0435, \u043A\u043D\u043E\u043F\u043A\u0430 \xAB\u041F\u043E\u0441\u043B\u0443\u0448\u0430\u0442\u044C\xBB \u043D\u0430 \u0432\u0438\u0442\u0440\u0438\u043D\u0435 \u0441\u043A\u0440\u044B\u0442\u0430. \u0412\u043E\u0441\u043F\u0440\u043E\u0438\u0437\u0432\u043E\u0434\u0438\u0442\u0441\u044F \u0442\u043E\u043B\u044C\u043A\u043E \u043F\u0440\u0438 \u043D\u0430\u043B\u0438\u0447\u0438\u0438 \u0441\u0441\u044B\u043B\u043A\u0438 \u043D\u0430 \u0440\u0435\u0430\u043B\u044C\u043D\u044B\u0439 \u0444\u0430\u0439\u043B." })
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("small", { style: { color: "var(--muted)", fontSize: "11.5px", marginTop: "4px", display: "block" }, children: "\u{1F4A1} \u0415\u0441\u043B\u0438 \u043F\u043E\u043B\u0435 \u043F\u0443\u0441\u0442\u043E\u0435, \u043A\u043D\u043E\u043F\u043A\u0430 \xAB\u041F\u043E\u0441\u043B\u0443\u0448\u0430\u0442\u044C\xBB \u043D\u0430 \u0432\u0438\u0442\u0440\u0438\u043D\u0435 \u0441\u043A\u0440\u044B\u0442\u0430. \u0412\u043E\u0441\u043F\u0440\u043E\u0438\u0437\u0432\u043E\u0434\u0438\u0442\u0441\u044F \u0442\u043E\u043B\u044C\u043A\u043E \u043F\u0440\u0438 \u043D\u0430\u043B\u0438\u0447\u0438\u0438 \u0441\u0441\u044B\u043B\u043A\u0438 \u043D\u0430 \u0440\u0435\u0430\u043B\u044C\u043D\u044B\u0439 \u0444\u0430\u0439\u043B." })
             ] }),
-            /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("label", { className: "full-width", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("label", { className: "full-width", children: [
               "\u041A\u0440\u0430\u0442\u043A\u043E\u0435 \u043E\u043F\u0438\u0441\u0430\u043D\u0438\u0435 \u0438\u043D\u0441\u0442\u0440\u0443\u043C\u0435\u043D\u0442\u0430",
-              /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(
                 "textarea",
                 {
                   rows: 3,
@@ -18161,9 +17777,9 @@ function PurchaserView({
                 }
               )
             ] }),
-            /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("label", { className: "full-width", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("label", { className: "full-width", children: [
               "\u041F\u0440\u0435\u0438\u043C\u0443\u0449\u0435\u0441\u0442\u0432\u0430 \u0438 \u0445\u0430\u0440\u0430\u043A\u0442\u0435\u0440\u0438\u0441\u0442\u0438\u043A\u0438 (\u0447\u0435\u0440\u0435\u0437 \u0437\u0430\u043F\u044F\u0442\u0443\u044E)",
-              /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(
                 "input",
                 {
                   value: featuresText,
@@ -18177,22 +17793,22 @@ function PurchaserView({
             ] })
           ] })
         ] }),
-        activeTab === "bundle" && /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { className: "tab-pane-content", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { className: "tab-section-head", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("strong", { children: "\u041A\u043E\u043C\u043F\u043B\u0435\u043A\u0442\u0430\u0446\u0438\u044F, \u043F\u043E\u0434\u0430\u0440\u043A\u0438 \u0438 \u0434\u043E\u043F\u0440\u043E\u0434\u0430\u0436\u0438" }),
-            /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("p", { children: "\u0412\u043A\u043B\u044E\u0447\u0430\u0439\u0442\u0435 \u0438\u043B\u0438 \u043E\u0442\u043A\u043B\u044E\u0447\u0430\u0439\u0442\u0435 \u043F\u043E\u0434\u0430\u0440\u043E\u0447\u043D\u044B\u0439 \u043E\u043D\u043B\u0430\u0439\u043D-\u043A\u0443\u0440\u0441, \u0441\u043E\u0441\u0442\u0430\u0432 PRO-\u043A\u043E\u043C\u043F\u043B\u0435\u043A\u0442\u0430 \u0438 \u043F\u0440\u0435\u0434\u043B\u043E\u0436\u0435\u043D\u0438\u0435 \u0441\u0442\u0440\u0443\u043D \u0441\u043E \u0441\u043A\u0438\u0434\u043A\u043E\u0439 50% \u0441 \u043F\u043E\u043C\u043E\u0449\u044C\u044E \u043F\u0435\u0440\u0435\u043A\u043B\u044E\u0447\u0430\u0442\u0435\u043B\u0435\u0439 \u0441\u043F\u0440\u0430\u0432\u0430." })
+        activeTab === "bundle" && /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "tab-pane-content", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "tab-section-head", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("strong", { children: "\u041A\u043E\u043C\u043F\u043B\u0435\u043A\u0442\u0430\u0446\u0438\u044F, \u043F\u043E\u0434\u0430\u0440\u043A\u0438 \u0438 \u0434\u043E\u043F\u0440\u043E\u0434\u0430\u0436\u0438" }),
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("p", { children: "\u0412\u043A\u043B\u044E\u0447\u0430\u0439\u0442\u0435 \u0438\u043B\u0438 \u043E\u0442\u043A\u043B\u044E\u0447\u0430\u0439\u0442\u0435 \u043F\u043E\u0434\u0430\u0440\u043E\u0447\u043D\u044B\u0439 \u043E\u043D\u043B\u0430\u0439\u043D-\u043A\u0443\u0440\u0441, \u0441\u043E\u0441\u0442\u0430\u0432 PRO-\u043A\u043E\u043C\u043F\u043B\u0435\u043A\u0442\u0430 \u0438 \u043F\u0440\u0435\u0434\u043B\u043E\u0436\u0435\u043D\u0438\u0435 \u0441\u0442\u0440\u0443\u043D \u0441\u043E \u0441\u043A\u0438\u0434\u043A\u043E\u0439 50% \u0441 \u043F\u043E\u043C\u043E\u0449\u044C\u044E \u043F\u0435\u0440\u0435\u043A\u043B\u044E\u0447\u0430\u0442\u0435\u043B\u0435\u0439 \u0441\u043F\u0440\u0430\u0432\u0430." })
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { className: "bundle-editor-grid", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { className: `bundle-config-card ${attachedCourseId !== "none" ? "enabled" : "disabled"}`, children: [
-              /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { className: "bundle-card-header-row", children: [
-                /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { className: "bundle-card-top", children: [
-                  /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("span", { className: "bundle-icon", children: "\u{1F381}" }),
-                  /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { children: [
-                    /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("strong", { children: "1. \u041F\u043E\u0434\u0430\u0440\u043E\u0447\u043D\u044B\u0439 \u043E\u043D\u043B\u0430\u0439\u043D-\u043A\u0443\u0440\u0441 \u043A \u0438\u043D\u0441\u0442\u0440\u0443\u043C\u0435\u043D\u0442\u0443" }),
-                    /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("span", { children: "\u0411\u0435\u0441\u043F\u043B\u0430\u0442\u043D\u044B\u0439 \u0432\u0438\u0434\u0435\u043E\u043A\u0443\u0440\u0441 \u0432 \u043F\u043E\u0434\u0430\u0440\u043E\u043A (\u0446\u0435\u043D\u043D\u043E\u0441\u0442\u044C 19 900 \u20B8) \u043F\u0440\u0438 \u043F\u043E\u043A\u0443\u043F\u043A\u0435" })
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "bundle-editor-grid", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: `bundle-config-card ${attachedCourseId !== "none" ? "enabled" : "disabled"}`, children: [
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "bundle-card-header-row", children: [
+                /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "bundle-card-top", children: [
+                  /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { className: "bundle-icon", children: "\u{1F381}" }),
+                  /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { children: [
+                    /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("strong", { children: "1. \u041F\u043E\u0434\u0430\u0440\u043E\u0447\u043D\u044B\u0439 \u043E\u043D\u043B\u0430\u0439\u043D-\u043A\u0443\u0440\u0441 \u043A \u0438\u043D\u0441\u0442\u0440\u0443\u043C\u0435\u043D\u0442\u0443" }),
+                    /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { children: "\u0411\u0435\u0441\u043F\u043B\u0430\u0442\u043D\u044B\u0439 \u0432\u0438\u0434\u0435\u043E\u043A\u0443\u0440\u0441 \u0432 \u043F\u043E\u0434\u0430\u0440\u043E\u043A (\u0446\u0435\u043D\u043D\u043E\u0441\u0442\u044C 19 900 \u20B8) \u043F\u0440\u0438 \u043F\u043E\u043A\u0443\u043F\u043A\u0435" })
                   ] })
                 ] }),
-                /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)(
+                /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)(
                   "button",
                   {
                     type: "button",
@@ -18202,16 +17818,16 @@ function PurchaserView({
                       setIsDirty(true);
                     },
                     children: [
-                      /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("span", { className: "switch-knob" }),
-                      /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("span", { className: "switch-text", children: attachedCourseId !== "none" ? "\u0412\u041A\u041B\u042E\u0427\u0415\u041D" : "\u041E\u0422\u041A\u041B\u042E\u0427\u0415\u041D" })
+                      /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { className: "switch-knob" }),
+                      /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { className: "switch-text", children: attachedCourseId !== "none" ? "\u0412\u041A\u041B\u042E\u0427\u0415\u041D" : "\u041E\u0422\u041A\u041B\u042E\u0427\u0415\u041D" })
                     ]
                   }
                 )
               ] }),
-              attachedCourseId !== "none" ? /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { className: "bundle-card-body", children: [
-                /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("label", { children: [
+              attachedCourseId !== "none" ? /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "bundle-card-body", children: [
+                /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("label", { children: [
                   "\u041F\u0440\u0438\u0432\u044F\u0437\u0430\u043D\u043D\u044B\u0439 \u043A\u0443\u0440\u0441 \u0438\u0437 \u0410\u043A\u0430\u0434\u0435\u043C\u0438\u0438 Maestro:",
-                  /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)(
+                  /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)(
                     "select",
                     {
                       value: attachedCourseId,
@@ -18220,8 +17836,8 @@ function PurchaserView({
                         setIsDirty(true);
                       },
                       children: [
-                        /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("option", { value: "auto", children: "\u2728 \u0410\u0432\u0442\u043E\u043C\u0430\u0442\u0438\u0447\u0435\u0441\u043A\u0438 (\u043F\u043E \u043A\u0430\u0442\u0435\u0433\u043E\u0440\u0438\u0438 \u0438\u043D\u0441\u0442\u0440\u0443\u043C\u0435\u043D\u0442\u0430)" }),
-                        adminCourses.map((c) => /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("option", { value: c.id, children: [
+                        /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("option", { value: "auto", children: "\u2728 \u0410\u0432\u0442\u043E\u043C\u0430\u0442\u0438\u0447\u0435\u0441\u043A\u0438 (\u043F\u043E \u043A\u0430\u0442\u0435\u0433\u043E\u0440\u0438\u0438 \u0438\u043D\u0441\u0442\u0440\u0443\u043C\u0435\u043D\u0442\u0430)" }),
+                        adminCourses.map((c) => /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("option", { value: c.id, children: [
                           "\u{1F393} ",
                           c.title,
                           " (",
@@ -18234,23 +17850,23 @@ function PurchaserView({
                     }
                   )
                 ] }),
-                /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("span", { className: "bundle-status-tag green", children: "\u2713 \u041E\u0442\u043E\u0431\u0440\u0430\u0436\u0430\u0435\u0442\u0441\u044F \u043D\u0430 \u043A\u0430\u0440\u0442\u043E\u0447\u043A\u0435 \u0442\u043E\u0432\u0430\u0440\u0430 \u043A\u0430\u043A \u0431\u0435\u0441\u043F\u043B\u0430\u0442\u043D\u044B\u0439 \u043F\u043E\u0434\u0430\u0440\u043E\u043A (0 \u20B8)" })
-              ] }) : /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("div", { className: "bundle-card-disabled-hint", children: /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("p", { children: [
+                /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { className: "bundle-status-tag green", children: "\u2713 \u041E\u0442\u043E\u0431\u0440\u0430\u0436\u0430\u0435\u0442\u0441\u044F \u043D\u0430 \u043A\u0430\u0440\u0442\u043E\u0447\u043A\u0435 \u0442\u043E\u0432\u0430\u0440\u0430 \u043A\u0430\u043A \u0431\u0435\u0441\u043F\u043B\u0430\u0442\u043D\u044B\u0439 \u043F\u043E\u0434\u0430\u0440\u043E\u043A (0 \u20B8)" })
+              ] }) : /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("div", { className: "bundle-card-disabled-hint", children: /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("p", { children: [
                 "\u274C ",
-                /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("strong", { children: "\u041A\u0443\u0440\u0441 \u043E\u0442\u043A\u043B\u044E\u0447\u0435\u043D" }),
+                /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("strong", { children: "\u041A\u0443\u0440\u0441 \u043E\u0442\u043A\u043B\u044E\u0447\u0435\u043D" }),
                 ". \u0422\u043E\u0432\u0430\u0440 \u043F\u0440\u043E\u0434\u0430\u0435\u0442\u0441\u044F \u0442\u043E\u043B\u044C\u043A\u043E \u043A\u0430\u043A \u0438\u043D\u0441\u0442\u0440\u0443\u043C\u0435\u043D\u0442 \u0432 \u0437\u0430\u0432\u043E\u0434\u0441\u043A\u043E\u0439 \u043A\u043E\u0440\u043E\u0431\u043A\u0435 \u0431\u0435\u0437 \u043E\u043D\u043B\u0430\u0439\u043D-\u0443\u0440\u043E\u043A\u043E\u0432."
               ] }) })
             ] }),
-            /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { className: `bundle-config-card ${internalAllowProPack ? "enabled" : "disabled"}`, children: [
-              /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { className: "bundle-card-header-row", children: [
-                /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { className: "bundle-card-top", children: [
-                  /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("span", { className: "bundle-icon", children: "\u{1F451}" }),
-                  /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { children: [
-                    /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("strong", { children: "2. PRO \u041A\u043E\u043C\u043F\u043B\u0435\u043A\u0442 (\u0427\u0435\u0445\u043E\u043B, \u0430\u043A\u0441\u0435\u0441\u0441\u0443\u0430\u0440\u044B \u0438 VIP)" }),
-                    /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("span", { children: "\u0420\u0430\u0441\u0448\u0438\u0440\u0435\u043D\u043D\u044B\u0439 \u043D\u0430\u0431\u043E\u0440 \u0430\u043A\u0441\u0435\u0441\u0441\u0443\u0430\u0440\u043E\u0432 \u0434\u043B\u044F \u0443\u0432\u0435\u043B\u0438\u0447\u0435\u043D\u0438\u044F \u0441\u0440\u0435\u0434\u043D\u0435\u0433\u043E \u0447\u0435\u043A\u0430" })
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: `bundle-config-card ${internalAllowProPack ? "enabled" : "disabled"}`, children: [
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "bundle-card-header-row", children: [
+                /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "bundle-card-top", children: [
+                  /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { className: "bundle-icon", children: "\u{1F451}" }),
+                  /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { children: [
+                    /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("strong", { children: "2. PRO \u041A\u043E\u043C\u043F\u043B\u0435\u043A\u0442 (\u0427\u0435\u0445\u043E\u043B, \u0430\u043A\u0441\u0435\u0441\u0441\u0443\u0430\u0440\u044B \u0438 VIP)" }),
+                    /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { children: "\u0420\u0430\u0441\u0448\u0438\u0440\u0435\u043D\u043D\u044B\u0439 \u043D\u0430\u0431\u043E\u0440 \u0430\u043A\u0441\u0435\u0441\u0441\u0443\u0430\u0440\u043E\u0432 \u0434\u043B\u044F \u0443\u0432\u0435\u043B\u0438\u0447\u0435\u043D\u0438\u044F \u0441\u0440\u0435\u0434\u043D\u0435\u0433\u043E \u0447\u0435\u043A\u0430" })
                   ] })
                 ] }),
-                /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)(
+                /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)(
                   "button",
                   {
                     type: "button",
@@ -18260,17 +17876,17 @@ function PurchaserView({
                       setIsDirty(true);
                     },
                     children: [
-                      /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("span", { className: "switch-knob" }),
-                      /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("span", { className: "switch-text", children: internalAllowProPack ? "\u0412\u041A\u041B\u042E\u0427\u0415\u041D" : "\u041E\u0422\u041A\u041B\u042E\u0427\u0415\u041D" })
+                      /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { className: "switch-knob" }),
+                      /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { className: "switch-text", children: internalAllowProPack ? "\u0412\u041A\u041B\u042E\u0427\u0415\u041D" : "\u041E\u0422\u041A\u041B\u042E\u0427\u0415\u041D" })
                     ]
                   }
                 )
               ] }),
-              internalAllowProPack ? /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { className: "bundle-card-body", children: [
-                /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { className: "two-cols-input", children: [
-                  /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("label", { children: [
+              internalAllowProPack ? /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "bundle-card-body", children: [
+                /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "two-cols-input", children: [
+                  /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("label", { children: [
                     "\u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435 \u0438 \u0441\u043E\u0441\u0442\u0430\u0432 \u0430\u043A\u0441\u0435\u0441\u0441\u0443\u0430\u0440\u043E\u0432 \u0432 PRO-\u043A\u043E\u043C\u043F\u043B\u0435\u043A\u0442\u0435",
-                    /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
+                    /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(
                       "input",
                       {
                         value: internalProPackTitle,
@@ -18282,9 +17898,9 @@ function PurchaserView({
                       }
                     )
                   ] }),
-                  /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("label", { children: [
+                  /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("label", { children: [
                     "\u0414\u043E\u043F\u043B\u0430\u0442\u0430 \u0437\u0430 PRO-\u043A\u043E\u043C\u043F\u043B\u0435\u043A\u0442 (\u20B8)",
-                    /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
+                    /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(
                       "input",
                       {
                         type: "number",
@@ -18298,27 +17914,27 @@ function PurchaserView({
                     )
                   ] })
                 ] }),
-                /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("span", { className: "bundle-status-tag gold", children: [
+                /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("span", { className: "bundle-status-tag gold", children: [
                   "\u2713 \u041F\u043E\u043A\u0443\u043F\u0430\u0442\u0435\u043B\u044C \u0441\u043C\u043E\u0436\u0435\u0442 \u0432\u044B\u0431\u0440\u0430\u0442\u044C \u043A\u043D\u043E\u043F\u043A\u0443 \xAB\u{1F451} PRO \u041A\u043E\u043C\u043F\u043B\u0435\u043A\u0442 (+",
                   money(internalProPackPrice),
                   " \u20B8)\xBB"
                 ] })
-              ] }) : /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("div", { className: "bundle-card-disabled-hint", children: /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("p", { children: [
+              ] }) : /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("div", { className: "bundle-card-disabled-hint", children: /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("p", { children: [
                 "\u274C ",
-                /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("strong", { children: "PRO-\u043A\u043E\u043C\u043F\u043B\u0435\u043A\u0442 \u043E\u0442\u043A\u043B\u044E\u0447\u0435\u043D" }),
+                /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("strong", { children: "PRO-\u043A\u043E\u043C\u043F\u043B\u0435\u043A\u0442 \u043E\u0442\u043A\u043B\u044E\u0447\u0435\u043D" }),
                 ". \u041A\u043D\u043E\u043F\u043A\u0430 \u0432\u044B\u0431\u043E\u0440\u0430 PRO-\u043A\u043E\u043C\u043F\u043B\u0435\u043A\u0442\u0430 \u0441\u043A\u0440\u044B\u0442\u0430 \u043D\u0430 \u043A\u0430\u0440\u0442\u043E\u0447\u043A\u0435 \u044D\u0442\u043E\u0433\u043E \u0442\u043E\u0432\u0430\u0440\u0430."
               ] }) })
             ] }),
-            /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { className: `bundle-config-card ${internalAllowStrings ? "enabled" : "disabled"}`, children: [
-              /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { className: "bundle-card-header-row", children: [
-                /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { className: "bundle-card-top", children: [
-                  /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("span", { className: "bundle-icon", children: "\u26A1" }),
-                  /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { children: [
-                    /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("strong", { children: "3. \u0414\u043E\u043F\u0440\u043E\u0434\u0430\u0436\u0430 \u0441\u0442\u0440\u0443\u043D \u0441\u043E \u0441\u043A\u0438\u0434\u043A\u043E\u0439 50% (Order Bump)" }),
-                    /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("span", { children: "\u0412\u044B\u0431\u043E\u0440 \u043F\u0440\u0435\u043C\u0438\u0443\u043C-\u0441\u0442\u0440\u0443\u043D Elixir / D'Addario \u0441\u043E \u0441\u043A\u0438\u0434\u043A\u043E\u0439 50%" })
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: `bundle-config-card ${internalAllowStrings ? "enabled" : "disabled"}`, children: [
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "bundle-card-header-row", children: [
+                /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "bundle-card-top", children: [
+                  /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { className: "bundle-icon", children: "\u26A1" }),
+                  /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { children: [
+                    /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("strong", { children: "3. \u0414\u043E\u043F\u0440\u043E\u0434\u0430\u0436\u0430 \u0441\u0442\u0440\u0443\u043D \u0441\u043E \u0441\u043A\u0438\u0434\u043A\u043E\u0439 50% (Order Bump)" }),
+                    /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { children: "\u0412\u044B\u0431\u043E\u0440 \u043F\u0440\u0435\u043C\u0438\u0443\u043C-\u0441\u0442\u0440\u0443\u043D Elixir / D'Addario \u0441\u043E \u0441\u043A\u0438\u0434\u043A\u043E\u0439 50%" })
                   ] })
                 ] }),
-                /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)(
+                /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)(
                   "button",
                   {
                     type: "button",
@@ -18328,68 +17944,68 @@ function PurchaserView({
                       setIsDirty(true);
                     },
                     children: [
-                      /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("span", { className: "switch-knob" }),
-                      /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("span", { className: "switch-text", children: internalAllowStrings ? "\u0412\u041A\u041B\u042E\u0427\u0415\u041D" : "\u041E\u0422\u041A\u041B\u042E\u0427\u0415\u041D" })
+                      /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { className: "switch-knob" }),
+                      /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { className: "switch-text", children: internalAllowStrings ? "\u0412\u041A\u041B\u042E\u0427\u0415\u041D" : "\u041E\u0422\u041A\u041B\u042E\u0427\u0415\u041D" })
                     ]
                   }
                 )
               ] }),
-              internalAllowStrings ? /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { className: "bundle-card-body", children: [
-                /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { className: "bump-preview-pills", style: { display: "flex", gap: "10px", flexWrap: "wrap", margin: "4px 0" }, children: [
-                  /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("span", { style: { fontSize: "12px", background: "#fff", padding: "6px 12px", borderRadius: "8px", border: "1px solid var(--line)", fontWeight: 700 }, children: [
+              internalAllowStrings ? /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "bundle-card-body", children: [
+                /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "bump-preview-pills", style: { display: "flex", gap: "10px", flexWrap: "wrap", margin: "4px 0" }, children: [
+                  /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("span", { style: { fontSize: "12px", background: "#fff", padding: "6px 12px", borderRadius: "8px", border: "1px solid var(--line)", fontWeight: 700 }, children: [
                     "\u{1F451} \u0421\u0442\u0440\u0443\u043D\u044B Elixir Nanoweb (USA): ",
-                    /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("strong", { children: "+4 950 \u20B8" }),
+                    /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("strong", { children: "+4 950 \u20B8" }),
                     " ",
-                    /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("del", { style: { color: "var(--muted)" }, children: "9 900 \u20B8" })
+                    /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("del", { style: { color: "var(--muted)" }, children: "9 900 \u20B8" })
                   ] }),
-                  /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("span", { style: { fontSize: "12px", background: "#fff", padding: "6px 12px", borderRadius: "8px", border: "1px solid var(--line)", fontWeight: 700 }, children: [
+                  /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("span", { style: { fontSize: "12px", background: "#fff", padding: "6px 12px", borderRadius: "8px", border: "1px solid var(--line)", fontWeight: 700 }, children: [
                     "\u{1F3B8} \u0421\u0442\u0440\u0443\u043D\u044B D'Addario Pro: ",
-                    /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("strong", { children: "+2 450 \u20B8" }),
+                    /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("strong", { children: "+2 450 \u20B8" }),
                     " ",
-                    /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("del", { style: { color: "var(--muted)" }, children: "4 900 \u20B8" })
+                    /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("del", { style: { color: "var(--muted)" }, children: "4 900 \u20B8" })
                   ] })
                 ] }),
-                /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("span", { className: "bundle-status-tag green", children: "\u2713 \u0411\u043B\u043E\u043A \u043F\u0440\u0435\u0434\u043B\u043E\u0436\u0435\u043D\u0438\u044F \u0437\u0430\u043F\u0430\u0441\u043D\u044B\u0445 \u0441\u0442\u0440\u0443\u043D \u0441\u043E \u0441\u043A\u0438\u0434\u043A\u043E\u0439 -50% \u0430\u043A\u0442\u0438\u0432\u0435\u043D \u0432 \u043A\u0430\u0440\u0442\u043E\u0447\u043A\u0435" })
-              ] }) : /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("div", { className: "bundle-card-disabled-hint", children: /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("p", { children: [
+                /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { className: "bundle-status-tag green", children: "\u2713 \u0411\u043B\u043E\u043A \u043F\u0440\u0435\u0434\u043B\u043E\u0436\u0435\u043D\u0438\u044F \u0437\u0430\u043F\u0430\u0441\u043D\u044B\u0445 \u0441\u0442\u0440\u0443\u043D \u0441\u043E \u0441\u043A\u0438\u0434\u043A\u043E\u0439 -50% \u0430\u043A\u0442\u0438\u0432\u0435\u043D \u0432 \u043A\u0430\u0440\u0442\u043E\u0447\u043A\u0435" })
+              ] }) : /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("div", { className: "bundle-card-disabled-hint", children: /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("p", { children: [
                 "\u274C ",
-                /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("strong", { children: "\u0421\u043F\u0435\u0446\u043F\u0440\u0435\u0434\u043B\u043E\u0436\u0435\u043D\u0438\u0435 \u0441\u0442\u0440\u0443\u043D \u043E\u0442\u043A\u043B\u044E\u0447\u0435\u043D\u043E" }),
+                /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("strong", { children: "\u0421\u043F\u0435\u0446\u043F\u0440\u0435\u0434\u043B\u043E\u0436\u0435\u043D\u0438\u0435 \u0441\u0442\u0440\u0443\u043D \u043E\u0442\u043A\u043B\u044E\u0447\u0435\u043D\u043E" }),
                 ". \u0411\u043B\u043E\u043A \u0434\u043E\u043F\u0440\u043E\u0434\u0430\u0436\u0438 \u0441\u0442\u0440\u0443\u043D \u0441\u043A\u0440\u044B\u0442 \u0432 \u043A\u0430\u0440\u0442\u043E\u0447\u043A\u0435 \u044D\u0442\u043E\u0433\u043E \u0442\u043E\u0432\u0430\u0440\u0430."
               ] }) })
             ] })
           ] })
         ] }),
-        activeTab === "matrix" && /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { className: "tab-pane-content", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { className: "card-subhead between", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { children: [
-              /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("strong", { children: [
+        activeTab === "matrix" && /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "tab-pane-content", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "card-subhead between", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { children: [
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("strong", { children: [
                 "\u041C\u0430\u0442\u0440\u0438\u0446\u0430 \u0446\u0432\u0435\u0442\u043E\u0432 \u0438 \u043C\u043E\u0434\u0438\u0444\u0438\u043A\u0430\u0446\u0438\u0439 \u043C\u043E\u0434\u0435\u043B\u0438 (",
                 modelVariants.length,
                 ")"
               ] }),
-              /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("span", { children: [
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("span", { children: [
                 "\u0412\u0441\u0435 \u0440\u0430\u0441\u0446\u0432\u0435\u0442\u043A\u0438 \u0438 \u0440\u0430\u0437\u043C\u0435\u0440\u044B \u0433\u0438\u0442\u0430\u0440\u044B \u0445\u0440\u0430\u043D\u044F\u0442\u0441\u044F \u0432 \u043E\u0434\u043D\u043E\u0439 \u043A\u0430\u0440\u0442\u043E\u0447\u043A\u0435. \u041E\u0431\u0449\u0438\u0439 \u043E\u0441\u0442\u0430\u0442\u043E\u043A: ",
-                /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("strong", { children: [
+                /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("strong", { children: [
                   totalModelStock,
                   " \u0448\u0442."
                 ] })
               ] })
             ] }),
-            /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("button", { type: "button", className: "primary-button small", onClick: addVariantRow, children: "+ \u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u0432\u0430\u0440\u0438\u0430\u043D\u0442 / \u0446\u0432\u0435\u0442" })
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("button", { type: "button", className: "primary-button small", onClick: addVariantRow, children: "+ \u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u0432\u0430\u0440\u0438\u0430\u043D\u0442 / \u0446\u0432\u0435\u0442" })
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { className: "variant-matrix-table", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { className: "variant-matrix-head", style: { gridTemplateColumns: "110px 100px 1.4fr 1.2fr 1.1fr 70px 85px 80px" }, children: [
-              /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("span", { children: "\u0426\u0432\u0435\u0442" }),
-              /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("span", { children: "\u0424\u043E\u0442\u043E \u0446\u0432\u0435\u0442\u0430" }),
-              /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("span", { children: "\u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435 \u0446\u0432\u0435\u0442\u0430" }),
-              /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("span", { children: "SKU \u0432\u0430\u0440\u0438\u0430\u043D\u0442\u0430" }),
-              /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("span", { children: "\u0428\u0442\u0440\u0438\u0445\u043A\u043E\u0434" }),
-              /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("span", { children: "\u0420\u0430\u0437\u043C\u0435\u0440" }),
-              /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("span", { children: "\u041E\u0441\u0442\u0430\u0442\u043E\u043A" }),
-              /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("span", { children: "\u0414\u0435\u0439\u0441\u0442\u0432\u0438\u044F" })
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "variant-matrix-table", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "variant-matrix-head", style: { gridTemplateColumns: "110px 100px 1.4fr 1.2fr 1.1fr 70px 85px 80px" }, children: [
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { children: "\u0426\u0432\u0435\u0442" }),
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { children: "\u0424\u043E\u0442\u043E \u0446\u0432\u0435\u0442\u0430" }),
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { children: "\u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435 \u0446\u0432\u0435\u0442\u0430" }),
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { children: "SKU \u0432\u0430\u0440\u0438\u0430\u043D\u0442\u0430" }),
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { children: "\u0428\u0442\u0440\u0438\u0445\u043A\u043E\u0434" }),
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { children: "\u0420\u0430\u0437\u043C\u0435\u0440" }),
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { children: "\u041E\u0441\u0442\u0430\u0442\u043E\u043A" }),
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { children: "\u0414\u0435\u0439\u0441\u0442\u0432\u0438\u044F" })
             ] }),
-            modelVariants.map((variant, index) => /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { className: "variant-matrix-row", style: { gridTemplateColumns: "110px 100px 1.4fr 1.2fr 1.1fr 70px 85px 80px" }, children: [
-              /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { className: "variant-color-input-wrap", children: [
-                /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
+            modelVariants.map((variant, index) => /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "variant-matrix-row", style: { gridTemplateColumns: "110px 100px 1.4fr 1.2fr 1.1fr 70px 85px 80px" }, children: [
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "variant-color-input-wrap", children: [
+                /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(
                   "input",
                   {
                     type: "color",
@@ -18398,7 +18014,7 @@ function PurchaserView({
                     title: "\u0412\u044B\u0431\u0440\u0430\u0442\u044C \u0446\u0432\u0435\u0442"
                   }
                 ),
-                /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
+                /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(
                   "input",
                   {
                     type: "text",
@@ -18409,8 +18025,8 @@ function PurchaserView({
                   }
                 )
               ] }),
-              /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { style: { display: "flex", alignItems: "center", gap: "6px" }, children: [
-                /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { style: { display: "flex", alignItems: "center", gap: "6px" }, children: [
+                /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(
                   "div",
                   {
                     style: {
@@ -18433,7 +18049,7 @@ function PurchaserView({
                       variantIndex: index
                     }),
                     title: "\u{1F50D} \u041D\u0430\u0436\u043C\u0438\u0442\u0435, \u0447\u0442\u043E\u0431\u044B \u043E\u0442\u043A\u0440\u044B\u0442\u044C \u0444\u043E\u0442\u043E \u0432 \u043F\u043E\u043B\u043D\u043E\u043C \u0440\u0430\u0437\u043C\u0435\u0440\u0435",
-                    children: /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
+                    children: /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(
                       Image,
                       {
                         src: variant.image || internalPhoto || "/placeholder.png",
@@ -18446,9 +18062,9 @@ function PurchaserView({
                     )
                   }
                 ),
-                /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("label", { style: { cursor: "pointer", fontSize: "11px", padding: "5px 7px", background: "#f4efe9", border: "1px solid var(--line)", borderRadius: "6px", fontWeight: 700 }, title: "\u0417\u0430\u0433\u0440\u0443\u0437\u0438\u0442\u044C \u0444\u043E\u0442\u043E \u0434\u043B\u044F \u044D\u0442\u043E\u0433\u043E \u0446\u0432\u0435\u0442\u0430", children: [
+                /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("label", { style: { cursor: "pointer", fontSize: "11px", padding: "5px 7px", background: "#f4efe9", border: "1px solid var(--line)", borderRadius: "6px", fontWeight: 700 }, title: "\u0417\u0430\u0433\u0440\u0443\u0437\u0438\u0442\u044C \u0444\u043E\u0442\u043E \u0434\u043B\u044F \u044D\u0442\u043E\u0433\u043E \u0446\u0432\u0435\u0442\u0430", children: [
                   "\u{1F4F7}",
-                  /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
+                  /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(
                     "input",
                     {
                       type: "file",
@@ -18462,7 +18078,7 @@ function PurchaserView({
                   )
                 ] })
               ] }),
-              /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(
                 "input",
                 {
                   type: "text",
@@ -18473,7 +18089,7 @@ function PurchaserView({
                   }
                 }
               ),
-              /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(
                 "input",
                 {
                   type: "text",
@@ -18482,7 +18098,7 @@ function PurchaserView({
                   onChange: (e) => updateVariantRow(index, { sku: e.target.value })
                 }
               ),
-              /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(
                 "input",
                 {
                   type: "text",
@@ -18491,7 +18107,7 @@ function PurchaserView({
                   onChange: (e) => updateVariantRow(index, { barcode: e.target.value })
                 }
               ),
-              /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(
                 "input",
                 {
                   type: "text",
@@ -18501,7 +18117,7 @@ function PurchaserView({
                   className: "size-input"
                 }
               ),
-              /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(
                 "input",
                 {
                   type: "number",
@@ -18512,8 +18128,8 @@ function PurchaserView({
                   className: "stock-input"
                 }
               ),
-              /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { className: "variant-actions", children: [
-                /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "variant-actions", children: [
+                /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(
                   "button",
                   {
                     type: "button",
@@ -18523,7 +18139,7 @@ function PurchaserView({
                     children: "\u{1F4CB}"
                   }
                 ),
-                /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
+                /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(
                   "button",
                   {
                     type: "button",
@@ -18538,15 +18154,15 @@ function PurchaserView({
             ] }, variant.id || `${variant.sku}-${index}`))
           ] })
         ] }),
-        activeTab === "pricing" && /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { className: "tab-pane-content", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { className: "tab-section-head", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("strong", { children: "\u041A\u0430\u043B\u044C\u043A\u0443\u043B\u044F\u0442\u043E\u0440 \u0441\u0435\u0431\u0435\u0441\u0442\u043E\u0438\u043C\u043E\u0441\u0442\u0438 \u0438 Kaspi \u0420\u0430\u0441\u0441\u0440\u043E\u0447\u043A\u0438 0-0-12" }),
-            /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("p", { children: "\u041F\u0440\u044F\u043C\u043E\u0439 \u0440\u0430\u0441\u0447\u0435\u0442 \u044E\u043D\u0438\u0442-\u044D\u043A\u043E\u043D\u043E\u043C\u0438\u043A\u0438 \u0438\u0437 \u041A\u0438\u0442\u0430\u044F \u0441 \u0443\u0447\u0435\u0442\u043E\u043C \u043A\u043E\u043C\u0438\u0441\u0441\u0438\u0439, \u043D\u0430\u043B\u043E\u0433\u043E\u0432 \u0438 \u0447\u0438\u0441\u0442\u043E\u0439 \u043C\u0430\u0440\u0436\u0438." })
+        activeTab === "pricing" && /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "tab-pane-content", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "tab-section-head", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("strong", { children: "\u041A\u0430\u043B\u044C\u043A\u0443\u043B\u044F\u0442\u043E\u0440 \u0441\u0435\u0431\u0435\u0441\u0442\u043E\u0438\u043C\u043E\u0441\u0442\u0438 \u0438 Kaspi \u0420\u0430\u0441\u0441\u0440\u043E\u0447\u043A\u0438 0-0-12" }),
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("p", { children: "\u041F\u0440\u044F\u043C\u043E\u0439 \u0440\u0430\u0441\u0447\u0435\u0442 \u044E\u043D\u0438\u0442-\u044D\u043A\u043E\u043D\u043E\u043C\u0438\u043A\u0438 \u0438\u0437 \u041A\u0438\u0442\u0430\u044F \u0441 \u0443\u0447\u0435\u0442\u043E\u043C \u043A\u043E\u043C\u0438\u0441\u0441\u0438\u0439, \u043D\u0430\u043B\u043E\u0433\u043E\u0432 \u0438 \u0447\u0438\u0441\u0442\u043E\u0439 \u043C\u0430\u0440\u0436\u0438." })
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { className: "calculator-form", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("label", { children: [
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "calculator-form", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("label", { children: [
               "\u0412\u0430\u043B\u044E\u0442\u0430 \u0437\u0430\u043A\u0443\u043F\u043A\u0438",
-              /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)(
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)(
                 "select",
                 {
                   value: currency,
@@ -18555,16 +18171,16 @@ function PurchaserView({
                     setIsDirty(true);
                   },
                   children: [
-                    /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("option", { value: "CNY", children: "\xA5 \u042E\u0430\u043D\u044C (CNY)" }),
-                    /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("option", { value: "USD", children: "$ \u0414\u043E\u043B\u043B\u0430\u0440 (USD)" }),
-                    /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("option", { value: "KZT", children: "\u20B8 \u0422\u0435\u043D\u0433\u0435 (KZT)" })
+                    /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("option", { value: "CNY", children: "\xA5 \u042E\u0430\u043D\u044C (CNY)" }),
+                    /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("option", { value: "USD", children: "$ \u0414\u043E\u043B\u043B\u0430\u0440 (USD)" }),
+                    /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("option", { value: "KZT", children: "\u20B8 \u0422\u0435\u043D\u0433\u0435 (KZT)" })
                   ]
                 }
               )
             ] }),
-            currency === "CNY" && /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("label", { children: [
+            currency === "CNY" && /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("label", { children: [
               "\u041A\u0443\u0440\u0441 \u044E\u0430\u043D\u044F, \u20B8",
-              /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(
                 "input",
                 {
                   type: "number",
@@ -18578,9 +18194,9 @@ function PurchaserView({
                 }
               )
             ] }),
-            currency === "USD" && /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("label", { children: [
+            currency === "USD" && /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("label", { children: [
               "\u041A\u0443\u0440\u0441 \u0434\u043E\u043B\u043B\u0430\u0440\u0430, \u20B8",
-              /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(
                 "input",
                 {
                   type: "number",
@@ -18594,9 +18210,9 @@ function PurchaserView({
                 }
               )
             ] }),
-            /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("label", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("label", { children: [
               "\u0417\u0430\u043A\u0443\u043F\u043A\u0430 \u0437\u0430 \u0435\u0434\u0438\u043D\u0438\u0446\u0443",
-              /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(
                 "input",
                 {
                   type: "number",
@@ -18609,9 +18225,9 @@ function PurchaserView({
                 }
               )
             ] }),
-            /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("label", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("label", { children: [
               "\u0414\u043E\u0441\u0442\u0430\u0432\u043A\u0430 \u043F\u043E \u041A\u0438\u0442\u0430\u044E, \u20B8",
-              /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(
                 "input",
                 {
                   type: "number",
@@ -18624,9 +18240,9 @@ function PurchaserView({
                 }
               )
             ] }),
-            /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("label", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("label", { children: [
               "\u041A\u0430\u0440\u0433\u043E / \u0414\u043E\u0441\u0442\u0430\u0432\u043A\u0430 \u0432 \u0420\u041A, \u20B8",
-              /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(
                 "input",
                 {
                   type: "number",
@@ -18639,9 +18255,9 @@ function PurchaserView({
                 }
               )
             ] }),
-            /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("label", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("label", { children: [
               "\u0422\u0430\u043C\u043E\u0436\u043D\u044F / \u041E\u0444\u043E\u0440\u043C\u043B\u0435\u043D\u0438\u0435, \u20B8",
-              /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(
                 "input",
                 {
                   type: "number",
@@ -18654,9 +18270,9 @@ function PurchaserView({
                 }
               )
             ] }),
-            /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("label", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("label", { children: [
               "\u0423\u043F\u0430\u043A\u043E\u0432\u043A\u0430 / \u041A\u043E\u0440\u043E\u0431\u043A\u0430, \u20B8",
-              /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(
                 "input",
                 {
                   type: "number",
@@ -18669,9 +18285,9 @@ function PurchaserView({
                 }
               )
             ] }),
-            /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("label", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("label", { children: [
               "\u0414\u043E\u0432\u043E\u0434\u043A\u0430 / \u041E\u0442\u0441\u0442\u0440\u043E\u0439\u043A\u0430 \u043C\u0430\u0441\u0442\u0435\u0440\u0430, \u20B8",
-              /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(
                 "input",
                 {
                   type: "number",
@@ -18684,9 +18300,9 @@ function PurchaserView({
                 }
               )
             ] }),
-            /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("label", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("label", { children: [
               "\u041C\u0430\u0440\u043A\u0435\u0442\u0438\u043D\u0433 / \u041B\u0438\u0434, \u20B8",
-              /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(
                 "input",
                 {
                   type: "number",
@@ -18699,9 +18315,9 @@ function PurchaserView({
                 }
               )
             ] }),
-            /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("label", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("label", { children: [
               "\u041F\u0440\u043E\u0447\u0438\u0435 \u0440\u0430\u0441\u0445\u043E\u0434\u044B, \u20B8",
-              /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(
                 "input",
                 {
                   type: "number",
@@ -18714,9 +18330,9 @@ function PurchaserView({
                 }
               )
             ] }),
-            /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("label", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("label", { children: [
               "\u041D\u0430\u043B\u043E\u0433 (\u0423\u0421\u041D), %",
-              /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(
                 "input",
                 {
                   type: "number",
@@ -18729,9 +18345,9 @@ function PurchaserView({
                 }
               )
             ] }),
-            /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("label", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("label", { children: [
               "Kaspi \u0420\u0430\u0441\u0441\u0440\u043E\u0447\u043A\u0430, %",
-              /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(
                 "input",
                 {
                   type: "number",
@@ -18744,9 +18360,9 @@ function PurchaserView({
                 }
               )
             ] }),
-            /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("label", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("label", { children: [
               "\u0421\u0440\u043E\u043A \u0440\u0430\u0441\u0441\u0440\u043E\u0447\u043A\u0438, \u043C\u0435\u0441.",
-              /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(
                 "input",
                 {
                   type: "number",
@@ -18759,9 +18375,9 @@ function PurchaserView({
                 }
               )
             ] }),
-            /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("label", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("label", { children: [
               "\u041A\u043E\u043C\u0438\u0441\u0441\u0438\u044F \u043F\u0440\u043E\u0434\u0430\u0432\u0446\u0430, %",
-              /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(
                 "input",
                 {
                   type: "number",
@@ -18774,9 +18390,9 @@ function PurchaserView({
                 }
               )
             ] }),
-            /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("label", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("label", { children: [
               "\u0416\u0435\u043B\u0430\u0435\u043C\u0430\u044F \u043F\u0440\u0438\u0431\u044B\u043B\u044C (\u043C\u0430\u0440\u0436\u0430), %",
-              /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(
                 "input",
                 {
                   type: "number",
@@ -18789,9 +18405,9 @@ function PurchaserView({
                 }
               )
             ] }),
-            /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("label", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("label", { children: [
               "\u0418\u0442\u043E\u0433\u043E\u0432\u0430\u044F \u0440\u043E\u0437\u043D\u0438\u0447\u043D\u0430\u044F \u0446\u0435\u043D\u0430, \u20B8",
-              /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(
                 "input",
                 {
                   type: "number",
@@ -18805,9 +18421,9 @@ function PurchaserView({
                 }
               )
             ] }),
-            /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("label", { className: "toggle-label", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("label", { className: "toggle-label", children: [
               "\u0420\u0435\u0436\u0438\u043C \u0446\u0435\u043D\u044B",
-              /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(
                 "button",
                 {
                   type: "button",
@@ -18822,13 +18438,13 @@ function PurchaserView({
               )
             ] })
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { className: "card-subhead between", style: { marginTop: "24px" }, children: [
-            /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { children: [
-              /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("strong", { children: "\u0421\u043A\u0438\u0434\u043A\u0430 \u0438 \u0441\u0442\u0430\u0440\u0430\u044F \u0437\u0430\u0447\u0451\u0440\u043A\u043D\u0443\u0442\u0430\u044F \u0446\u0435\u043D\u0430 (Sale)" }),
-              /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("span", { children: "\u041F\u0440\u0438\u0432\u043B\u0435\u0447\u0435\u043D\u0438\u0435 \u0432\u043D\u0438\u043C\u0430\u043D\u0438\u044F \u043F\u043E\u043A\u0443\u043F\u0430\u0442\u0435\u043B\u0435\u0439 \u043D\u0430 \u0432\u0438\u0442\u0440\u0438\u043D\u0435." })
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "card-subhead between", style: { marginTop: "24px" }, children: [
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { children: [
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("strong", { children: "\u0421\u043A\u0438\u0434\u043A\u0430 \u0438 \u0441\u0442\u0430\u0440\u0430\u044F \u0437\u0430\u0447\u0451\u0440\u043A\u043D\u0443\u0442\u0430\u044F \u0446\u0435\u043D\u0430 (Sale)" }),
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { children: "\u041F\u0440\u0438\u0432\u043B\u0435\u0447\u0435\u043D\u0438\u0435 \u0432\u043D\u0438\u043C\u0430\u043D\u0438\u044F \u043F\u043E\u043A\u0443\u043F\u0430\u0442\u0435\u043B\u0435\u0439 \u043D\u0430 \u0432\u0438\u0442\u0440\u0438\u043D\u0435." })
             ] }),
-            /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("label", { className: "discount-toggle-label", children: [
-              /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("label", { className: "discount-toggle-label", children: [
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(
                 "input",
                 {
                   type: "checkbox",
@@ -18839,13 +18455,13 @@ function PurchaserView({
                   }
                 }
               ),
-              /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("span", { children: "\u0412\u043A\u043B\u044E\u0447\u0438\u0442\u044C \u0441\u043A\u0438\u0434\u043A\u0443" })
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { children: "\u0412\u043A\u043B\u044E\u0447\u0438\u0442\u044C \u0441\u043A\u0438\u0434\u043A\u0443" })
             ] })
           ] }),
-          hasDiscount && /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { className: "calculator-form discount-form", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("label", { children: [
+          hasDiscount && /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "calculator-form discount-form", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("label", { children: [
               "\u0421\u043A\u0438\u0434\u043A\u0430, %",
-              /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(
                 "input",
                 {
                   type: "number",
@@ -18860,9 +18476,9 @@ function PurchaserView({
                 }
               )
             ] }),
-            /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("label", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("label", { children: [
               "\u0421\u0442\u0430\u0440\u0430\u044F \u0446\u0435\u043D\u0430, \u20B8",
-              /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(
                 "input",
                 {
                   type: "number",
@@ -18875,102 +18491,102 @@ function PurchaserView({
                 }
               )
             ] }),
-            /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("label", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("label", { children: [
               "\u0418\u0442\u043E\u0433\u043E \u043A \u043E\u043F\u043B\u0430\u0442\u0435 \u043F\u043E\u043A\u0443\u043F\u0430\u0442\u0435\u043B\u0435\u043C",
-              /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("input", { type: "text", disabled: true, value: `${money(Math.round(retail))} \u20B8` })
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("input", { type: "text", disabled: true, value: `${money(Math.round(retail))} \u20B8` })
             ] }),
-            /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("label", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("label", { children: [
               "\u0412\u044B\u0433\u043E\u0434\u0430 \u043F\u043E\u043A\u0443\u043F\u0430\u0442\u0435\u043B\u044F",
-              /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("input", { type: "text", disabled: true, value: `${money(savingsKzt)} \u20B8` })
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("input", { type: "text", disabled: true, value: `${money(savingsKzt)} \u20B8` })
             ] })
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { className: "calculation-summary", style: { marginTop: "20px" }, children: [
-            /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { children: [
-              /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("span", { children: "\u0417\u0430\u043A\u0443\u043F\u043A\u0430 \u0432 \u0442\u0435\u043D\u0433\u0435" }),
-              /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("strong", { children: [
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "calculation-summary", style: { marginTop: "20px" }, children: [
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { children: [
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { children: "\u0417\u0430\u043A\u0443\u043F\u043A\u0430 \u0432 \u0442\u0435\u043D\u0433\u0435" }),
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("strong", { children: [
                 money(purchaseKzt),
                 " \u20B8"
               ] })
             ] }),
-            /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { children: [
-              /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("span", { children: "\u0424\u0438\u043A\u0441. \u0441\u0435\u0431\u0435\u0441\u0442\u043E\u0438\u043C\u043E\u0441\u0442\u044C" }),
-              /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("strong", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { children: [
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { children: "\u0424\u0438\u043A\u0441. \u0441\u0435\u0431\u0435\u0441\u0442\u043E\u0438\u043C\u043E\u0441\u0442\u044C" }),
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("strong", { children: [
                 money(fixedCost),
                 " \u20B8"
               ] })
             ] }),
-            /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { children: [
-              /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("span", { children: "\u0422\u043E\u0447\u043A\u0430 \u0431\u0435\u0437\u0443\u0431\u044B\u0442\u043E\u0447\u043D\u043E\u0441\u0442\u0438" }),
-              /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("strong", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { children: [
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { children: "\u0422\u043E\u0447\u043A\u0430 \u0431\u0435\u0437\u0443\u0431\u044B\u0442\u043E\u0447\u043D\u043E\u0441\u0442\u0438" }),
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("strong", { children: [
                 money(breakEvenPrice),
                 " \u20B8"
               ] })
             ] }),
-            /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { children: [
-              /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("span", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { children: [
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("span", { children: [
                 "\u041D\u0430\u043B\u043E\u0433 (",
                 taxPercent,
                 "%)"
               ] }),
-              /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("strong", { children: [
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("strong", { children: [
                 money(taxAmount),
                 " \u20B8"
               ] })
             ] }),
-            /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { children: [
-              /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("span", { children: "Kaspi \u0420\u0430\u0441\u0441\u0440\u043E\u0447\u043A\u0430" }),
-              /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("strong", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { children: [
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { children: "Kaspi \u0420\u0430\u0441\u0441\u0440\u043E\u0447\u043A\u0430" }),
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("strong", { children: [
                 money(bankAmount),
                 " \u20B8"
               ] })
             ] }),
-            /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { children: [
-              /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("span", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { children: [
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("span", { children: [
                 "\u041F\u0440\u043E\u0434\u0430\u0432\u0435\u0446 (",
                 sellerPercent,
                 "%)"
               ] }),
-              /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("strong", { children: [
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("strong", { children: [
                 money(sellerAmount),
                 " \u20B8"
               ] })
             ] }),
-            /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { children: [
-              /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("span", { children: "\u0427\u0438\u0441\u0442\u0430\u044F \u0432\u044B\u0440\u0443\u0447\u043A\u0430" }),
-              /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("strong", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { children: [
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { children: "\u0427\u0438\u0441\u0442\u0430\u044F \u0432\u044B\u0440\u0443\u0447\u043A\u0430" }),
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("strong", { children: [
                 money(netRevenue),
                 " \u20B8"
               ] })
             ] }),
-            /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { className: "accent-result", children: [
-              /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("span", { children: "\u041F\u0440\u0438\u0431\u044B\u043B\u044C \u0441 1 \u0448\u0442." }),
-              /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("strong", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "accent-result", children: [
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { children: "\u041F\u0440\u0438\u0431\u044B\u043B\u044C \u0441 1 \u0448\u0442." }),
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("strong", { children: [
                 money(profit),
                 " \u20B8"
               ] })
             ] }),
-            /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { children: [
-              /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("span", { children: "\u041C\u0430\u0440\u0436\u0430" }),
-              /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("strong", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { children: [
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { children: "\u041C\u0430\u0440\u0436\u0430" }),
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("strong", { children: [
                 margin.toFixed(1),
                 "%"
               ] })
             ] }),
-            /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { children: [
-              /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("span", { children: "\u041D\u0430\u0446\u0435\u043D\u043A\u0430 \u043A \u0441\u0435\u0431\u0435\u0441\u0442\u043E\u0438\u043C\u043E\u0441\u0442\u0438" }),
-              /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("strong", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { children: [
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { children: "\u041D\u0430\u0446\u0435\u043D\u043A\u0430 \u043A \u0441\u0435\u0431\u0435\u0441\u0442\u043E\u0438\u043C\u043E\u0441\u0442\u0438" }),
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("strong", { children: [
                 markupOnCost.toFixed(1),
                 "%"
               ] })
             ] })
           ] })
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { className: "save-actions", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { className: `save-feedback ${saveState}`, "aria-live": "polite", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("strong", { children: editingProductId ? `\u041C\u043E\u0434\u0435\u043B\u044C ${internalSku}` : "\u041D\u043E\u0432\u0430\u044F \u043A\u0430\u0440\u0442\u043E\u0447\u043A\u0430" }),
-            /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("span", { children: saveMessage || (isDirty ? "\u0415\u0441\u0442\u044C \u043D\u0435\u0441\u043E\u0445\u0440\u0430\u043D\u0451\u043D\u043D\u044B\u0435 \u043F\u0440\u0430\u0432\u043A\u0438." : "\u0412\u0441\u0435 \u0438\u0437\u043C\u0435\u043D\u0435\u043D\u0438\u044F \u0441\u043E\u0445\u0440\u0430\u043D\u0435\u043D\u044B \u0432 \u0431\u0430\u0437\u0435.") })
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "save-actions", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: `save-feedback ${saveState}`, "aria-live": "polite", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("strong", { children: editingProductId ? `\u041C\u043E\u0434\u0435\u043B\u044C ${internalSku}` : "\u041D\u043E\u0432\u0430\u044F \u043A\u0430\u0440\u0442\u043E\u0447\u043A\u0430" }),
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { children: saveMessage || (isDirty ? "\u0415\u0441\u0442\u044C \u043D\u0435\u0441\u043E\u0445\u0440\u0430\u043D\u0451\u043D\u043D\u044B\u0435 \u043F\u0440\u0430\u0432\u043A\u0438." : "\u0412\u0441\u0435 \u0438\u0437\u043C\u0435\u043D\u0435\u043D\u0438\u044F \u0441\u043E\u0445\u0440\u0430\u043D\u0435\u043D\u044B \u0432 \u0431\u0430\u0437\u0435.") })
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(
             "button",
             {
               type: "button",
@@ -18980,7 +18596,7 @@ function PurchaserView({
               children: "\u0421\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C \u0447\u0435\u0440\u043D\u043E\u0432\u0438\u043A"
             }
           ),
-          /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(
             "button",
             {
               type: "button",
@@ -18992,49 +18608,49 @@ function PurchaserView({
           )
         ] })
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("aside", { className: "shipment-card", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("p", { className: "eyebrow", children: "\u0422\u0415\u041A\u0423\u0429\u0410\u042F \u041F\u041E\u0421\u0422\u0410\u0412\u041A\u0410" }),
-        /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("h2", { children: "\u0413\u043E\u0442\u043E\u0432\u043D\u043E\u0441\u0442\u044C \u043A\u0430\u0442\u0430\u043B\u043E\u0433\u0430" }),
-        /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { className: "progress-ring", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("strong", { children: filteredProducts.reduce((acc, p) => acc + (p.quantity || 0), 0) }),
-          /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("span", { children: "\u0438\u043D\u0441\u0442\u0440\u0443\u043C\u0435\u043D\u0442\u043E\u0432 \u043D\u0430 \u0441\u043A\u043B\u0430\u0434\u0435" })
+      /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("aside", { className: "shipment-card", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("p", { className: "eyebrow", children: "\u0422\u0415\u041A\u0423\u0429\u0410\u042F \u041F\u041E\u0421\u0422\u0410\u0412\u041A\u0410" }),
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("h2", { children: "\u0413\u043E\u0442\u043E\u0432\u043D\u043E\u0441\u0442\u044C \u043A\u0430\u0442\u0430\u043B\u043E\u0433\u0430" }),
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "progress-ring", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("strong", { children: filteredProducts.reduce((acc, p) => acc + (p.quantity || 0), 0) }),
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { children: "\u0438\u043D\u0441\u0442\u0440\u0443\u043C\u0435\u043D\u0442\u043E\u0432 \u043D\u0430 \u0441\u043A\u043B\u0430\u0434\u0435" })
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("ul", { children: [
-          /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("li", { children: [
-            /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("span", { children: "\u0412\u0441\u0435\u0433\u043E \u043C\u043E\u0434\u0435\u043B\u0435\u0439" }),
-            /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("strong", { children: filteredProducts.length })
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("ul", { children: [
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("li", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { children: "\u0412\u0441\u0435\u0433\u043E \u043C\u043E\u0434\u0435\u043B\u0435\u0439" }),
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("strong", { children: filteredProducts.length })
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("li", { children: [
-            /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("span", { children: "\u041D\u0430 \u0432\u0438\u0442\u0440\u0438\u043D\u0435" }),
-            /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("strong", { style: { color: "#128c7e" }, children: [
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("li", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { children: "\u041D\u0430 \u0432\u0438\u0442\u0440\u0438\u043D\u0435" }),
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("strong", { style: { color: "#128c7e" }, children: [
               filteredProducts.filter((p) => p.publicationStatus === "published").length,
               " \u0448\u0442."
             ] })
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("li", { children: [
-            /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("span", { children: "\u0412 \u0447\u0435\u0440\u043D\u043E\u0432\u0438\u043A\u0430\u0445" }),
-            /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("strong", { style: { color: "#c87531" }, children: [
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("li", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { children: "\u0412 \u0447\u0435\u0440\u043D\u043E\u0432\u0438\u043A\u0430\u0445" }),
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("strong", { style: { color: "#c87531" }, children: [
               filteredProducts.filter((p) => p.publicationStatus !== "published").length,
               " \u0448\u0442."
             ] })
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("li", { children: [
-            /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("span", { children: "\u0428\u0430\u0431\u043B\u043E\u043D\u044B \u0440\u0430\u0441\u0445\u043E\u0434\u043E\u0432" }),
-            /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("strong", { children: [
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("li", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { children: "\u0428\u0430\u0431\u043B\u043E\u043D\u044B \u0440\u0430\u0441\u0445\u043E\u0434\u043E\u0432" }),
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("strong", { children: [
               presets.length,
               " \u0448\u0430\u0431\u043B\u043E\u043D\u043E\u0432"
             ] })
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("li", { children: [
-            /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("span", { children: "\u041E\u043D\u043B\u0430\u0439\u043D-\u043A\u0443\u0440\u0441\u044B" }),
-            /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("button", { type: "button", className: "inline-print-link", onClick: () => setIsCourseModalOpen(true), children: "\u041D\u0430\u0441\u0442\u0440\u043E\u0438\u0442\u044C \u043A\u0443\u0440\u0441\u044B \u{1F393}" })
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("li", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { children: "\u041E\u043D\u043B\u0430\u0439\u043D-\u043A\u0443\u0440\u0441\u044B" }),
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("button", { type: "button", className: "inline-print-link", onClick: () => setIsCourseModalOpen(true), children: "\u041D\u0430\u0441\u0442\u0440\u043E\u0438\u0442\u044C \u043A\u0443\u0440\u0441\u044B \u{1F393}" })
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("li", { children: [
-            /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("span", { children: "\u0428\u0442\u0440\u0438\u0445\u043A\u043E\u0434\u044B" }),
-            /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("button", { type: "button", className: "inline-print-link", onClick: () => setIsPrintModalOpen(true), children: "\u041F\u0435\u0447\u0430\u0442\u044C \u0446\u0435\u043D\u043D\u0438\u043A\u043E\u0432 \u{1F5A8}" })
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("li", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { children: "\u0428\u0442\u0440\u0438\u0445\u043A\u043E\u0434\u044B" }),
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("button", { type: "button", className: "inline-print-link", onClick: () => setIsPrintModalOpen(true), children: "\u041F\u0435\u0447\u0430\u0442\u044C \u0446\u0435\u043D\u043D\u0438\u043A\u043E\u0432 \u{1F5A8}" })
           ] })
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(
           "button",
           {
             className: "primary-button",
@@ -19044,19 +18660,19 @@ function PurchaserView({
         )
       ] })
     ] }),
-    /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("section", { className: "inventory-card", id: "inventory", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { className: "card-heading", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { children: [
-          /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("p", { className: "eyebrow", children: "\u0421\u041A\u041B\u0410\u0414 \u041F\u041E\u0421\u0422\u0410\u0412\u041A\u0418" }),
-          /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("h2", { children: [
+    /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("section", { className: "inventory-card", id: "inventory", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "card-heading", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { children: [
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("p", { className: "eyebrow", children: "\u0421\u041A\u041B\u0410\u0414 \u041F\u041E\u0421\u0422\u0410\u0412\u041A\u0418" }),
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("h2", { children: [
             "\u0422\u043E\u0432\u0430\u0440\u044B \u0438 \u043F\u0430\u0440\u0442\u0438\u0438 (",
             displayedInventoryProducts.length,
             ")"
           ] })
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { className: "inventory-heading-tools", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { className: "inventory-status-tabs", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)(
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "inventory-heading-tools", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "inventory-status-tabs", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)(
               "button",
               {
                 type: "button",
@@ -19069,7 +18685,7 @@ function PurchaserView({
                 ]
               }
             ),
-            /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)(
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)(
               "button",
               {
                 type: "button",
@@ -19082,7 +18698,7 @@ function PurchaserView({
                 ]
               }
             ),
-            /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)(
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)(
               "button",
               {
                 type: "button",
@@ -19096,22 +18712,22 @@ function PurchaserView({
               }
             )
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("label", { className: "search-box small", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("span", { children: "\u{1F50D}" }),
-            /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("input", { value: query, onChange: (e) => setQuery(e.target.value), placeholder: "\u041F\u043E\u0438\u0441\u043A \u043F\u043E \u0441\u043A\u043B\u0430\u0434\u0443..." })
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("label", { className: "search-box small", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { children: "\u{1F50D}" }),
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("input", { value: query, onChange: (e) => setQuery(e.target.value), placeholder: "\u041F\u043E\u0438\u0441\u043A \u043F\u043E \u0441\u043A\u043B\u0430\u0434\u0443..." })
           ] })
         ] })
       ] }),
-      selectedProductIds.size > 0 && /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { className: "bulk-actions-ribbon", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { className: "bulk-count", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("span", { children: [
+      selectedProductIds.size > 0 && /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "bulk-actions-ribbon", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "bulk-count", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("span", { children: [
             "\u0412\u044B\u0431\u0440\u0430\u043D\u043E \u0442\u043E\u0432\u0430\u0440\u043E\u0432: ",
-            /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("strong", { children: selectedProductIds.size })
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("strong", { children: selectedProductIds.size })
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("button", { type: "button", className: "bulk-clear-btn", onClick: () => setSelectedProductIds(/* @__PURE__ */ new Set()), children: "\u0421\u043D\u044F\u0442\u044C \u0432\u044B\u0434\u0435\u043B\u0435\u043D\u0438\u0435" })
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("button", { type: "button", className: "bulk-clear-btn", onClick: () => setSelectedProductIds(/* @__PURE__ */ new Set()), children: "\u0421\u043D\u044F\u0442\u044C \u0432\u044B\u0434\u0435\u043B\u0435\u043D\u0438\u0435" })
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { className: "bulk-buttons", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)(
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "bulk-buttons", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)(
             "button",
             {
               type: "button",
@@ -19125,7 +18741,7 @@ function PurchaserView({
               ]
             }
           ),
-          /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)(
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)(
             "button",
             {
               type: "button",
@@ -19139,17 +18755,17 @@ function PurchaserView({
               ]
             }
           ),
-          /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { className: "bulk-preset-group", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "bulk-preset-group", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(
               "select",
               {
                 value: bulkPresetId,
                 onChange: (e) => setBulkPresetId(e.target.value),
                 title: "\u0412\u044B\u0431\u0440\u0430\u0442\u044C \u0448\u0430\u0431\u043B\u043E\u043D \u0434\u043B\u044F \u043F\u0440\u0438\u043C\u0435\u043D\u0435\u043D\u0438\u044F",
-                children: presets.map((p) => /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("option", { value: p.id, children: p.name }, p.id))
+                children: presets.map((p) => /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("option", { value: p.id, children: p.name }, p.id))
               }
             ),
-            /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(
               "button",
               {
                 type: "button",
@@ -19160,7 +18776,7 @@ function PurchaserView({
               }
             )
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)(
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)(
             "button",
             {
               type: "button",
@@ -19174,7 +18790,7 @@ function PurchaserView({
               ]
             }
           ),
-          selectedProductIds.size >= 2 && /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)(
+          selectedProductIds.size >= 2 && /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)(
             "button",
             {
               type: "button",
@@ -19190,9 +18806,9 @@ function PurchaserView({
           )
         ] })
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { className: "inventory-table", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { className: "inventory-head", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("span", { className: "inventory-checkbox-cell", style: { width: 36 }, children: /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "inventory-table", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "inventory-head", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { className: "inventory-checkbox-cell", style: { width: 36 }, children: /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(
             "input",
             {
               type: "checkbox",
@@ -19201,13 +18817,13 @@ function PurchaserView({
               title: isAllSelected ? "\u0421\u043D\u044F\u0442\u044C \u0432\u044B\u0434\u0435\u043B\u0435\u043D\u0438\u0435 \u0441\u043E \u0432\u0441\u0435\u0445" : "\u0412\u044B\u0431\u0440\u0430\u0442\u044C \u0432\u0441\u0435 \u0432 \u0441\u043F\u0438\u0441\u043A\u0435"
             }
           ) }),
-          /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("span", { children: "\u0422\u043E\u0432\u0430\u0440 / \u041C\u043E\u0434\u0435\u043B\u044C" }),
-          /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("span", { children: "\u0410\u0440\u0442\u0438\u043A\u0443\u043B (SKU)" }),
-          /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("span", { children: "\u0426\u0435\u043D\u0430 \u0440\u043E\u0437\u043D\u0438\u0446\u044B" }),
-          /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("span", { children: "\u0412\u0430\u0440\u0438\u0430\u043D\u0442\u044B" }),
-          /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("span", { children: "\u041E\u0441\u0442\u0430\u0442\u043E\u043A" }),
-          /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("span", { children: "\u0421\u0442\u0430\u0442\u0443\u0441 \u043F\u0443\u0431\u043B\u0438\u043A\u0430\u0446\u0438\u0438" }),
-          /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("span", { children: "\u0414\u0435\u0439\u0441\u0442\u0432\u0438\u0435" })
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { children: "\u0422\u043E\u0432\u0430\u0440 / \u041C\u043E\u0434\u0435\u043B\u044C" }),
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { children: "\u0410\u0440\u0442\u0438\u043A\u0443\u043B (SKU)" }),
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { children: "\u0426\u0435\u043D\u0430 \u0440\u043E\u0437\u043D\u0438\u0446\u044B" }),
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { children: "\u0412\u0430\u0440\u0438\u0430\u043D\u0442\u044B" }),
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { children: "\u041E\u0441\u0442\u0430\u0442\u043E\u043A" }),
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { children: "\u0421\u0442\u0430\u0442\u0443\u0441 \u043F\u0443\u0431\u043B\u0438\u043A\u0430\u0446\u0438\u0438" }),
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { children: "\u0414\u0435\u0439\u0441\u0442\u0432\u0438\u0435" })
         ] }),
         displayedInventoryProducts.map((product) => {
           const isSelected = selectedProductIds.has(product.id);
@@ -19215,12 +18831,12 @@ function PurchaserView({
           const prodHasDiscount = Boolean(
             product.isDiscountActive || product.discountPercent && product.discountPercent > 0 || product.originalPrice && product.price && product.originalPrice > product.price
           );
-          return /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)(
+          return /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)(
             "div",
             {
               className: `inventory-row ${isSelected ? "selected-row" : ""}`,
               children: [
-                /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("span", { className: "inventory-checkbox-cell", style: { width: 36 }, children: /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
+                /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { className: "inventory-checkbox-cell", style: { width: 36 }, children: /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(
                   "input",
                   {
                     type: "checkbox",
@@ -19229,31 +18845,31 @@ function PurchaserView({
                     "aria-label": `\u0412\u044B\u0431\u0440\u0430\u0442\u044C ${product.name}`
                   }
                 ) }),
-                /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("span", { className: "inventory-product", onClick: () => editStoredProduct(product), children: [
-                  /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("span", { className: "inventory-thumb", children: /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(Image, { src: product.image, alt: "", fill: true, unoptimized: true, sizes: "56px" }) }),
-                  /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("span", { children: [
-                    /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("strong", { children: product.name }),
-                    /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("small", { children: product.category })
+                /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("span", { className: "inventory-product", onClick: () => editStoredProduct(product), children: [
+                  /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { className: "inventory-thumb", children: /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Image, { src: product.image, alt: "", fill: true, unoptimized: true, sizes: "56px" }) }),
+                  /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("span", { children: [
+                    /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("strong", { children: product.name }),
+                    /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("small", { children: product.category })
                   ] })
                 ] }),
-                /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("span", { className: "mono-sku", onClick: () => editStoredProduct(product), children: product.sku }),
-                /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("span", { className: "price-cell", onClick: () => editStoredProduct(product), children: [
-                  /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("strong", { children: product.price ? `${money(product.price)} \u20B8` : "\u2014" }),
-                  prodHasDiscount && product.originalPrice && /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("small", { className: "inventory-old-price", children: [
+                /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { className: "mono-sku", onClick: () => editStoredProduct(product), children: product.sku }),
+                /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("span", { className: "price-cell", onClick: () => editStoredProduct(product), children: [
+                  /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("strong", { children: product.price ? `${money(product.price)} \u20B8` : "\u2014" }),
+                  prodHasDiscount && product.originalPrice && /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("small", { className: "inventory-old-price", children: [
                     money(product.originalPrice),
                     " \u20B8"
                   ] })
                 ] }),
-                /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("span", { onClick: () => editStoredProduct(product), children: [
+                /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("span", { onClick: () => editStoredProduct(product), children: [
                   product.variants,
                   " ",
                   product.variants === 1 ? "\u0432\u0430\u0440." : "\u0432\u0430\u0440."
                 ] }),
-                /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("span", { onClick: () => editStoredProduct(product), children: /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("strong", { children: [
+                /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { onClick: () => editStoredProduct(product), children: /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("strong", { children: [
                   product.quantity,
                   " \u0448\u0442."
                 ] }) }),
-                /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("span", { children: /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
+                /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { children: /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(
                   "span",
                   {
                     className: `status-chip ${isPublished ? "published" : "draft"}`,
@@ -19261,7 +18877,7 @@ function PurchaserView({
                     children: isPublished ? "\u{1F7E2} \u041D\u0430 \u0432\u0438\u0442\u0440\u0438\u043D\u0435" : "\u{1F7E1} \u0427\u0435\u0440\u043D\u043E\u0432\u0438\u043A"
                   }
                 ) }),
-                /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("span", { children: /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
+                /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { children: /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(
                   "button",
                   {
                     type: "button",
@@ -19277,7 +18893,7 @@ function PurchaserView({
         })
       ] })
     ] }),
-    previewPhotoModal && /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("div", { className: "modal-backdrop", role: "presentation", onMouseDown: () => setPreviewPhotoModal(null), children: /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)(
+    previewPhotoModal && /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("div", { className: "modal-backdrop", role: "presentation", onMouseDown: () => setPreviewPhotoModal(null), children: /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)(
       "div",
       {
         className: "photo-lightbox-card",
@@ -19285,12 +18901,12 @@ function PurchaserView({
         "aria-modal": "true",
         onMouseDown: (e) => e.stopPropagation(),
         children: [
-          /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { className: "photo-lightbox-header", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { children: [
-              /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("strong", { children: previewPhotoModal.title }),
-              previewPhotoModal.subtitle && /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("span", { style: { display: "block", fontSize: "12px", color: "var(--muted)" }, children: previewPhotoModal.subtitle })
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "photo-lightbox-header", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { children: [
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("strong", { children: previewPhotoModal.title }),
+              previewPhotoModal.subtitle && /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { style: { display: "block", fontSize: "12px", color: "var(--muted)" }, children: previewPhotoModal.subtitle })
             ] }),
-            /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(
               "button",
               {
                 type: "button",
@@ -19301,7 +18917,7 @@ function PurchaserView({
               }
             )
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("div", { className: "photo-lightbox-body", children: /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("div", { className: "photo-lightbox-body", children: /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(
             "img",
             {
               src: previewPhotoModal.url,
@@ -19309,12 +18925,12 @@ function PurchaserView({
               className: "photo-lightbox-img"
             }
           ) }),
-          /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { className: "photo-lightbox-footer", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("span", { className: "photo-lightbox-path", children: previewPhotoModal.url }),
-            /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { style: { display: "flex", gap: "10px", alignItems: "center" }, children: [
-              /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("label", { className: "primary-button small", style: { cursor: "pointer", display: "inline-flex", alignItems: "center", gap: "6px" }, children: [
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { className: "photo-lightbox-footer", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { className: "photo-lightbox-path", children: previewPhotoModal.url }),
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("div", { style: { display: "flex", gap: "10px", alignItems: "center" }, children: [
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)("label", { className: "primary-button small", style: { cursor: "pointer", display: "inline-flex", alignItems: "center", gap: "6px" }, children: [
                 "\u{1F4C1} \u0417\u0430\u043C\u0435\u043D\u0438\u0442\u044C \u0444\u043E\u0442\u043E",
-                /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
+                /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(
                   "input",
                   {
                     type: "file",
@@ -19336,7 +18952,7 @@ function PurchaserView({
                   }
                 )
               ] }),
-              /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
+              /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(
                 "button",
                 {
                   type: "button",
@@ -19354,21 +18970,21 @@ function PurchaserView({
 }
 
 // app/admin/pricing/page.tsx
-var import_jsx_runtime15 = __toESM(require_jsx_runtime(), 1);
+var import_jsx_runtime14 = __toESM(require_jsx_runtime(), 1);
 var AUTH_KEY = "maestro_admin_auth";
 var VALID_PASSWORDS = /* @__PURE__ */ new Set(["Anastacia123!", "maestro2026", "admin", "1234"]);
 function AdminPricingPage() {
-  const [isAuthenticated, setIsAuthenticated] = (0, import_react13.useState)(false);
-  const [passwordInput, setPasswordInput] = (0, import_react13.useState)("");
-  const [authError, setAuthError] = (0, import_react13.useState)("");
-  const [query, setQuery] = (0, import_react13.useState)("");
-  const [category, setCategory] = (0, import_react13.useState)("\u0412\u0441\u0435");
-  const [selected, setSelected] = (0, import_react13.useState)(null);
-  const [selectedVariant, setSelectedVariant] = (0, import_react13.useState)(null);
-  const [requestedQuantity, setRequestedQuantity] = (0, import_react13.useState)(1);
-  const [notice, setNotice] = (0, import_react13.useState)("");
-  const [storedProducts, setStoredProducts] = (0, import_react13.useState)([]);
-  (0, import_react13.useEffect)(() => {
+  const [isAuthenticated, setIsAuthenticated] = (0, import_react12.useState)(false);
+  const [passwordInput, setPasswordInput] = (0, import_react12.useState)("");
+  const [authError, setAuthError] = (0, import_react12.useState)("");
+  const [query, setQuery] = (0, import_react12.useState)("");
+  const [category, setCategory] = (0, import_react12.useState)("\u0412\u0441\u0435");
+  const [selected, setSelected] = (0, import_react12.useState)(null);
+  const [selectedVariant, setSelectedVariant] = (0, import_react12.useState)(null);
+  const [requestedQuantity, setRequestedQuantity] = (0, import_react12.useState)(1);
+  const [notice, setNotice] = (0, import_react12.useState)("");
+  const [storedProducts, setStoredProducts] = (0, import_react12.useState)([]);
+  (0, import_react12.useEffect)(() => {
     try {
       const stored = sessionStorage.getItem(AUTH_KEY);
       if (stored === "true") {
@@ -19377,7 +18993,7 @@ function AdminPricingPage() {
     } catch {
     }
   }, []);
-  (0, import_react13.useEffect)(() => {
+  (0, import_react12.useEffect)(() => {
     if (!isAuthenticated) return;
     let active = true;
     fetch("/api/products?scope=all").then((res) => res.ok ? res.json() : Promise.reject(new Error("Failed"))).then((data) => {
@@ -19390,13 +19006,13 @@ function AdminPricingPage() {
       active = false;
     };
   }, [isAuthenticated]);
-  const mergedProducts = (0, import_react13.useMemo)(() => {
+  const mergedProducts = (0, import_react12.useMemo)(() => {
     return mergeBySku(products, storedProducts);
   }, [storedProducts]);
-  const categories = (0, import_react13.useMemo)(() => {
+  const categories = (0, import_react12.useMemo)(() => {
     return ["\u0412\u0441\u0435", ...new Set(mergedProducts.map((p) => p.category))];
   }, [mergedProducts]);
-  const filteredProducts = (0, import_react13.useMemo)(() => {
+  const filteredProducts = (0, import_react12.useMemo)(() => {
     const term = query.trim().toLowerCase();
     return mergedProducts.filter((product) => {
       const matchCategory = category === "\u0412\u0441\u0435" || product.category === category;
@@ -19441,14 +19057,14 @@ function AdminPricingPage() {
     setRequestedQuantity(1);
   };
   if (!isAuthenticated) {
-    return /* @__PURE__ */ (0, import_jsx_runtime15.jsx)("main", { className: "admin-auth-screen", children: /* @__PURE__ */ (0, import_jsx_runtime15.jsxs)("div", { className: "admin-auth-card", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime15.jsx)("div", { className: "brand-mark large", children: "M" }),
-      /* @__PURE__ */ (0, import_jsx_runtime15.jsx)("h2", { children: "\u041F\u0430\u043D\u0435\u043B\u044C \u0437\u0430\u043A\u0443\u043F\u0449\u0438\u043A\u0430 Maestro" }),
-      /* @__PURE__ */ (0, import_jsx_runtime15.jsx)("p", { children: "\u0412\u0432\u0435\u0434\u0438\u0442\u0435 \u043F\u0430\u0440\u043E\u043B\u044C \u0430\u0434\u043C\u0438\u043D\u0438\u0441\u0442\u0440\u0430\u0442\u043E\u0440\u0430 \u0434\u043B\u044F \u0434\u043E\u0441\u0442\u0443\u043F\u0430 \u043A \u0443\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044E \u0446\u0435\u043D\u043E\u043E\u0431\u0440\u0430\u0437\u043E\u0432\u0430\u043D\u0438\u0435\u043C, \u044E\u043D\u0438\u0442-\u044D\u043A\u043E\u043D\u043E\u043C\u0438\u043A\u043E\u0439 \u0438 \u0441\u043A\u043B\u0430\u0434\u043E\u043C." }),
-      /* @__PURE__ */ (0, import_jsx_runtime15.jsxs)("form", { onSubmit: handleLogin, className: "admin-auth-form", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime15.jsxs)("label", { children: [
+    return /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("main", { className: "admin-auth-screen", children: /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { className: "admin-auth-card", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("div", { className: "brand-mark large", children: "M" }),
+      /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("h2", { children: "\u041F\u0430\u043D\u0435\u043B\u044C \u0437\u0430\u043A\u0443\u043F\u0449\u0438\u043A\u0430 Maestro" }),
+      /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("p", { children: "\u0412\u0432\u0435\u0434\u0438\u0442\u0435 \u043F\u0430\u0440\u043E\u043B\u044C \u0430\u0434\u043C\u0438\u043D\u0438\u0441\u0442\u0440\u0430\u0442\u043E\u0440\u0430 \u0434\u043B\u044F \u0434\u043E\u0441\u0442\u0443\u043F\u0430 \u043A \u0443\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044E \u0446\u0435\u043D\u043E\u043E\u0431\u0440\u0430\u0437\u043E\u0432\u0430\u043D\u0438\u0435\u043C, \u044E\u043D\u0438\u0442-\u044D\u043A\u043E\u043D\u043E\u043C\u0438\u043A\u043E\u0439 \u0438 \u0441\u043A\u043B\u0430\u0434\u043E\u043C." }),
+      /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("form", { onSubmit: handleLogin, className: "admin-auth-form", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("label", { children: [
           "\u041F\u0430\u0440\u043E\u043B\u044C",
-          /* @__PURE__ */ (0, import_jsx_runtime15.jsx)(
+          /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
             "input",
             {
               type: "password",
@@ -19462,30 +19078,30 @@ function AdminPricingPage() {
             }
           )
         ] }),
-        authError && /* @__PURE__ */ (0, import_jsx_runtime15.jsx)("div", { className: "admin-auth-error", children: authError }),
-        /* @__PURE__ */ (0, import_jsx_runtime15.jsxs)("div", { className: "admin-auth-actions", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime15.jsx)(Link, { href: "/", className: "secondary-button", children: "\u2190 \u041D\u0430 \u0432\u0438\u0442\u0440\u0438\u043D\u0443" }),
-          /* @__PURE__ */ (0, import_jsx_runtime15.jsx)("button", { type: "submit", className: "primary-button", children: "\u0412\u043E\u0439\u0442\u0438 \u0432 \u043F\u0430\u043D\u0435\u043B\u044C" })
+        authError && /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("div", { className: "admin-auth-error", children: authError }),
+        /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { className: "admin-auth-actions", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(Link, { href: "/", className: "secondary-button", children: "\u2190 \u041D\u0430 \u0432\u0438\u0442\u0440\u0438\u043D\u0443" }),
+          /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("button", { type: "submit", className: "primary-button", children: "\u0412\u043E\u0439\u0442\u0438 \u0432 \u043F\u0430\u043D\u0435\u043B\u044C" })
         ] })
       ] })
     ] }) });
   }
-  return /* @__PURE__ */ (0, import_jsx_runtime15.jsxs)("main", { className: "site-shell", children: [
-    /* @__PURE__ */ (0, import_jsx_runtime15.jsxs)("header", { className: "admin-topbar", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime15.jsxs)("div", { className: "admin-brand", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime15.jsx)("span", { className: "brand-mark", children: "M" }),
-        /* @__PURE__ */ (0, import_jsx_runtime15.jsxs)("div", { children: [
-          /* @__PURE__ */ (0, import_jsx_runtime15.jsx)("strong", { children: "MAESTRO ADMIN" }),
-          /* @__PURE__ */ (0, import_jsx_runtime15.jsx)("small", { children: "\u041A\u0430\u043B\u044C\u043A\u0443\u043B\u044F\u0442\u043E\u0440 \u0437\u0430\u043A\u0443\u043F\u0449\u0438\u043A\u0430 & \u0441\u043A\u043B\u0430\u0434" })
+  return /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("main", { className: "site-shell", children: [
+    /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("header", { className: "admin-topbar", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { className: "admin-brand", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("span", { className: "brand-mark", children: "M" }),
+        /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { children: [
+          /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("strong", { children: "MAESTRO ADMIN" }),
+          /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("small", { children: "\u041A\u0430\u043B\u044C\u043A\u0443\u043B\u044F\u0442\u043E\u0440 \u0437\u0430\u043A\u0443\u043F\u0449\u0438\u043A\u0430 & \u0441\u043A\u043B\u0430\u0434" })
         ] })
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime15.jsxs)("nav", { className: "admin-nav", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime15.jsx)("a", { href: "#inventory", children: "\u0421\u043A\u043B\u0430\u0434 \u043F\u043E\u0441\u0442\u0430\u0432\u043A\u0438" }),
-        /* @__PURE__ */ (0, import_jsx_runtime15.jsx)(Link, { href: "/", children: "\u2190 \u041F\u0435\u0440\u0435\u0439\u0442\u0438 \u043D\u0430 \u0432\u0438\u0442\u0440\u0438\u043D\u0443" }),
-        /* @__PURE__ */ (0, import_jsx_runtime15.jsx)("button", { type: "button", className: "admin-logout-btn", onClick: handleLogout, children: "\u0412\u044B\u0439\u0442\u0438" })
+      /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("nav", { className: "admin-nav", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("a", { href: "#inventory", children: "\u0421\u043A\u043B\u0430\u0434 \u043F\u043E\u0441\u0442\u0430\u0432\u043A\u0438" }),
+        /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(Link, { href: "/", children: "\u2190 \u041F\u0435\u0440\u0435\u0439\u0442\u0438 \u043D\u0430 \u0432\u0438\u0442\u0440\u0438\u043D\u0443" }),
+        /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("button", { type: "button", className: "admin-logout-btn", onClick: handleLogout, children: "\u0412\u044B\u0439\u0442\u0438" })
       ] })
     ] }),
-    /* @__PURE__ */ (0, import_jsx_runtime15.jsx)(
+    /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
       PurchaserView,
       {
         categories,
@@ -19501,7 +19117,7 @@ function AdminPricingPage() {
         setNotice
       }
     ),
-    /* @__PURE__ */ (0, import_jsx_runtime15.jsx)(
+    /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
       ProductModal,
       {
         selected,
@@ -19515,19 +19131,19 @@ function AdminPricingPage() {
         }
       }
     ),
-    notice && /* @__PURE__ */ (0, import_jsx_runtime15.jsx)("div", { className: "toast", children: notice })
+    notice && /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("div", { className: "toast", children: notice })
   ] });
 }
 
 // components/AnalyticsReport.tsx
-var import_react14 = __toESM(require_react(), 1);
-var import_jsx_runtime16 = __toESM(require_jsx_runtime(), 1);
+var import_react13 = __toESM(require_react(), 1);
+var import_jsx_runtime15 = __toESM(require_jsx_runtime(), 1);
 function AnalyticsReport() {
-  const [products2, setProducts] = (0, import_react14.useState)([]);
-  const [loading, setLoading] = (0, import_react14.useState)(true);
-  const [kaspiFeeSimPercent, setKaspiFeeSimPercent] = (0, import_react14.useState)(11);
-  const [reportDate, setReportDate] = (0, import_react14.useState)("");
-  (0, import_react14.useEffect)(() => {
+  const [products2, setProducts] = (0, import_react13.useState)([]);
+  const [loading, setLoading] = (0, import_react13.useState)(true);
+  const [kaspiFeeSimPercent, setKaspiFeeSimPercent] = (0, import_react13.useState)(11);
+  const [reportDate, setReportDate] = (0, import_react13.useState)("");
+  (0, import_react13.useEffect)(() => {
     setReportDate(
       (/* @__PURE__ */ new Date()).toLocaleDateString("ru-RU", {
         year: "numeric",
@@ -19575,7 +19191,7 @@ function AnalyticsReport() {
       roiPercent
     };
   };
-  const analytics = (0, import_react14.useMemo)(() => {
+  const analytics = (0, import_react13.useMemo)(() => {
     let totalStockQty = 0;
     let totalCostKzt = 0;
     let totalRevenueKzt = 0;
@@ -19615,17 +19231,17 @@ function AnalyticsReport() {
       items
     };
   }, [products2, kaspiFeeSimPercent]);
-  return /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("div", { className: "analytics-page-root", children: [
-    /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("header", { className: "analytics-top-bar no-print", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("div", { className: "analytics-brand-area", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("div", { className: "analytics-logo-badge", children: "MAESTRO" }),
-        /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("div", { children: [
-          /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("h1", { children: "\u0424\u0438\u043D\u0430\u043D\u0441\u043E\u0432\u0430\u044F \u0430\u043D\u0430\u043B\u0438\u0442\u0438\u043A\u0430 \u0438 \u0421\u0432\u043E\u0434\u043A\u0430 \u0441\u043A\u043B\u0430\u0434\u0430" }),
-          /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("p", { children: "\u0423\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0447\u0435\u0441\u043A\u0438\u0439 \u043E\u0442\u0447\u0435\u0442 \u044E\u043D\u0438\u0442-\u044D\u043A\u043E\u043D\u043E\u043C\u0438\u043A\u0438 \u0438 \u0434\u043E\u0445\u043E\u0434\u043D\u043E\u0441\u0442\u0438 \u0430\u0441\u0441\u043E\u0440\u0442\u0438\u043C\u0435\u043D\u0442\u0430" })
+  return /* @__PURE__ */ (0, import_jsx_runtime15.jsxs)("div", { className: "analytics-page-root", children: [
+    /* @__PURE__ */ (0, import_jsx_runtime15.jsxs)("header", { className: "analytics-top-bar no-print", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime15.jsxs)("div", { className: "analytics-brand-area", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime15.jsx)("div", { className: "analytics-logo-badge", children: "MAESTRO" }),
+        /* @__PURE__ */ (0, import_jsx_runtime15.jsxs)("div", { children: [
+          /* @__PURE__ */ (0, import_jsx_runtime15.jsx)("h1", { children: "\u0424\u0438\u043D\u0430\u043D\u0441\u043E\u0432\u0430\u044F \u0430\u043D\u0430\u043B\u0438\u0442\u0438\u043A\u0430 \u0438 \u0421\u0432\u043E\u0434\u043A\u0430 \u0441\u043A\u043B\u0430\u0434\u0430" }),
+          /* @__PURE__ */ (0, import_jsx_runtime15.jsx)("p", { children: "\u0423\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0447\u0435\u0441\u043A\u0438\u0439 \u043E\u0442\u0447\u0435\u0442 \u044E\u043D\u0438\u0442-\u044D\u043A\u043E\u043D\u043E\u043C\u0438\u043A\u0438 \u0438 \u0434\u043E\u0445\u043E\u0434\u043D\u043E\u0441\u0442\u0438 \u0430\u0441\u0441\u043E\u0440\u0442\u0438\u043C\u0435\u043D\u0442\u0430" })
         ] })
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("div", { className: "analytics-actions", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime16.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime15.jsxs)("div", { className: "analytics-actions", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime15.jsx)(
           "button",
           {
             type: "button",
@@ -19634,7 +19250,7 @@ function AnalyticsReport() {
             children: "\u2190 \u0412 \u0440\u0435\u0434\u0430\u043A\u0442\u043E\u0440 \u0446\u0435\u043D"
           }
         ),
-        /* @__PURE__ */ (0, import_jsx_runtime16.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime15.jsx)(
           "button",
           {
             type: "button",
@@ -19645,103 +19261,103 @@ function AnalyticsReport() {
         )
       ] })
     ] }),
-    /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("main", { className: "analytics-sheet", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("div", { className: "sheet-header", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("div", { className: "sheet-header-left", children: /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("div", { className: "sheet-title-group", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("span", { className: "sheet-watermark-tag", children: "\u041E\u0424\u0418\u0426\u0418\u0410\u041B\u042C\u041D\u042B\u0419 \u041E\u0422\u0427\u0415\u0422 \u0421\u0415\u0422\u0418 MAESTRO" }),
-          /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("h2", { children: "\u0421\u0432\u043E\u0434\u043D\u0430\u044F \u0430\u043D\u0430\u043B\u0438\u0442\u0438\u043A\u0430 \u043A\u0430\u043F\u0438\u0442\u0430\u043B\u0430 \u0438 \u044E\u043D\u0438\u0442-\u044D\u043A\u043E\u043D\u043E\u043C\u0438\u043A\u0438" }),
-          /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("span", { className: "sheet-meta-date", children: [
+    /* @__PURE__ */ (0, import_jsx_runtime15.jsxs)("main", { className: "analytics-sheet", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime15.jsxs)("div", { className: "sheet-header", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime15.jsx)("div", { className: "sheet-header-left", children: /* @__PURE__ */ (0, import_jsx_runtime15.jsxs)("div", { className: "sheet-title-group", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime15.jsx)("span", { className: "sheet-watermark-tag", children: "\u041E\u0424\u0418\u0426\u0418\u0410\u041B\u042C\u041D\u042B\u0419 \u041E\u0422\u0427\u0415\u0422 \u0421\u0415\u0422\u0418 MAESTRO" }),
+          /* @__PURE__ */ (0, import_jsx_runtime15.jsx)("h2", { children: "\u0421\u0432\u043E\u0434\u043D\u0430\u044F \u0430\u043D\u0430\u043B\u0438\u0442\u0438\u043A\u0430 \u043A\u0430\u043F\u0438\u0442\u0430\u043B\u0430 \u0438 \u044E\u043D\u0438\u0442-\u044D\u043A\u043E\u043D\u043E\u043C\u0438\u043A\u0438" }),
+          /* @__PURE__ */ (0, import_jsx_runtime15.jsxs)("span", { className: "sheet-meta-date", children: [
             "\u0421\u0444\u043E\u0440\u043C\u0438\u0440\u043E\u0432\u0430\u043D\u043E: ",
             reportDate || "20 \u0430\u0432\u0433\u0443\u0441\u0442\u0430 2026 \u0433.",
             " \xB7 \u0412\u0430\u043B\u044E\u0442\u0430: KZT (\u20B8)"
           ] })
         ] }) }),
-        /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("div", { className: "sheet-header-right", children: /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("div", { className: "sheet-status-box", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("span", { className: "sheet-status-indicator", children: "\u25CF \u0410\u041A\u0422\u0423\u0410\u041B\u042C\u041D\u041E" }),
-          /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("strong", { children: [
+        /* @__PURE__ */ (0, import_jsx_runtime15.jsx)("div", { className: "sheet-header-right", children: /* @__PURE__ */ (0, import_jsx_runtime15.jsxs)("div", { className: "sheet-status-box", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime15.jsx)("span", { className: "sheet-status-indicator", children: "\u25CF \u0410\u041A\u0422\u0423\u0410\u041B\u042C\u041D\u041E" }),
+          /* @__PURE__ */ (0, import_jsx_runtime15.jsxs)("strong", { children: [
             "\u0411\u0430\u0437\u0430 \u0442\u043E\u0432\u0430\u0440\u043E\u0432: ",
             products2.length,
             " \u043C\u043E\u0434\u0435\u043B\u0435\u0439"
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("small", { children: [
+          /* @__PURE__ */ (0, import_jsx_runtime15.jsxs)("small", { children: [
             "\u041E\u0431\u0449\u0438\u0439 \u043E\u0441\u0442\u0430\u0442\u043E\u043A: ",
             analytics.totalStockQty,
             " \u0448\u0442."
           ] })
         ] }) })
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("section", { className: "analytics-kpi-grid", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("div", { className: "analytics-kpi-card gold-border", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("span", { className: "kpi-label", children: "\u{1F4B0} \u041A\u0430\u043F\u0438\u0442\u0430\u043B \u0432 \u0441\u0435\u0431\u0435\u0441\u0442\u043E\u0438\u043C\u043E\u0441\u0442\u0438" }),
-          /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("strong", { className: "kpi-value gold", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime15.jsxs)("section", { className: "analytics-kpi-grid", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime15.jsxs)("div", { className: "analytics-kpi-card gold-border", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime15.jsx)("span", { className: "kpi-label", children: "\u{1F4B0} \u041A\u0430\u043F\u0438\u0442\u0430\u043B \u0432 \u0441\u0435\u0431\u0435\u0441\u0442\u043E\u0438\u043C\u043E\u0441\u0442\u0438" }),
+          /* @__PURE__ */ (0, import_jsx_runtime15.jsxs)("strong", { className: "kpi-value gold", children: [
             money(analytics.totalCostKzt),
             " \u20B8"
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("span", { className: "kpi-hint", children: "\u0417\u0430\u043A\u0443\u043F\u043A\u0430 + \u0434\u043E\u0441\u0442\u0430\u0432\u043A\u0430 + \u043A\u0430\u0440\u0433\u043E + \u0434\u043E\u0432\u043E\u0434\u043A\u0430" })
+          /* @__PURE__ */ (0, import_jsx_runtime15.jsx)("span", { className: "kpi-hint", children: "\u0417\u0430\u043A\u0443\u043F\u043A\u0430 + \u0434\u043E\u0441\u0442\u0430\u0432\u043A\u0430 + \u043A\u0430\u0440\u0433\u043E + \u0434\u043E\u0432\u043E\u0434\u043A\u0430" })
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("div", { className: "analytics-kpi-card", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("span", { className: "kpi-label", children: "\u{1F3F7}\uFE0F \u041E\u0436\u0438\u0434\u0430\u0435\u043C\u0430\u044F \u0432\u0430\u043B\u043E\u0432\u0430\u044F \u0432\u044B\u0440\u0443\u0447\u043A\u0430" }),
-          /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("strong", { className: "kpi-value", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime15.jsxs)("div", { className: "analytics-kpi-card", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime15.jsx)("span", { className: "kpi-label", children: "\u{1F3F7}\uFE0F \u041E\u0436\u0438\u0434\u0430\u0435\u043C\u0430\u044F \u0432\u0430\u043B\u043E\u0432\u0430\u044F \u0432\u044B\u0440\u0443\u0447\u043A\u0430" }),
+          /* @__PURE__ */ (0, import_jsx_runtime15.jsxs)("strong", { className: "kpi-value", children: [
             money(analytics.totalRevenueKzt),
             " \u20B8"
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("span", { className: "kpi-hint", children: "\u041F\u0440\u0438 100% \u0440\u0435\u0430\u043B\u0438\u0437\u0430\u0446\u0438\u0438 \u043E\u0441\u0442\u0430\u0442\u043A\u043E\u0432" })
+          /* @__PURE__ */ (0, import_jsx_runtime15.jsx)("span", { className: "kpi-hint", children: "\u041F\u0440\u0438 100% \u0440\u0435\u0430\u043B\u0438\u0437\u0430\u0446\u0438\u0438 \u043E\u0441\u0442\u0430\u0442\u043A\u043E\u0432" })
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("div", { className: "analytics-kpi-card green-border", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("span", { className: "kpi-label", children: "\u{1F3AF} \u041F\u0440\u043E\u0433\u043D\u043E\u0437\u043D\u0430\u044F \u0447\u0438\u0441\u0442\u0430\u044F \u043F\u0440\u0438\u0431\u044B\u043B\u044C" }),
-          /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("strong", { className: "kpi-value green", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime15.jsxs)("div", { className: "analytics-kpi-card green-border", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime15.jsx)("span", { className: "kpi-label", children: "\u{1F3AF} \u041F\u0440\u043E\u0433\u043D\u043E\u0437\u043D\u0430\u044F \u0447\u0438\u0441\u0442\u0430\u044F \u043F\u0440\u0438\u0431\u044B\u043B\u044C" }),
+          /* @__PURE__ */ (0, import_jsx_runtime15.jsxs)("strong", { className: "kpi-value green", children: [
             "+",
             money(analytics.totalNetProfitKzt),
             " \u20B8"
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("span", { className: "kpi-hint", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime15.jsxs)("span", { className: "kpi-hint", children: [
             "\u0417\u0430 \u0432\u044B\u0447\u0435\u0442\u043E\u043C Kaspi (",
             kaspiFeeSimPercent,
             "%), \u043D\u0430\u043B\u043E\u0433\u043E\u0432 \u0438 %"
           ] })
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("div", { className: "analytics-kpi-card", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("span", { className: "kpi-label", children: "\u{1F4C8} \u0421\u0440\u0435\u0434\u043D\u044F\u044F \u0440\u0435\u043D\u0442\u0430\u0431\u0435\u043B\u044C\u043D\u043E\u0441\u0442\u044C (ROI)" }),
-          /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("strong", { className: "kpi-value", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime15.jsxs)("div", { className: "analytics-kpi-card", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime15.jsx)("span", { className: "kpi-label", children: "\u{1F4C8} \u0421\u0440\u0435\u0434\u043D\u044F\u044F \u0440\u0435\u043D\u0442\u0430\u0431\u0435\u043B\u044C\u043D\u043E\u0441\u0442\u044C (ROI)" }),
+          /* @__PURE__ */ (0, import_jsx_runtime15.jsxs)("strong", { className: "kpi-value", children: [
             analytics.overallRoiPercent,
             "%"
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("span", { className: "kpi-hint", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime15.jsxs)("span", { className: "kpi-hint", children: [
             "\u041C\u0430\u0440\u0436\u0438\u043D\u0430\u043B\u044C\u043D\u043E\u0441\u0442\u044C \u043F\u0440\u043E\u0434\u0430\u0436: ",
             analytics.overallMarginPercent,
             "%"
           ] })
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("div", { className: "analytics-kpi-card", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("span", { className: "kpi-label", children: "\u{1F4E6} \u0412\u0441\u0435\u0433\u043E \u0442\u043E\u0432\u0430\u0440\u0430 \u043D\u0430 \u0441\u043A\u043B\u0430\u0434\u0435" }),
-          /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("strong", { className: "kpi-value", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime15.jsxs)("div", { className: "analytics-kpi-card", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime15.jsx)("span", { className: "kpi-label", children: "\u{1F4E6} \u0412\u0441\u0435\u0433\u043E \u0442\u043E\u0432\u0430\u0440\u0430 \u043D\u0430 \u0441\u043A\u043B\u0430\u0434\u0435" }),
+          /* @__PURE__ */ (0, import_jsx_runtime15.jsxs)("strong", { className: "kpi-value", children: [
             analytics.totalStockQty,
             " ",
-            /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("small", { style: { fontSize: "14px", fontWeight: 700 }, children: "\u0448\u0442." })
+            /* @__PURE__ */ (0, import_jsx_runtime15.jsx)("small", { style: { fontSize: "14px", fontWeight: 700 }, children: "\u0448\u0442." })
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("span", { className: "kpi-hint", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime15.jsxs)("span", { className: "kpi-hint", children: [
             products2.length,
             " \u0430\u043A\u0442\u0438\u0432\u043D\u044B\u0445 \u0442\u043E\u0432\u0430\u0440\u043D\u044B\u0445 \u043F\u043E\u0437\u0438\u0446\u0438\u0439"
           ] })
         ] })
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("section", { className: "analytics-section-box no-print", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("div", { className: "section-box-head between", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("div", { children: [
-            /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("h3", { children: "\u{1F39B} \u0421\u0438\u043C\u0443\u043B\u044F\u0442\u043E\u0440 \u0430\u043A\u0446\u0438\u0439 \u0438 \u043A\u043E\u043C\u0438\u0441\u0441\u0438\u0439 Kaspi \u0420\u0430\u0441\u0441\u0440\u043E\u0447\u043A\u0438" }),
-            /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("p", { children: "\u041E\u0446\u0435\u043D\u0438\u0442\u0435 \u0438\u0437\u043C\u0435\u043D\u0435\u043D\u0438\u0435 \u0447\u0438\u0441\u0442\u043E\u0439 \u043F\u0440\u0438\u0431\u044B\u043B\u0438 \u0441\u0435\u0442\u0438 \u043F\u0440\u0438 \u0441\u043C\u0435\u043D\u0435 \u0442\u0430\u0440\u0438\u0444\u0430 Kaspi (\u0441\u0442\u0430\u043D\u0434\u0430\u0440\u0442 0-0-12 vs Kaspi \u0416\u04B1\u043C\u0430)" })
+      /* @__PURE__ */ (0, import_jsx_runtime15.jsxs)("section", { className: "analytics-section-box no-print", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime15.jsxs)("div", { className: "section-box-head between", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime15.jsxs)("div", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime15.jsx)("h3", { children: "\u{1F39B} \u0421\u0438\u043C\u0443\u043B\u044F\u0442\u043E\u0440 \u0430\u043A\u0446\u0438\u0439 \u0438 \u043A\u043E\u043C\u0438\u0441\u0441\u0438\u0439 Kaspi \u0420\u0430\u0441\u0441\u0440\u043E\u0447\u043A\u0438" }),
+            /* @__PURE__ */ (0, import_jsx_runtime15.jsx)("p", { children: "\u041E\u0446\u0435\u043D\u0438\u0442\u0435 \u0438\u0437\u043C\u0435\u043D\u0435\u043D\u0438\u0435 \u0447\u0438\u0441\u0442\u043E\u0439 \u043F\u0440\u0438\u0431\u044B\u043B\u0438 \u0441\u0435\u0442\u0438 \u043F\u0440\u0438 \u0441\u043C\u0435\u043D\u0435 \u0442\u0430\u0440\u0438\u0444\u0430 Kaspi (\u0441\u0442\u0430\u043D\u0434\u0430\u0440\u0442 0-0-12 vs Kaspi \u0416\u04B1\u043C\u0430)" })
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("div", { className: "kaspi-sim-badge", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime15.jsxs)("div", { className: "kaspi-sim-badge", children: [
             "\u0422\u0435\u043A\u0443\u0449\u0430\u044F \u043A\u043E\u043C\u0438\u0441\u0441\u0438\u044F \u0432 \u0440\u0430\u0441\u0447\u0435\u0442\u0435: ",
-            /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("strong", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime15.jsxs)("strong", { children: [
               kaspiFeeSimPercent,
               "%"
             ] })
           ] })
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("div", { className: "kaspi-sim-controls", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("div", { className: "sim-presets-row", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime16.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime15.jsxs)("div", { className: "kaspi-sim-controls", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime15.jsxs)("div", { className: "sim-presets-row", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime15.jsx)(
               "button",
               {
                 type: "button",
@@ -19750,7 +19366,7 @@ function AnalyticsReport() {
                 children: "0% (\u041F\u0440\u044F\u043C\u0430\u044F \u043E\u043F\u043B\u0430\u0442\u0430 \u043D\u0430\u043B/\u043A\u0430\u0440\u0442\u0430)"
               }
             ),
-            /* @__PURE__ */ (0, import_jsx_runtime16.jsx)(
+            /* @__PURE__ */ (0, import_jsx_runtime15.jsx)(
               "button",
               {
                 type: "button",
@@ -19759,7 +19375,7 @@ function AnalyticsReport() {
                 children: "11% (Kaspi Red / \u0420\u0430\u0441\u0441\u0440\u043E\u0447\u043A\u0430 0-0-12)"
               }
             ),
-            /* @__PURE__ */ (0, import_jsx_runtime16.jsx)(
+            /* @__PURE__ */ (0, import_jsx_runtime15.jsx)(
               "button",
               {
                 type: "button",
@@ -19768,7 +19384,7 @@ function AnalyticsReport() {
                 children: "18% (Kaspi \u0416\u04B1\u043C\u0430 0-0-24)"
               }
             ),
-            /* @__PURE__ */ (0, import_jsx_runtime16.jsx)(
+            /* @__PURE__ */ (0, import_jsx_runtime15.jsx)(
               "button",
               {
                 type: "button",
@@ -19778,10 +19394,10 @@ function AnalyticsReport() {
               }
             )
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("div", { className: "sim-slider-row", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("label", { children: [
+          /* @__PURE__ */ (0, import_jsx_runtime15.jsxs)("div", { className: "sim-slider-row", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime15.jsxs)("label", { children: [
               "\u0422\u043E\u0447\u043D\u044B\u0439 \u0432\u044B\u0431\u043E\u0440 % \u043A\u043E\u043C\u0438\u0441\u0441\u0438\u0438 Kaspi:",
-              /* @__PURE__ */ (0, import_jsx_runtime16.jsx)(
+              /* @__PURE__ */ (0, import_jsx_runtime15.jsx)(
                 "input",
                 {
                   type: "range",
@@ -19793,36 +19409,36 @@ function AnalyticsReport() {
                 }
               )
             ] }),
-            /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("span", { className: "sim-slider-val", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime15.jsxs)("span", { className: "sim-slider-val", children: [
               kaspiFeeSimPercent,
               "%"
             ] })
           ] })
         ] })
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("section", { className: "analytics-section-box", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("div", { className: "section-box-head", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("h3", { children: "\u{1F4CA} \u0421\u0442\u0440\u0443\u043A\u0442\u0443\u0440\u0430 \u043A\u0430\u043F\u0438\u0442\u0430\u043B\u0430 \u0438 \u043F\u0440\u0438\u0431\u044B\u043B\u0438 \u043F\u043E \u043A\u0430\u0442\u0435\u0433\u043E\u0440\u0438\u044F\u043C" }),
-          /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("p", { children: "\u0420\u0430\u0441\u043F\u0440\u0435\u0434\u0435\u043B\u0435\u043D\u0438\u0435 \u0437\u0430\u043F\u0430\u0441\u043E\u0432, \u0438\u043D\u0432\u0435\u0441\u0442\u0438\u0446\u0438\u0439 \u0438 \u043E\u0436\u0438\u0434\u0430\u0435\u043C\u043E\u0433\u043E \u0434\u043E\u0445\u043E\u0434\u0430 \u043F\u043E \u0442\u043E\u0432\u0430\u0440\u043D\u044B\u043C \u0433\u0440\u0443\u043F\u043F\u0430\u043C" })
+      /* @__PURE__ */ (0, import_jsx_runtime15.jsxs)("section", { className: "analytics-section-box", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime15.jsxs)("div", { className: "section-box-head", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime15.jsx)("h3", { children: "\u{1F4CA} \u0421\u0442\u0440\u0443\u043A\u0442\u0443\u0440\u0430 \u043A\u0430\u043F\u0438\u0442\u0430\u043B\u0430 \u0438 \u043F\u0440\u0438\u0431\u044B\u043B\u0438 \u043F\u043E \u043A\u0430\u0442\u0435\u0433\u043E\u0440\u0438\u044F\u043C" }),
+          /* @__PURE__ */ (0, import_jsx_runtime15.jsx)("p", { children: "\u0420\u0430\u0441\u043F\u0440\u0435\u0434\u0435\u043B\u0435\u043D\u0438\u0435 \u0437\u0430\u043F\u0430\u0441\u043E\u0432, \u0438\u043D\u0432\u0435\u0441\u0442\u0438\u0446\u0438\u0439 \u0438 \u043E\u0436\u0438\u0434\u0430\u0435\u043C\u043E\u0433\u043E \u0434\u043E\u0445\u043E\u0434\u0430 \u043F\u043E \u0442\u043E\u0432\u0430\u0440\u043D\u044B\u043C \u0433\u0440\u0443\u043F\u043F\u0430\u043C" })
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("div", { className: "category-bars-list", children: Object.entries(analytics.categoryStats).map(([categoryName, stats]) => {
+        /* @__PURE__ */ (0, import_jsx_runtime15.jsx)("div", { className: "category-bars-list", children: Object.entries(analytics.categoryStats).map(([categoryName, stats]) => {
           const sharePercent = analytics.totalCostKzt > 0 ? Math.round(stats.cost / analytics.totalCostKzt * 100) : 0;
           const profitShare = analytics.totalNetProfitKzt > 0 ? Math.round(stats.profit / analytics.totalNetProfitKzt * 100) : 0;
-          return /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("div", { className: "category-bar-row", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("div", { className: "category-bar-meta", children: [
-              /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("div", { className: "cat-title-group", children: [
-                /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("strong", { children: categoryName }),
-                /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("span", { children: [
+          return /* @__PURE__ */ (0, import_jsx_runtime15.jsxs)("div", { className: "category-bar-row", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime15.jsxs)("div", { className: "category-bar-meta", children: [
+              /* @__PURE__ */ (0, import_jsx_runtime15.jsxs)("div", { className: "cat-title-group", children: [
+                /* @__PURE__ */ (0, import_jsx_runtime15.jsx)("strong", { children: categoryName }),
+                /* @__PURE__ */ (0, import_jsx_runtime15.jsxs)("span", { children: [
                   stats.count,
                   " \u043C\u043E\u0434\u0435\u043B\u0435\u0439 \xB7 ",
                   stats.qty,
                   " \u0448\u0442. \u043D\u0430 \u0441\u043A\u043B\u0430\u0434\u0435"
                 ] })
               ] }),
-              /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("div", { className: "cat-fin-group", children: [
-                /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("span", { children: [
+              /* @__PURE__ */ (0, import_jsx_runtime15.jsxs)("div", { className: "cat-fin-group", children: [
+                /* @__PURE__ */ (0, import_jsx_runtime15.jsxs)("span", { children: [
                   "\u0418\u043D\u0432\u0435\u0441\u0442\u0438\u0440\u043E\u0432\u0430\u043D\u043E: ",
-                  /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("strong", { children: [
+                  /* @__PURE__ */ (0, import_jsx_runtime15.jsxs)("strong", { children: [
                     money(stats.cost),
                     " \u20B8"
                   ] }),
@@ -19830,7 +19446,7 @@ function AnalyticsReport() {
                   sharePercent,
                   "%)"
                 ] }),
-                /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("span", { className: "cat-profit-pill", children: [
+                /* @__PURE__ */ (0, import_jsx_runtime15.jsxs)("span", { className: "cat-profit-pill", children: [
                   "\u041F\u0440\u0438\u0431\u044B\u043B\u044C: +",
                   money(stats.profit),
                   " \u20B8 (",
@@ -19839,7 +19455,7 @@ function AnalyticsReport() {
                 ] })
               ] })
             ] }),
-            /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("div", { className: "category-progress-track", children: /* @__PURE__ */ (0, import_jsx_runtime16.jsx)(
+            /* @__PURE__ */ (0, import_jsx_runtime15.jsx)("div", { className: "category-progress-track", children: /* @__PURE__ */ (0, import_jsx_runtime15.jsx)(
               "div",
               {
                 className: "category-progress-fill",
@@ -19849,116 +19465,116 @@ function AnalyticsReport() {
           ] }, categoryName);
         }) })
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("section", { className: "analytics-section-box", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("div", { className: "section-box-head between", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("div", { children: [
-            /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("h3", { children: "\u{1F451} \u0420\u0435\u0439\u0442\u0438\u043D\u0433 \u043C\u0430\u0440\u0436\u0438\u043D\u0430\u043B\u044C\u043D\u043E\u0441\u0442\u0438 \u0442\u043E\u0432\u0430\u0440\u043E\u0432 (ABC-\u0430\u043D\u0430\u043B\u0438\u0437 \u0441\u043A\u043B\u0430\u0434\u0430)" }),
-            /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("p", { children: "\u0421\u043E\u0440\u0442\u0438\u0440\u043E\u0432\u043A\u0430 \u043F\u043E \u0432\u043A\u043B\u0430\u0434\u0443 \u0432 \u0441\u043E\u0432\u043E\u043A\u0443\u043F\u043D\u0443\u044E \u0447\u0438\u0441\u0442\u0443\u044E \u043F\u0440\u0438\u0431\u044B\u043B\u044C \u043F\u0430\u0440\u0442\u0438\u0438 (\u043E\u0442 \u0441\u0430\u043C\u044B\u0445 \u0434\u043E\u0445\u043E\u0434\u043D\u044B\u0445 \u043A \u0431\u0430\u0437\u043E\u0432\u044B\u043C)" })
+      /* @__PURE__ */ (0, import_jsx_runtime15.jsxs)("section", { className: "analytics-section-box", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime15.jsxs)("div", { className: "section-box-head between", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime15.jsxs)("div", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime15.jsx)("h3", { children: "\u{1F451} \u0420\u0435\u0439\u0442\u0438\u043D\u0433 \u043C\u0430\u0440\u0436\u0438\u043D\u0430\u043B\u044C\u043D\u043E\u0441\u0442\u0438 \u0442\u043E\u0432\u0430\u0440\u043E\u0432 (ABC-\u0430\u043D\u0430\u043B\u0438\u0437 \u0441\u043A\u043B\u0430\u0434\u0430)" }),
+            /* @__PURE__ */ (0, import_jsx_runtime15.jsx)("p", { children: "\u0421\u043E\u0440\u0442\u0438\u0440\u043E\u0432\u043A\u0430 \u043F\u043E \u0432\u043A\u043B\u0430\u0434\u0443 \u0432 \u0441\u043E\u0432\u043E\u043A\u0443\u043F\u043D\u0443\u044E \u0447\u0438\u0441\u0442\u0443\u044E \u043F\u0440\u0438\u0431\u044B\u043B\u044C \u043F\u0430\u0440\u0442\u0438\u0438 (\u043E\u0442 \u0441\u0430\u043C\u044B\u0445 \u0434\u043E\u0445\u043E\u0434\u043D\u044B\u0445 \u043A \u0431\u0430\u0437\u043E\u0432\u044B\u043C)" })
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("span", { className: "table-count-pill", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime15.jsxs)("span", { className: "table-count-pill", children: [
             analytics.items.length,
             " \u043F\u043E\u0437\u0438\u0446\u0438\u0439"
           ] })
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("div", { className: "analytics-table-wrap", children: /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("table", { className: "analytics-data-table", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("thead", { children: /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("tr", { children: [
-            /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("th", { style: { width: "40px" }, children: "#" }),
-            /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("th", { children: "\u0418\u043D\u0441\u0442\u0440\u0443\u043C\u0435\u043D\u0442 / \u0410\u0440\u0442\u0438\u043A\u0443\u043B" }),
-            /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("th", { children: "\u041A\u0430\u0442\u0435\u0433\u043E\u0440\u0438\u044F" }),
-            /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("th", { children: "\u041E\u0441\u0442\u0430\u0442\u043E\u043A" }),
-            /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("th", { children: "\u0421\u0435\u0431\u0435\u0441\u0442\u043E\u0438\u043C\u043E\u0441\u0442\u044C" }),
-            /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("th", { children: "\u0420\u043E\u0437\u043D\u0438\u0446\u0430 (\u0412\u0438\u0442\u0440\u0438\u043D\u0430)" }),
-            /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("th", { children: "\u0427\u0438\u0441\u0442\u044B\u043C\u0438 \u0441 1 \u0448\u0442." }),
-            /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("th", { children: "\u041F\u0440\u0438\u0431\u044B\u043B\u044C \u043F\u0430\u0440\u0442\u0438\u0438" }),
-            /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("th", { children: "\u041C\u0430\u0440\u0436\u0430 %" }),
-            /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("th", { children: "\u041A\u043B\u0430\u0441\u0441" })
+        /* @__PURE__ */ (0, import_jsx_runtime15.jsx)("div", { className: "analytics-table-wrap", children: /* @__PURE__ */ (0, import_jsx_runtime15.jsxs)("table", { className: "analytics-data-table", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime15.jsx)("thead", { children: /* @__PURE__ */ (0, import_jsx_runtime15.jsxs)("tr", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime15.jsx)("th", { style: { width: "40px" }, children: "#" }),
+            /* @__PURE__ */ (0, import_jsx_runtime15.jsx)("th", { children: "\u0418\u043D\u0441\u0442\u0440\u0443\u043C\u0435\u043D\u0442 / \u0410\u0440\u0442\u0438\u043A\u0443\u043B" }),
+            /* @__PURE__ */ (0, import_jsx_runtime15.jsx)("th", { children: "\u041A\u0430\u0442\u0435\u0433\u043E\u0440\u0438\u044F" }),
+            /* @__PURE__ */ (0, import_jsx_runtime15.jsx)("th", { children: "\u041E\u0441\u0442\u0430\u0442\u043E\u043A" }),
+            /* @__PURE__ */ (0, import_jsx_runtime15.jsx)("th", { children: "\u0421\u0435\u0431\u0435\u0441\u0442\u043E\u0438\u043C\u043E\u0441\u0442\u044C" }),
+            /* @__PURE__ */ (0, import_jsx_runtime15.jsx)("th", { children: "\u0420\u043E\u0437\u043D\u0438\u0446\u0430 (\u0412\u0438\u0442\u0440\u0438\u043D\u0430)" }),
+            /* @__PURE__ */ (0, import_jsx_runtime15.jsx)("th", { children: "\u0427\u0438\u0441\u0442\u044B\u043C\u0438 \u0441 1 \u0448\u0442." }),
+            /* @__PURE__ */ (0, import_jsx_runtime15.jsx)("th", { children: "\u041F\u0440\u0438\u0431\u044B\u043B\u044C \u043F\u0430\u0440\u0442\u0438\u0438" }),
+            /* @__PURE__ */ (0, import_jsx_runtime15.jsx)("th", { children: "\u041C\u0430\u0440\u0436\u0430 %" }),
+            /* @__PURE__ */ (0, import_jsx_runtime15.jsx)("th", { children: "\u041A\u043B\u0430\u0441\u0441" })
           ] }) }),
-          /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("tbody", { children: analytics.items.map((item, idx) => {
+          /* @__PURE__ */ (0, import_jsx_runtime15.jsx)("tbody", { children: analytics.items.map((item, idx) => {
             const p = item.product;
             const eco = item.eco;
             const isTopA = idx < 3 || eco.marginPercent >= 35;
             const isB = !isTopA && eco.marginPercent >= 25;
-            return /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("tr", { children: [
-              /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("td", { className: "center-cell muted", children: idx + 1 }),
-              /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("td", { children: /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("div", { className: "table-product-cell", children: [
-                /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("div", { className: "table-thumb", children: /* @__PURE__ */ (0, import_jsx_runtime16.jsx)(Image, { src: p.image, alt: "", fill: true, unoptimized: true, sizes: "36px", style: { objectFit: "contain" } }) }),
-                /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("div", { children: [
-                  /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("strong", { children: p.name }),
-                  /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("span", { className: "table-sku", children: p.sku })
+            return /* @__PURE__ */ (0, import_jsx_runtime15.jsxs)("tr", { children: [
+              /* @__PURE__ */ (0, import_jsx_runtime15.jsx)("td", { className: "center-cell muted", children: idx + 1 }),
+              /* @__PURE__ */ (0, import_jsx_runtime15.jsx)("td", { children: /* @__PURE__ */ (0, import_jsx_runtime15.jsxs)("div", { className: "table-product-cell", children: [
+                /* @__PURE__ */ (0, import_jsx_runtime15.jsx)("div", { className: "table-thumb", children: /* @__PURE__ */ (0, import_jsx_runtime15.jsx)(Image, { src: p.image, alt: "", fill: true, unoptimized: true, sizes: "36px", style: { objectFit: "contain" } }) }),
+                /* @__PURE__ */ (0, import_jsx_runtime15.jsxs)("div", { children: [
+                  /* @__PURE__ */ (0, import_jsx_runtime15.jsx)("strong", { children: p.name }),
+                  /* @__PURE__ */ (0, import_jsx_runtime15.jsx)("span", { className: "table-sku", children: p.sku })
                 ] })
               ] }) }),
-              /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("td", { children: /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("span", { className: "table-cat-badge", children: p.category }) }),
-              /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("td", { className: "center-cell font-bold", children: [
+              /* @__PURE__ */ (0, import_jsx_runtime15.jsx)("td", { children: /* @__PURE__ */ (0, import_jsx_runtime15.jsx)("span", { className: "table-cat-badge", children: p.category }) }),
+              /* @__PURE__ */ (0, import_jsx_runtime15.jsxs)("td", { className: "center-cell font-bold", children: [
                 eco.qty,
                 " \u0448\u0442."
               ] }),
-              /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("td", { className: "num-cell", children: eco.directCost > 0 ? `${money(eco.directCost)} \u20B8` : "\u2014" }),
-              /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("td", { className: "num-cell font-bold", children: eco.retailPrice > 0 ? `${money(eco.retailPrice)} \u20B8` : "\u2014" }),
-              /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("td", { className: "num-cell profit-green", children: [
+              /* @__PURE__ */ (0, import_jsx_runtime15.jsx)("td", { className: "num-cell", children: eco.directCost > 0 ? `${money(eco.directCost)} \u20B8` : "\u2014" }),
+              /* @__PURE__ */ (0, import_jsx_runtime15.jsx)("td", { className: "num-cell font-bold", children: eco.retailPrice > 0 ? `${money(eco.retailPrice)} \u20B8` : "\u2014" }),
+              /* @__PURE__ */ (0, import_jsx_runtime15.jsxs)("td", { className: "num-cell profit-green", children: [
                 "+",
                 money(eco.netProfitPerUnit),
                 " \u20B8"
               ] }),
-              /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("td", { className: "num-cell batch-profit", children: [
+              /* @__PURE__ */ (0, import_jsx_runtime15.jsxs)("td", { className: "num-cell batch-profit", children: [
                 "+",
                 money(eco.totalStockNetProfit),
                 " \u20B8"
               ] }),
-              /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("td", { className: "center-cell", children: /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("span", { className: `margin-badge ${eco.marginPercent >= 35 ? "high" : eco.marginPercent >= 20 ? "mid" : "low"}`, children: [
+              /* @__PURE__ */ (0, import_jsx_runtime15.jsx)("td", { className: "center-cell", children: /* @__PURE__ */ (0, import_jsx_runtime15.jsxs)("span", { className: `margin-badge ${eco.marginPercent >= 35 ? "high" : eco.marginPercent >= 20 ? "mid" : "low"}`, children: [
                 eco.marginPercent,
                 "%"
               ] }) }),
-              /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("td", { className: "center-cell", children: /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("span", { className: `abc-badge ${isTopA ? "class-a" : isB ? "class-b" : "class-c"}`, children: isTopA ? "Class A" : isB ? "Class B" : "Class C" }) })
+              /* @__PURE__ */ (0, import_jsx_runtime15.jsx)("td", { className: "center-cell", children: /* @__PURE__ */ (0, import_jsx_runtime15.jsx)("span", { className: `abc-badge ${isTopA ? "class-a" : isB ? "class-b" : "class-c"}`, children: isTopA ? "Class A" : isB ? "Class B" : "Class C" }) })
             ] }, p.id || idx);
           }) }),
-          /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("tfoot", { children: /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("tr", { className: "table-total-row", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("td", { colSpan: 3, children: /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("strong", { children: "\u0418\u0422\u041E\u0413\u041E \u041F\u041E \u0412\u0421\u0415\u041C\u0423 \u0421\u041A\u041B\u0410\u0414\u0423:" }) }),
-            /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("td", { className: "center-cell", children: /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("strong", { children: [
+          /* @__PURE__ */ (0, import_jsx_runtime15.jsx)("tfoot", { children: /* @__PURE__ */ (0, import_jsx_runtime15.jsxs)("tr", { className: "table-total-row", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime15.jsx)("td", { colSpan: 3, children: /* @__PURE__ */ (0, import_jsx_runtime15.jsx)("strong", { children: "\u0418\u0422\u041E\u0413\u041E \u041F\u041E \u0412\u0421\u0415\u041C\u0423 \u0421\u041A\u041B\u0410\u0414\u0423:" }) }),
+            /* @__PURE__ */ (0, import_jsx_runtime15.jsx)("td", { className: "center-cell", children: /* @__PURE__ */ (0, import_jsx_runtime15.jsxs)("strong", { children: [
               analytics.totalStockQty,
               " \u0448\u0442."
             ] }) }),
-            /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("td", { className: "num-cell", children: /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("strong", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime15.jsx)("td", { className: "num-cell", children: /* @__PURE__ */ (0, import_jsx_runtime15.jsxs)("strong", { children: [
               money(analytics.totalCostKzt),
               " \u20B8"
             ] }) }),
-            /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("td", { className: "num-cell", children: /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("strong", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime15.jsx)("td", { className: "num-cell", children: /* @__PURE__ */ (0, import_jsx_runtime15.jsxs)("strong", { children: [
               money(analytics.totalRevenueKzt),
               " \u20B8"
             ] }) }),
-            /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("td", { className: "num-cell muted", children: "\u2014" }),
-            /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("td", { className: "num-cell total-profit", children: /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("strong", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime15.jsx)("td", { className: "num-cell muted", children: "\u2014" }),
+            /* @__PURE__ */ (0, import_jsx_runtime15.jsx)("td", { className: "num-cell total-profit", children: /* @__PURE__ */ (0, import_jsx_runtime15.jsxs)("strong", { children: [
               "+",
               money(analytics.totalNetProfitKzt),
               " \u20B8"
             ] }) }),
-            /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("td", { className: "center-cell", children: /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("strong", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime15.jsx)("td", { className: "center-cell", children: /* @__PURE__ */ (0, import_jsx_runtime15.jsxs)("strong", { children: [
               analytics.overallMarginPercent,
               "%"
             ] }) }),
-            /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("td", { className: "center-cell", children: "\u2713" })
+            /* @__PURE__ */ (0, import_jsx_runtime15.jsx)("td", { className: "center-cell", children: "\u2713" })
           ] }) })
         ] }) })
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("footer", { className: "sheet-footer", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("div", { className: "sheet-signature-box", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("div", { children: [
-            /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("strong", { children: "\u0420\u0443\u043A\u043E\u0432\u043E\u0434\u0438\u0442\u0435\u043B\u044C \u043C\u0430\u0433\u0430\u0437\u0438\u043D\u0430 Maestro:" }),
-            /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("div", { className: "sign-line" }),
-            /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("small", { children: "\u041F\u043E\u0434\u043F\u0438\u0441\u044C / \u0420\u0430\u0441\u0448\u0438\u0444\u0440\u043E\u0432\u043A\u0430" })
+      /* @__PURE__ */ (0, import_jsx_runtime15.jsxs)("footer", { className: "sheet-footer", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime15.jsxs)("div", { className: "sheet-signature-box", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime15.jsxs)("div", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime15.jsx)("strong", { children: "\u0420\u0443\u043A\u043E\u0432\u043E\u0434\u0438\u0442\u0435\u043B\u044C \u043C\u0430\u0433\u0430\u0437\u0438\u043D\u0430 Maestro:" }),
+            /* @__PURE__ */ (0, import_jsx_runtime15.jsx)("div", { className: "sign-line" }),
+            /* @__PURE__ */ (0, import_jsx_runtime15.jsx)("small", { children: "\u041F\u043E\u0434\u043F\u0438\u0441\u044C / \u0420\u0430\u0441\u0448\u0438\u0444\u0440\u043E\u0432\u043A\u0430" })
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("div", { children: [
-            /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("strong", { children: "\u0413\u043B\u0430\u0432\u043D\u044B\u0439 \u0442\u043E\u0432\u0430\u0440\u043E\u0432\u0435\u0434 \u0438 \u0437\u0430\u043A\u0443\u043F\u0449\u0438\u043A:" }),
-            /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("div", { className: "sign-line" }),
-            /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("small", { children: "\u041F\u043E\u0434\u043F\u0438\u0441\u044C / \u0420\u0430\u0441\u0448\u0438\u0444\u0440\u043E\u0432\u043A\u0430" })
+          /* @__PURE__ */ (0, import_jsx_runtime15.jsxs)("div", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime15.jsx)("strong", { children: "\u0413\u043B\u0430\u0432\u043D\u044B\u0439 \u0442\u043E\u0432\u0430\u0440\u043E\u0432\u0435\u0434 \u0438 \u0437\u0430\u043A\u0443\u043F\u0449\u0438\u043A:" }),
+            /* @__PURE__ */ (0, import_jsx_runtime15.jsx)("div", { className: "sign-line" }),
+            /* @__PURE__ */ (0, import_jsx_runtime15.jsx)("small", { children: "\u041F\u043E\u0434\u043F\u0438\u0441\u044C / \u0420\u0430\u0441\u0448\u0438\u0444\u0440\u043E\u0432\u043A\u0430" })
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("div", { className: "stamp-box", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("span", { children: "\u041C.\u041F." }),
-            /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("small", { children: "\u0428\u0442\u0430\u043C\u043F \u043F\u0440\u0435\u0434\u043F\u0440\u0438\u044F\u0442\u0438\u044F" })
+          /* @__PURE__ */ (0, import_jsx_runtime15.jsxs)("div", { className: "stamp-box", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime15.jsx)("span", { children: "\u041C.\u041F." }),
+            /* @__PURE__ */ (0, import_jsx_runtime15.jsx)("small", { children: "\u0428\u0442\u0430\u043C\u043F \u043F\u0440\u0435\u0434\u043F\u0440\u0438\u044F\u0442\u0438\u044F" })
           ] })
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("div", { className: "sheet-legal-note", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("span", { children: "MAESTRO MUSIC STORE & ACADEMY \xB7 \u0433. \u0410\u043A\u0442\u043E\u0431\u0435, \u041A\u0430\u0437\u0430\u0445\u0441\u0442\u0430\u043D \xB7 shop.maestro.com.kz" }),
-          /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("span", { children: "\u041A\u043E\u043D\u0444\u0438\u0434\u0435\u043D\u0446\u0438\u0430\u043B\u044C\u043D\u043E \xB7 \u0414\u043E\u043A\u0443\u043C\u0435\u043D\u0442 \u0432\u043D\u0443\u0442\u0440\u0435\u043D\u043D\u0435\u0433\u043E \u0443\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0447\u0435\u0441\u043A\u043E\u0433\u043E \u0443\u0447\u0435\u0442\u0430" })
+        /* @__PURE__ */ (0, import_jsx_runtime15.jsxs)("div", { className: "sheet-legal-note", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime15.jsx)("span", { children: "MAESTRO MUSIC STORE & ACADEMY \xB7 \u0433. \u0410\u043A\u0442\u043E\u0431\u0435, \u041A\u0430\u0437\u0430\u0445\u0441\u0442\u0430\u043D \xB7 shop.maestro.com.kz" }),
+          /* @__PURE__ */ (0, import_jsx_runtime15.jsx)("span", { children: "\u041A\u043E\u043D\u0444\u0438\u0434\u0435\u043D\u0446\u0438\u0430\u043B\u044C\u043D\u043E \xB7 \u0414\u043E\u043A\u0443\u043C\u0435\u043D\u0442 \u0432\u043D\u0443\u0442\u0440\u0435\u043D\u043D\u0435\u0433\u043E \u0443\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0447\u0435\u0441\u043A\u043E\u0433\u043E \u0443\u0447\u0435\u0442\u0430" })
         ] })
       ] })
     ] })
@@ -19966,32 +19582,32 @@ function AnalyticsReport() {
 }
 
 // app/admin/analytics/page.tsx
-var import_jsx_runtime17 = __toESM(require_jsx_runtime(), 1);
+var import_jsx_runtime16 = __toESM(require_jsx_runtime(), 1);
 function AdminAnalyticsPage() {
-  return /* @__PURE__ */ (0, import_jsx_runtime17.jsx)(AnalyticsReport, {});
+  return /* @__PURE__ */ (0, import_jsx_runtime16.jsx)(AnalyticsReport, {});
 }
 
 // src/main.tsx
-var import_jsx_runtime18 = __toESM(require_jsx_runtime(), 1);
+var import_jsx_runtime17 = __toESM(require_jsx_runtime(), 1);
 function App() {
-  const [pathname, setPathname] = (0, import_react15.useState)(window.location.pathname);
-  (0, import_react15.useEffect)(() => {
+  const [pathname, setPathname] = (0, import_react14.useState)(window.location.pathname);
+  (0, import_react14.useEffect)(() => {
     const handlePop = () => setPathname(window.location.pathname);
     window.addEventListener("popstate", handlePop);
     return () => window.removeEventListener("popstate", handlePop);
   }, []);
   if (pathname === "/admin/analytics" || pathname.startsWith("/admin/analytics")) {
-    return /* @__PURE__ */ (0, import_jsx_runtime18.jsx)(AdminAnalyticsPage, {});
+    return /* @__PURE__ */ (0, import_jsx_runtime17.jsx)(AdminAnalyticsPage, {});
   }
   if (pathname.startsWith("/admin")) {
-    return /* @__PURE__ */ (0, import_jsx_runtime18.jsx)(AdminPricingPage, {});
+    return /* @__PURE__ */ (0, import_jsx_runtime17.jsx)(AdminPricingPage, {});
   }
-  return /* @__PURE__ */ (0, import_jsx_runtime18.jsx)(Home, {});
+  return /* @__PURE__ */ (0, import_jsx_runtime17.jsx)(Home, {});
 }
 var rootElement = document.getElementById("root");
 if (rootElement) {
   import_client.default.createRoot(rootElement).render(
-    /* @__PURE__ */ (0, import_jsx_runtime18.jsx)(import_react15.default.StrictMode, { children: /* @__PURE__ */ (0, import_jsx_runtime18.jsx)(App, {}) })
+    /* @__PURE__ */ (0, import_jsx_runtime17.jsx)(import_react14.default.StrictMode, { children: /* @__PURE__ */ (0, import_jsx_runtime17.jsx)(App, {}) })
   );
 }
 /*! Bundled license information:
