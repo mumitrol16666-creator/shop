@@ -17,16 +17,16 @@ jobs:
       - name: Deploy to Server via SSH
         uses: appleboy/ssh-action@v1.0.3
         with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USER }}
+          host: 178.105.59.89
+          username: root
           key: ${{ secrets.SSH_KEY }}
-          port: ${{ secrets.SSH_PORT || 14579 }}
+          port: 14579
           script: |
             set -e
             echo "🚀 Starting deployment on server..."
             
             # 1. Go to project directory
-            cd ${{ secrets.DEPLOY_PATH || '/var/www/shop.maestro.com.kz' }}
+            cd /var/www/shop.maestro.com.kz
 
             # Preserve the live catalog before replacing tracked application files.
             mkdir -p .runtime-data/uploads
