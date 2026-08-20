@@ -243,12 +243,16 @@ export function resolveAttachedCourse(
   product: { category?: string; attachedCourseId?: string },
   coursesList: Course[] = COURSES
 ): Course | null {
-  if (product.attachedCourseId === "none" || product.attachedCourseId === "") {
+  if (
+    !product.attachedCourseId ||
+    product.attachedCourseId === "none" ||
+    product.attachedCourseId === ""
+  ) {
     return null;
   }
   if (product.attachedCourseId && product.attachedCourseId !== "auto") {
     const found = coursesList.find((c) => c.id === product.attachedCourseId || c.slug === product.attachedCourseId);
-    if (found) return found;
+    return found ?? null;
   }
   const cat = (product.category || "").toLowerCase();
   if (cat.includes("электро")) {
@@ -260,5 +264,5 @@ export function resolveAttachedCourse(
   if (cat.includes("акустическ") || cat.includes("классическ") || cat.includes("гитар")) {
     return coursesList.find((c) => c.instrument === "acoustic") || coursesList[0] || null;
   }
-  return coursesList[0] || null;
+  return null;
 }

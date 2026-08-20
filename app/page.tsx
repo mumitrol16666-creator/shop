@@ -7,8 +7,12 @@ import { ProductModal } from "../components/ProductModal";
 import { Storefront } from "../components/Storefront";
 import { Topbar } from "../components/Topbar";
 import {
+  COMMERCE_STAGE0_ENABLED,
   type CartItem,
+  createTemporaryRequestId,
+  initialVariantSelection,
   mergeBySku,
+  productUnitPrice,
   type Product,
   products as defaultProducts,
   type Variant,
@@ -28,6 +32,7 @@ export default function Home() {
   const [customerPhone, setCustomerPhone] = useState("");
   const [customerCity, setCustomerCity] = useState("Актобе");
   const [customerComment, setCustomerComment] = useState("");
+  const [paymentRequestId, setPaymentRequestId] = useState("");
   const [notice, setNotice] = useState("");
   const [storedProducts, setStoredProducts] = useState<Product[]>([]);
 
@@ -45,6 +50,12 @@ export default function Home() {
       active = false;
     };
   }, []);
+
+  useEffect(() => {
+    const hasCommerceOverlay = cartOpen || Boolean(selected) || kaspiModalOpen;
+    document.body.classList.toggle("commerce-overlay-open", hasCommerceOverlay);
+    return () => document.body.classList.remove("commerce-overlay-open");
+  }, [cartOpen, selected, kaspiModalOpen]);
 
   const mergedProducts = useMemo(() => {
     const list = mergeBySku(defaultProducts, storedProducts);
@@ -91,12 +102,10 @@ export default function Home() {
   );
 
   const openProduct = (product: Product, variantOverride?: Variant | null) => {
-    const variants = variantsFor(product);
     setSelected(product);
-    // `null` means the buyer has not selected a color yet: keep the main
-    // product photo visible. Calls without an override still use the first
-    // variant (for example, the featured product block).
-    setSelectedVariant(variantOverride === undefined ? variants[0] ?? null : variantOverride);
+    setSelectedVariant(
+      initialVariantSelection(product, variantOverride, COMMERCE_STAGE0_ENABLED),
+    );
     setRequestedQuantity(1);
   };
 
@@ -115,10 +124,17 @@ export default function Home() {
     stringsUpsell?: string,
     stringsUpsellPrice?: number,
   ) => {
-    const variant = variantOverride ?? selectedVariant ?? variantsFor(product)[0];
-    if (!variant) return;
+    const variant =
+      variantOverride ??
+      selectedVariant ??
+      (COMMERCE_STAGE0_ENABLED ? undefined : variantsFor(product)[0]);
+    if (!variant) {
+      setNotice("Сначала выберите вариант товара.");
+      window.setTimeout(() => setNotice(""), 2800);
+      return;
+    }
     const maxQty = variant.stock || 1;
-    const itemKey = `${product.sku}-${variant.sku}-${bundleType || "gift_course"}-${stringsUpsell ? "strings" : "none"}`;
+    const itemKey = `${product.sku}-${variant.sku}-${bundleType || "base"}-${stringsUpsell ? "strings" : "none"}`;
     const qtyToAdd = Math.min(requestedQuantity, maxQty);
     const bundleLabel = bundleTitle || (
       bundleType === "gift_course"
@@ -127,7 +143,7 @@ export default function Home() {
         ? "👑 PRO Комплект"
         : "🎸 Стандарт"
     );
-    const itemPrice = priceOverride ?? (variant.price || product.price || 0);
+    const itemPrice = priceOverride ?? productUnitPrice(product, variant);
 
     setCartItems((current) => {
       const existingIndex = current.findIndex((item) => item.key === itemKey);
@@ -197,6 +213,7 @@ export default function Home() {
       <Topbar
         query={query}
         setQuery={setQuery}
+        catalogProducts={mergedProducts}
         cartCount={cartCount}
         setCartOpen={setCartOpen}
         onSelectProduct={openProduct}
@@ -232,6 +249,7 @@ export default function Home() {
       )}
 
       <ProductModal
+        key={selected ? String(selected.id) : "no-product"}
         selected={selected}
         selectedVariant={selectedVariant}
         setSelectedVariant={setSelectedVariant}
@@ -259,6 +277,7 @@ export default function Home() {
         setCustomerComment={setCustomerComment}
         onSubmitOrder={submitOrder}
         onOpenKaspiQr={() => {
+          setPaymentRequestId(createTemporaryRequestId());
           setCartOpen(false);
           setKaspiModalOpen(true);
         }}
@@ -273,9 +292,9 @@ export default function Home() {
         customerPhone={customerPhone}
         customerCity={customerCity}
         customerComment={customerComment}
-        onPaymentSuccess={() => {
-          setCartItems([]);
-          setNotice("Оплата через Kaspi принята! Менеджер свяжется с вами.");
+        requestId={paymentRequestId}
+        onPaymentReported={() => {
+          setNotice("Сообщение об оплате отправлено на проверку. Корзина сохранена.");
           window.setTimeout(() => setNotice(""), 4000);
         }}
       />

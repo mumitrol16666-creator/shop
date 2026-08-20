@@ -12,7 +12,8 @@ type KaspiQrModalProps = {
   customerPhone: string;
   customerCity?: string;
   customerComment?: string;
-  onPaymentSuccess: () => void;
+  requestId: string;
+  onPaymentReported: () => void;
 };
 
 export function KaspiQrModal({
@@ -24,24 +25,28 @@ export function KaspiQrModal({
   customerPhone,
   customerCity = "Актобе",
   customerComment = "",
-  onPaymentSuccess,
+  requestId,
+  onPaymentReported,
 }: KaspiQrModalProps) {
-  const [isConfirmed, setIsConfirmed] = useState(false);
+  const [isReported, setIsReported] = useState(false);
 
   if (!isOpen) return null;
 
-  const handleConfirmPaid = () => {
-    setIsConfirmed(true);
+  const handleReportPayment = () => {
+    setIsReported(true);
 
-    // Send complete order details to WhatsApp manager
+    // Stage 0 fallback: report the payment for manual verification. This action
+    // never marks an order as paid and never clears the buyer's cart.
     const fullComment = [
       customerComment,
-      `💳 [ОПЛАТА]: Клиент подтвердил оплату через Kaspi Pay (${OFFICIAL_KASPI_PAY_LINK}). Ожидает подтверждения и отправки.`,
+      `💳 [СТАТУС ОПЛАТЫ]: payment_reported — клиент сообщил об оплате через Kaspi Pay (${OFFICIAL_KASPI_PAY_LINK}). Требуется ручная проверка.`,
     ]
       .filter(Boolean)
       .join("\n");
 
     const waUrl = buildWhatsAppOrderUrl({
+      requestId,
+      paymentStatus: "payment_reported",
       customerName,
       customerPhone,
       customerCity,
@@ -53,8 +58,8 @@ export function KaspiQrModal({
     window.open(waUrl, "_blank", "noopener,noreferrer");
 
     setTimeout(() => {
-      onPaymentSuccess();
-      setIsConfirmed(false);
+      onPaymentReported();
+      setIsReported(false);
       onClose();
     }, 2400);
   };
@@ -78,14 +83,15 @@ export function KaspiQrModal({
           </button>
         </div>
 
-        {isConfirmed ? (
+        {isReported ? (
           <div className="kaspi-success-screen">
             <div className="kaspi-success-icon">✓</div>
-            <h3>Заказ принят в обработку!</h3>
+            <h3>Сообщение об оплате отправлено</h3>
             <p>
-              Спасибо за оплату, <strong>{customerName || "дорогой клиент"}</strong>! Заявка отправлена менеджеру в WhatsApp. Мы свяжемся с вами в течение 5 минут.
+              <strong>{customerName || "Клиент"}</strong>, менеджер проверит поступление денег. До проверки статус заказа — «ожидает подтверждения».
             </p>
             <div className="receipt-box">
+              <span>Заявка: <strong>{requestId}</strong></span>
               <span>Сумма: <strong>{money(totalPrice)} ₸</strong></span>
               <span>Товаров: <strong>{cartItems.reduce((a, b) => a + b.quantity, 0)} шт.</strong></span>
             </div>
@@ -146,9 +152,9 @@ export function KaspiQrModal({
               <button
                 type="button"
                 className="kaspi-confirm-button"
-                onClick={handleConfirmPaid}
+                onClick={handleReportPayment}
               >
-                ✓ Я оплатил через Kaspi → Подтвердить заказ
+                Сообщить об оплате и отправить заявку
               </button>
             </div>
 

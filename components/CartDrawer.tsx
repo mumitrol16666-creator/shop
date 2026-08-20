@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import {
   buildWhatsAppOrderUrl,
   DEFAULT_WHATSAPP_PHONE,
@@ -49,6 +49,7 @@ export function CartDrawer({
 }: CartDrawerProps) {
   const [deliveryMethod, setDeliveryMethod] = useState("Самовывоз в магазине (Актобе)");
   const [paymentMethod, setPaymentMethod] = useState("Kaspi Рассрочка 0-0-12");
+  const orderFormRef = useRef<HTMLFormElement>(null);
 
   if (!cartOpen) return null;
 
@@ -91,6 +92,7 @@ export function CartDrawer({
       alert("Корзина пуста. Добавьте товар из каталога.");
       return;
     }
+    if (!orderFormRef.current?.reportValidity()) return;
     onOpenKaspiQr();
   };
 
@@ -200,21 +202,30 @@ export function CartDrawer({
           </div>
         )}
 
-        <div className="order-form">
+        <form ref={orderFormRef} className="order-form" onSubmit={handleSendToWhatsApp}>
           <label>
-            Ваше имя
+            Ваше имя *
             <input
+              name="customerName"
               value={customerName}
               onChange={(event) => setCustomerName(event.target.value)}
               placeholder="Как к вам обращаться"
+              autoComplete="name"
+              required
             />
           </label>
           <label>
-            Телефон / WhatsApp
+            Телефон / WhatsApp *
             <input
+              name="customerPhone"
+              type="tel"
               value={customerPhone}
               onChange={(event) => setCustomerPhone(event.target.value)}
               placeholder="+7 (7xx) xxx-xx-xx"
+              autoComplete="tel"
+              pattern="(?:\D*\d){10,}\D*"
+              title="Введите номер телефона: не менее 10 цифр"
+              required
             />
           </label>
 
@@ -302,9 +313,8 @@ export function CartDrawer({
               </button>
 
               <button
-                type="button"
+                type="submit"
                 className="whatsapp-submit-button"
-                onClick={handleSendToWhatsApp}
                 disabled={!cartItems.length}
               >
                 <span className="wa-icon">💬</span>
@@ -316,7 +326,7 @@ export function CartDrawer({
               Менеджер магазина: <strong>+7 (777) 505-57-88</strong>
             </p>
           </div>
-        </div>
+        </form>
       </aside>
     </div>
   );

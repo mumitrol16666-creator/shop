@@ -22,6 +22,9 @@ async function build() {
       },
       define: {
         "process.env.NODE_ENV": '"production"',
+        "process.env.NEXT_PUBLIC_COMMERCE_STAGE0": JSON.stringify(
+          process.env.NEXT_PUBLIC_COMMERCE_STAGE0 ?? "1",
+        ),
       },
       alias: {
         "@": root,

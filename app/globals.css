@@ -6345,6 +6345,88 @@ button {
   }
 }
 
+/* ==========================================================================
+   STAGE 0 — COMMERCE SAFETY HOTFIXES
+   Functional containment only; no visual redesign.
+   ========================================================================== */
+body.commerce-overlay-open {
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+
+.modal-buy-button-primary:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+  transform: none;
+  box-shadow: none;
+}
+
+.kaspi-pills-row {
+  flex-wrap: wrap;
+}
+
+@media (max-width: 800px) {
+  html,
+  body,
+  .site-shell {
+    max-width: 100%;
+    overflow-x: clip;
+  }
+
+  .cart-drawer,
+  .modern-product-modal,
+  .kaspi-qr-modal {
+    min-width: 0;
+    max-width: 100vw;
+  }
+
+  .cart-drawer {
+    height: 100dvh;
+    padding-bottom: max(24px, env(safe-area-inset-bottom));
+  }
+
+  .kaspi-qr-modal {
+    width: 100%;
+    max-height: 100dvh;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    border-radius: 24px 24px 0 0;
+    padding: 20px 16px max(20px, env(safe-area-inset-bottom));
+  }
+
+  .kaspi-modal-head {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    background: #fff;
+  }
+
+  .cart-line,
+  .cart-copy,
+  .order-form,
+  .form-row-two,
+  .kaspi-modal-body,
+  .kaspi-amount-box,
+  .kaspi-actions {
+    min-width: 0;
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 430px) {
+  .form-row-two {
+    grid-template-columns: 1fr;
+  }
+
+  .modal-sticky-bottom-bar {
+    padding-bottom: max(12px, env(safe-area-inset-bottom)) !important;
+  }
+
+  .bottom-actions-group {
+    min-width: 0;
+  }
+}
+
 .bulk-action-btn.print {
   background: #0984e3;
   color: #fff;
@@ -8516,4 +8598,3 @@ button {
     margin: 1.2cm;
   }
 }
-

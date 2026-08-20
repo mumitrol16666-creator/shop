@@ -2,11 +2,21 @@
 
 import Link from "next/link";
 import { useState, useRef, useEffect } from "react";
-import { DEFAULT_WHATSAPP_PHONE, DISPLAY_WHATSAPP_PHONE, products as defaultProducts, money, type Product } from "../lib/catalog-data";
+import {
+  COMMERCE_STAGE0_ENABLED,
+  DEFAULT_WHATSAPP_PHONE,
+  DISPLAY_WHATSAPP_PHONE,
+  money,
+  productUnitPrice,
+  products as defaultProducts,
+  type Product,
+  variantsFor,
+} from "../lib/catalog-data";
 
 type TopbarProps = {
   query: string;
   setQuery: (query: string) => void;
+  catalogProducts: Product[];
   cartCount: number;
   setCartOpen: (open: boolean) => void;
   onSelectProduct?: (product: Product) => void;
@@ -15,6 +25,7 @@ type TopbarProps = {
 export function Topbar({
   query,
   setQuery,
+  catalogProducts,
   cartCount,
   setCartOpen,
   onSelectProduct,
@@ -22,13 +33,18 @@ export function Topbar({
   const [isSearchFocused, setIsSearchFocused] = useState(false);
   const searchWrapRef = useRef<HTMLDivElement>(null);
 
+  const searchCatalog = COMMERCE_STAGE0_ENABLED ? catalogProducts : defaultProducts;
   const searchResults = query.trim().length >= 2
-    ? defaultProducts.filter((p) => {
+    ? searchCatalog.filter((p) => {
         const q = query.toLowerCase();
         return (
           p.name.toLowerCase().includes(q) ||
+          p.sku.toLowerCase().includes(q) ||
           p.category.toLowerCase().includes(q) ||
-          (p.description && p.description.toLowerCase().includes(q))
+          (p.description && p.description.toLowerCase().includes(q)) ||
+          variantsFor(p).some((variant) =>
+            `${variant.name} ${variant.sku}`.toLowerCase().includes(q),
+          )
         );
       }).slice(0, 4)
     : [];
@@ -129,7 +145,7 @@ export function Topbar({
                   <small>{item.category}</small>
                 </div>
                 <div className="search-item-price">
-                  <span>{money(item.price)} ₸</span>
+                  <span>{money(productUnitPrice(item))} ₸</span>
                 </div>
               </div>
             ))}

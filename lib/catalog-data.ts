@@ -422,6 +422,42 @@ export const installment = (price: number, months: number = 12) => {
   return Math.round(price / months);
 };
 
+/**
+ * Stage 0 defaults to enabled and can be disabled quickly in production with
+ * NEXT_PUBLIC_COMMERCE_STAGE0=0 if the catalog hotfix needs to be rolled back.
+ */
+export const COMMERCE_STAGE0_ENABLED =
+  process.env.NEXT_PUBLIC_COMMERCE_STAGE0 !== "0";
+
+export const productUnitPrice = (
+  product: Pick<Product, "price">,
+  variant?: Pick<Variant, "price"> | null,
+) => {
+  const value = variant?.price ?? product.price ?? 0;
+  return Number.isFinite(value) && value >= 0 ? value : 0;
+};
+
+export const initialVariantSelection = (
+  product: Product,
+  variantOverride?: Variant | null,
+  stage0Enabled = COMMERCE_STAGE0_ENABLED,
+): Variant | null => {
+  if (variantOverride !== undefined) return variantOverride;
+  return stage0Enabled ? null : variantsFor(product)[0] ?? null;
+};
+
+export const isCustomerContactComplete = (name: string, phone: string) =>
+  name.trim().length > 0 && phone.replace(/\D/g, "").length >= 10;
+
+export const createTemporaryRequestId = () => {
+  const date = new Date().toISOString().slice(0, 10).replace(/-/g, "");
+  const randomPart =
+    typeof globalThis.crypto?.randomUUID === "function"
+      ? globalThis.crypto.randomUUID().slice(0, 8).toUpperCase()
+      : Math.random().toString(36).slice(2, 10).toUpperCase();
+  return `MM-${date}-${randomPart}`;
+};
+
 export const variantsFor = (product: Product) =>
   product.variantItems ?? variantsByProduct[String(product.id)] ?? [];
 
@@ -436,6 +472,8 @@ export const DISPLAY_WHATSAPP_PHONE = "+7 (777) 505-57-88";
 
 export function buildWhatsAppOrderUrl(params: {
   phone?: string;
+  requestId?: string;
+  paymentStatus?: "payment_reported";
   customerName: string;
   customerPhone: string;
   customerCity: string;
@@ -483,6 +521,10 @@ export function buildWhatsAppOrderUrl(params: {
   const lines = [
     "🎸 *Новая заявка с сайта Maestro Music Store*",
     "",
+    params.requestId ? `🧾 *Номер заявки:* ${params.requestId}` : "",
+    params.paymentStatus === "payment_reported"
+      ? "💳 *Статус оплаты:* клиент сообщил об оплате — требуется ручная проверка"
+      : "",
     `👤 *Покупатель:* ${params.customerName.trim() || "Не указано"}`,
     `📱 *Телефон:* ${params.customerPhone.trim() || "Не указан"}`,
     `📍 *Город:* ${params.customerCity.trim() || "Актобе"}`,

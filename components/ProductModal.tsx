@@ -2,7 +2,14 @@
 
 import Image from "next/image";
 import { type Dispatch, type SetStateAction, useState } from "react";
-import { installment, money, type Product, type Variant, variantsFor } from "../lib/catalog-data";
+import {
+  installment,
+  money,
+  productUnitPrice,
+  type Product,
+  type Variant,
+  variantsFor,
+} from "../lib/catalog-data";
 import { resolveAttachedCourse } from "../lib/courses-data";
 import { playProductAudio, stopProductAudio } from "../lib/sound-synth";
 
@@ -54,9 +61,10 @@ export function ProductModal({
 
   if (!selected) return null;
 
+  const availableVariants = variantsFor(selected);
   const attachedCourse = showCourseOption ? resolveAttachedCourse(selected) : null;
   const selectedImage = selectedVariant?.image || selected.image;
-  const basePrice = selectedVariant?.price || selected.price || 0;
+  const basePrice = productUnitPrice(selected, selectedVariant);
   const bundleDelta = selectedBundle === "pro_pack" ? proPackPrice : 0;
   const stringsDelta = selectedStrings === "elixir" ? 4950 : selectedStrings === "daddario" ? 2450 : 0;
   const currentPrice = basePrice + bundleDelta + stringsDelta;
@@ -91,6 +99,7 @@ export function ProductModal({
   };
 
   const handleAddToCart = () => {
+    if (!selectedVariant || selectedVariant.stock <= 0) return;
     const giftCourseName = attachedCourse ? attachedCourse.title : undefined;
     const bundleName =
       selectedBundle === "pro_pack"
@@ -117,7 +126,8 @@ export function ProductModal({
     );
   };
 
-  const currentVariantStock = selectedVariant?.stock ?? selected.quantity ?? 1;
+  const currentVariantStock = selectedVariant?.stock ?? 0;
+  const canAddToCart = Boolean(selectedVariant && currentVariantStock > 0);
 
   return (
     <div className="modal-backdrop" role="presentation" onMouseDown={onClose}>
@@ -190,11 +200,11 @@ export function ProductModal({
                 {/* STEP 1: VARIANT / COLOR SELECTOR */}
                 <div className="clean-section-block">
                   <div className="clean-section-title">
-                    <span>1. Выберите цвет:</span>
-                    <strong>{selectedVariant?.name || "Стандартный"}</strong>
+                    <span>1. Выберите вариант:</span>
+                    <strong>{selectedVariant?.name || "Не выбран"}</strong>
                   </div>
                   <div className="clean-swatches-grid">
-                    {variantsFor(selected).map((variant) => {
+                    {availableVariants.map((variant) => {
                       const isSelected = (selectedVariant?.sku || selectedVariant?.name) === (variant.sku || variant.name);
                       return (
                         <button
@@ -424,8 +434,13 @@ export function ProductModal({
                 type="button"
                 className="modal-buy-button-primary"
                 onClick={handleAddToCart}
+                disabled={!canAddToCart}
               >
-                🛒 Добавить в корзину
+                {selectedVariant
+                  ? currentVariantStock > 0
+                    ? "🛒 Добавить в корзину"
+                    : "Нет в наличии"
+                  : "Выберите вариант"}
               </button>
             </div>
           </div>

@@ -6,6 +6,7 @@ import {
   installment,
   instrumentChoices,
   money,
+  productUnitPrice,
   type Product,
   type Variant,
   variantsFor,
@@ -481,26 +482,26 @@ export function Storefront({
 
         <div className="products-grid">
           {displayedProducts.map((product) => {
-            const productPrice = product.price ?? 0;
+            const variants = variantsFor(product);
+            const selectedCardVariant = selectedVariantsByProduct[product.id] || null;
+            const currentVariant = selectedCardVariant || variants[0] || null;
+            const productPrice = productUnitPrice(product, selectedCardVariant);
             const hasDiscount = Boolean(
-              (product.originalPrice && product.price && product.originalPrice > product.price) ||
+              (product.originalPrice && productPrice && product.originalPrice > productPrice) ||
               (product.discountPercent && product.discountPercent > 0)
             );
             const discountPercent =
               product.discountPercent ||
-              (product.originalPrice && product.price
-                ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)
+              (product.originalPrice && productPrice
+                ? Math.round(((product.originalPrice - productPrice) / product.originalPrice) * 100)
                 : 0);
             const originalPrice =
               product.originalPrice ||
-              (product.price && discountPercent > 0
-                ? Math.round(product.price / (1 - discountPercent / 100))
+              (productPrice && discountPercent > 0
+                ? Math.round(productPrice / (1 - discountPercent / 100))
                 : null);
             const isPlaying = playingId === product.id;
 
-            const variants = variantsFor(product);
-            const selectedCardVariant = selectedVariantsByProduct[product.id] || null;
-            const currentVariant = selectedCardVariant || variants[0] || null;
             // The product photo is the storefront cover. A variant photo should
             // replace it only after the buyer explicitly chooses that variant.
             const displayImage = selectedCardVariant?.image || product.image || currentVariant?.image;
@@ -561,8 +562,10 @@ export function Storefront({
                       >
                         <div className="swatch-dots-row">
                           {variants.slice(0, 6).map((v) => {
-                            const isSelected =
-                              (currentVariant?.id || currentVariant?.sku) === (v.id || v.sku);
+                            const isSelected = Boolean(
+                              selectedCardVariant &&
+                              (selectedCardVariant.id || selectedCardVariant.sku) === (v.id || v.sku),
+                            );
                             return (
                               <button
                                 key={v.sku || v.name}
@@ -599,8 +602,8 @@ export function Storefront({
                             </span>
                           )}
                         </div>
-                        {currentVariant?.name && (
-                          <span className="current-color-label">{currentVariant.name}</span>
+                        {selectedCardVariant?.name && (
+                          <span className="current-color-label">{selectedCardVariant.name}</span>
                         )}
                       </div>
                     )}
