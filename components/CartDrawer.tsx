@@ -148,9 +148,23 @@ export function CartDrawer({
                   <small>
                     {item.variantName} · {item.sku}
                   </small>
-                  {item.giftCourseTitle && (
+                  {item.bundleTitle && (
                     <span className="cart-gift-badge">
-                      🎁 В комплекте: «{item.giftCourseTitle}»
+                      {item.bundleTitle}
+                    </span>
+                  )}
+                  {item.stringsUpsell && (
+                    <span className="cart-strings-badge" style={{
+                      display: "inline-block",
+                      fontSize: "11px",
+                      fontWeight: 700,
+                      color: "#b45309",
+                      background: "#fef3c7",
+                      padding: "2px 8px",
+                      borderRadius: "6px",
+                      marginTop: "3px"
+                    }}>
+                      ⚡ + {item.stringsUpsell}
                     </span>
                   )}
                   {item.price > 0 && (

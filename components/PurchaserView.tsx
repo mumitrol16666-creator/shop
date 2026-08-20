@@ -91,6 +91,9 @@ export function PurchaserView({
   const [targetAudience, setTargetAudience] = useState("Для начинающих");
   const [attachedCourseId, setAttachedCourseId] = useState<string>("auto");
   const [internalAudioUrl, setInternalAudioUrl] = useState<string>("");
+  const [internalProPackTitle, setInternalProPackTitle] = useState<string>("Чехол + Ремень + VIP Доступ");
+  const [internalProPackPrice, setInternalProPackPrice] = useState<number>(8900);
+  const [internalAllowStrings, setInternalAllowStrings] = useState<boolean>(true);
 
   // Model variants list (Color & Variant Matrix)
   const [modelVariants, setModelVariants] = useState<Variant[]>([
@@ -244,6 +247,9 @@ export function PurchaserView({
     setTargetAudience(product.badge ?? "");
     setAttachedCourseId(product.attachedCourseId || "auto");
     setInternalAudioUrl(product.audioUrl || "");
+    setInternalProPackTitle(product.proPackTitle || "Чехол + Ремень + VIP Доступ");
+    setInternalProPackPrice(product.proPackPrice !== undefined ? product.proPackPrice : 8900);
+    setInternalAllowStrings(product.allowStringsUpsell !== false);
 
     // Discount
     const prodHasDiscount = Boolean(
@@ -399,6 +405,9 @@ export function PurchaserView({
           targetAudience,
           attachedCourseId: attachedCourseId === "none" ? "" : attachedCourseId,
           audioUrl: internalAudioUrl.trim(),
+          proPackTitle: internalProPackTitle.trim(),
+          proPackPrice: internalProPackPrice,
+          allowStringsUpsell: internalAllowStrings,
           variant: {
             name: primaryVariant.name,
             sku: primaryVariant.sku,
@@ -448,6 +457,9 @@ export function PurchaserView({
         price: Math.round(retail),
         attachedCourseId: attachedCourseId === "none" ? undefined : attachedCourseId,
         audioUrl: internalAudioUrl.trim() || undefined,
+        proPackTitle: internalProPackTitle.trim(),
+        proPackPrice: internalProPackPrice,
+        allowStringsUpsell: internalAllowStrings,
         originalPrice: hasDiscount && calculation ? Math.round(calculation.originalPriceKzt) : undefined,
         discountPercent: hasDiscount ? discountPercent : undefined,
         isDiscountActive: hasDiscount,
@@ -825,6 +837,56 @@ export function PurchaserView({
                 💡 Если поле пустое, кнопка «Послушать» на витрине скрыта. Звук воспроизводится только если вы укажете ссылку на реальную запись.
               </small>
             </label>
+
+            <div className="bundle-admin-settings-row full-width" style={{
+              background: "#faf7f2",
+              padding: "16px",
+              borderRadius: "14px",
+              border: "1px solid var(--line)",
+              display: "grid",
+              gridTemplateColumns: "1.5fr 1fr",
+              gap: "14px",
+              marginTop: "6px"
+            }}>
+              <label>
+                👑 Состав PRO Комплекта (аксессуары)
+                <input
+                  value={internalProPackTitle}
+                  onChange={(e) => {
+                    setInternalProPackTitle(e.target.value);
+                    setIsDirty(true);
+                  }}
+                  placeholder="Чехол + Ремень + VIP Доступ"
+                />
+              </label>
+
+              <label>
+                💰 Доплата за PRO Комплект (₸)
+                <input
+                  type="number"
+                  value={internalProPackPrice}
+                  onChange={(e) => {
+                    setInternalProPackPrice(Number(e.target.value) || 0);
+                    setIsDirty(true);
+                  }}
+                  placeholder="8900"
+                />
+              </label>
+
+              <div style={{ gridColumn: "1 / -1" }}>
+                <label style={{ display: "inline-flex", alignItems: "center", gap: "8px", cursor: "pointer", fontWeight: 700 }}>
+                  <input
+                    type="checkbox"
+                    checked={internalAllowStrings}
+                    onChange={(e) => {
+                      setInternalAllowStrings(e.target.checked);
+                      setIsDirty(true);
+                    }}
+                  />
+                  <span>⚡ Предлагать комплект струн Elixir/D'Addario со скидкой -50% к этой гитаре</span>
+                </label>
+              </div>
+            </div>
           </div>
 
           {/* 2. Color & Variant Matrix */}

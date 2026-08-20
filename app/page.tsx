@@ -111,18 +111,22 @@ export default function Home() {
     bundleType?: "base" | "gift_course" | "pro_pack",
     priceOverride?: number,
     giftCourseTitle?: string,
+    bundleTitle?: string,
+    stringsUpsell?: string,
+    stringsUpsellPrice?: number,
   ) => {
     const variant = variantOverride ?? selectedVariant ?? variantsFor(product)[0];
     if (!variant) return;
     const maxQty = variant.stock || 1;
-    const itemKey = `${product.sku}-${variant.sku}-${bundleType || "gift_course"}`;
+    const itemKey = `${product.sku}-${variant.sku}-${bundleType || "gift_course"}-${stringsUpsell ? "strings" : "none"}`;
     const qtyToAdd = Math.min(requestedQuantity, maxQty);
-    const bundleLabel =
+    const bundleLabel = bundleTitle || (
       bundleType === "gift_course"
         ? (giftCourseTitle ? `🎁 + Курс «${giftCourseTitle}»` : "🎁 + Онлайн-курс")
         : bundleType === "pro_pack"
         ? "👑 PRO Комплект"
-        : "🎸 Стандарт";
+        : "🎸 Стандарт"
+    );
     const itemPrice = priceOverride ?? (variant.price || product.price || 0);
 
     setCartItems((current) => {
@@ -141,7 +145,7 @@ export default function Home() {
         {
           key: itemKey,
           productId: product.id,
-          name: `${product.name} (${bundleLabel})`,
+          name: product.name,
           variantName: variant.name,
           sku: variant.sku,
           image: variant.image || product.image,
@@ -149,7 +153,10 @@ export default function Home() {
           quantity: qtyToAdd,
           maxQuantity: maxQty,
           bundle: bundleType,
+          bundleTitle: bundleLabel,
           giftCourseTitle: bundleType === "gift_course" ? giftCourseTitle : undefined,
+          stringsUpsell,
+          stringsUpsellPrice,
         },
       ];
     });

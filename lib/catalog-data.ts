@@ -54,6 +54,10 @@ export type Product = {
   features: string[];
   attachedCourseId?: string;
   audioUrl?: string;
+  proPackTitle?: string;
+  proPackPrice?: number;
+  proPackDescription?: string;
+  allowStringsUpsell?: boolean;
   price?: number;
   originalPrice?: number;
   discountPercent?: number;
@@ -75,7 +79,10 @@ export type CartItem = {
   quantity: number;
   maxQuantity: number;
   bundle?: "base" | "gift_course" | "pro_pack";
+  bundleTitle?: string;
   giftCourseTitle?: string;
+  stringsUpsell?: string;
+  stringsUpsellPrice?: number;
 };
 
 export const products: Product[] = [

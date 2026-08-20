@@ -20,6 +20,9 @@ type ProductModalProps = {
     bundle?: "base" | "gift_course" | "pro_pack",
     price?: number,
     giftCourseTitle?: string,
+    bundleTitle?: string,
+    stringsUpsell?: string,
+    stringsUpsellPrice?: number,
   ) => void;
 };
 
@@ -40,10 +43,14 @@ export function ProductModal({
 
   if (!selected) return null;
 
+  const proPackTitle = selected.proPackTitle || "Чехол + Ремень + VIP Доступ";
+  const proPackPrice = selected.proPackPrice !== undefined ? selected.proPackPrice : 8900;
+  const showStringsUpsell = selected.allowStringsUpsell !== false;
+
   const attachedCourse = resolveAttachedCourse(selected);
   const selectedImage = selectedVariant?.image || selected.image;
   const basePrice = selectedVariant?.price || selected.price || 0;
-  const bundleDelta = selectedBundle === "pro_pack" ? 8900 : 0;
+  const bundleDelta = selectedBundle === "pro_pack" ? proPackPrice : 0;
   const stringsDelta = selectedStrings === "elixir" ? 4950 : selectedStrings === "daddario" ? 2450 : 0;
   const currentPrice = basePrice + bundleDelta + stringsDelta;
 
@@ -74,6 +81,33 @@ export function ProductModal({
     playProductAudio(selected.audioUrl, () => {
       setIsPlayingSound(false);
     });
+  };
+
+  const handleAddToCart = () => {
+    const giftCourseName = attachedCourse ? attachedCourse.title : undefined;
+    const bundleName =
+      selectedBundle === "pro_pack"
+        ? `PRO: ${proPackTitle}`
+        : selectedBundle === "gift_course"
+        ? (giftCourseName ? `Подарок: Курс «${giftCourseName}»` : "Подарок: Онлайн-курс")
+        : "Только инструмент";
+    const stringsName =
+      selectedStrings === "elixir"
+        ? "Струны Elixir Nanoweb (-50%)"
+        : selectedStrings === "daddario"
+        ? "Струны D'Addario Pro (-50%)"
+        : undefined;
+
+    onAddToCart(
+      selected,
+      selectedVariant,
+      selectedBundle,
+      currentPrice,
+      giftCourseName,
+      bundleName,
+      stringsName,
+      stringsDelta
+    );
   };
 
   return (
@@ -129,6 +163,7 @@ export function ProductModal({
                 <div className="variant-options">
                   {variantsFor(selected).map((variant) => (
                     <button
+                      type="button"
                       key={variant.name}
                       className={selectedVariant?.name === variant.name ? "active" : ""}
                       onClick={() => {
@@ -154,7 +189,7 @@ export function ProductModal({
 
               {/* Bundle & Course Selector */}
               <div className="bundle-selector-card">
-                <span className="bundle-label">Выберите комплектацию:</span>
+                <span className="bundle-label">ВЫБЕРИТЕ КОМПЛЕКТАЦИЮ:</span>
                 <div className="bundle-options-grid">
                   <button
                     type="button"
@@ -173,7 +208,7 @@ export function ProductModal({
                       onClick={() => setSelectedBundle("gift_course")}
                     >
                       <span className="bundle-badge-pill">ПОДАРОК 0 ₸</span>
-                      <span className="bundle-title">🎁 + Курс «{attachedCourse.title.length > 28 ? attachedCourse.title.slice(0, 28) + "..." : attachedCourse.title}»</span>
+                      <span className="bundle-title">🎁 + Курс «{attachedCourse.title.length > 26 ? attachedCourse.title.slice(0, 26) + "..." : attachedCourse.title}»</span>
                       <small>{attachedCourse.lessonsCount || 10} уроков · Преп. {attachedCourse.instructor.name}</small>
                       <strong className="free-text">Бесплатно ({money(attachedCourse.price)} ₸)</strong>
                     </button>
@@ -196,63 +231,135 @@ export function ProductModal({
                     onClick={() => setSelectedBundle("pro_pack")}
                   >
                     <span className="bundle-title">👑 PRO Комплект</span>
-                    <small>Чехол + Ремень + VIP Доступ</small>
-                    <strong>+8 900 ₸</strong>
+                    <small>{proPackTitle}</small>
+                    <strong>+{money(proPackPrice)} ₸</strong>
                   </button>
                 </div>
               </div>
 
               {/* Exclusive Strings Order Bump (-50%) */}
-              <div className="order-bump-box">
-                <div className="bump-box-header">
-                  <span className="bump-tag-gold">⚡ СПЕЦПРЕДЛОЖЕНИЕ (-50%)</span>
-                  <p>Запасной комплект премиум-струн со скидкой 50% к этой гитаре</p>
+              {showStringsUpsell && (
+                <div className="order-bump-box">
+                  <div className="bump-box-header">
+                    <span className="bump-tag-gold">⚡ СПЕЦПРЕДЛОЖЕНИЕ (-50%)</span>
+                    <p>Запасной комплект премиум-струн со скидкой 50% к этой гитаре</p>
+                  </div>
+
+                  <div className="bump-options-list">
+                    <div
+                      className={`bump-option-row ${selectedStrings === "elixir" ? "active" : ""}`}
+                      onClick={() => setSelectedStrings(selectedStrings === "elixir" ? null : "elixir")}
+                      role="button"
+                      tabIndex={0}
+                    >
+                      <div className="bump-checkbox-visual">
+                        {selectedStrings === "elixir" ? "✓" : ""}
+                      </div>
+                      <div className="bump-option-text">
+                        <div className="bump-title-row">
+                          <strong>👑 Струны Elixir Nanoweb (США)</strong>
+                          <span className="bump-badge-usa">-50%</span>
+                        </div>
+                        <small>Служат до 6 месяцев · Полимерная нано-защита от коррозии · Звонкий тон</small>
+                      </div>
+                      <div className="bump-option-pricing">
+                        <span className="bump-price-old">9 900 ₸</span>
+                        <strong className="bump-price-new">+4 950 ₸</strong>
+                      </div>
+                    </div>
+
+                    <div
+                      className={`bump-option-row ${selectedStrings === "daddario" ? "active" : ""}`}
+                      onClick={() => setSelectedStrings(selectedStrings === "daddario" ? null : "daddario")}
+                      role="button"
+                      tabIndex={0}
+                    >
+                      <div className="bump-checkbox-visual">
+                        {selectedStrings === "daddario" ? "✓" : ""}
+                      </div>
+                      <div className="bump-option-text">
+                        <div className="bump-title-row">
+                          <strong>🎸 Струны D'Addario / Alice Pro</strong>
+                          <span className="bump-badge-usa">-50%</span>
+                        </div>
+                        <small>Мягкое натяжение для легких аккордов · Сбалансированный чистый звук</small>
+                      </div>
+                      <div className="bump-option-pricing">
+                        <span className="bump-price-old">4 900 ₸</span>
+                        <strong className="bump-price-new">+2 450 ₸</strong>
+                      </div>
+                    </div>
+                  </div>
                 </div>
+              )}
 
-                <div className="bump-options-list">
-                  <div
-                    className={`bump-option-row ${selectedStrings === "elixir" ? "active" : ""}`}
-                    onClick={() => setSelectedStrings(selectedStrings === "elixir" ? null : "elixir")}
-                    role="button"
-                    tabIndex={0}
-                  >
-                    <div className="bump-checkbox-visual">
-                      {selectedStrings === "elixir" ? "✓" : ""}
+              {/* Dynamic Live Assembly Summary Card */}
+              <div className="live-assembly-card">
+                <div className="assembly-card-header">
+                  <span className="assembly-tag">📦 СОСТАВ ВАШЕЙ КОМПЛЕКТАЦИИ:</span>
+                  <span className="assembly-live-pill">● Собирается вживую</span>
+                </div>
+                <ul className="assembly-items-list">
+                  <li>
+                    <span className="assembly-icon">🎸</span>
+                    <div className="assembly-item-content">
+                      <strong>{selected.name}</strong>
+                      <small>Цвет: {selectedVariant?.name || "Стандарт"}</small>
                     </div>
-                    <div className="bump-option-text">
-                      <div className="bump-title-row">
-                        <strong>👑 Струны Elixir Nanoweb (США)</strong>
-                        <span className="bump-badge-usa">-50%</span>
-                      </div>
-                      <small>Служат до 6 месяцев · Полимерная нано-защита от коррозии · Звонкий тон</small>
-                    </div>
-                    <div className="bump-option-pricing">
-                      <span className="bump-price-old">9 900 ₸</span>
-                      <strong className="bump-price-new">+4 950 ₸</strong>
-                    </div>
-                  </div>
+                    <span className="assembly-item-price">{money(basePrice)} ₸</span>
+                  </li>
 
-                  <div
-                    className={`bump-option-row ${selectedStrings === "daddario" ? "active" : ""}`}
-                    onClick={() => setSelectedStrings(selectedStrings === "daddario" ? null : "daddario")}
-                    role="button"
-                    tabIndex={0}
-                  >
-                    <div className="bump-checkbox-visual">
-                      {selectedStrings === "daddario" ? "✓" : ""}
+                  <li>
+                    <span className="assembly-icon">
+                      {selectedBundle === "base" ? "📦" : selectedBundle === "gift_course" ? "🎁" : "👑"}
+                    </span>
+                    <div className="assembly-item-content">
+                      <strong>
+                        {selectedBundle === "base"
+                          ? "Заводская комплектация"
+                          : selectedBundle === "gift_course"
+                          ? `Подарочный курс «${attachedCourse ? attachedCourse.title : "Онлайн-курс"}»`
+                          : `PRO Комплект: ${proPackTitle}`}
+                      </strong>
+                      <small>
+                        {selectedBundle === "base"
+                          ? "Гитара в коробке + ключи"
+                          : selectedBundle === "gift_course"
+                          ? "16 видеоуроков с доступом навсегда"
+                          : "Чехол, ремень и расширенная комплектация"}
+                      </small>
                     </div>
-                    <div className="bump-option-text">
-                      <div className="bump-title-row">
-                        <strong>🎸 Струны D'Addario / Alice Pro</strong>
-                        <span className="bump-badge-usa">-50%</span>
+                    <span className={`assembly-item-price ${selectedBundle === "gift_course" ? "free" : ""}`}>
+                      {selectedBundle === "base" ? "+0 ₸" : selectedBundle === "gift_course" ? "Бесплатно (0 ₸)" : `+${money(proPackPrice)} ₸`}
+                    </span>
+                  </li>
+
+                  {selectedStrings && (
+                    <li className="assembly-item-upsell">
+                      <span className="assembly-icon">⚡</span>
+                      <div className="assembly-item-content">
+                        <strong>
+                          {selectedStrings === "elixir" ? "Струны Elixir Nanoweb (USA)" : "Струны D'Addario Pro"}
+                        </strong>
+                        <small>Скидка 50% к заказу гитары</small>
                       </div>
-                      <small>Мягкое натяжение для легких аккордов · Сбалансированный чистый звук</small>
+                      <span className="assembly-item-price">+{money(stringsDelta)} ₸</span>
+                    </li>
+                  )}
+
+                  <li className="assembly-item-bonus">
+                    <span className="assembly-icon">🛠</span>
+                    <div className="assembly-item-content">
+                      <strong>Отстройка мастером и мягкие струны</strong>
+                      <small>Регулировка анкера 1.5–2 мм + шлифовка ладов</small>
                     </div>
-                    <div className="bump-option-pricing">
-                      <span className="bump-price-old">4 900 ₸</span>
-                      <strong className="bump-price-new">+2 450 ₸</strong>
-                    </div>
-                  </div>
+                    <span className="assembly-item-price free">Включено (0 ₸)</span>
+                  </li>
+                </ul>
+
+                <div className="assembly-total-row">
+                  <span>Итоговый комплект:</span>
+                  <strong>{money(currentPrice * requestedQuantity)} ₸</strong>
                 </div>
               </div>
 
@@ -298,66 +405,54 @@ export function ProductModal({
                     {hasDiscount && <span className="modal-discount-tag">-{discountPercent}%</span>}
                   </div>
                   <div className="price-block-numbers">
-                    <strong>
-                      {currentPrice > 0
-                        ? `${money(currentPrice)} ₸`
-                        : "Уточняется"}
-                    </strong>
+                    <strong className="current-price">{money(currentPrice * requestedQuantity)} ₸</strong>
                     {hasDiscount && originalPrice && (
-                      <span className="modal-old-price">{money(originalPrice)} ₸</span>
+                      <span className="old-price">{money((originalPrice + bundleDelta + stringsDelta) * requestedQuantity)} ₸</span>
                     )}
                   </div>
-                  {savings > 0 && <span className="savings-badge">Экономия {money(savings)} ₸</span>}
+                  {savings > 0 && (
+                    <span className="savings-badge">Экономия {money(savings * requestedQuantity)} ₸</span>
+                  )}
                 </div>
-                <div className="quantity-picker" aria-label="Количество">
-                  <button
-                    onClick={() => setRequestedQuantity((value) => Math.max(1, value - 1))}
-                    disabled={requestedQuantity <= 1}
-                  >
-                    −
-                  </button>
-                  <strong>{requestedQuantity}</strong>
-                  <button
-                    onClick={() =>
-                      setRequestedQuantity((value) =>
-                        Math.min(selectedVariant?.stock ?? 1, value + 1),
-                      )
-                    }
-                    disabled={requestedQuantity >= (selectedVariant?.stock ?? 1)}
-                  >
-                    +
-                  </button>
-                </div>
-                <button
-                  className="primary-button"
-                  onClick={() => {
-                    const stringsNote = selectedStrings === "elixir"
-                      ? " + Струны Elixir Nanoweb (-50%)"
-                      : selectedStrings === "daddario"
-                      ? " + Струны D'Addario Pro (-50%)"
-                      : "";
-                    const modifiedVariant = selectedVariant ? {
-                      ...selectedVariant,
-                      name: `${selectedVariant.name}${stringsNote}`
-                    } : null;
 
-                    onAddToCart(
-                      selected,
-                      modifiedVariant,
-                      selectedBundle,
-                      currentPrice,
-                      selectedBundle === "gift_course" ? attachedCourse?.title : undefined
-                    );
-                  }}
-                >
-                  Добавить в заявку
-                </button>
+                <div className="quantity-and-buy">
+                  <div className="modal-qty">
+                    <button
+                      type="button"
+                      onClick={() => setRequestedQuantity((q) => Math.max(1, q - 1))}
+                      disabled={requestedQuantity <= 1}
+                      aria-label="Уменьшить количество"
+                    >
+                      −
+                    </button>
+                    <span>{requestedQuantity}</span>
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setRequestedQuantity((q) =>
+                          Math.min(selectedVariant?.stock ?? selected.quantity, q + 1)
+                        )
+                      }
+                      disabled={requestedQuantity >= (selectedVariant?.stock ?? selected.quantity)}
+                      aria-label="Увеличить количество"
+                    >
+                      +
+                    </button>
+                  </div>
+
+                  <button
+                    type="button"
+                    className="primary-button"
+                    onClick={handleAddToCart}
+                  >
+                    🛒 В заявку · {money(currentPrice * requestedQuantity)} ₸
+                  </button>
+                </div>
               </div>
             </>
           ) : (
-            <div className="internal-note">
-              <strong>Внутренняя карточка</strong>
-              <span>Штрихкод и фактическая себестоимость будут добавлены после получения данных.</span>
+            <div className="modal-action">
+              <span className="purchaser-hint">Режим закупщика: редактирование через панель закупщика</span>
             </div>
           )}
         </div>

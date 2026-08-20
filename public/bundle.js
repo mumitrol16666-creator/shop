@@ -13794,10 +13794,19 @@ function CartDrawer({
               " \xB7 ",
               item.sku
             ] }),
-            item.giftCourseTitle && /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("span", { className: "cart-gift-badge", children: [
-              "\u{1F381} \u0412 \u043A\u043E\u043C\u043F\u043B\u0435\u043A\u0442\u0435: \xAB",
-              item.giftCourseTitle,
-              "\xBB"
+            item.bundleTitle && /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "cart-gift-badge", children: item.bundleTitle }),
+            item.stringsUpsell && /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("span", { className: "cart-strings-badge", style: {
+              display: "inline-block",
+              fontSize: "11px",
+              fontWeight: 700,
+              color: "#b45309",
+              background: "#fef3c7",
+              padding: "2px 8px",
+              borderRadius: "6px",
+              marginTop: "3px"
+            }, children: [
+              "\u26A1 + ",
+              item.stringsUpsell
             ] }),
             item.price > 0 && /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("span", { className: "cart-line-price", children: [
               money(item.price * item.quantity),
@@ -14302,10 +14311,13 @@ function ProductModal({
   const [selectedBundle, setSelectedBundle] = (0, import_react4.useState)("gift_course");
   const [selectedStrings, setSelectedStrings] = (0, import_react4.useState)(null);
   if (!selected) return null;
+  const proPackTitle = selected.proPackTitle || "\u0427\u0435\u0445\u043E\u043B + \u0420\u0435\u043C\u0435\u043D\u044C + VIP \u0414\u043E\u0441\u0442\u0443\u043F";
+  const proPackPrice = selected.proPackPrice !== void 0 ? selected.proPackPrice : 8900;
+  const showStringsUpsell = selected.allowStringsUpsell !== false;
   const attachedCourse = resolveAttachedCourse(selected);
   const selectedImage = selectedVariant?.image || selected.image;
   const basePrice = selectedVariant?.price || selected.price || 0;
-  const bundleDelta = selectedBundle === "pro_pack" ? 8900 : 0;
+  const bundleDelta = selectedBundle === "pro_pack" ? proPackPrice : 0;
   const stringsDelta = selectedStrings === "elixir" ? 4950 : selectedStrings === "daddario" ? 2450 : 0;
   const currentPrice = basePrice + bundleDelta + stringsDelta;
   const hasDiscount = Boolean(
@@ -14325,6 +14337,21 @@ function ProductModal({
     playProductAudio(selected.audioUrl, () => {
       setIsPlayingSound(false);
     });
+  };
+  const handleAddToCart = () => {
+    const giftCourseName = attachedCourse ? attachedCourse.title : void 0;
+    const bundleName = selectedBundle === "pro_pack" ? `PRO: ${proPackTitle}` : selectedBundle === "gift_course" ? giftCourseName ? `\u041F\u043E\u0434\u0430\u0440\u043E\u043A: \u041A\u0443\u0440\u0441 \xAB${giftCourseName}\xBB` : "\u041F\u043E\u0434\u0430\u0440\u043E\u043A: \u041E\u043D\u043B\u0430\u0439\u043D-\u043A\u0443\u0440\u0441" : "\u0422\u043E\u043B\u044C\u043A\u043E \u0438\u043D\u0441\u0442\u0440\u0443\u043C\u0435\u043D\u0442";
+    const stringsName = selectedStrings === "elixir" ? "\u0421\u0442\u0440\u0443\u043D\u044B Elixir Nanoweb (-50%)" : selectedStrings === "daddario" ? "\u0421\u0442\u0440\u0443\u043D\u044B D'Addario Pro (-50%)" : void 0;
+    onAddToCart(
+      selected,
+      selectedVariant,
+      selectedBundle,
+      currentPrice,
+      giftCourseName,
+      bundleName,
+      stringsName,
+      stringsDelta
+    );
   };
   return /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "modal-backdrop", role: "presentation", onMouseDown: onClose, children: /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("article", { className: "product-modal", role: "dialog", "aria-modal": "true", onMouseDown: (e) => e.stopPropagation(), children: [
     /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("button", { className: "modal-close", onClick: onClose, "aria-label": "\u0417\u0430\u043A\u0440\u044B\u0442\u044C", children: "\xD7" }),
@@ -14395,6 +14422,7 @@ function ProductModal({
           /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "variant-options", children: variantsFor(selected).map((variant) => /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)(
             "button",
             {
+              type: "button",
               className: selectedVariant?.name === variant.name ? "active" : "",
               onClick: () => {
                 setSelectedVariant(variant);
@@ -14422,7 +14450,7 @@ function ProductModal({
           selectedVariant?.note && /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { className: "variant-note", children: selectedVariant.note })
         ] }),
         /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "bundle-selector-card", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "bundle-label", children: "\u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u043A\u043E\u043C\u043F\u043B\u0435\u043A\u0442\u0430\u0446\u0438\u044E:" }),
+          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "bundle-label", children: "\u0412\u042B\u0411\u0415\u0420\u0418\u0422\u0415 \u041A\u041E\u041C\u041F\u041B\u0415\u041A\u0422\u0410\u0426\u0418\u042E:" }),
           /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "bundle-options-grid", children: [
             /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)(
               "button",
@@ -14447,7 +14475,7 @@ function ProductModal({
                   /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "bundle-badge-pill", children: "\u041F\u041E\u0414\u0410\u0420\u041E\u041A 0 \u20B8" }),
                   /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("span", { className: "bundle-title", children: [
                     "\u{1F381} + \u041A\u0443\u0440\u0441 \xAB",
-                    attachedCourse.title.length > 28 ? attachedCourse.title.slice(0, 28) + "..." : attachedCourse.title,
+                    attachedCourse.title.length > 26 ? attachedCourse.title.slice(0, 26) + "..." : attachedCourse.title,
                     "\xBB"
                   ] }),
                   /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("small", { children: [
@@ -14484,14 +14512,18 @@ function ProductModal({
                 onClick: () => setSelectedBundle("pro_pack"),
                 children: [
                   /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "bundle-title", children: "\u{1F451} PRO \u041A\u043E\u043C\u043F\u043B\u0435\u043A\u0442" }),
-                  /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("small", { children: "\u0427\u0435\u0445\u043E\u043B + \u0420\u0435\u043C\u0435\u043D\u044C + VIP \u0414\u043E\u0441\u0442\u0443\u043F" }),
-                  /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("strong", { children: "+8 900 \u20B8" })
+                  /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("small", { children: proPackTitle }),
+                  /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("strong", { children: [
+                    "+",
+                    money(proPackPrice),
+                    " \u20B8"
+                  ] })
                 ]
               }
             )
           ] })
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "order-bump-box", children: [
+        showStringsUpsell && /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "order-bump-box", children: [
           /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "bump-box-header", children: [
             /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "bump-tag-gold", children: "\u26A1 \u0421\u041F\u0415\u0426\u041F\u0420\u0415\u0414\u041B\u041E\u0416\u0415\u041D\u0418\u0415 (-50%)" }),
             /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { children: "\u0417\u0430\u043F\u0430\u0441\u043D\u043E\u0439 \u043A\u043E\u043C\u043F\u043B\u0435\u043A\u0442 \u043F\u0440\u0435\u043C\u0438\u0443\u043C-\u0441\u0442\u0440\u0443\u043D \u0441\u043E \u0441\u043A\u0438\u0434\u043A\u043E\u0439 50% \u043A \u044D\u0442\u043E\u0439 \u0433\u0438\u0442\u0430\u0440\u0435" })
@@ -14545,6 +14577,63 @@ function ProductModal({
             )
           ] })
         ] }),
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "live-assembly-card", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "assembly-card-header", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "assembly-tag", children: "\u{1F4E6} \u0421\u041E\u0421\u0422\u0410\u0412 \u0412\u0410\u0428\u0415\u0419 \u041A\u041E\u041C\u041F\u041B\u0415\u041A\u0422\u0410\u0426\u0418\u0418:" }),
+            /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "assembly-live-pill", children: "\u25CF \u0421\u043E\u0431\u0438\u0440\u0430\u0435\u0442\u0441\u044F \u0432\u0436\u0438\u0432\u0443\u044E" })
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("ul", { className: "assembly-items-list", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("li", { children: [
+              /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "assembly-icon", children: "\u{1F3B8}" }),
+              /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "assembly-item-content", children: [
+                /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("strong", { children: selected.name }),
+                /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("small", { children: [
+                  "\u0426\u0432\u0435\u0442: ",
+                  selectedVariant?.name || "\u0421\u0442\u0430\u043D\u0434\u0430\u0440\u0442"
+                ] })
+              ] }),
+              /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("span", { className: "assembly-item-price", children: [
+                money(basePrice),
+                " \u20B8"
+              ] })
+            ] }),
+            /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("li", { children: [
+              /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "assembly-icon", children: selectedBundle === "base" ? "\u{1F4E6}" : selectedBundle === "gift_course" ? "\u{1F381}" : "\u{1F451}" }),
+              /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "assembly-item-content", children: [
+                /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("strong", { children: selectedBundle === "base" ? "\u0417\u0430\u0432\u043E\u0434\u0441\u043A\u0430\u044F \u043A\u043E\u043C\u043F\u043B\u0435\u043A\u0442\u0430\u0446\u0438\u044F" : selectedBundle === "gift_course" ? `\u041F\u043E\u0434\u0430\u0440\u043E\u0447\u043D\u044B\u0439 \u043A\u0443\u0440\u0441 \xAB${attachedCourse ? attachedCourse.title : "\u041E\u043D\u043B\u0430\u0439\u043D-\u043A\u0443\u0440\u0441"}\xBB` : `PRO \u041A\u043E\u043C\u043F\u043B\u0435\u043A\u0442: ${proPackTitle}` }),
+                /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("small", { children: selectedBundle === "base" ? "\u0413\u0438\u0442\u0430\u0440\u0430 \u0432 \u043A\u043E\u0440\u043E\u0431\u043A\u0435 + \u043A\u043B\u044E\u0447\u0438" : selectedBundle === "gift_course" ? "16 \u0432\u0438\u0434\u0435\u043E\u0443\u0440\u043E\u043A\u043E\u0432 \u0441 \u0434\u043E\u0441\u0442\u0443\u043F\u043E\u043C \u043D\u0430\u0432\u0441\u0435\u0433\u0434\u0430" : "\u0427\u0435\u0445\u043E\u043B, \u0440\u0435\u043C\u0435\u043D\u044C \u0438 \u0440\u0430\u0441\u0448\u0438\u0440\u0435\u043D\u043D\u0430\u044F \u043A\u043E\u043C\u043F\u043B\u0435\u043A\u0442\u0430\u0446\u0438\u044F" })
+              ] }),
+              /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: `assembly-item-price ${selectedBundle === "gift_course" ? "free" : ""}`, children: selectedBundle === "base" ? "+0 \u20B8" : selectedBundle === "gift_course" ? "\u0411\u0435\u0441\u043F\u043B\u0430\u0442\u043D\u043E (0 \u20B8)" : `+${money(proPackPrice)} \u20B8` })
+            ] }),
+            selectedStrings && /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("li", { className: "assembly-item-upsell", children: [
+              /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "assembly-icon", children: "\u26A1" }),
+              /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "assembly-item-content", children: [
+                /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("strong", { children: selectedStrings === "elixir" ? "\u0421\u0442\u0440\u0443\u043D\u044B Elixir Nanoweb (USA)" : "\u0421\u0442\u0440\u0443\u043D\u044B D'Addario Pro" }),
+                /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("small", { children: "\u0421\u043A\u0438\u0434\u043A\u0430 50% \u043A \u0437\u0430\u043A\u0430\u0437\u0443 \u0433\u0438\u0442\u0430\u0440\u044B" })
+              ] }),
+              /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("span", { className: "assembly-item-price", children: [
+                "+",
+                money(stringsDelta),
+                " \u20B8"
+              ] })
+            ] }),
+            /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("li", { className: "assembly-item-bonus", children: [
+              /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "assembly-icon", children: "\u{1F6E0}" }),
+              /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "assembly-item-content", children: [
+                /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("strong", { children: "\u041E\u0442\u0441\u0442\u0440\u043E\u0439\u043A\u0430 \u043C\u0430\u0441\u0442\u0435\u0440\u043E\u043C \u0438 \u043C\u044F\u0433\u043A\u0438\u0435 \u0441\u0442\u0440\u0443\u043D\u044B" }),
+                /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("small", { children: "\u0420\u0435\u0433\u0443\u043B\u0438\u0440\u043E\u0432\u043A\u0430 \u0430\u043D\u043A\u0435\u0440\u0430 1.5\u20132 \u043C\u043C + \u0448\u043B\u0438\u0444\u043E\u0432\u043A\u0430 \u043B\u0430\u0434\u043E\u0432" })
+              ] }),
+              /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "assembly-item-price free", children: "\u0412\u043A\u043B\u044E\u0447\u0435\u043D\u043E (0 \u20B8)" })
+            ] })
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "assembly-total-row", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { children: "\u0418\u0442\u043E\u0433\u043E\u0432\u044B\u0439 \u043A\u043E\u043C\u043F\u043B\u0435\u043A\u0442:" }),
+            /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("strong", { children: [
+              money(currentPrice * requestedQuantity),
+              " \u20B8"
+            ] })
+          ] })
+        ] }),
         currentPrice > 0 && /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "modal-installment-card", children: [
           /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "installment-header", children: [
             /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { children: [
@@ -14592,65 +14681,63 @@ function ProductModal({
               ] })
             ] }),
             /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "price-block-numbers", children: [
-              /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("strong", { children: currentPrice > 0 ? `${money(currentPrice)} \u20B8` : "\u0423\u0442\u043E\u0447\u043D\u044F\u0435\u0442\u0441\u044F" }),
-              hasDiscount && originalPrice && /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("span", { className: "modal-old-price", children: [
-                money(originalPrice),
+              /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("strong", { className: "current-price", children: [
+                money(currentPrice * requestedQuantity),
+                " \u20B8"
+              ] }),
+              hasDiscount && originalPrice && /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("span", { className: "old-price", children: [
+                money((originalPrice + bundleDelta + stringsDelta) * requestedQuantity),
                 " \u20B8"
               ] })
             ] }),
             savings > 0 && /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("span", { className: "savings-badge", children: [
               "\u042D\u043A\u043E\u043D\u043E\u043C\u0438\u044F ",
-              money(savings),
+              money(savings * requestedQuantity),
               " \u20B8"
             ] })
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "quantity-picker", "aria-label": "\u041A\u043E\u043B\u0438\u0447\u0435\u0441\u0442\u0432\u043E", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
+          /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "quantity-and-buy", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "modal-qty", children: [
+              /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
+                "button",
+                {
+                  type: "button",
+                  onClick: () => setRequestedQuantity((q) => Math.max(1, q - 1)),
+                  disabled: requestedQuantity <= 1,
+                  "aria-label": "\u0423\u043C\u0435\u043D\u044C\u0448\u0438\u0442\u044C \u043A\u043E\u043B\u0438\u0447\u0435\u0441\u0442\u0432\u043E",
+                  children: "\u2212"
+                }
+              ),
+              /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { children: requestedQuantity }),
+              /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
+                "button",
+                {
+                  type: "button",
+                  onClick: () => setRequestedQuantity(
+                    (q) => Math.min(selectedVariant?.stock ?? selected.quantity, q + 1)
+                  ),
+                  disabled: requestedQuantity >= (selectedVariant?.stock ?? selected.quantity),
+                  "aria-label": "\u0423\u0432\u0435\u043B\u0438\u0447\u0438\u0442\u044C \u043A\u043E\u043B\u0438\u0447\u0435\u0441\u0442\u0432\u043E",
+                  children: "+"
+                }
+              )
+            ] }),
+            /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)(
               "button",
               {
-                onClick: () => setRequestedQuantity((value) => Math.max(1, value - 1)),
-                disabled: requestedQuantity <= 1,
-                children: "\u2212"
-              }
-            ),
-            /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("strong", { children: requestedQuantity }),
-            /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
-              "button",
-              {
-                onClick: () => setRequestedQuantity(
-                  (value) => Math.min(selectedVariant?.stock ?? 1, value + 1)
-                ),
-                disabled: requestedQuantity >= (selectedVariant?.stock ?? 1),
-                children: "+"
+                type: "button",
+                className: "primary-button",
+                onClick: handleAddToCart,
+                children: [
+                  "\u{1F6D2} \u0412 \u0437\u0430\u044F\u0432\u043A\u0443 \xB7 ",
+                  money(currentPrice * requestedQuantity),
+                  " \u20B8"
+                ]
               }
             )
-          ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
-            "button",
-            {
-              className: "primary-button",
-              onClick: () => {
-                const stringsNote = selectedStrings === "elixir" ? " + \u0421\u0442\u0440\u0443\u043D\u044B Elixir Nanoweb (-50%)" : selectedStrings === "daddario" ? " + \u0421\u0442\u0440\u0443\u043D\u044B D'Addario Pro (-50%)" : "";
-                const modifiedVariant = selectedVariant ? {
-                  ...selectedVariant,
-                  name: `${selectedVariant.name}${stringsNote}`
-                } : null;
-                onAddToCart(
-                  selected,
-                  modifiedVariant,
-                  selectedBundle,
-                  currentPrice,
-                  selectedBundle === "gift_course" ? attachedCourse?.title : void 0
-                );
-              },
-              children: "\u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u0432 \u0437\u0430\u044F\u0432\u043A\u0443"
-            }
-          )
+          ] })
         ] })
-      ] }) : /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "internal-note", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("strong", { children: "\u0412\u043D\u0443\u0442\u0440\u0435\u043D\u043D\u044F\u044F \u043A\u0430\u0440\u0442\u043E\u0447\u043A\u0430" }),
-        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { children: "\u0428\u0442\u0440\u0438\u0445\u043A\u043E\u0434 \u0438 \u0444\u0430\u043A\u0442\u0438\u0447\u0435\u0441\u043A\u0430\u044F \u0441\u0435\u0431\u0435\u0441\u0442\u043E\u0438\u043C\u043E\u0441\u0442\u044C \u0431\u0443\u0434\u0443\u0442 \u0434\u043E\u0431\u0430\u0432\u043B\u0435\u043D\u044B \u043F\u043E\u0441\u043B\u0435 \u043F\u043E\u043B\u0443\u0447\u0435\u043D\u0438\u044F \u0434\u0430\u043D\u043D\u044B\u0445." })
-      ] })
+      ] }) : /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "modal-action", children: /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "purchaser-hint", children: "\u0420\u0435\u0436\u0438\u043C \u0437\u0430\u043A\u0443\u043F\u0449\u0438\u043A\u0430: \u0440\u0435\u0434\u0430\u043A\u0442\u0438\u0440\u043E\u0432\u0430\u043D\u0438\u0435 \u0447\u0435\u0440\u0435\u0437 \u043F\u0430\u043D\u0435\u043B\u044C \u0437\u0430\u043A\u0443\u043F\u0449\u0438\u043A\u0430" }) })
     ] })
   ] }) });
 }
@@ -15651,13 +15738,13 @@ function Home() {
     setView("store");
     document.getElementById("catalog")?.scrollIntoView({ behavior: "smooth" });
   };
-  const addToCart = (product, variantOverride, bundleType, priceOverride, giftCourseTitle) => {
+  const addToCart = (product, variantOverride, bundleType, priceOverride, giftCourseTitle, bundleTitle, stringsUpsell, stringsUpsellPrice) => {
     const variant = variantOverride ?? selectedVariant ?? variantsFor(product)[0];
     if (!variant) return;
     const maxQty = variant.stock || 1;
-    const itemKey = `${product.sku}-${variant.sku}-${bundleType || "gift_course"}`;
+    const itemKey = `${product.sku}-${variant.sku}-${bundleType || "gift_course"}-${stringsUpsell ? "strings" : "none"}`;
     const qtyToAdd = Math.min(requestedQuantity, maxQty);
-    const bundleLabel = bundleType === "gift_course" ? giftCourseTitle ? `\u{1F381} + \u041A\u0443\u0440\u0441 \xAB${giftCourseTitle}\xBB` : "\u{1F381} + \u041E\u043D\u043B\u0430\u0439\u043D-\u043A\u0443\u0440\u0441" : bundleType === "pro_pack" ? "\u{1F451} PRO \u041A\u043E\u043C\u043F\u043B\u0435\u043A\u0442" : "\u{1F3B8} \u0421\u0442\u0430\u043D\u0434\u0430\u0440\u0442";
+    const bundleLabel = bundleTitle || (bundleType === "gift_course" ? giftCourseTitle ? `\u{1F381} + \u041A\u0443\u0440\u0441 \xAB${giftCourseTitle}\xBB` : "\u{1F381} + \u041E\u043D\u043B\u0430\u0439\u043D-\u043A\u0443\u0440\u0441" : bundleType === "pro_pack" ? "\u{1F451} PRO \u041A\u043E\u043C\u043F\u043B\u0435\u043A\u0442" : "\u{1F3B8} \u0421\u0442\u0430\u043D\u0434\u0430\u0440\u0442");
     const itemPrice = priceOverride ?? (variant.price || product.price || 0);
     setCartItems((current) => {
       const existingIndex = current.findIndex((item) => item.key === itemKey);
@@ -15675,7 +15762,7 @@ function Home() {
         {
           key: itemKey,
           productId: product.id,
-          name: `${product.name} (${bundleLabel})`,
+          name: product.name,
           variantName: variant.name,
           sku: variant.sku,
           image: variant.image || product.image,
@@ -15683,7 +15770,10 @@ function Home() {
           quantity: qtyToAdd,
           maxQuantity: maxQty,
           bundle: bundleType,
-          giftCourseTitle: bundleType === "gift_course" ? giftCourseTitle : void 0
+          bundleTitle: bundleLabel,
+          giftCourseTitle: bundleType === "gift_course" ? giftCourseTitle : void 0,
+          stringsUpsell,
+          stringsUpsellPrice
         }
       ];
     });
@@ -17232,6 +17322,9 @@ function PurchaserView({
   const [targetAudience, setTargetAudience] = (0, import_react12.useState)("\u0414\u043B\u044F \u043D\u0430\u0447\u0438\u043D\u0430\u044E\u0449\u0438\u0445");
   const [attachedCourseId, setAttachedCourseId] = (0, import_react12.useState)("auto");
   const [internalAudioUrl, setInternalAudioUrl] = (0, import_react12.useState)("");
+  const [internalProPackTitle, setInternalProPackTitle] = (0, import_react12.useState)("\u0427\u0435\u0445\u043E\u043B + \u0420\u0435\u043C\u0435\u043D\u044C + VIP \u0414\u043E\u0441\u0442\u0443\u043F");
+  const [internalProPackPrice, setInternalProPackPrice] = (0, import_react12.useState)(8900);
+  const [internalAllowStrings, setInternalAllowStrings] = (0, import_react12.useState)(true);
   const [modelVariants, setModelVariants] = (0, import_react12.useState)([
     {
       id: "var-1",
@@ -17373,6 +17466,9 @@ function PurchaserView({
     setTargetAudience(product.badge ?? "");
     setAttachedCourseId(product.attachedCourseId || "auto");
     setInternalAudioUrl(product.audioUrl || "");
+    setInternalProPackTitle(product.proPackTitle || "\u0427\u0435\u0445\u043E\u043B + \u0420\u0435\u043C\u0435\u043D\u044C + VIP \u0414\u043E\u0441\u0442\u0443\u043F");
+    setInternalProPackPrice(product.proPackPrice !== void 0 ? product.proPackPrice : 8900);
+    setInternalAllowStrings(product.allowStringsUpsell !== false);
     const prodHasDiscount = Boolean(
       product.isDiscountActive || product.discountPercent && product.discountPercent > 0 || product.originalPrice && product.price && product.originalPrice > product.price
     );
@@ -17506,6 +17602,9 @@ function PurchaserView({
           targetAudience,
           attachedCourseId: attachedCourseId === "none" ? "" : attachedCourseId,
           audioUrl: internalAudioUrl.trim(),
+          proPackTitle: internalProPackTitle.trim(),
+          proPackPrice: internalProPackPrice,
+          allowStringsUpsell: internalAllowStrings,
           variant: {
             name: primaryVariant.name,
             sku: primaryVariant.sku,
@@ -17553,6 +17652,9 @@ function PurchaserView({
         price: Math.round(retail),
         attachedCourseId: attachedCourseId === "none" ? void 0 : attachedCourseId,
         audioUrl: internalAudioUrl.trim() || void 0,
+        proPackTitle: internalProPackTitle.trim(),
+        proPackPrice: internalProPackPrice,
+        allowStringsUpsell: internalAllowStrings,
         originalPrice: hasDiscount && calculation ? Math.round(calculation.originalPriceKzt) : void 0,
         discountPercent: hasDiscount ? discountPercent : void 0,
         isDiscountActive: hasDiscount,
@@ -17943,6 +18045,60 @@ function PurchaserView({
               }
             ),
             /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("small", { style: { color: "var(--muted)", fontSize: "11.5px", marginTop: "4px", display: "block" }, children: "\u{1F4A1} \u0415\u0441\u043B\u0438 \u043F\u043E\u043B\u0435 \u043F\u0443\u0441\u0442\u043E\u0435, \u043A\u043D\u043E\u043F\u043A\u0430 \xAB\u041F\u043E\u0441\u043B\u0443\u0448\u0430\u0442\u044C\xBB \u043D\u0430 \u0432\u0438\u0442\u0440\u0438\u043D\u0435 \u0441\u043A\u0440\u044B\u0442\u0430. \u0417\u0432\u0443\u043A \u0432\u043E\u0441\u043F\u0440\u043E\u0438\u0437\u0432\u043E\u0434\u0438\u0442\u0441\u044F \u0442\u043E\u043B\u044C\u043A\u043E \u0435\u0441\u043B\u0438 \u0432\u044B \u0443\u043A\u0430\u0436\u0435\u0442\u0435 \u0441\u0441\u044B\u043B\u043A\u0443 \u043D\u0430 \u0440\u0435\u0430\u043B\u044C\u043D\u0443\u044E \u0437\u0430\u043F\u0438\u0441\u044C." })
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { className: "bundle-admin-settings-row full-width", style: {
+            background: "#faf7f2",
+            padding: "16px",
+            borderRadius: "14px",
+            border: "1px solid var(--line)",
+            display: "grid",
+            gridTemplateColumns: "1.5fr 1fr",
+            gap: "14px",
+            marginTop: "6px"
+          }, children: [
+            /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("label", { children: [
+              "\u{1F451} \u0421\u043E\u0441\u0442\u0430\u0432 PRO \u041A\u043E\u043C\u043F\u043B\u0435\u043A\u0442\u0430 (\u0430\u043A\u0441\u0435\u0441\u0441\u0443\u0430\u0440\u044B)",
+              /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
+                "input",
+                {
+                  value: internalProPackTitle,
+                  onChange: (e) => {
+                    setInternalProPackTitle(e.target.value);
+                    setIsDirty(true);
+                  },
+                  placeholder: "\u0427\u0435\u0445\u043E\u043B + \u0420\u0435\u043C\u0435\u043D\u044C + VIP \u0414\u043E\u0441\u0442\u0443\u043F"
+                }
+              )
+            ] }),
+            /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("label", { children: [
+              "\u{1F4B0} \u0414\u043E\u043F\u043B\u0430\u0442\u0430 \u0437\u0430 PRO \u041A\u043E\u043C\u043F\u043B\u0435\u043A\u0442 (\u20B8)",
+              /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
+                "input",
+                {
+                  type: "number",
+                  value: internalProPackPrice,
+                  onChange: (e) => {
+                    setInternalProPackPrice(Number(e.target.value) || 0);
+                    setIsDirty(true);
+                  },
+                  placeholder: "8900"
+                }
+              )
+            ] }),
+            /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("div", { style: { gridColumn: "1 / -1" }, children: /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("label", { style: { display: "inline-flex", alignItems: "center", gap: "8px", cursor: "pointer", fontWeight: 700 }, children: [
+              /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
+                "input",
+                {
+                  type: "checkbox",
+                  checked: internalAllowStrings,
+                  onChange: (e) => {
+                    setInternalAllowStrings(e.target.checked);
+                    setIsDirty(true);
+                  }
+                }
+              ),
+              /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("span", { children: "\u26A1 \u041F\u0440\u0435\u0434\u043B\u0430\u0433\u0430\u0442\u044C \u043A\u043E\u043C\u043F\u043B\u0435\u043A\u0442 \u0441\u0442\u0440\u0443\u043D Elixir/D'Addario \u0441\u043E \u0441\u043A\u0438\u0434\u043A\u043E\u0439 -50% \u043A \u044D\u0442\u043E\u0439 \u0433\u0438\u0442\u0430\u0440\u0435" })
+            ] }) })
           ] })
         ] }),
         /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { className: "card-subhead between", children: [
