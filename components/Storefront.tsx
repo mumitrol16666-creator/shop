@@ -288,8 +288,8 @@ export function Storefront({
           <span>Отстройка грифа, визуальный контроль покрытия и проверка фурнитуры.</span>
         </div>
         <div className="trust-item">
-          <strong>Рассрочка 0-0-12 и 0-0-24</strong>
-          <span>Kaspi Red, Kaspi Рассрочка и Halyk Bank без скрытых комиссий и переплат.</span>
+          <strong>Kaspi Red и Рассрочка 0-0-12</strong>
+          <span>Kaspi Red (3 мес) и Kaspi Рассрочка (до 12 мес) без процентов и переплат.</span>
         </div>
         <div className="trust-item">
           <strong>Доставка по Казахстану</strong>
@@ -549,7 +549,7 @@ export function Storefront({
                       )}
                     </div>
                     {productPrice > 0 ? (
-                      <div className="installment-chip" title="Рассрочка 0-0-12 Kaspi / Halyk">
+                      <div className="installment-chip" title="Kaspi Red и Рассрочка 0-0-12">
                         <span className="kaspi-badge">0-0-12</span>
                         <span>от {money(installment(productPrice, 12))} ₸/мес</span>
                       </div>
@@ -696,8 +696,8 @@ export function Storefront({
               a: "Сразу после подтверждения заказа в WhatsApp менеджер отправит вам персональный доступ к кабинету ученика. Доступ бессрочный навсегда с любого телефона или компьютера."
             },
             {
-              q: "Как работает рассрочка Kaspi 0-0-12 / 0-0-24?",
-              a: "Вы оформляете покупку в приложении Kaspi QR за 1 минуту. Сумма делится ровно на выбранный срок (3, 6, 12 или 24 мес) без скрытых комиссий, процентов и переплат."
+              q: "Как работает Kaspi Red и рассрочка Kaspi 0-0-12?",
+              a: "Вы оформляете покупку в приложении Kaspi QR за 1 минуту. Сумма делится ровно на выбранный срок (Kaspi Red на 3 мес или Рассрочка на 6-12 мес) без скрытых комиссий, процентов и переплат."
             },
             {
               q: "Почему струны Elixir со скидкой 50% выгоднее взять сразу?",
@@ -735,7 +735,7 @@ export function Storefront({
           </article>
           <article className="delivery-card">
             <h3>Оплата и рассрочка</h3>
-            <p>Доступна оплата картой, Kaspi Pay, а также онлайн-рассрочка 0-0-12 и 0-0-24 без переплат.</p>
+            <p>Доступна оплата Kaspi QR, Kaspi Red, а также онлайн-рассрочка Kaspi 0-0-12 без переплат.</p>
           </article>
         </div>
       </section>

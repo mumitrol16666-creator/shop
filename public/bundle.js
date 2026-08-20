@@ -14653,23 +14653,20 @@ function ProductModal({
               installmentMonths
             ] })
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "installment-tabs", children: [3, 6, 12, 24].map((m) => /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)(
+          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "installment-tabs", children: [3, 6, 12].map((m) => /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
             "button",
             {
               type: "button",
               className: `installment-tab ${installmentMonths === m ? "active" : ""}`,
               onClick: () => setInstallmentMonths(m),
-              children: [
-                m,
-                " \u043C\u0435\u0441"
-              ]
+              children: m === 3 ? "3 \u043C\u0435\u0441 (Red)" : `${m} \u043C\u0435\u0441`
             },
             m
           )) }),
           /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "installment-partners", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { children: "Kaspi \u0420\u0430\u0441\u0441\u0440\u043E\u0447\u043A\u0430 / Red" }),
+            /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { children: "Kaspi Red" }),
             /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { children: "\u2022" }),
-            /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { children: "Halyk Bank" }),
+            /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { children: "Kaspi \u0420\u0430\u0441\u0441\u0440\u043E\u0447\u043A\u0430 0-0-12" }),
             /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { children: "\u2022" }),
             /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { children: "0 \u20B8 \u043F\u0435\u0440\u0432\u044B\u0439 \u0432\u0437\u043D\u043E\u0441" })
           ] })
@@ -14993,8 +14990,8 @@ function Storefront({
         /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { children: "\u041E\u0442\u0441\u0442\u0440\u043E\u0439\u043A\u0430 \u0433\u0440\u0438\u0444\u0430, \u0432\u0438\u0437\u0443\u0430\u043B\u044C\u043D\u044B\u0439 \u043A\u043E\u043D\u0442\u0440\u043E\u043B\u044C \u043F\u043E\u043A\u0440\u044B\u0442\u0438\u044F \u0438 \u043F\u0440\u043E\u0432\u0435\u0440\u043A\u0430 \u0444\u0443\u0440\u043D\u0438\u0442\u0443\u0440\u044B." })
       ] }),
       /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "trust-item", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("strong", { children: "\u0420\u0430\u0441\u0441\u0440\u043E\u0447\u043A\u0430 0-0-12 \u0438 0-0-24" }),
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { children: "Kaspi Red, Kaspi \u0420\u0430\u0441\u0441\u0440\u043E\u0447\u043A\u0430 \u0438 Halyk Bank \u0431\u0435\u0437 \u0441\u043A\u0440\u044B\u0442\u044B\u0445 \u043A\u043E\u043C\u0438\u0441\u0441\u0438\u0439 \u0438 \u043F\u0435\u0440\u0435\u043F\u043B\u0430\u0442." })
+        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("strong", { children: "Kaspi Red \u0438 \u0420\u0430\u0441\u0441\u0440\u043E\u0447\u043A\u0430 0-0-12" }),
+        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { children: "Kaspi Red (3 \u043C\u0435\u0441) \u0438 Kaspi \u0420\u0430\u0441\u0441\u0440\u043E\u0447\u043A\u0430 (\u0434\u043E 12 \u043C\u0435\u0441) \u0431\u0435\u0437 \u043F\u0440\u043E\u0446\u0435\u043D\u0442\u043E\u0432 \u0438 \u043F\u0435\u0440\u0435\u043F\u043B\u0430\u0442." })
       ] }),
       /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "trust-item", children: [
         /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("strong", { children: "\u0414\u043E\u0441\u0442\u0430\u0432\u043A\u0430 \u043F\u043E \u041A\u0430\u0437\u0430\u0445\u0441\u0442\u0430\u043D\u0443" }),
@@ -15253,7 +15250,7 @@ function Storefront({
                   " \u20B8"
                 ] })
               ] }),
-              productPrice > 0 ? /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "installment-chip", title: "\u0420\u0430\u0441\u0441\u0440\u043E\u0447\u043A\u0430 0-0-12 Kaspi / Halyk", children: [
+              productPrice > 0 ? /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "installment-chip", title: "Kaspi Red \u0438 \u0420\u0430\u0441\u0441\u0440\u043E\u0447\u043A\u0430 0-0-12", children: [
                 /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { className: "kaspi-badge", children: "0-0-12" }),
                 /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("span", { children: [
                   "\u043E\u0442 ",
@@ -15389,8 +15386,8 @@ function Storefront({
           a: "\u0421\u0440\u0430\u0437\u0443 \u043F\u043E\u0441\u043B\u0435 \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0435\u043D\u0438\u044F \u0437\u0430\u043A\u0430\u0437\u0430 \u0432 WhatsApp \u043C\u0435\u043D\u0435\u0434\u0436\u0435\u0440 \u043E\u0442\u043F\u0440\u0430\u0432\u0438\u0442 \u0432\u0430\u043C \u043F\u0435\u0440\u0441\u043E\u043D\u0430\u043B\u044C\u043D\u044B\u0439 \u0434\u043E\u0441\u0442\u0443\u043F \u043A \u043A\u0430\u0431\u0438\u043D\u0435\u0442\u0443 \u0443\u0447\u0435\u043D\u0438\u043A\u0430. \u0414\u043E\u0441\u0442\u0443\u043F \u0431\u0435\u0441\u0441\u0440\u043E\u0447\u043D\u044B\u0439 \u043D\u0430\u0432\u0441\u0435\u0433\u0434\u0430 \u0441 \u043B\u044E\u0431\u043E\u0433\u043E \u0442\u0435\u043B\u0435\u0444\u043E\u043D\u0430 \u0438\u043B\u0438 \u043A\u043E\u043C\u043F\u044C\u044E\u0442\u0435\u0440\u0430."
         },
         {
-          q: "\u041A\u0430\u043A \u0440\u0430\u0431\u043E\u0442\u0430\u0435\u0442 \u0440\u0430\u0441\u0441\u0440\u043E\u0447\u043A\u0430 Kaspi 0-0-12 / 0-0-24?",
-          a: "\u0412\u044B \u043E\u0444\u043E\u0440\u043C\u043B\u044F\u0435\u0442\u0435 \u043F\u043E\u043A\u0443\u043F\u043A\u0443 \u0432 \u043F\u0440\u0438\u043B\u043E\u0436\u0435\u043D\u0438\u0438 Kaspi QR \u0437\u0430 1 \u043C\u0438\u043D\u0443\u0442\u0443. \u0421\u0443\u043C\u043C\u0430 \u0434\u0435\u043B\u0438\u0442\u0441\u044F \u0440\u043E\u0432\u043D\u043E \u043D\u0430 \u0432\u044B\u0431\u0440\u0430\u043D\u043D\u044B\u0439 \u0441\u0440\u043E\u043A (3, 6, 12 \u0438\u043B\u0438 24 \u043C\u0435\u0441) \u0431\u0435\u0437 \u0441\u043A\u0440\u044B\u0442\u044B\u0445 \u043A\u043E\u043C\u0438\u0441\u0441\u0438\u0439, \u043F\u0440\u043E\u0446\u0435\u043D\u0442\u043E\u0432 \u0438 \u043F\u0435\u0440\u0435\u043F\u043B\u0430\u0442."
+          q: "\u041A\u0430\u043A \u0440\u0430\u0431\u043E\u0442\u0430\u0435\u0442 Kaspi Red \u0438 \u0440\u0430\u0441\u0441\u0440\u043E\u0447\u043A\u0430 Kaspi 0-0-12?",
+          a: "\u0412\u044B \u043E\u0444\u043E\u0440\u043C\u043B\u044F\u0435\u0442\u0435 \u043F\u043E\u043A\u0443\u043F\u043A\u0443 \u0432 \u043F\u0440\u0438\u043B\u043E\u0436\u0435\u043D\u0438\u0438 Kaspi QR \u0437\u0430 1 \u043C\u0438\u043D\u0443\u0442\u0443. \u0421\u0443\u043C\u043C\u0430 \u0434\u0435\u043B\u0438\u0442\u0441\u044F \u0440\u043E\u0432\u043D\u043E \u043D\u0430 \u0432\u044B\u0431\u0440\u0430\u043D\u043D\u044B\u0439 \u0441\u0440\u043E\u043A (Kaspi Red \u043D\u0430 3 \u043C\u0435\u0441 \u0438\u043B\u0438 \u0420\u0430\u0441\u0441\u0440\u043E\u0447\u043A\u0430 \u043D\u0430 6-12 \u043C\u0435\u0441) \u0431\u0435\u0437 \u0441\u043A\u0440\u044B\u0442\u044B\u0445 \u043A\u043E\u043C\u0438\u0441\u0441\u0438\u0439, \u043F\u0440\u043E\u0446\u0435\u043D\u0442\u043E\u0432 \u0438 \u043F\u0435\u0440\u0435\u043F\u043B\u0430\u0442."
         },
         {
           q: "\u041F\u043E\u0447\u0435\u043C\u0443 \u0441\u0442\u0440\u0443\u043D\u044B Elixir \u0441\u043E \u0441\u043A\u0438\u0434\u043A\u043E\u0439 50% \u0432\u044B\u0433\u043E\u0434\u043D\u0435\u0435 \u0432\u0437\u044F\u0442\u044C \u0441\u0440\u0430\u0437\u0443?",
@@ -15420,7 +15417,7 @@ function Storefront({
         ] }),
         /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("article", { className: "delivery-card", children: [
           /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("h3", { children: "\u041E\u043F\u043B\u0430\u0442\u0430 \u0438 \u0440\u0430\u0441\u0441\u0440\u043E\u0447\u043A\u0430" }),
-          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { children: "\u0414\u043E\u0441\u0442\u0443\u043F\u043D\u0430 \u043E\u043F\u043B\u0430\u0442\u0430 \u043A\u0430\u0440\u0442\u043E\u0439, Kaspi Pay, \u0430 \u0442\u0430\u043A\u0436\u0435 \u043E\u043D\u043B\u0430\u0439\u043D-\u0440\u0430\u0441\u0441\u0440\u043E\u0447\u043A\u0430 0-0-12 \u0438 0-0-24 \u0431\u0435\u0437 \u043F\u0435\u0440\u0435\u043F\u043B\u0430\u0442." })
+          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { children: "\u0414\u043E\u0441\u0442\u0443\u043F\u043D\u0430 \u043E\u043F\u043B\u0430\u0442\u0430 Kaspi QR, Kaspi Red, \u0430 \u0442\u0430\u043A\u0436\u0435 \u043E\u043D\u043B\u0430\u0439\u043D-\u0440\u0430\u0441\u0441\u0440\u043E\u0447\u043A\u0430 Kaspi 0-0-12 \u0431\u0435\u0437 \u043F\u0435\u0440\u0435\u043F\u043B\u0430\u0442." })
         ] })
       ] })
     ] }),

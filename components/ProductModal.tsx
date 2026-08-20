@@ -387,22 +387,22 @@ export function ProductModal({
                   </div>
 
                   <div className="installment-tabs">
-                    {[3, 6, 12, 24].map((m) => (
+                    {[3, 6, 12].map((m) => (
                       <button
                         key={m}
                         type="button"
                         className={`installment-tab ${installmentMonths === m ? "active" : ""}`}
                         onClick={() => setInstallmentMonths(m)}
                       >
-                        {m} мес
+                        {m === 3 ? "3 мес (Red)" : `${m} мес`}
                       </button>
                     ))}
                   </div>
 
                   <div className="installment-partners">
-                    <span>Kaspi Рассрочка / Red</span>
+                    <span>Kaspi Red</span>
                     <span>•</span>
-                    <span>Halyk Bank</span>
+                    <span>Kaspi Рассрочка 0-0-12</span>
                     <span>•</span>
                     <span>0 ₸ первый взнос</span>
                   </div>
