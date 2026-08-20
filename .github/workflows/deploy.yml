@@ -47,8 +47,9 @@ jobs:
             # 3. Install dependencies
             npm install --legacy-peer-deps
             
-            # 4. Build application
-            npm run build
+            # 4. Build the static client served by the VPS.
+            # The full vinext/Sites build requires Node 22 and is validated separately.
+            npm run build:client
             
             # 5. Restart with PM2
             pm2 reload ecosystem.config.cjs --update-env || pm2 start ecosystem.config.cjs
