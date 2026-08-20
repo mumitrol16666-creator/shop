@@ -81,8 +81,18 @@ export function Topbar({
           className={`nav-tab-link academy ${view === "academy" ? "active" : ""}`}
           onClick={() => setView?.("academy")}
         >
-          🎓 Обучение & Курсы
+          🎓 Обучение
         </button>
+
+        <a
+          href="https://maestro-school.duckdns.org/login"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="nav-tab-link student-portal-link"
+          title="Вход в личный кабинет ученика Maestro School"
+        >
+          🔑 Кабинет ученика ↗
+        </a>
 
         <a href="#pick" onClick={() => setView?.("store")}>🎯 Подбор</a>
         <a href="#reviews" onClick={() => setView?.("store")}>⭐ Отзывы</a>
@@ -197,6 +207,15 @@ export function Topbar({
           <span>🎓</span>
           <small>Обучение</small>
         </button>
+        <a
+          href="https://maestro-school.duckdns.org/login"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mobile-nav-btn"
+        >
+          <span>🔑</span>
+          <small>Кабинет</small>
+        </a>
         <button
           type="button"
           className="mobile-nav-btn"

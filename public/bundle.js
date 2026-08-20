@@ -13310,6 +13310,10 @@ function buildWhatsAppOrderUrl(params) {
   const totalQty = params.cartItems.reduce((acc, i) => acc + i.quantity, 0);
   const installmentText = params.totalPrice > 0 ? `
 \u{1F4B3} *\u0420\u0430\u0441\u0441\u0440\u043E\u0447\u043A\u0430 0-0-12:* \u043E\u0442 ${money(installment(params.totalPrice, 12))} \u20B8 / \u043C\u0435\u0441.` : "";
+  const hasCourse = params.cartItems.some(
+    (item) => item.bundle === "gift_course" || item.bundle === "pro_pack" || item.giftCourseTitle
+  );
+  const courseActivationText = hasCourse ? "\n\u{1F393} *\u0412\u0445\u043E\u0434 \u0432 \u043B\u0438\u0447\u043D\u044B\u0439 \u043A\u0430\u0431\u0438\u043D\u0435\u0442 \u0410\u043A\u0430\u0434\u0435\u043C\u0438\u0438 Maestro School:* https://maestro-school.duckdns.org/login" : "";
   const lines = [
     "\u{1F3B8} *\u041D\u043E\u0432\u0430\u044F \u0437\u0430\u044F\u0432\u043A\u0430 \u0441 \u0441\u0430\u0439\u0442\u0430 Maestro Music Store*",
     "",
@@ -13321,7 +13325,7 @@ function buildWhatsAppOrderUrl(params) {
     `\u{1F4E6} *\u0421\u043E\u0441\u0442\u0430\u0432 \u0437\u0430\u043A\u0430\u0437\u0430 (${totalQty} \u0435\u0434.):*`,
     itemsText,
     "",
-    `\u{1F4B0} *\u0421\u0443\u043C\u043C\u0430 \u0437\u0430\u044F\u0432\u043A\u0438:* ${params.totalPrice > 0 ? `${money(params.totalPrice)} \u20B8` : "\u0423\u0442\u043E\u0447\u043D\u044F\u0435\u0442\u0441\u044F \u043C\u0435\u043D\u0435\u0434\u0436\u0435\u0440\u043E\u043C"}${installmentText}`
+    `\u{1F4B0} *\u0421\u0443\u043C\u043C\u0430 \u0437\u0430\u044F\u0432\u043A\u0438:* ${params.totalPrice > 0 ? `${money(params.totalPrice)} \u20B8` : "\u0423\u0442\u043E\u0447\u043D\u044F\u0435\u0442\u0441\u044F \u043C\u0435\u043D\u0435\u0434\u0436\u0435\u0440\u043E\u043C"}${installmentText}${courseActivationText}`
   ].filter(Boolean);
   const text = encodeURIComponent(lines.join("\n"));
   return `https://wa.me/${cleanPhone}?text=${text}`;
@@ -15325,7 +15329,18 @@ function Topbar({
           type: "button",
           className: `nav-tab-link academy ${view === "academy" ? "active" : ""}`,
           onClick: () => setView?.("academy"),
-          children: "\u{1F393} \u041E\u0431\u0443\u0447\u0435\u043D\u0438\u0435 & \u041A\u0443\u0440\u0441\u044B"
+          children: "\u{1F393} \u041E\u0431\u0443\u0447\u0435\u043D\u0438\u0435"
+        }
+      ),
+      /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(
+        "a",
+        {
+          href: "https://maestro-school.duckdns.org/login",
+          target: "_blank",
+          rel: "noopener noreferrer",
+          className: "nav-tab-link student-portal-link",
+          title: "\u0412\u0445\u043E\u0434 \u0432 \u043B\u0438\u0447\u043D\u044B\u0439 \u043A\u0430\u0431\u0438\u043D\u0435\u0442 \u0443\u0447\u0435\u043D\u0438\u043A\u0430 Maestro School",
+          children: "\u{1F511} \u041A\u0430\u0431\u0438\u043D\u0435\u0442 \u0443\u0447\u0435\u043D\u0438\u043A\u0430 \u2197"
         }
       ),
       /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("a", { href: "#pick", onClick: () => setView?.("store"), children: "\u{1F3AF} \u041F\u043E\u0434\u0431\u043E\u0440" }),
@@ -15448,6 +15463,19 @@ function Topbar({
           children: [
             /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("span", { children: "\u{1F393}" }),
             /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("small", { children: "\u041E\u0431\u0443\u0447\u0435\u043D\u0438\u0435" })
+          ]
+        }
+      ),
+      /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)(
+        "a",
+        {
+          href: "https://maestro-school.duckdns.org/login",
+          target: "_blank",
+          rel: "noopener noreferrer",
+          className: "mobile-nav-btn",
+          children: [
+            /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("span", { children: "\u{1F511}" }),
+            /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("small", { children: "\u041A\u0430\u0431\u0438\u043D\u0435\u0442" })
           ]
         }
       ),

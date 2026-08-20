@@ -446,6 +446,13 @@ export function buildWhatsAppOrderUrl(params: {
       ? `\n💳 *Рассрочка 0-0-12:* от ${money(installment(params.totalPrice, 12))} ₸ / мес.`
       : "";
 
+  const hasCourse = params.cartItems.some(
+    (item) => item.bundle === "gift_course" || item.bundle === "pro_pack" || item.giftCourseTitle
+  );
+  const courseActivationText = hasCourse
+    ? "\n🎓 *Вход в личный кабинет Академии Maestro School:* https://maestro-school.duckdns.org/login"
+    : "";
+
   const lines = [
     "🎸 *Новая заявка с сайта Maestro Music Store*",
     "",
@@ -461,7 +468,7 @@ export function buildWhatsAppOrderUrl(params: {
     "",
     `💰 *Сумма заявки:* ${
       params.totalPrice > 0 ? `${money(params.totalPrice)} ₸` : "Уточняется менеджером"
-    }${installmentText}`,
+    }${installmentText}${courseActivationText}`,
   ].filter(Boolean);
 
   const text = encodeURIComponent(lines.join("\n"));
