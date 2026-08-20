@@ -868,11 +868,22 @@ const server = http.createServer((req, res) => {
     return;
   }
 
-  // Fallback to index.html for client SPA routes
-  const fallbackIndex = path.join(PUBLIC_DIR, "index.html");
-  if (fs.existsSync(fallbackIndex)) {
-    serveStaticFile(req, res, fallbackIndex, "text/html; charset=utf-8", true);
-    return;
+  // Serve the SPA shell only for known public store routes. Unknown product and
+  // category URLs must remain real 404 responses instead of rendering home.
+  const normalizedPath = pathname.length > 1 ? pathname.replace(/\/+$/, "") : pathname;
+  const categoryMatch = normalizedPath.match(/^\/catalog\/([^/]+)$/);
+  const productMatch = normalizedPath.match(/^\/product\/([^/]+)$/);
+  const knownStaticRoute = normalizedPath === "/catalog" || normalizedPath === "/picker" || normalizedPath === "/cart";
+  const knownCategoryRoute = Boolean(categoryMatch && commerceCore.isCanonicalCategorySlug(categoryMatch[1]));
+  const knownProductRoute = Boolean(productMatch && commerceCore.productByIdentifier(baseCommerceCatalog(), {
+    slug: decodeURIComponent(productMatch[1]),
+  }));
+  if (knownStaticRoute || knownCategoryRoute || knownProductRoute) {
+    const fallbackIndex = path.join(PUBLIC_DIR, "index.html");
+    if (fs.existsSync(fallbackIndex)) {
+      serveStaticFile(req, res, fallbackIndex, "text/html; charset=utf-8", true);
+      return;
+    }
   }
 
   res.writeHead(404, { "Content-Type": "text/plain" });

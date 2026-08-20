@@ -33,30 +33,33 @@ test("Contract: cart persistence is versioned identifiers-only and reconciles on
 });
 
 test("Contract: UI pricing and checkout bridge use the shared domain and server order", async () => {
-  const [page, modal, qr, vpsHtml] = await Promise.all([
+  const [page, runtime, configurator, modal, qr, vpsHtml] = await Promise.all([
     source("../app/page.tsx"),
+    source("../components/store/StoreRuntime.tsx"),
+    source("../components/store/product/ProductConfigurator.tsx"),
     source("../components/ProductModal.tsx"),
     source("../components/KaspiQrModal.tsx"),
     source("../public/index.html"),
   ]);
-  assert.match(page, /\/api\/catalog/);
-  assert.match(page, /commerceCart\.createOrder/);
+  assert.match(page, /commerceCatalog\(\)/);
+  assert.match(runtime, /cart\.createOrder/);
+  assert.match(configurator, /quoteConfiguration/);
   assert.match(modal, /quoteConfiguration/);
   assert.doesNotMatch(modal, /basePrice \+ bundleDelta \+ stringsDelta/);
   assert.match(qr, /payment-report/);
-  assert.match(vpsHtml, /bundle\.js\?v=10/);
-  assert.doesNotMatch(vpsHtml, /bundle\.js\?v=9/);
+  assert.match(vpsHtml, /bundle\.js\?v=11/);
+  assert.doesNotMatch(vpsHtml, /bundle\.js\?v=10/);
 });
 
 test("Contract: client has no paid mutation and trusted confirmation is authenticated", async () => {
-  const [page, qr, provider, confirm, status] = await Promise.all([
-    source("../app/page.tsx"),
+  const [runtime, qr, provider, confirm, status] = await Promise.all([
+    source("../components/store/StoreRuntime.tsx"),
     source("../components/KaspiQrModal.tsx"),
     source("../components/CommerceCartProvider.tsx"),
     source("../app/api/admin/orders/[id]/confirm-payment/route.ts"),
     source("../lib/commerce/status.ts"),
   ]);
-  for (const clientSource of [page, qr, provider]) {
+  for (const clientSource of [runtime, qr, provider]) {
     assert.doesNotMatch(clientSource, /status\s*:\s*["']paid["']/);
   }
   assert.match(confirm, /isAdminRequest/);

@@ -5,6 +5,7 @@ import {
   variantsFor,
 } from "../catalog-data";
 import { stableHash } from "./pricing";
+import { categoryFromSource } from "./categories";
 import {
   BUNDLE_SKUS,
   COMMERCE_CURRENCY,
@@ -146,6 +147,7 @@ export function buildCatalogReadModels(
         : !product.publicationStatus || product.publicationStatus === "published",
     )
     .map((product) => {
+      const category = categoryFromSource(product.category);
       const currentBasePrice = asMoney(product.price);
       const originalBasePrice =
         product.isDiscountActive && product.originalPrice
@@ -196,7 +198,10 @@ export function buildCatalogReadModels(
         sku: product.sku,
         name: product.name,
         shortName: product.shortName || product.name,
-        category: product.category,
+        categoryId: category.id,
+        categorySlug: category.slug,
+        categoryDisplayName: category.displayName,
+        category: category.displayName,
         description: product.description,
         image: product.image,
         features: product.features || [],
@@ -227,7 +232,8 @@ export function buildCatalogReadModels(
           product.name,
           product.shortName,
           product.sku,
-          product.category,
+          category.displayName,
+          category.slug,
           product.description,
           ...(product.features || []),
           ...variants.flatMap((variant) => [variant.title, variant.sku]),
@@ -254,6 +260,9 @@ export const stage1SmokeProduct = (): ProductReadModel => ({
   sku: STAGE1_SMOKE_PRODUCT_SKU,
   name: "Stage 1 smoke product",
   shortName: "Stage 1 smoke",
+  categoryId: "system-test",
+  categorySlug: "system-test",
+  categoryDisplayName: "Системный тест",
   category: "Системный тест",
   description: "Безопасный технический товар, не отображается в каталоге.",
   image: "/products/01_st20_electric.png",

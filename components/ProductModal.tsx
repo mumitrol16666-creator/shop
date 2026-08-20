@@ -13,6 +13,7 @@ import { resolveAttachedCourse } from "../lib/courses-data";
 import { playProductAudio, stopProductAudio } from "../lib/sound-synth";
 import { quoteConfiguration } from "../lib/commerce/pricing";
 import { BUNDLE_SKUS, COMPONENT_SKUS } from "../lib/commerce/types";
+import { useOverlayLifecycle } from "./store/feedback/Overlay";
 
 type ProductModalProps = {
   selected: Product | null;
@@ -43,6 +44,7 @@ export function ProductModal({
   const [installmentMonths, setInstallmentMonths] = useState<number>(12);
   const [isPlayingSound, setIsPlayingSound] = useState(false);
   const [selectedStrings, setSelectedStrings] = useState<"elixir" | "daddario" | null>(null);
+  const modalRef = useOverlayLifecycle(Boolean(selected), onClose);
 
   const commerceProduct = selected?.commerce;
   const proBundle = commerceProduct?.bundleDefinitions.find((bundle) => bundle.id === "pro_pack");
@@ -116,7 +118,7 @@ export function ProductModal({
 
   return (
     <div className="modal-backdrop" role="presentation" onMouseDown={onClose}>
-      <article className="product-modal modern-product-modal" role="dialog" aria-modal="true" onMouseDown={(e) => e.stopPropagation()}>
+      <article ref={modalRef} className="product-modal modern-product-modal" role="dialog" aria-modal="true" onMouseDown={(e) => e.stopPropagation()}>
         <button className="modal-close" onClick={onClose} aria-label="Закрыть">×</button>
 
         {/* SCROLLABLE MAIN BODY */}

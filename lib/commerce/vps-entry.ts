@@ -15,3 +15,4 @@ export {
 export { CommerceDomainError, commerceError, toErrorResponse } from "./errors";
 export { assertOrderTransition, canTransitionOrder } from "./status";
 export { BUNDLE_SKUS, CART_SCHEMA_VERSION, COMMERCE_STATE_SCHEMA_VERSION } from "./types";
+export { CATALOG_CATEGORIES, categoryBySlug, isCanonicalCategorySlug } from "./categories";

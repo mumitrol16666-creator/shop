@@ -83,23 +83,23 @@ test("P0: payment report handoff is structured and never claims paid", () => {
 });
 
 test("P0: UI wiring keeps one catalog source, explicit configuration and required contacts", async () => {
-  const [page, topbar, productModal, cart, kaspi, css] = await Promise.all([
+  const [page, runtime, vpsRoot, configurator, cart, kaspi, css] = await Promise.all([
     readSource("../app/page.tsx"),
-    readSource("../components/Topbar.tsx"),
-    readSource("../components/ProductModal.tsx"),
+    readSource("../components/store/StoreRuntime.tsx"),
+    readSource("../components/store/VpsStoreRoot.tsx"),
+    readSource("../components/store/product/ProductConfigurator.tsx"),
     readSource("../components/CartDrawer.tsx"),
     readSource("../components/KaspiQrModal.tsx"),
     readSource("../app/globals.css"),
   ]);
 
-  assert.match(page, /catalogProducts=\{mergedProducts\}/);
-  assert.match(page, /fetch\("\/api\/catalog"\)/);
-  assert.match(page, /CommerceCartProvider/);
-  assert.match(topbar, /const searchCatalog = catalogProducts/);
-  assert.doesNotMatch(topbar, /defaultProducts/);
-  assert.match(page, /key=\{selected \? String\(selected\.id\) : "no-product"\}/);
-  assert.match(productModal, /disabled=\{!canAddToCart\}/);
-  assert.match(productModal, /"Выберите вариант"/);
+  assert.match(page, /commerceCatalog\(\)/);
+  assert.match(page, /StoreRuntime/);
+  assert.match(runtime, /CommerceCartProvider/);
+  assert.match(vpsRoot, /fetch\("\/api\/catalog"/);
+  assert.match(configurator, /product\.selectionRequired \? ""/);
+  assert.match(configurator, /disabled=\{!variantSku \|\| !maxQuantity\}/);
+  assert.match(configurator, /"Выберите вариант"/);
   assert.match(cart, /reportValidity\(\)/);
   assert.match(cart, /name="customerName"[\s\S]*?required/);
   assert.match(cart, /name="customerPhone"[\s\S]*?required/);
@@ -108,7 +108,7 @@ test("P0: UI wiring keeps one catalog source, explicit configuration and require
   assert.match(kaspi, /paymentStatus: "payment_reported"/);
   assert.match(kaspi, /Требуется ручная проверка/);
   assert.doesNotMatch(kaspi, /Спасибо за оплату|Заказ принят в обработку|onPaymentSuccess/);
-  assert.doesNotMatch(page, /onPaymentReported=\{\(\) => \{[\s\S]{0,180}setCartItems\(\[\]\)/);
+  assert.doesNotMatch(runtime, /onPaymentReported=\{\(\) => \{[\s\S]{0,180}setCartItems\(\[\]\)/);
   assert.match(css, /body\.commerce-overlay-open/);
   assert.match(css, /max-height: 100dvh/);
   assert.match(css, /overflow-x: clip/);

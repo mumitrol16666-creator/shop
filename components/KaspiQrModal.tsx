@@ -2,6 +2,7 @@ import { useState } from "react";
 import { buildWhatsAppOrderUrl, installment, money } from "../lib/catalog-data";
 import { cartItemsFromOrder } from "../lib/commerce/ui-adapter";
 import type { PublicOrder } from "../lib/commerce/types";
+import { useOverlayLifecycle } from "./store/feedback/Overlay";
 
 export const OFFICIAL_KASPI_PAY_LINK = "https://pay.kaspi.kz/pay/ku3aldre";
 
@@ -28,6 +29,7 @@ export function KaspiQrModal({
 }: KaspiQrModalProps) {
   const [isReported, setIsReported] = useState(false);
   const [reportError, setReportError] = useState("");
+  const modalRef = useOverlayLifecycle(isOpen && Boolean(order), onClose);
 
   if (!isOpen || !order) return null;
   const cartItems = cartItemsFromOrder(order);
@@ -79,6 +81,7 @@ export function KaspiQrModal({
   return (
     <div className="modal-backdrop" role="presentation" onMouseDown={onClose}>
       <article
+        ref={modalRef}
         className="kaspi-qr-modal"
         role="dialog"
         aria-modal="true"

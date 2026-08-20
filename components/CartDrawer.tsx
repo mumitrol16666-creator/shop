@@ -1,12 +1,13 @@
 "use client";
 
 import Image from "next/image";
-import { useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import {
   installment,
   money,
   type CartItem,
 } from "../lib/catalog-data";
+import { useOverlayLifecycle } from "./store/feedback/Overlay";
 
 export type CheckoutIntent = {
   fulfilmentMethod: string;
@@ -62,6 +63,8 @@ export function CartDrawer({
   const [paymentMethod, setPaymentMethod] = useState("Kaspi Рассрочка 0-0-12");
   const orderFormRef = useRef<HTMLFormElement>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const closeDrawer = useCallback(() => setCartOpen(false), [setCartOpen]);
+  const drawerRef = useOverlayLifecycle(cartOpen, closeDrawer);
 
   if (!cartOpen) return null;
 
@@ -104,6 +107,7 @@ export function CartDrawer({
   return (
     <div className="cart-drawer-backdrop" role="presentation" onMouseDown={() => setCartOpen(false)}>
       <aside
+        ref={drawerRef}
         className="cart-drawer"
         role="dialog"
         aria-modal="true"
@@ -115,10 +119,11 @@ export function CartDrawer({
             <p className="eyebrow">Заявка</p>
             <h2>Корзина магазина</h2>
           </div>
-          <button onClick={() => setCartOpen(false)} aria-label="Закрыть корзину">
+          <button onClick={closeDrawer} aria-label="Закрыть корзину">
             ×
           </button>
         </div>
+        <a className="store-text-link" href="/cart" onClick={closeDrawer}>Открыть страницу корзины →</a>
 
         {/* Dynamic Delivery & Gift Progress Bar */}
         {cartItems.length > 0 && (

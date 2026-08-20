@@ -73,6 +73,10 @@ export type ProductReadModel = {
   sku: string;
   name: string;
   shortName: string;
+  categoryId: string;
+  categorySlug: string;
+  categoryDisplayName: string;
+  /** @deprecated Use categoryDisplayName for presentation and categorySlug for routing. */
   category: string;
   description: string;
   image: string;

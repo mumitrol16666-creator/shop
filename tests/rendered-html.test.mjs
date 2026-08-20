@@ -61,8 +61,9 @@ test("rejects an impossible percentage structure", () => {
 });
 
 test("wires protected administration to persistent catalog APIs", async () => {
-  const [page, adminPage, adminGate, purchaserView, route, coursesRoute, schema, hosting, bundle] = await Promise.all([
+  const [page, vpsRoot, adminPage, adminGate, purchaserView, route, coursesRoute, schema, hosting, bundle] = await Promise.all([
     readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../components/store/VpsStoreRoot.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/admin/pricing/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../components/AdminAccessGate.tsx", import.meta.url), "utf8"),
     readFile(new URL("../components/PurchaserView.tsx", import.meta.url), "utf8"),
@@ -73,7 +74,8 @@ test("wires protected administration to persistent catalog APIs", async () => {
     readFile(new URL("../public/bundle.js", import.meta.url), "utf8"),
   ]);
 
-  assert.match(page, /fetch\("\/api\/catalog"\)/);
+  assert.match(page, /commerceCatalog\(\)/);
+  assert.match(vpsRoot, /fetch\("\/api\/catalog"/);
   assert.doesNotMatch(page, /scope=all/);
   assert.match(adminPage, /fetch\("\/api\/products\?scope=all"/);
   assert.match(adminGate, /\/api\/admin\/session/);
