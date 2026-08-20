@@ -81,24 +81,27 @@ export function KaspiQrModal({
             <div className="kaspi-amount-box">
               <span className="kaspi-amount-label">Сумма к оплате</span>
               <strong className="kaspi-amount-val">{money(totalPrice)} ₸</strong>
-              <span className="kaspi-installment-pill">
-                0-0-12: от {money(installment(totalPrice, 12))} ₸ / мес
-              </span>
+              <div className="kaspi-pills-row" style={{ display: "flex", gap: "6px", justifyContent: "center", marginTop: "4px" }}>
+                <span className="kaspi-installment-pill">Kaspi Red (3 мес)</span>
+                <span className="kaspi-installment-pill">0-0-12: от {money(installment(totalPrice, 12))} ₸/мес</span>
+              </div>
             </div>
 
             <div className="kaspi-qr-frame">
-              <div
-                className="kaspi-qr-svg-wrap"
-                dangerouslySetInnerHTML={{ __html: qrSvg }}
-              />
-              <div className="kaspi-qr-center-logo">K</div>
-              <span className="kaspi-qr-scan-hint">Отсканируйте камерой Kaspi.kz</span>
+              <div className="kaspi-official-qr-wrap">
+                <img
+                  src="/kaspi_pay_qr.png"
+                  alt="Официальный Kaspi QR Maestro"
+                  className="kaspi-official-qr-img"
+                />
+              </div>
+              <span className="kaspi-qr-scan-hint">Отсканируйте камерой в приложении Kaspi.kz</span>
             </div>
 
             <div className="kaspi-steps-list">
               <div className="kaspi-step">
                 <span>1</span>
-                <p>Откройте приложение <strong>Kaspi.kz</strong> на телефоне</p>
+                <p>Откройте приложение <strong>Kaspi.kz</strong> на смартфоне</p>
               </div>
               <div className="kaspi-step">
                 <span>2</span>
@@ -106,31 +109,22 @@ export function KaspiQrModal({
               </div>
               <div className="kaspi-step">
                 <span>3</span>
-                <p>Выберите <strong>Kaspi Gold</strong>, <strong>Red</strong> или <strong>Рассрочку 0-0-12</strong></p>
+                <p>Выберите <strong>Kaspi Red</strong>, <strong>Gold</strong> или <strong>Рассрочку 0-0-12</strong></p>
               </div>
             </div>
 
             <div className="kaspi-actions">
-              <a
-                href={paymentUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="kaspi-mobile-button"
-              >
-                Открыть счет в приложении Kaspi.kz
-              </a>
-
               <button
                 type="button"
                 className="kaspi-confirm-button"
                 onClick={handleConfirmPaid}
               >
-                Я оплатил счет
+                ✓ Я оплатил через Kaspi
               </button>
             </div>
 
             <p className="kaspi-merchant-note">
-              Получатель: <strong>ИП Maestro Music Store</strong> · БИН/ИИН подтвержден
+              Получатель: <strong>MAESTRO MUSIC STORE</strong> · Официальный Kaspi Pay
             </p>
           </div>
         )}

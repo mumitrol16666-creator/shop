@@ -14167,22 +14167,25 @@ function KaspiQrModal({
               money(totalPrice),
               " \u20B8"
             ] }),
-            /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("span", { className: "kaspi-installment-pill", children: [
-              "0-0-12: \u043E\u0442 ",
-              money(installment(totalPrice, 12)),
-              " \u20B8 / \u043C\u0435\u0441"
+            /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "kaspi-pills-row", style: { display: "flex", gap: "6px", justifyContent: "center", marginTop: "4px" }, children: [
+              /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("span", { className: "kaspi-installment-pill", children: "Kaspi Red (3 \u043C\u0435\u0441)" }),
+              /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("span", { className: "kaspi-installment-pill", children: [
+                "0-0-12: \u043E\u0442 ",
+                money(installment(totalPrice, 12)),
+                " \u20B8/\u043C\u0435\u0441"
+              ] })
             ] })
           ] }),
           /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "kaspi-qr-frame", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
-              "div",
+            /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("div", { className: "kaspi-official-qr-wrap", children: /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
+              "img",
               {
-                className: "kaspi-qr-svg-wrap",
-                dangerouslySetInnerHTML: { __html: qrSvg }
+                src: "/kaspi_pay_qr.png",
+                alt: "\u041E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u044B\u0439 Kaspi QR Maestro",
+                className: "kaspi-official-qr-img"
               }
-            ),
-            /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("div", { className: "kaspi-qr-center-logo", children: "K" }),
-            /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("span", { className: "kaspi-qr-scan-hint", children: "\u041E\u0442\u0441\u043A\u0430\u043D\u0438\u0440\u0443\u0439\u0442\u0435 \u043A\u0430\u043C\u0435\u0440\u043E\u0439 Kaspi.kz" })
+            ) }),
+            /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("span", { className: "kaspi-qr-scan-hint", children: "\u041E\u0442\u0441\u043A\u0430\u043D\u0438\u0440\u0443\u0439\u0442\u0435 \u043A\u0430\u043C\u0435\u0440\u043E\u0439 \u0432 \u043F\u0440\u0438\u043B\u043E\u0436\u0435\u043D\u0438\u0438 Kaspi.kz" })
           ] }),
           /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "kaspi-steps-list", children: [
             /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "kaspi-step", children: [
@@ -14190,7 +14193,7 @@ function KaspiQrModal({
               /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("p", { children: [
                 "\u041E\u0442\u043A\u0440\u043E\u0439\u0442\u0435 \u043F\u0440\u0438\u043B\u043E\u0436\u0435\u043D\u0438\u0435 ",
                 /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("strong", { children: "Kaspi.kz" }),
-                " \u043D\u0430 \u0442\u0435\u043B\u0435\u0444\u043E\u043D\u0435"
+                " \u043D\u0430 \u0441\u043C\u0430\u0440\u0442\u0444\u043E\u043D\u0435"
               ] })
             ] }),
             /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "kaspi-step", children: [
@@ -14205,39 +14208,27 @@ function KaspiQrModal({
               /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("span", { children: "3" }),
               /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("p", { children: [
                 "\u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 ",
-                /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("strong", { children: "Kaspi Gold" }),
+                /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("strong", { children: "Kaspi Red" }),
                 ", ",
-                /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("strong", { children: "Red" }),
+                /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("strong", { children: "Gold" }),
                 " \u0438\u043B\u0438 ",
                 /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("strong", { children: "\u0420\u0430\u0441\u0441\u0440\u043E\u0447\u043A\u0443 0-0-12" })
               ] })
             ] })
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "kaspi-actions", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
-              "a",
-              {
-                href: paymentUrl,
-                target: "_blank",
-                rel: "noopener noreferrer",
-                className: "kaspi-mobile-button",
-                children: "\u041E\u0442\u043A\u0440\u044B\u0442\u044C \u0441\u0447\u0435\u0442 \u0432 \u043F\u0440\u0438\u043B\u043E\u0436\u0435\u043D\u0438\u0438 Kaspi.kz"
-              }
-            ),
-            /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
-              "button",
-              {
-                type: "button",
-                className: "kaspi-confirm-button",
-                onClick: handleConfirmPaid,
-                children: "\u042F \u043E\u043F\u043B\u0430\u0442\u0438\u043B \u0441\u0447\u0435\u0442"
-              }
-            )
-          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("div", { className: "kaspi-actions", children: /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
+            "button",
+            {
+              type: "button",
+              className: "kaspi-confirm-button",
+              onClick: handleConfirmPaid,
+              children: "\u2713 \u042F \u043E\u043F\u043B\u0430\u0442\u0438\u043B \u0447\u0435\u0440\u0435\u0437 Kaspi"
+            }
+          ) }),
           /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("p", { className: "kaspi-merchant-note", children: [
             "\u041F\u043E\u043B\u0443\u0447\u0430\u0442\u0435\u043B\u044C: ",
-            /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("strong", { children: "\u0418\u041F Maestro Music Store" }),
-            " \xB7 \u0411\u0418\u041D/\u0418\u0418\u041D \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0435\u043D"
+            /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("strong", { children: "MAESTRO MUSIC STORE" }),
+            " \xB7 \u041E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u044B\u0439 Kaspi Pay"
           ] })
         ] })
       ]
