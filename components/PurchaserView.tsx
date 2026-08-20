@@ -106,19 +106,19 @@ export function PurchaserView({
     variantIndex?: number;
   } | null>(null);
 
-  const compressImage = (file: File): Promise<string> => {
+  const compressImage = (file: File): Promise<{ dataUrl: string; filename: string }> => {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.onload = (e) => {
         const rawBase64 = e.target?.result as string;
         if (!file.type.startsWith("image/")) {
-          return resolve(rawBase64);
+          return resolve({ dataUrl: rawBase64, filename: file.name });
         }
         // `Image` is also the imported Next.js component in this file.
         // Use a real browser image element for client-side compression.
         const img = document.createElement("img");
         img.onload = () => {
-          const maxDim = 1600;
+          const maxDim = 1800;
           let width = img.width;
           let height = img.height;
           if (width > maxDim || height > maxDim) {
@@ -130,19 +130,110 @@ export function PurchaserView({
               height = maxDim;
             }
           }
-          const canvas = document.createElement("canvas");
-          canvas.width = width;
-          canvas.height = height;
-          const ctx = canvas.getContext("2d");
-          if (!ctx) {
-            return resolve(rawBase64);
+          const sourceCanvas = document.createElement("canvas");
+          sourceCanvas.width = width;
+          sourceCanvas.height = height;
+          const sourceCtx = sourceCanvas.getContext("2d", { willReadFrequently: true });
+          if (!sourceCtx) {
+            return resolve({ dataUrl: rawBase64, filename: file.name });
           }
-          ctx.drawImage(img, 0, 0, width, height);
-          const outputType = file.type === "image/png" ? "image/png" : "image/jpeg";
-          const compressedDataUrl = canvas.toDataURL(outputType, 0.88);
-          resolve(compressedDataUrl);
+          sourceCtx.drawImage(img, 0, 0, width, height);
+
+          // Trim transparent and nearly-white margins. Product photos usually
+          // arrive with a lot of empty canvas, which makes the instrument look
+          // tiny even when CSS uses object-fit: contain.
+          let cropX = 0;
+          let cropY = 0;
+          let cropWidth = width;
+          let cropHeight = height;
+          try {
+            const pixels = sourceCtx.getImageData(0, 0, width, height).data;
+            let minX = width;
+            let minY = height;
+            let maxX = -1;
+            let maxY = -1;
+            const scanStep = Math.max(1, Math.floor(Math.max(width, height) / 900));
+
+            for (let y = 0; y < height; y += scanStep) {
+              for (let x = 0; x < width; x += scanStep) {
+                const offset = (y * width + x) * 4;
+                const r = pixels[offset] ?? 255;
+                const g = pixels[offset + 1] ?? 255;
+                const b = pixels[offset + 2] ?? 255;
+                const a = pixels[offset + 3] ?? 0;
+                const isEmpty = a < 18 || (r > 246 && g > 246 && b > 246);
+                if (!isEmpty) {
+                  minX = Math.min(minX, x);
+                  minY = Math.min(minY, y);
+                  maxX = Math.max(maxX, x);
+                  maxY = Math.max(maxY, y);
+                }
+              }
+            }
+
+            if (maxX >= minX && maxY >= minY) {
+              const detectedWidth = maxX - minX + scanStep;
+              const detectedHeight = maxY - minY + scanStep;
+              const detectedArea = detectedWidth * detectedHeight;
+              if (detectedArea > width * height * 0.015) {
+                const padding = Math.round(Math.max(detectedWidth, detectedHeight) * 0.045);
+                cropX = Math.max(0, minX - padding);
+                cropY = Math.max(0, minY - padding);
+                cropWidth = Math.min(width - cropX, detectedWidth + padding * 2);
+                cropHeight = Math.min(height - cropY, detectedHeight + padding * 2);
+              }
+            }
+          } catch {
+            // If pixel inspection is unavailable, keep the complete photo.
+          }
+
+          // Every uploaded product gets the same square canvas and breathing
+          // room, so cards and modals stay visually consistent.
+          const outputSize = 1400;
+          const normalizedCanvas = document.createElement("canvas");
+          normalizedCanvas.width = outputSize;
+          normalizedCanvas.height = outputSize;
+          const normalizedCtx = normalizedCanvas.getContext("2d");
+          if (!normalizedCtx) {
+            return resolve({ dataUrl: rawBase64, filename: file.name });
+          }
+          const availableSize = outputSize * 0.88;
+          const scale = Math.min(availableSize / cropWidth, availableSize / cropHeight);
+          const drawWidth = Math.max(1, Math.round(cropWidth * scale));
+          const drawHeight = Math.max(1, Math.round(cropHeight * scale));
+          const drawX = Math.round((outputSize - drawWidth) / 2);
+          const drawY = Math.round((outputSize - drawHeight) / 2);
+          normalizedCtx.clearRect(0, 0, outputSize, outputSize);
+          normalizedCtx.drawImage(
+            sourceCanvas,
+            cropX,
+            cropY,
+            cropWidth,
+            cropHeight,
+            drawX,
+            drawY,
+            drawWidth,
+            drawHeight,
+          );
+
+          const maxUploadBytes = 760 * 1024;
+          let quality = 0.84;
+          let compressedDataUrl = normalizedCanvas.toDataURL("image/webp", quality);
+          const webpSupported = compressedDataUrl.startsWith("data:image/webp");
+          const approximateBytes = (dataUrl: string) => Math.ceil((dataUrl.length * 3) / 4);
+          while (webpSupported && approximateBytes(compressedDataUrl) > maxUploadBytes && quality > 0.44) {
+            quality -= 0.08;
+            compressedDataUrl = normalizedCanvas.toDataURL("image/webp", quality);
+          }
+
+          const baseName = file.name.replace(/\.[^.]+$/, "") || "photo";
+          const fallbackExtension = file.type === "image/png" ? "png" : "jpg";
+          resolve({
+            dataUrl: compressedDataUrl,
+            filename: `${baseName}.${webpSupported ? "webp" : fallbackExtension}`,
+          });
         };
-        img.onerror = () => resolve(rawBase64);
+        img.onerror = () => resolve({ dataUrl: rawBase64, filename: file.name });
         img.src = rawBase64;
       };
       reader.onerror = reject;
@@ -154,13 +245,21 @@ export function PurchaserView({
     if (!file) return;
     setIsUploadingPhoto(true);
     try {
-      const base64 = await compressImage(file);
+      const processed = await compressImage(file);
       const res = await fetch("/api/upload", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ filename: file.name, base64 }),
+        body: JSON.stringify({ filename: processed.filename, base64: processed.dataUrl }),
       });
-      const data = (await res.json()) as { url?: string; error?: string };
+      const responseText = await res.text();
+      let data: { url?: string; error?: string } = {};
+      try {
+        data = JSON.parse(responseText) as { url?: string; error?: string };
+      } catch {
+        data.error = res.status === 413
+          ? "Фотография слишком большая для сервера"
+          : `Сервер вернул ошибку ${res.status}`;
+      }
       if (res.ok && data.url) {
         onSuccess(data.url);
         setIsDirty(true);
