@@ -14262,296 +14262,298 @@ function ProductModal({
   const currentVariantStock = selectedVariant?.stock ?? selected.quantity ?? 1;
   return /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "modal-backdrop", role: "presentation", onMouseDown: onClose, children: /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("article", { className: "product-modal modern-product-modal", role: "dialog", "aria-modal": "true", onMouseDown: (e) => e.stopPropagation(), children: [
     /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("button", { className: "modal-close", onClick: onClose, "aria-label": "\u0417\u0430\u043A\u0440\u044B\u0442\u044C", children: "\xD7" }),
-    /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "modal-image-col", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "modal-image-container", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
-          Image,
-          {
-            src: selectedImage,
-            alt: `${selected.name} \u2014 ${selectedVariant?.name ?? "\u0432\u0430\u0440\u0438\u0430\u043D\u0442"}`,
-            fill: true,
-            unoptimized: true,
-            sizes: "(max-width: 800px) 90vw, 48vw",
-            className: "modal-main-img"
-          },
-          selectedImage
-        ),
-        hasDiscount && /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("span", { className: "modal-discount-pill", children: [
-          "\u0410\u041A\u0426\u0418\u042F -",
-          discountPercent,
-          "%"
-        ] }),
-        selected.audioUrl && /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)(
-          "button",
-          {
-            type: "button",
-            className: `sound-preview-btn ${isPlayingSound ? "playing" : ""}`,
-            onClick: handlePlaySound,
-            title: isPlayingSound ? "\u041E\u0441\u0442\u0430\u043D\u043E\u0432\u0438\u0442\u044C" : "\u041F\u043E\u0441\u043B\u0443\u0448\u0430\u0442\u044C \u0440\u0435\u0430\u043B\u044C\u043D\u043E\u0435 \u0437\u0432\u0443\u0447\u0430\u043D\u0438\u0435 \u0438\u043D\u0441\u0442\u0440\u0443\u043C\u0435\u043D\u0442\u0430",
-            children: [
-              /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "sound-icon", children: isPlayingSound ? "\u{1F3B5}" : "\u{1F50A}" }),
-              /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { children: isPlayingSound ? "\u0417\u0432\u0443\u0447\u0438\u0442 \u043F\u0440\u0438\u043C\u0435\u0440..." : "\u041F\u043E\u0441\u043B\u0443\u0448\u0430\u0442\u044C \u0437\u0432\u0443\u0447\u0430\u043D\u0438\u0435" }),
-              isPlayingSound && /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("span", { className: "sound-wave-bars", children: [
-                /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("i", {}),
-                /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("i", {}),
-                /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("i", {}),
-                /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("i", {})
-              ] })
-            ]
-          }
-        )
-      ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "master-setup-badge", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "badge-icon", children: "\u{1F6E0}" }),
-        /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { children: [
-          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("strong", { children: "\u0411\u0435\u0441\u043F\u043B\u0430\u0442\u043D\u0430\u044F \u0434\u043E\u0432\u043E\u0434\u043A\u0430 \u043C\u0430\u0441\u0442\u0435\u0440\u043E\u043C" }),
-          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("small", { children: "\u041E\u0442\u0441\u0442\u0440\u043E\u0439\u043A\u0430 \u043C\u0435\u043D\u0437\u0443\u0440\u044B, \u043C\u044F\u0433\u043A\u0430\u044F \u043F\u043E\u0441\u0430\u0434\u043A\u0430 \u0441\u0442\u0440\u0443\u043D 1.5 \u043C\u043C" })
-        ] })
-      ] })
-    ] }),
-    /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "modal-details-col", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "modal-head-row", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "modal-cat-and-stock", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "modal-category-badge", children: selected.category }),
-          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: `modal-stock-pill ${currentVariantStock > 0 ? "in-stock" : "out"}`, children: currentVariantStock > 0 ? `\u25CF \u0412 \u043D\u0430\u043B\u0438\u0447\u0438\u0438 ${currentVariantStock} \u0448\u0442.` : "\u041F\u043E\u0434 \u0437\u0430\u043A\u0430\u0437" })
-        ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("h2", { className: "modal-product-title", children: selected.name }),
-        /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "modal-sku-bar", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("span", { children: [
-            "\u0410\u0440\u0442\u0438\u043A\u0443\u043B: ",
-            /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("code", { children: selectedVariant?.sku ?? selected.sku })
+    /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "modal-scrollable-content", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "modal-image-col", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "modal-image-container", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
+            Image,
+            {
+              src: selectedImage,
+              alt: `${selected.name} \u2014 ${selectedVariant?.name ?? "\u0432\u0430\u0440\u0438\u0430\u043D\u0442"}`,
+              fill: true,
+              unoptimized: true,
+              sizes: "(max-width: 800px) 90vw, 48vw",
+              className: "modal-main-img"
+            },
+            selectedImage
+          ),
+          hasDiscount && /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("span", { className: "modal-discount-pill", children: [
+            "\u0410\u041A\u0426\u0418\u042F -",
+            discountPercent,
+            "%"
           ] }),
-          selected.badge && /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "modal-highlight-tag", children: selected.badge })
-        ] })
-      ] }),
-      mode === "buyer" ? /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "modal-interactive-body", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "clean-section-block", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "clean-section-title", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { children: "1. \u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u0446\u0432\u0435\u0442:" }),
-            /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("strong", { children: selectedVariant?.name || "\u0421\u0442\u0430\u043D\u0434\u0430\u0440\u0442\u043D\u044B\u0439" })
-          ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "clean-swatches-grid", children: variantsFor(selected).map((variant) => {
-            const isSelected = (selectedVariant?.sku || selectedVariant?.name) === (variant.sku || variant.name);
-            return /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)(
-              "button",
-              {
-                type: "button",
-                className: `clean-swatch-tile ${isSelected ? "active" : ""}`,
-                onClick: () => {
-                  setSelectedVariant(variant);
-                  setRequestedQuantity(1);
-                },
-                children: [
-                  /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
-                    "i",
-                    {
-                      style: {
-                        background: variant.secondary ? `linear-gradient(135deg, ${variant.color} 0 50%, ${variant.secondary} 50%)` : variant.color || "#181511"
-                      }
-                    }
-                  ),
-                  /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "swatch-tile-name", children: variant.name }),
-                  /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("small", { className: "swatch-tile-stock", children: [
-                    variant.stock,
-                    " \u0448\u0442."
-                  ] })
-                ]
-              },
-              variant.sku || variant.name
-            );
-          }) })
-        ] }),
-        (showCourseOption || showProPackOption) && /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "clean-section-block", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "clean-section-title", children: /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { children: "2. \u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u043A\u043E\u043C\u043F\u043B\u0435\u043A\u0442\u0430\u0446\u0438\u044E:" }) }),
-          /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "clean-bundles-grid", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)(
-              "button",
-              {
-                type: "button",
-                className: `clean-bundle-card ${selectedBundle === "base" ? "active" : ""}`,
-                onClick: () => setSelectedBundle("base"),
-                children: [
-                  /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "bundle-card-top-row", children: [
-                    /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "bundle-card-icon", children: "\u{1F3B8}" }),
-                    /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("strong", { className: "bundle-card-name", children: "\u0422\u043E\u043B\u044C\u043A\u043E \u0438\u043D\u0441\u0442\u0440\u0443\u043C\u0435\u043D\u0442" })
-                  ] }),
-                  /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("small", { className: "bundle-card-desc", children: "\u0417\u0430\u0432\u043E\u0434\u0441\u043A\u0430\u044F \u043A\u043E\u0440\u043E\u0431\u043A\u0430 + \u043A\u043B\u044E\u0447\u0438" }),
-                  /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "bundle-card-price-row", children: /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("strong", { children: "+0 \u20B8" }) })
-                ]
-              }
-            ),
-            showCourseOption && /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)(
-              "button",
-              {
-                type: "button",
-                className: `clean-bundle-card gift-highlight ${selectedBundle === "gift_course" ? "active" : ""}`,
-                onClick: () => setSelectedBundle("gift_course"),
-                children: [
-                  /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "bundle-badge-gift", children: "\u041F\u041E\u0414\u0410\u0420\u041E\u041A 0 \u20B8" }),
-                  /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "bundle-card-top-row", children: [
-                    /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "bundle-card-icon", children: "\u{1F381}" }),
-                    /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("strong", { className: "bundle-card-name", children: "\u0413\u0438\u0442\u0430\u0440\u0430 + \u041A\u0443\u0440\u0441" })
-                  ] }),
-                  /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("small", { className: "bundle-card-desc", children: attachedCourse ? `\u041A\u0443\u0440\u0441 \xAB${attachedCourse.title}\xBB` : "\u041E\u043D\u043B\u0430\u0439\u043D-\u043A\u0443\u0440\u0441 \u0432 \u043F\u043E\u0434\u0430\u0440\u043E\u043A" }),
-                  /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "bundle-card-price-row", children: /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("strong", { className: "free-tag", children: "\u0411\u0435\u0441\u043F\u043B\u0430\u0442\u043D\u043E (0 \u20B8)" }) })
-                ]
-              }
-            ),
-            showProPackOption && /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)(
-              "button",
-              {
-                type: "button",
-                className: `clean-bundle-card pro-highlight ${selectedBundle === "pro_pack" ? "active" : ""}`,
-                onClick: () => setSelectedBundle("pro_pack"),
-                children: [
-                  /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "bundle-badge-pro", children: "PRO \u041D\u0410\u0411\u041E\u0420" }),
-                  /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "bundle-card-top-row", children: [
-                    /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "bundle-card-icon", children: "\u{1F451}" }),
-                    /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("strong", { className: "bundle-card-name", children: "PRO \u041A\u043E\u043C\u043F\u043B\u0435\u043A\u0442" })
-                  ] }),
-                  /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("small", { className: "bundle-card-desc", children: proPackTitle }),
-                  /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "bundle-card-price-row", children: /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("strong", { children: [
-                    "+",
-                    money(proPackPrice),
-                    " \u20B8"
-                  ] }) })
-                ]
-              }
-            )
-          ] })
-        ] }),
-        showStringsUpsell && /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "clean-section-block", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "clean-section-title", children: /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { children: "3. \u0421\u043F\u0435\u0446\u043F\u0440\u0435\u0434\u043B\u043E\u0436\u0435\u043D\u0438\u0435 \u043A \u0437\u0430\u043A\u0430\u0437\u0443 (-50%):" }) }),
-          /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "clean-bump-list", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)(
-              "div",
-              {
-                className: `clean-bump-item ${selectedStrings === "elixir" ? "active" : ""}`,
-                onClick: () => setSelectedStrings(selectedStrings === "elixir" ? null : "elixir"),
-                children: [
-                  /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "bump-check-circle", children: selectedStrings === "elixir" ? "\u2713" : "" }),
-                  /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "bump-text-wrap", children: [
-                    /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("strong", { children: [
-                      "\u{1F451} \u0421\u0442\u0440\u0443\u043D\u044B Elixir Nanoweb (\u0421\u0428\u0410) ",
-                      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "discount-tag-red", children: "-50%" })
-                    ] }),
-                    /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("small", { children: "\u0421\u043B\u0443\u0436\u0430\u0442 \u0434\u043E 6 \u043C\u0435\u0441\u044F\u0446\u0435\u0432 \xB7 \u0417\u0432\u043E\u043D\u043A\u0438\u0439 \u043F\u0440\u0435\u043C\u0438\u0430\u043B\u044C\u043D\u044B\u0439 \u0442\u043E\u043D" })
-                  ] }),
-                  /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "bump-pricing-wrap", children: [
-                    /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("del", { children: "9 900 \u20B8" }),
-                    /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("strong", { children: "+4 950 \u20B8" })
-                  ] })
-                ]
-              }
-            ),
-            /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)(
-              "div",
-              {
-                className: `clean-bump-item ${selectedStrings === "daddario" ? "active" : ""}`,
-                onClick: () => setSelectedStrings(selectedStrings === "daddario" ? null : "daddario"),
-                children: [
-                  /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "bump-check-circle", children: selectedStrings === "daddario" ? "\u2713" : "" }),
-                  /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "bump-text-wrap", children: [
-                    /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("strong", { children: [
-                      "\u{1F3B8} \u0421\u0442\u0440\u0443\u043D\u044B D'Addario Pro ",
-                      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "discount-tag-red", children: "-50%" })
-                    ] }),
-                    /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("small", { children: "\u041C\u044F\u0433\u043A\u043E\u0435 \u043D\u0430\u0442\u044F\u0436\u0435\u043D\u0438\u0435 \u0434\u043B\u044F \u043B\u0435\u0433\u043A\u0438\u0445 \u043F\u0435\u0440\u0432\u044B\u0445 \u0430\u043A\u043A\u043E\u0440\u0434\u043E\u0432" })
-                  ] }),
-                  /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "bump-pricing-wrap", children: [
-                    /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("del", { children: "4 900 \u20B8" }),
-                    /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("strong", { children: "+2 450 \u20B8" })
-                  ] })
-                ]
-              }
-            )
-          ] })
-        ] }),
-        currentPrice > 0 && /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "clean-installment-box", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "installment-box-top", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "installment-brand", children: [
-              /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "kaspi-red-badge", children: "kaspi" }),
-              /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("strong", { children: "\u0420\u0430\u0441\u0441\u0440\u043E\u0447\u043A\u0430 \u0431\u0435\u0437 \u043F\u0435\u0440\u0435\u043F\u043B\u0430\u0442" })
-            ] }),
-            /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("strong", { className: "monthly-figure", children: [
-              money(installment(currentPrice, installmentMonths)),
-              " \u20B8 ",
-              /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("small", { children: "/ \u043C\u0435\u0441" })
-            ] })
-          ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "installment-pills-selector", children: [3, 6, 12].map((m) => /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
+          selected.audioUrl && /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)(
             "button",
             {
               type: "button",
-              className: `installment-pill-btn ${installmentMonths === m ? "active" : ""}`,
-              onClick: () => setInstallmentMonths(m),
-              children: m === 3 ? "3 \u043C\u0435\u0441 (Kaspi Red)" : `${m} \u043C\u0435\u0441 (0-0-${m})`
-            },
-            m
-          )) })
+              className: `sound-preview-btn ${isPlayingSound ? "playing" : ""}`,
+              onClick: handlePlaySound,
+              title: isPlayingSound ? "\u041E\u0441\u0442\u0430\u043D\u043E\u0432\u0438\u0442\u044C" : "\u041F\u043E\u0441\u043B\u0443\u0448\u0430\u0442\u044C \u0440\u0435\u0430\u043B\u044C\u043D\u043E\u0435 \u0437\u0432\u0443\u0447\u0430\u043D\u0438\u0435 \u0438\u043D\u0441\u0442\u0440\u0443\u043C\u0435\u043D\u0442\u0430",
+              children: [
+                /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "sound-icon", children: isPlayingSound ? "\u{1F3B5}" : "\u{1F50A}" }),
+                /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { children: isPlayingSound ? "\u0417\u0432\u0443\u0447\u0438\u0442 \u043F\u0440\u0438\u043C\u0435\u0440..." : "\u041F\u043E\u0441\u043B\u0443\u0448\u0430\u0442\u044C \u0437\u0432\u0443\u0447\u0430\u043D\u0438\u0435" }),
+                isPlayingSound && /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("span", { className: "sound-wave-bars", children: [
+                  /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("i", {}),
+                  /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("i", {}),
+                  /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("i", {}),
+                  /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("i", {})
+                ] })
+              ]
+            }
+          )
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("details", { className: "clean-details-accordion", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("summary", { children: [
-            /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { children: "\u{1F4CB} \u041E\u043F\u0438\u0441\u0430\u043D\u0438\u0435 \u0438 \u0445\u0430\u0440\u0430\u043A\u0442\u0435\u0440\u0438\u0441\u0442\u0438\u043A\u0438 \u0438\u043D\u0441\u0442\u0440\u0443\u043C\u0435\u043D\u0442\u0430" }),
-            /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "accordion-chevron", children: "\u25BC" })
-          ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "accordion-content", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { className: "product-modal-desc", children: selected.description }),
-            /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("ul", { className: "product-features-checklist", children: selected.features.map((feature) => /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("li", { children: [
-              "\u2713 ",
-              feature
-            ] }, feature)) })
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "master-setup-badge", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "badge-icon", children: "\u{1F6E0}" }),
+          /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("strong", { children: "\u0411\u0435\u0441\u043F\u043B\u0430\u0442\u043D\u0430\u044F \u0434\u043E\u0432\u043E\u0434\u043A\u0430 \u043C\u0430\u0441\u0442\u0435\u0440\u043E\u043C" }),
+            /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("small", { children: "\u041E\u0442\u0441\u0442\u0440\u043E\u0439\u043A\u0430 \u043C\u0435\u043D\u0437\u0443\u0440\u044B, \u043C\u044F\u0433\u043A\u0430\u044F \u043F\u043E\u0441\u0430\u0434\u043A\u0430 \u0441\u0442\u0440\u0443\u043D 1.5 \u043C\u043C" })
           ] })
         ] })
-      ] }) : /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "purchaser-mode-notice", children: /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { children: "\u0420\u0435\u0436\u0438\u043C \u0443\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F: \u0440\u0435\u0434\u0430\u043A\u0442\u0438\u0440\u043E\u0432\u0430\u043D\u0438\u0435 \u0447\u0435\u0440\u0435\u0437 \u043F\u0430\u043D\u0435\u043B\u044C \u0437\u0430\u043A\u0443\u043F\u0449\u0438\u043A\u0430" }) }),
-      mode === "buyer" && /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "modal-sticky-bottom-bar", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "bottom-price-summary", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "bottom-price-label", children: "\u0418\u0422\u041E\u0413\u041E \u041A \u041E\u041F\u041B\u0410\u0422\u0415:" }),
-          /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "bottom-price-numbers", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("strong", { className: "bottom-current-price", children: [
-              money(currentPrice * requestedQuantity),
-              " \u20B8"
+      ] }),
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "modal-details-col", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "modal-head-row", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "modal-cat-and-stock", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "modal-category-badge", children: selected.category }),
+            /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: `modal-stock-pill ${currentVariantStock > 0 ? "in-stock" : "out"}`, children: currentVariantStock > 0 ? `\u25CF \u0412 \u043D\u0430\u043B\u0438\u0447\u0438\u0438 ${currentVariantStock} \u0448\u0442.` : "\u041F\u043E\u0434 \u0437\u0430\u043A\u0430\u0437" })
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("h2", { className: "modal-product-title", children: selected.name }),
+          /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "modal-sku-bar", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("span", { children: [
+              "\u0410\u0440\u0442\u0438\u043A\u0443\u043B: ",
+              /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("code", { children: selectedVariant?.sku ?? selected.sku })
             ] }),
-            hasDiscount && originalPrice && /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("del", { className: "bottom-old-price", children: [
-              money((originalPrice + bundleDelta + stringsDelta) * requestedQuantity),
-              " \u20B8"
-            ] })
+            selected.badge && /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "modal-highlight-tag", children: selected.badge })
           ] })
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "bottom-actions-group", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "modal-qty-clean", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
-              "button",
-              {
-                type: "button",
-                onClick: () => setRequestedQuantity((q) => Math.max(1, q - 1)),
-                disabled: requestedQuantity <= 1,
-                "aria-label": "\u0423\u043C\u0435\u043D\u044C\u0448\u0438\u0442\u044C",
-                children: "\u2212"
-              }
-            ),
-            /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { children: requestedQuantity }),
-            /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
-              "button",
-              {
-                type: "button",
-                onClick: () => setRequestedQuantity((q) => Math.min(currentVariantStock, q + 1)),
-                disabled: requestedQuantity >= currentVariantStock,
-                "aria-label": "\u0423\u0432\u0435\u043B\u0438\u0447\u0438\u0442\u044C",
-                children: "+"
-              }
-            )
+        mode === "buyer" ? /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "modal-interactive-body", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "clean-section-block", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "clean-section-title", children: [
+              /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { children: "1. \u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u0446\u0432\u0435\u0442:" }),
+              /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("strong", { children: selectedVariant?.name || "\u0421\u0442\u0430\u043D\u0434\u0430\u0440\u0442\u043D\u044B\u0439" })
+            ] }),
+            /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "clean-swatches-grid", children: variantsFor(selected).map((variant) => {
+              const isSelected = (selectedVariant?.sku || selectedVariant?.name) === (variant.sku || variant.name);
+              return /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)(
+                "button",
+                {
+                  type: "button",
+                  className: `clean-swatch-tile ${isSelected ? "active" : ""}`,
+                  onClick: () => {
+                    setSelectedVariant(variant);
+                    setRequestedQuantity(1);
+                  },
+                  children: [
+                    /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
+                      "i",
+                      {
+                        style: {
+                          background: variant.secondary ? `linear-gradient(135deg, ${variant.color} 0 50%, ${variant.secondary} 50%)` : variant.color || "#181511"
+                        }
+                      }
+                    ),
+                    /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "swatch-tile-name", children: variant.name }),
+                    /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("small", { className: "swatch-tile-stock", children: [
+                      variant.stock,
+                      " \u0448\u0442."
+                    ] })
+                  ]
+                },
+                variant.sku || variant.name
+              );
+            }) })
           ] }),
+          (showCourseOption || showProPackOption) && /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "clean-section-block", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "clean-section-title", children: /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { children: "2. \u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u043A\u043E\u043C\u043F\u043B\u0435\u043A\u0442\u0430\u0446\u0438\u044E:" }) }),
+            /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "clean-bundles-grid", children: [
+              /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)(
+                "button",
+                {
+                  type: "button",
+                  className: `clean-bundle-card ${selectedBundle === "base" ? "active" : ""}`,
+                  onClick: () => setSelectedBundle("base"),
+                  children: [
+                    /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "bundle-card-top-row", children: [
+                      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "bundle-card-icon", children: "\u{1F3B8}" }),
+                      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("strong", { className: "bundle-card-name", children: "\u0422\u043E\u043B\u044C\u043A\u043E \u0438\u043D\u0441\u0442\u0440\u0443\u043C\u0435\u043D\u0442" })
+                    ] }),
+                    /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("small", { className: "bundle-card-desc", children: "\u0417\u0430\u0432\u043E\u0434\u0441\u043A\u0430\u044F \u043A\u043E\u0440\u043E\u0431\u043A\u0430 + \u043A\u043B\u044E\u0447\u0438" }),
+                    /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "bundle-card-price-row", children: /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("strong", { children: "+0 \u20B8" }) })
+                  ]
+                }
+              ),
+              showCourseOption && /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)(
+                "button",
+                {
+                  type: "button",
+                  className: `clean-bundle-card gift-highlight ${selectedBundle === "gift_course" ? "active" : ""}`,
+                  onClick: () => setSelectedBundle("gift_course"),
+                  children: [
+                    /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "bundle-badge-gift", children: "\u041F\u041E\u0414\u0410\u0420\u041E\u041A 0 \u20B8" }),
+                    /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "bundle-card-top-row", children: [
+                      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "bundle-card-icon", children: "\u{1F381}" }),
+                      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("strong", { className: "bundle-card-name", children: "\u0413\u0438\u0442\u0430\u0440\u0430 + \u041A\u0443\u0440\u0441" })
+                    ] }),
+                    /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("small", { className: "bundle-card-desc", children: attachedCourse ? `\u041A\u0443\u0440\u0441 \xAB${attachedCourse.title}\xBB` : "\u041E\u043D\u043B\u0430\u0439\u043D-\u043A\u0443\u0440\u0441 \u0432 \u043F\u043E\u0434\u0430\u0440\u043E\u043A" }),
+                    /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "bundle-card-price-row", children: /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("strong", { className: "free-tag", children: "\u0411\u0435\u0441\u043F\u043B\u0430\u0442\u043D\u043E (0 \u20B8)" }) })
+                  ]
+                }
+              ),
+              showProPackOption && /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)(
+                "button",
+                {
+                  type: "button",
+                  className: `clean-bundle-card pro-highlight ${selectedBundle === "pro_pack" ? "active" : ""}`,
+                  onClick: () => setSelectedBundle("pro_pack"),
+                  children: [
+                    /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "bundle-badge-pro", children: "PRO \u041D\u0410\u0411\u041E\u0420" }),
+                    /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "bundle-card-top-row", children: [
+                      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "bundle-card-icon", children: "\u{1F451}" }),
+                      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("strong", { className: "bundle-card-name", children: "PRO \u041A\u043E\u043C\u043F\u043B\u0435\u043A\u0442" })
+                    ] }),
+                    /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("small", { className: "bundle-card-desc", children: proPackTitle }),
+                    /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "bundle-card-price-row", children: /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("strong", { children: [
+                      "+",
+                      money(proPackPrice),
+                      " \u20B8"
+                    ] }) })
+                  ]
+                }
+              )
+            ] })
+          ] }),
+          showStringsUpsell && /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "clean-section-block", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "clean-section-title", children: /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { children: "3. \u0421\u043F\u0435\u0446\u043F\u0440\u0435\u0434\u043B\u043E\u0436\u0435\u043D\u0438\u0435 \u043A \u0437\u0430\u043A\u0430\u0437\u0443 (-50%):" }) }),
+            /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "clean-bump-list", children: [
+              /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)(
+                "div",
+                {
+                  className: `clean-bump-item ${selectedStrings === "elixir" ? "active" : ""}`,
+                  onClick: () => setSelectedStrings(selectedStrings === "elixir" ? null : "elixir"),
+                  children: [
+                    /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "bump-check-circle", children: selectedStrings === "elixir" ? "\u2713" : "" }),
+                    /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "bump-text-wrap", children: [
+                      /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("strong", { children: [
+                        "\u{1F451} \u0421\u0442\u0440\u0443\u043D\u044B Elixir Nanoweb (\u0421\u0428\u0410) ",
+                        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "discount-tag-red", children: "-50%" })
+                      ] }),
+                      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("small", { children: "\u0421\u043B\u0443\u0436\u0430\u0442 \u0434\u043E 6 \u043C\u0435\u0441\u044F\u0446\u0435\u0432 \xB7 \u0417\u0432\u043E\u043D\u043A\u0438\u0439 \u043F\u0440\u0435\u043C\u0438\u0430\u043B\u044C\u043D\u044B\u0439 \u0442\u043E\u043D" })
+                    ] }),
+                    /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "bump-pricing-wrap", children: [
+                      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("del", { children: "9 900 \u20B8" }),
+                      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("strong", { children: "+4 950 \u20B8" })
+                    ] })
+                  ]
+                }
+              ),
+              /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)(
+                "div",
+                {
+                  className: `clean-bump-item ${selectedStrings === "daddario" ? "active" : ""}`,
+                  onClick: () => setSelectedStrings(selectedStrings === "daddario" ? null : "daddario"),
+                  children: [
+                    /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "bump-check-circle", children: selectedStrings === "daddario" ? "\u2713" : "" }),
+                    /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "bump-text-wrap", children: [
+                      /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("strong", { children: [
+                        "\u{1F3B8} \u0421\u0442\u0440\u0443\u043D\u044B D'Addario Pro ",
+                        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "discount-tag-red", children: "-50%" })
+                      ] }),
+                      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("small", { children: "\u041C\u044F\u0433\u043A\u043E\u0435 \u043D\u0430\u0442\u044F\u0436\u0435\u043D\u0438\u0435 \u0434\u043B\u044F \u043B\u0435\u0433\u043A\u0438\u0445 \u043F\u0435\u0440\u0432\u044B\u0445 \u0430\u043A\u043A\u043E\u0440\u0434\u043E\u0432" })
+                    ] }),
+                    /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "bump-pricing-wrap", children: [
+                      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("del", { children: "4 900 \u20B8" }),
+                      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("strong", { children: "+2 450 \u20B8" })
+                    ] })
+                  ]
+                }
+              )
+            ] })
+          ] }),
+          currentPrice > 0 && /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "clean-installment-box", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "installment-box-top", children: [
+              /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "installment-brand", children: [
+                /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "kaspi-red-badge", children: "kaspi" }),
+                /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("strong", { children: "\u0420\u0430\u0441\u0441\u0440\u043E\u0447\u043A\u0430 \u0431\u0435\u0437 \u043F\u0435\u0440\u0435\u043F\u043B\u0430\u0442" })
+              ] }),
+              /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("strong", { className: "monthly-figure", children: [
+                money(installment(currentPrice, installmentMonths)),
+                " \u20B8 ",
+                /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("small", { children: "/ \u043C\u0435\u0441" })
+              ] })
+            ] }),
+            /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "installment-pills-selector", children: [3, 6, 12].map((m) => /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
+              "button",
+              {
+                type: "button",
+                className: `installment-pill-btn ${installmentMonths === m ? "active" : ""}`,
+                onClick: () => setInstallmentMonths(m),
+                children: m === 3 ? "3 \u043C\u0435\u0441 (Kaspi Red)" : `${m} \u043C\u0435\u0441 (0-0-${m})`
+              },
+              m
+            )) })
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("details", { className: "clean-details-accordion", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("summary", { children: [
+              /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { children: "\u{1F4CB} \u041E\u043F\u0438\u0441\u0430\u043D\u0438\u0435 \u0438 \u0445\u0430\u0440\u0430\u043A\u0442\u0435\u0440\u0438\u0441\u0442\u0438\u043A\u0438 \u0438\u043D\u0441\u0442\u0440\u0443\u043C\u0435\u043D\u0442\u0430" }),
+              /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "accordion-chevron", children: "\u25BC" })
+            ] }),
+            /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "accordion-content", children: [
+              /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { className: "product-modal-desc", children: selected.description }),
+              /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("ul", { className: "product-features-checklist", children: selected.features.map((feature) => /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("li", { children: [
+                "\u2713 ",
+                feature
+              ] }, feature)) })
+            ] })
+          ] })
+        ] }) : /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "purchaser-mode-notice", children: /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { children: "\u0420\u0435\u0436\u0438\u043C \u0443\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F: \u0440\u0435\u0434\u0430\u043A\u0442\u0438\u0440\u043E\u0432\u0430\u043D\u0438\u0435 \u0447\u0435\u0440\u0435\u0437 \u043F\u0430\u043D\u0435\u043B\u044C \u0437\u0430\u043A\u0443\u043F\u0449\u0438\u043A\u0430" }) })
+      ] })
+    ] }),
+    mode === "buyer" && /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "modal-sticky-bottom-bar", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "bottom-price-summary", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "bottom-price-label", children: "\u0418\u0422\u041E\u0413\u041E \u041A \u041E\u041F\u041B\u0410\u0422\u0415:" }),
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "bottom-price-numbers", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("strong", { className: "bottom-current-price", children: [
+            money(currentPrice * requestedQuantity),
+            " \u20B8"
+          ] }),
+          hasDiscount && originalPrice && /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("del", { className: "bottom-old-price", children: [
+            money((originalPrice + bundleDelta + stringsDelta) * requestedQuantity),
+            " \u20B8"
+          ] })
+        ] })
+      ] }),
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "bottom-actions-group", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "modal-qty-clean", children: [
           /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
             "button",
             {
               type: "button",
-              className: "modal-buy-button-primary",
-              onClick: handleAddToCart,
-              children: "\u{1F6D2} \u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u0432 \u043A\u043E\u0440\u0437\u0438\u043D\u0443"
+              onClick: () => setRequestedQuantity((q) => Math.max(1, q - 1)),
+              disabled: requestedQuantity <= 1,
+              "aria-label": "\u0423\u043C\u0435\u043D\u044C\u0448\u0438\u0442\u044C",
+              children: "\u2212"
+            }
+          ),
+          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { children: requestedQuantity }),
+          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
+            "button",
+            {
+              type: "button",
+              onClick: () => setRequestedQuantity((q) => Math.min(currentVariantStock, q + 1)),
+              disabled: requestedQuantity >= currentVariantStock,
+              "aria-label": "\u0423\u0432\u0435\u043B\u0438\u0447\u0438\u0442\u044C",
+              children: "+"
             }
           )
-        ] })
+        ] }),
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
+          "button",
+          {
+            type: "button",
+            className: "modal-buy-button-primary",
+            onClick: handleAddToCart,
+            children: "\u{1F6D2} \u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u0432 \u043A\u043E\u0440\u0437\u0438\u043D\u0443"
+          }
+        )
       ] })
     ] })
   ] }) });
