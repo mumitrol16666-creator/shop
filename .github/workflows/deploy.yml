@@ -1,58 +1,30 @@
-name: Deploy to Production Server
+name: Validate Shop
 
 on:
   push:
     branches:
       - main
+  pull_request:
 
 jobs:
-  deploy:
-    name: Deploy to VPS
+  validate:
+    name: Build and test
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Deploy to Server via SSH
-        uses: appleboy/ssh-action@v1.0.3
+      - name: Use Node.js 22
+        uses: actions/setup-node@v4
         with:
-          host: 178.105.59.89
-          username: root
-          key: ${{ secrets.SSH_KEY }}
-          port: 14579
-          script: |
-            set -e
-            echo "🚀 Starting deployment on server..."
-            
-            # 1. Go to project directory
-            cd /var/www/shop.maestro.com.kz
+          node-version: 22
+          cache: npm
 
-            # Preserve the live catalog before replacing tracked application files.
-            mkdir -p .runtime-data/uploads
-            if [ ! -f .runtime-data/products.json ] && [ -f data/products.json ]; then
-              cp data/products.json .runtime-data/products.json
-            fi
-            if [ ! -f .runtime-data/courses.json ] && [ -f data/courses.json ]; then
-              cp data/courses.json .runtime-data/courses.json
-            fi
-            if [ -d public/uploads ]; then
-              cp -Rn public/uploads/. .runtime-data/uploads/ || true
-            fi
-            
-            # 2. Pull latest code from main
-            git fetch origin main
-            git reset --hard origin/main
-            
-            # 3. Install dependencies
-            npm install --legacy-peer-deps
-            
-            # 4. Build the static client served by the VPS.
-            # The full vinext/Sites build requires Node 22 and is validated separately.
-            npm run build:client
-            
-            # 5. Restart with PM2
-            pm2 reload ecosystem.config.cjs --update-env || pm2 start ecosystem.config.cjs
-            pm2 save
-            
-            echo "✅ Deployment successful! Server reloaded."
+      - name: Install dependencies
+        run: npm ci --legacy-peer-deps
+
+      - name: Build storefront
+        run: npm run build
+
+      - name: Run tests
+        run: node --test tests/*.test.mjs
