@@ -114,7 +114,9 @@ export function PurchaserView({
         if (!file.type.startsWith("image/")) {
           return resolve(rawBase64);
         }
-        const img = new Image();
+        // `Image` is also the imported Next.js component in this file.
+        // Use a real browser image element for client-side compression.
+        const img = document.createElement("img");
         img.onload = () => {
           const maxDim = 1600;
           let width = img.width;

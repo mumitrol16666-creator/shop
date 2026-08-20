@@ -93,7 +93,10 @@ export default function Home() {
   const openProduct = (product: Product, variantOverride?: Variant | null) => {
     const variants = variantsFor(product);
     setSelected(product);
-    setSelectedVariant(variantOverride ?? variants[0] ?? null);
+    // `null` means the buyer has not selected a color yet: keep the main
+    // product photo visible. Calls without an override still use the first
+    // variant (for example, the featured product block).
+    setSelectedVariant(variantOverride === undefined ? variants[0] ?? null : variantOverride);
     setRequestedQuantity(1);
   };
 

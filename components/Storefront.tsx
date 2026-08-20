@@ -499,15 +499,18 @@ export function Storefront({
             const isPlaying = playingId === product.id;
 
             const variants = variantsFor(product);
-            const currentVariant = selectedVariantsByProduct[product.id] || variants[0] || null;
-            const displayImage = currentVariant?.image || product.image;
+            const selectedCardVariant = selectedVariantsByProduct[product.id] || null;
+            const currentVariant = selectedCardVariant || variants[0] || null;
+            // The product photo is the storefront cover. A variant photo should
+            // replace it only after the buyer explicitly chooses that variant.
+            const displayImage = selectedCardVariant?.image || product.image || currentVariant?.image;
             const attachedCourse = resolveAttachedCourse(product);
 
             return (
               <article className="product-card" key={product.id}>
                 <div
                   className="product-card-body"
-                  onClick={() => openProduct(product, currentVariant)}
+                  onClick={() => openProduct(product, selectedCardVariant)}
                   role="button"
                   tabIndex={0}
                   aria-label={`Открыть карточку: ${product.name}`}
@@ -630,7 +633,7 @@ export function Storefront({
                     className="card-action-button"
                     onClick={(e) => {
                       e.stopPropagation();
-                      openProduct(product, currentVariant);
+                      openProduct(product, selectedCardVariant);
                     }}
                   >
                     Выбрать
