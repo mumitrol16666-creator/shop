@@ -1,25 +1,46 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { CartDrawer } from "../components/CartDrawer";
+import { CartDrawer, type CheckoutIntent } from "../components/CartDrawer";
+import { CommerceCartProvider, useCommerceCart } from "../components/CommerceCartProvider";
 import { KaspiQrModal } from "../components/KaspiQrModal";
 import { ProductModal } from "../components/ProductModal";
 import { Storefront } from "../components/Storefront";
 import { Topbar } from "../components/Topbar";
 import {
-  COMMERCE_STAGE0_ENABLED,
+  buildWhatsAppOrderUrl,
   type CartItem,
-  createTemporaryRequestId,
-  initialVariantSelection,
-  mergeBySku,
-  productUnitPrice,
   type Product,
-  products as defaultProducts,
   type Variant,
   variantsFor,
 } from "../lib/catalog-data";
+import { BUNDLE_SKUS, type ProductReadModel, type PublicOrder } from "../lib/commerce/types";
+import { cartItemFromReconciled, cartItemsFromOrder, toStorefrontProduct } from "../lib/commerce/ui-adapter";
 
 export default function Home() {
+  const [catalogModels, setCatalogModels] = useState<ProductReadModel[]>([]);
+
+  useEffect(() => {
+    let active = true;
+    fetch("/api/catalog")
+      .then((response) => response.ok ? response.json() : Promise.reject(new Error("catalog unavailable")))
+      .then((payload: { products?: ProductReadModel[] }) => {
+        if (active && Array.isArray(payload.products) && payload.products.length) {
+          setCatalogModels(payload.products);
+        }
+      })
+      .catch(() => {});
+    return () => { active = false; };
+  }, []);
+
+  return (
+    <CommerceCartProvider products={catalogModels}>
+      <StorefrontHome catalogModels={catalogModels} />
+    </CommerceCartProvider>
+  );
+}
+
+function StorefrontHome({ catalogModels }: { catalogModels: ProductReadModel[] }) {
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState("Все");
   const [selected, setSelected] = useState<Product | null>(null);
@@ -27,29 +48,13 @@ export default function Home() {
   const [requestedQuantity, setRequestedQuantity] = useState(1);
   const [cartOpen, setCartOpen] = useState(false);
   const [kaspiModalOpen, setKaspiModalOpen] = useState(false);
-  const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [customerName, setCustomerName] = useState("");
   const [customerPhone, setCustomerPhone] = useState("");
   const [customerCity, setCustomerCity] = useState("Актобе");
   const [customerComment, setCustomerComment] = useState("");
-  const [paymentRequestId, setPaymentRequestId] = useState("");
+  const [paymentOrder, setPaymentOrder] = useState<PublicOrder | null>(null);
   const [notice, setNotice] = useState("");
-  const [storedProducts, setStoredProducts] = useState<Product[]>([]);
-
-  useEffect(() => {
-    let active = true;
-    fetch("/api/products")
-      .then((res) => (res.ok ? res.json() : Promise.reject(new Error("Failed"))))
-      .then((data: { products?: Product[] }) => {
-        if (active && Array.isArray(data.products)) {
-          setStoredProducts(data.products);
-        }
-      })
-      .catch(() => {});
-    return () => {
-      active = false;
-    };
-  }, []);
+  const commerceCart = useCommerceCart();
 
   useEffect(() => {
     const hasCommerceOverlay = cartOpen || Boolean(selected) || kaspiModalOpen;
@@ -57,15 +62,15 @@ export default function Home() {
     return () => document.body.classList.remove("commerce-overlay-open");
   }, [cartOpen, selected, kaspiModalOpen]);
 
-  const mergedProducts = useMemo(() => {
-    const list = mergeBySku(defaultProducts, storedProducts);
-    return list.filter(
-      (product) =>
-        !product.isStored ||
-        product.publicationStatus === "published" ||
-        !product.publicationStatus,
-    );
-  }, [storedProducts]);
+  const mergedProducts = useMemo(
+    () => catalogModels.map(toStorefrontProduct),
+    [catalogModels],
+  );
+
+  const cartItems = useMemo<CartItem[]>(
+    () => commerceCart.reconciliation.lines.map(cartItemFromReconciled),
+    [commerceCart.reconciliation.lines],
+  );
 
   const categories = useMemo(() => {
     return ["Все", ...new Set(mergedProducts.map((p) => p.category))];
@@ -96,16 +101,14 @@ export default function Home() {
     [cartItems],
   );
 
-  const cartTotalPrice = useMemo(
-    () => cartItems.reduce((acc, item) => acc + (item.price || 0) * item.quantity, 0),
-    [cartItems],
-  );
-
   const openProduct = (product: Product, variantOverride?: Variant | null) => {
     setSelected(product);
-    setSelectedVariant(
-      initialVariantSelection(product, variantOverride, COMMERCE_STAGE0_ENABLED),
-    );
+    const variants = variantsFor(product);
+    setSelectedVariant(variantOverride !== undefined
+      ? variantOverride
+      : product.commerce?.selectionRequired
+        ? null
+        : variants[0] ?? null);
     setRequestedQuantity(1);
   };
 
@@ -116,65 +119,25 @@ export default function Home() {
 
   const addToCart = (
     product: Product,
-    variantOverride?: Variant | null,
-    bundleType?: "base" | "gift_course" | "pro_pack",
-    priceOverride?: number,
-    giftCourseTitle?: string,
-    bundleTitle?: string,
-    stringsUpsell?: string,
-    stringsUpsellPrice?: number,
+    variant: Variant,
+    bundleType: "base" | "gift_course" | "pro_pack",
+    componentSkus: string[],
   ) => {
-    const variant =
-      variantOverride ??
-      selectedVariant ??
-      (COMMERCE_STAGE0_ENABLED ? undefined : variantsFor(product)[0]);
-    if (!variant) {
+    if (!variant || !product.commerce) {
       setNotice("Сначала выберите вариант товара.");
       window.setTimeout(() => setNotice(""), 2800);
       return;
     }
-    const maxQty = variant.stock || 1;
-    const itemKey = `${product.sku}-${variant.sku}-${bundleType || "base"}-${stringsUpsell ? "strings" : "none"}`;
-    const qtyToAdd = Math.min(requestedQuantity, maxQty);
-    const bundleLabel = bundleTitle || (
-      bundleType === "gift_course"
-        ? (giftCourseTitle ? `🎁 + Курс «${giftCourseTitle}»` : "🎁 + Онлайн-курс")
-        : bundleType === "pro_pack"
-        ? "👑 PRO Комплект"
-        : "🎸 Стандарт"
-    );
-    const itemPrice = priceOverride ?? productUnitPrice(product, variant);
-
-    setCartItems((current) => {
-      const existingIndex = current.findIndex((item) => item.key === itemKey);
-      if (existingIndex > -1) {
-        const next = [...current];
-        const existing = next[existingIndex];
-        if (existing) {
-          const newQty = Math.min(maxQty, existing.quantity + qtyToAdd);
-          next[existingIndex] = { ...existing, quantity: newQty };
-        }
-        return next;
-      }
-      return [
-        ...current,
-        {
-          key: itemKey,
-          productId: product.id,
-          name: product.name,
-          variantName: variant.name,
-          sku: variant.sku,
-          image: variant.image || product.image,
-          price: itemPrice,
-          quantity: qtyToAdd,
-          maxQuantity: maxQty,
-          bundle: bundleType,
-          bundleTitle: bundleLabel,
-          giftCourseTitle: bundleType === "gift_course" ? giftCourseTitle : undefined,
-          stringsUpsell,
-          stringsUpsellPrice,
-        },
-      ];
+    commerceCart.add({
+      product: product.commerce,
+      variantSku: variant.sku,
+      bundleSku: bundleType === "pro_pack"
+        ? BUNDLE_SKUS.proPack
+        : bundleType === "gift_course"
+          ? BUNDLE_SKUS.giftCourse
+          : BUNDLE_SKUS.base,
+      componentSkus,
+      quantity: Math.min(requestedQuantity, variant.stock),
     });
 
     setSelected(null);
@@ -184,28 +147,50 @@ export default function Home() {
   };
 
   const updateCartQuantity = (key: string, delta: number) => {
-    setCartItems((current) =>
-      current
-        .map((item) =>
-          item.key === key
-            ? {
-                ...item,
-                quantity: Math.max(1, Math.min(item.maxQuantity, item.quantity + delta)),
-              }
-            : item,
-        )
-        .filter((item) => item.quantity > 0),
-    );
+    commerceCart.updateQuantity(key, delta);
   };
 
   const removeCartItem = (key: string) => {
-    setCartItems((current) => current.filter((item) => item.key !== key));
+    commerceCart.remove(key);
   };
 
-  const submitOrder = () => {
+  const createServerOrder = (intent: CheckoutIntent) => commerceCart.createOrder({
+    customer: {
+      name: customerName,
+      phone: customerPhone,
+      city: customerCity || "Актобе",
+      comment: customerComment,
+    },
+    fulfilment: { method: intent.fulfilmentMethod },
+    payment: { method: intent.paymentMethod },
+  });
+
+  const submitOrder = async (intent: CheckoutIntent) => {
+    const order = await createServerOrder(intent);
+    const waUrl = buildWhatsAppOrderUrl({
+      requestId: order.orderId,
+      customerName,
+      customerPhone,
+      customerCity,
+      customerComment: [
+        `Способ доставки: ${order.fulfilmentMethod}`,
+        `Способ оплаты: ${order.paymentMethod}`,
+        customerComment ? `Комментарий: ${customerComment}` : "",
+      ].filter(Boolean).join(" | "),
+      cartItems: cartItemsFromOrder(order),
+      totalPrice: order.totals.final,
+    });
+    window.open(waUrl, "_blank", "noopener,noreferrer");
     setNotice("Заявка сформирована. Открываем WhatsApp для подтверждения с менеджером...");
     setCartOpen(false);
     window.setTimeout(() => setNotice(""), 3600);
+  };
+
+  const openKaspiOrder = async (intent: CheckoutIntent) => {
+    const order = await createServerOrder(intent);
+    setPaymentOrder(order);
+    setCartOpen(false);
+    setKaspiModalOpen(true);
   };
 
   return (
@@ -265,6 +250,7 @@ export default function Home() {
         setCartOpen={setCartOpen}
         cartItems={cartItems}
         cartCount={cartCount}
+        totalPrice={commerceCart.reconciliation.totals.final}
         updateCartQuantity={updateCartQuantity}
         removeCartItem={removeCartItem}
         customerName={customerName}
@@ -276,24 +262,26 @@ export default function Home() {
         customerComment={customerComment}
         setCustomerComment={setCustomerComment}
         onSubmitOrder={submitOrder}
-        onOpenKaspiQr={() => {
-          setPaymentRequestId(createTemporaryRequestId());
-          setCartOpen(false);
-          setKaspiModalOpen(true);
-        }}
+        onOpenKaspiQr={openKaspiOrder}
+        reconciliationMessage={commerceCart.isReconciling
+          ? "Проверяем цены и остатки…"
+          : commerceCart.reconciliation.state === "changed"
+            ? "Цена изменилась — проверьте итог."
+            : commerceCart.error}
+        hasPriceChanges={commerceCart.reconciliation.state === "changed"}
+        onAcceptPriceChanges={commerceCart.acceptPriceChanges}
       />
 
       <KaspiQrModal
         isOpen={kaspiModalOpen}
         onClose={() => setKaspiModalOpen(false)}
-        cartItems={cartItems}
-        totalPrice={cartTotalPrice}
+        order={paymentOrder}
         customerName={customerName}
         customerPhone={customerPhone}
         customerCity={customerCity}
         customerComment={customerComment}
-        requestId={paymentRequestId}
-        onPaymentReported={() => {
+        onPaymentReported={(order) => {
+          setPaymentOrder(order);
           setNotice("Сообщение об оплате отправлено на проверку. Корзина сохранена.");
           window.setTimeout(() => setNotice(""), 4000);
         }}

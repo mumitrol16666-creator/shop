@@ -1,3 +1,5 @@
+import type { ProductReadModel } from "./commerce/types";
+
 export type AdminPricing = {
   purchaseCurrency: "CNY" | "USD" | "KZT";
   purchasePrice: number;
@@ -67,6 +69,8 @@ export type Product = {
   isStored?: boolean;
   variantItems?: Variant[];
   adminPricing?: AdminPricing;
+  updatedAt?: string;
+  commerce?: ProductReadModel;
 };
 
 export type CartItem = {

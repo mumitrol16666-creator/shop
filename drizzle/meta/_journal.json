@@ -15,6 +15,13 @@
       "when": 1787232527064,
       "tag": "0001_premium_rocket_raccoon",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1787252617879,
+      "tag": "0002_absurd_meggan",
+      "breakpoints": true
     }
   ]
 }

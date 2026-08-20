@@ -14,6 +14,7 @@ import {
 } from "../../../db/schema";
 import { calculateProductPricing } from "../../../lib/product-pricing";
 import { products as defaultProducts } from "../../../lib/catalog-data";
+import { parseBundleMetadata } from "../../../lib/commerce/d1-catalog";
 
 export const dynamic = "force-dynamic";
 
@@ -169,7 +170,7 @@ function toPublicProduct<T extends Record<string, any>>(product: T) {
   return safe;
 }
 
-async function readCatalog(includeDrafts: boolean) {
+export async function readCatalog(includeDrafts: boolean) {
   const db = getDb();
   if (db) {
     try {
@@ -208,8 +209,7 @@ async function readCatalog(includeDrafts: boolean) {
             .filter((variant) =>
               includeDrafts
                 ? true
-                : variant.status === "active" &&
-                  variant.stockQuantity > variant.reservedQuantity,
+                : variant.status === "active",
             );
           const prices = pricingRows.filter(
             (pricing) => pricing.productId === product.id,
@@ -241,6 +241,7 @@ async function readCatalog(includeDrafts: boolean) {
                 }
               : undefined;
 
+          const bundleMetadata = parseBundleMetadata(product.bundleJson);
           return {
             id: product.id,
             databaseId: product.id,
@@ -248,12 +249,17 @@ async function readCatalog(includeDrafts: boolean) {
             shortName: product.shortName,
             category: product.category,
             image: product.mainPhotoUrl,
-            quantity: variants.reduce((sum, variant) => sum + variant.stockQuantity, 0),
+            quantity: variants.reduce(
+              (sum, variant) =>
+                sum + Math.max(0, variant.stockQuantity - variant.reservedQuantity),
+              0,
+            ),
             variants: variants.length,
             sku: product.sku,
             badge: product.targetAudience ?? undefined,
             description: product.description,
             features: parseStringArray(product.featuresJson),
+            ...bundleMetadata,
             price: publicPrice || undefined,
             publicationStatus: publication.status,
             isStored: true,

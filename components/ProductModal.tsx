@@ -5,13 +5,14 @@ import { type Dispatch, type SetStateAction, useState } from "react";
 import {
   installment,
   money,
-  productUnitPrice,
   type Product,
   type Variant,
   variantsFor,
 } from "../lib/catalog-data";
 import { resolveAttachedCourse } from "../lib/courses-data";
 import { playProductAudio, stopProductAudio } from "../lib/sound-synth";
+import { quoteConfiguration } from "../lib/commerce/pricing";
+import { BUNDLE_SKUS, COMPONENT_SKUS } from "../lib/commerce/types";
 
 type ProductModalProps = {
   selected: Product | null;
@@ -23,13 +24,9 @@ type ProductModalProps = {
   onClose: () => void;
   onAddToCart: (
     product: Product,
-    variant?: Variant | null,
-    bundle?: "base" | "gift_course" | "pro_pack",
-    price?: number,
-    giftCourseTitle?: string,
-    bundleTitle?: string,
-    stringsUpsell?: string,
-    stringsUpsellPrice?: number,
+    variant: Variant,
+    bundle: "base" | "gift_course" | "pro_pack",
+    componentSkus: string[],
   ) => void;
 };
 
@@ -47,13 +44,16 @@ export function ProductModal({
   const [isPlayingSound, setIsPlayingSound] = useState(false);
   const [selectedStrings, setSelectedStrings] = useState<"elixir" | "daddario" | null>(null);
 
-  const showProPackOption = selected ? Boolean(selected.allowProPack === true) : false;
-  const showCourseOption = selected
-    ? Boolean(selected.attachedCourseId && selected.attachedCourseId !== "none")
-    : false;
-  const showStringsUpsell = selected ? Boolean(selected.allowStringsUpsell === true) : false;
-  const proPackTitle = selected?.proPackTitle || "Чехол + Ремень + VIP Доступ";
-  const proPackPrice = selected?.proPackPrice !== undefined ? selected.proPackPrice : 8900;
+  const commerceProduct = selected?.commerce;
+  const proBundle = commerceProduct?.bundleDefinitions.find((bundle) => bundle.id === "pro_pack");
+  const courseBundle = commerceProduct?.bundleDefinitions.find((bundle) => bundle.id === "gift_course");
+  const elixirComponent = commerceProduct?.componentDefinitions.find((component) => component.sku === COMPONENT_SKUS.elixirStrings);
+  const daddarioComponent = commerceProduct?.componentDefinitions.find((component) => component.sku === COMPONENT_SKUS.daddarioStrings);
+  const showProPackOption = Boolean(proBundle);
+  const showCourseOption = Boolean(courseBundle);
+  const showStringsUpsell = Boolean(elixirComponent || daddarioComponent);
+  const proPackTitle = proBundle?.description || "Чехол + Ремень + VIP Доступ";
+  const proPackPrice = proBundle?.priceDelta || 0;
 
   const [selectedBundle, setSelectedBundle] = useState<"base" | "gift_course" | "pro_pack">(
     showCourseOption ? "gift_course" : showProPackOption ? "pro_pack" : "base"
@@ -64,26 +64,29 @@ export function ProductModal({
   const availableVariants = variantsFor(selected);
   const attachedCourse = showCourseOption ? resolveAttachedCourse(selected) : null;
   const selectedImage = selectedVariant?.image || selected.image;
-  const basePrice = productUnitPrice(selected, selectedVariant);
-  const bundleDelta = selectedBundle === "pro_pack" ? proPackPrice : 0;
-  const stringsDelta = selectedStrings === "elixir" ? 4950 : selectedStrings === "daddario" ? 2450 : 0;
-  const currentPrice = basePrice + bundleDelta + stringsDelta;
-
-  const hasDiscount = Boolean(
-    (selected.originalPrice && currentPrice && selected.originalPrice > currentPrice) ||
-    (selected.discountPercent && selected.discountPercent > 0)
-  );
-  const discountPercent =
-    selected.discountPercent ||
-    (selected.originalPrice && currentPrice
-      ? Math.round(((selected.originalPrice - currentPrice) / selected.originalPrice) * 100)
-      : 0);
-  const originalPrice =
-    selected.originalPrice ||
-    (currentPrice && discountPercent > 0
-      ? Math.round(currentPrice / (1 - discountPercent / 100))
-      : null);
-  const savings = hasDiscount && originalPrice ? originalPrice - currentPrice : 0;
+  const bundleSku = selectedBundle === "pro_pack"
+    ? BUNDLE_SKUS.proPack
+    : selectedBundle === "gift_course"
+      ? BUNDLE_SKUS.giftCourse
+      : BUNDLE_SKUS.base;
+  const selectedComponentSkus = selectedStrings === "elixir"
+    ? [COMPONENT_SKUS.elixirStrings]
+    : selectedStrings === "daddario"
+      ? [COMPONENT_SKUS.daddarioStrings]
+      : [];
+  const quote = commerceProduct && selectedVariant
+    ? quoteConfiguration(commerceProduct, {
+        variantSku: selectedVariant.sku,
+        bundleSku,
+        componentSkus: selectedComponentSkus,
+      })
+    : selected.commerce?.defaultPrice;
+  const currentPrice = quote?.final || 0;
+  const hasDiscount = Boolean(quote && quote.discount > 0);
+  const discountPercent = quote?.subtotal
+    ? Math.round(((quote.discount || 0) / quote.subtotal) * 100)
+    : 0;
+  const originalPrice = quote?.subtotal || currentPrice;
 
   const handlePlaySound = () => {
     if (!selected.audioUrl) return;
@@ -100,29 +103,11 @@ export function ProductModal({
 
   const handleAddToCart = () => {
     if (!selectedVariant || selectedVariant.stock <= 0) return;
-    const giftCourseName = attachedCourse ? attachedCourse.title : undefined;
-    const bundleName =
-      selectedBundle === "pro_pack"
-        ? `PRO: ${proPackTitle}`
-        : selectedBundle === "gift_course"
-        ? (giftCourseName ? `Подарок: Курс «${giftCourseName}»` : "Подарок: Онлайн-курс")
-        : "Только инструмент";
-    const stringsName =
-      selectedStrings === "elixir"
-        ? "Струны Elixir Nanoweb (-50%)"
-        : selectedStrings === "daddario"
-        ? "Струны D'Addario Pro (-50%)"
-        : undefined;
-
     onAddToCart(
       selected,
       selectedVariant,
       selectedBundle,
-      currentPrice,
-      giftCourseName,
-      bundleName,
-      stringsName,
-      stringsDelta
+      selectedComponentSkus,
     );
   };
 
@@ -301,7 +286,7 @@ export function ProductModal({
                       <span>3. Спецпредложение к заказу (-50%):</span>
                     </div>
                     <div className="clean-bump-list">
-                      <div
+                      {elixirComponent && <div
                         className={`clean-bump-item ${selectedStrings === "elixir" ? "active" : ""}`}
                         onClick={() => setSelectedStrings(selectedStrings === "elixir" ? null : "elixir")}
                       >
@@ -314,11 +299,11 @@ export function ProductModal({
                         </div>
                         <div className="bump-pricing-wrap">
                           <del>9 900 ₸</del>
-                          <strong>+4 950 ₸</strong>
+                          <strong>+{money(elixirComponent.price)} ₸</strong>
                         </div>
-                      </div>
+                      </div>}
 
-                      <div
+                      {daddarioComponent && <div
                         className={`clean-bump-item ${selectedStrings === "daddario" ? "active" : ""}`}
                         onClick={() => setSelectedStrings(selectedStrings === "daddario" ? null : "daddario")}
                       >
@@ -326,14 +311,14 @@ export function ProductModal({
                           {selectedStrings === "daddario" ? "✓" : ""}
                         </div>
                         <div className="bump-text-wrap">
-                          <strong>🎸 Струны D'Addario Pro <span className="discount-tag-red">-50%</span></strong>
+                          <strong>🎸 Струны D&apos;Addario Pro <span className="discount-tag-red">-50%</span></strong>
                           <small>Мягкое натяжение для легких первых аккордов</small>
                         </div>
                         <div className="bump-pricing-wrap">
                           <del>4 900 ₸</del>
-                          <strong>+2 450 ₸</strong>
+                          <strong>+{money(daddarioComponent.price)} ₸</strong>
                         </div>
-                      </div>
+                      </div>}
                     </div>
                   </div>
                 )}
@@ -399,9 +384,9 @@ export function ProductModal({
                 <strong className="bottom-current-price">
                   {money(currentPrice * requestedQuantity)} ₸
                 </strong>
-                {hasDiscount && originalPrice && (
+                {hasDiscount && originalPrice > currentPrice && (
                   <del className="bottom-old-price">
-                    {money((originalPrice + bundleDelta + stringsDelta) * requestedQuantity)} ₸
+                    {money(originalPrice * requestedQuantity)} ₸
                   </del>
                 )}
               </div>

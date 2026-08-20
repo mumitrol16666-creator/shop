@@ -253,7 +253,7 @@ export function Storefront({
                 <h3>{currentHero.title}</h3>
                 <div className="hero-kaspi-installment">
                   <span className="kaspi-tag">Kaspi 0-0-12</span>
-                  <span>от <strong>{money(currentHero.monthly)} ₸</strong> / мес</span>
+                  <span>от <strong>{money(installment(matchingHeroProduct ? productUnitPrice(matchingHeroProduct) : 0, 12))} ₸</strong> / мес</span>
                 </div>
               </div>
               {matchingHeroProduct && (
@@ -486,20 +486,9 @@ export function Storefront({
             const selectedCardVariant = selectedVariantsByProduct[product.id] || null;
             const currentVariant = selectedCardVariant || variants[0] || null;
             const productPrice = productUnitPrice(product, selectedCardVariant);
-            const hasDiscount = Boolean(
-              (product.originalPrice && productPrice && product.originalPrice > productPrice) ||
-              (product.discountPercent && product.discountPercent > 0)
-            );
-            const discountPercent =
-              product.discountPercent ||
-              (product.originalPrice && productPrice
-                ? Math.round(((product.originalPrice - productPrice) / product.originalPrice) * 100)
-                : 0);
-            const originalPrice =
-              product.originalPrice ||
-              (productPrice && discountPercent > 0
-                ? Math.round(productPrice / (1 - discountPercent / 100))
-                : null);
+            const hasDiscount = Boolean(product.isDiscountActive && product.discountPercent);
+            const discountPercent = product.discountPercent || 0;
+            const originalPrice = product.originalPrice || null;
             const isPlaying = playingId === product.id;
 
             // The product photo is the storefront cover. A variant photo should

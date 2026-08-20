@@ -73,7 +73,7 @@ test("wires protected administration to persistent catalog APIs", async () => {
     readFile(new URL("../public/bundle.js", import.meta.url), "utf8"),
   ]);
 
-  assert.match(page, /fetch\("\/api\/products"\)/);
+  assert.match(page, /fetch\("\/api\/catalog"\)/);
   assert.doesNotMatch(page, /scope=all/);
   assert.match(adminPage, /fetch\("\/api\/products\?scope=all"/);
   assert.match(adminGate, /\/api\/admin\/session/);

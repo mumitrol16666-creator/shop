@@ -1,0 +1,72 @@
+import assert from "node:assert/strict";
+import { readFile } from "node:fs/promises";
+import test from "node:test";
+
+const source = (path) => readFile(new URL(path, import.meta.url), "utf8");
+
+test("Contract: required commerce endpoints and stable error envelope exist", async () => {
+  const [catalog, product, validate, orders, readOrder, report, errors] = await Promise.all([
+    source("../app/api/catalog/route.ts"),
+    source("../app/api/products/[slug]/route.ts"),
+    source("../app/api/cart/validate/route.ts"),
+    source("../app/api/orders/route.ts"),
+    source("../app/api/orders/[id]/route.ts"),
+    source("../app/api/orders/[id]/payment-report/route.ts"),
+    source("../lib/commerce/errors.ts"),
+  ]);
+  assert.match(catalog, /catalogVersion/);
+  assert.match(product, /PRODUCT_NOT_FOUND/);
+  assert.match(validate, /reconcileCart/);
+  assert.match(orders, /Idempotency|idempotency/i);
+  assert.match(readOrder, /readPublicOrderD1/);
+  assert.match(report, /reportPaymentD1/);
+  assert.match(errors, /\{ error: CommerceErrorShape \}/);
+});
+
+test("Contract: cart persistence is versioned identifiers-only and reconciles on lifecycle triggers", async () => {
+  const provider = await source("../components/CommerceCartProvider.tsx");
+  assert.match(provider, /maestro-commerce-cart-v1/);
+  assert.match(provider, /schemaVersion/);
+  assert.match(provider, /visibilitychange/);
+  assert.match(provider, /\/api\/cart\/validate/);
+  assert.doesNotMatch(provider, /unitPrice|trustedTotal|totalPrice/);
+});
+
+test("Contract: UI pricing and checkout bridge use the shared domain and server order", async () => {
+  const [page, modal, qr] = await Promise.all([
+    source("../app/page.tsx"),
+    source("../components/ProductModal.tsx"),
+    source("../components/KaspiQrModal.tsx"),
+  ]);
+  assert.match(page, /\/api\/catalog/);
+  assert.match(page, /commerceCart\.createOrder/);
+  assert.match(modal, /quoteConfiguration/);
+  assert.doesNotMatch(modal, /basePrice \+ bundleDelta \+ stringsDelta/);
+  assert.match(qr, /payment-report/);
+});
+
+test("Contract: client has no paid mutation and trusted confirmation is authenticated", async () => {
+  const [page, qr, provider, confirm, status] = await Promise.all([
+    source("../app/page.tsx"),
+    source("../components/KaspiQrModal.tsx"),
+    source("../components/CommerceCartProvider.tsx"),
+    source("../app/api/admin/orders/[id]/confirm-payment/route.ts"),
+    source("../lib/commerce/status.ts"),
+  ]);
+  for (const clientSource of [page, qr, provider]) {
+    assert.doesNotMatch(clientSource, /status\s*:\s*["']paid["']/);
+  }
+  assert.match(confirm, /isAdminRequest/);
+  assert.match(status, /actorType !== "admin"/);
+});
+
+test("Contract: schema is additive, indexed and has atomic stock guards", async () => {
+  const migration = await source("../drizzle/0002_absurd_meggan.sql");
+  for (const table of ["orders", "order_items", "payments", "order_status_history", "stock_reservations"]) {
+    assert.ok(migration.includes(`CREATE TABLE \`${table}\``));
+  }
+  assert.match(migration, /orders_idempotency_key_unique/);
+  assert.match(migration, /stock_reservations_guard_insert/);
+  assert.match(migration, /RAISE\(ABORT, 'INSUFFICIENT_STOCK'\)/);
+  assert.doesNotMatch(migration, /DROP TABLE|DELETE FROM/);
+});

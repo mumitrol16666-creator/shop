@@ -3,12 +3,10 @@
 import Link from "next/link";
 import { useState, useRef, useEffect } from "react";
 import {
-  COMMERCE_STAGE0_ENABLED,
   DEFAULT_WHATSAPP_PHONE,
   DISPLAY_WHATSAPP_PHONE,
   money,
   productUnitPrice,
-  products as defaultProducts,
   type Product,
   variantsFor,
 } from "../lib/catalog-data";
@@ -33,7 +31,7 @@ export function Topbar({
   const [isSearchFocused, setIsSearchFocused] = useState(false);
   const searchWrapRef = useRef<HTMLDivElement>(null);
 
-  const searchCatalog = COMMERCE_STAGE0_ENABLED ? catalogProducts : defaultProducts;
+  const searchCatalog = catalogProducts;
   const searchResults = query.trim().length >= 2
     ? searchCatalog.filter((p) => {
         const q = query.toLowerCase();

@@ -93,7 +93,10 @@ test("P0: UI wiring keeps one catalog source, explicit configuration and require
   ]);
 
   assert.match(page, /catalogProducts=\{mergedProducts\}/);
-  assert.match(topbar, /COMMERCE_STAGE0_ENABLED \? catalogProducts : defaultProducts/);
+  assert.match(page, /fetch\("\/api\/catalog"\)/);
+  assert.match(page, /CommerceCartProvider/);
+  assert.match(topbar, /const searchCatalog = catalogProducts/);
+  assert.doesNotMatch(topbar, /defaultProducts/);
   assert.match(page, /key=\{selected \? String\(selected\.id\) : "no-product"\}/);
   assert.match(productModal, /disabled=\{!canAddToCart\}/);
   assert.match(productModal, /"Выберите вариант"/);
@@ -101,6 +104,7 @@ test("P0: UI wiring keeps one catalog source, explicit configuration and require
   assert.match(cart, /name="customerName"[\s\S]*?required/);
   assert.match(cart, /name="customerPhone"[\s\S]*?required/);
   assert.match(cart, /pattern="\(\?:\\D\*\\d\)\{10,\}\\D\*"/);
+  assert.match(kaspi, /payment-report/);
   assert.match(kaspi, /paymentStatus: "payment_reported"/);
   assert.match(kaspi, /Требуется ручная проверка/);
   assert.doesNotMatch(kaspi, /Спасибо за оплату|Заказ принят в обработку|onPaymentSuccess/);

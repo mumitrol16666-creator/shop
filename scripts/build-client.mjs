@@ -39,6 +39,19 @@ async function build() {
       legalComments: "none",
       logLevel: "info",
     });
+    await esbuild.build({
+      entryPoints: [path.join(root, "lib/commerce/vps-entry.ts")],
+      bundle: true,
+      platform: "node",
+      target: "node22",
+      format: "cjs",
+      outfile: path.join(root, "dist-vps/commerce-core.cjs"),
+      tsconfig: path.join(root, "tsconfig.json"),
+      minify: false,
+      sourcemap: false,
+      legalComments: "none",
+      logLevel: "info",
+    });
     console.log("✅ ESBuild ESM bundle compiled successfully (minified)!");
   } catch (err) {
     console.error("ESBuild error:", err);

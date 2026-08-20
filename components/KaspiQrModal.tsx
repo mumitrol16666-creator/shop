@@ -1,67 +1,79 @@
 import { useState } from "react";
-import { buildWhatsAppOrderUrl, installment, money, type CartItem } from "../lib/catalog-data";
+import { buildWhatsAppOrderUrl, installment, money } from "../lib/catalog-data";
+import { cartItemsFromOrder } from "../lib/commerce/ui-adapter";
+import type { PublicOrder } from "../lib/commerce/types";
 
 export const OFFICIAL_KASPI_PAY_LINK = "https://pay.kaspi.kz/pay/ku3aldre";
 
 type KaspiQrModalProps = {
   isOpen: boolean;
   onClose: () => void;
-  cartItems: CartItem[];
-  totalPrice: number;
+  order: PublicOrder | null;
   customerName: string;
   customerPhone: string;
   customerCity?: string;
   customerComment?: string;
-  requestId: string;
-  onPaymentReported: () => void;
+  onPaymentReported: (order: PublicOrder) => void;
 };
 
 export function KaspiQrModal({
   isOpen,
   onClose,
-  cartItems,
-  totalPrice,
+  order,
   customerName,
   customerPhone,
   customerCity = "Актобе",
   customerComment = "",
-  requestId,
   onPaymentReported,
 }: KaspiQrModalProps) {
   const [isReported, setIsReported] = useState(false);
+  const [reportError, setReportError] = useState("");
 
-  if (!isOpen) return null;
+  if (!isOpen || !order) return null;
+  const cartItems = cartItemsFromOrder(order);
+  const totalPrice = order.totals.final;
 
-  const handleReportPayment = () => {
-    setIsReported(true);
+  const handleReportPayment = async () => {
+    setReportError("");
+    try {
+      const response = await fetch(`/api/orders/${encodeURIComponent(order.orderId)}/payment-report`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ reference: "customer_kaspi_report" }),
+      });
+      const payload = await response.json();
+      if (!response.ok || !payload.order) throw new Error(payload?.error?.message || "Не удалось отправить отметку об оплате.");
+      const reportedOrder = payload.order as PublicOrder;
+      setIsReported(true);
 
-    // Stage 0 fallback: report the payment for manual verification. This action
-    // never marks an order as paid and never clears the buyer's cart.
-    const fullComment = [
-      customerComment,
-      `💳 [СТАТУС ОПЛАТЫ]: payment_reported — клиент сообщил об оплате через Kaspi Pay (${OFFICIAL_KASPI_PAY_LINK}). Требуется ручная проверка.`,
-    ]
-      .filter(Boolean)
-      .join("\n");
+      const fullComment = [
+        customerComment,
+        `💳 [СТАТУС ОПЛАТЫ]: payment_reported — клиент сообщил об оплате через Kaspi Pay (${OFFICIAL_KASPI_PAY_LINK}). Требуется ручная проверка.`,
+      ]
+        .filter(Boolean)
+        .join("\n");
 
-    const waUrl = buildWhatsAppOrderUrl({
-      requestId,
-      paymentStatus: "payment_reported",
-      customerName,
-      customerPhone,
-      customerCity,
-      customerComment: fullComment,
-      cartItems,
-      totalPrice,
-    });
+      const waUrl = buildWhatsAppOrderUrl({
+        requestId: reportedOrder.orderId,
+        paymentStatus: "payment_reported",
+        customerName,
+        customerPhone,
+        customerCity,
+        customerComment: fullComment,
+        cartItems: cartItemsFromOrder(reportedOrder),
+        totalPrice: reportedOrder.totals.final,
+      });
 
-    window.open(waUrl, "_blank", "noopener,noreferrer");
+      window.open(waUrl, "_blank", "noopener,noreferrer");
 
-    setTimeout(() => {
-      onPaymentReported();
-      setIsReported(false);
-      onClose();
-    }, 2400);
+      setTimeout(() => {
+        onPaymentReported(reportedOrder);
+        setIsReported(false);
+        onClose();
+      }, 2400);
+    } catch (error) {
+      setReportError(error instanceof Error ? error.message : "Не удалось отправить отметку об оплате.");
+    }
   };
 
   return (
@@ -91,7 +103,7 @@ export function KaspiQrModal({
               <strong>{customerName || "Клиент"}</strong>, менеджер проверит поступление денег. До проверки статус заказа — «ожидает подтверждения».
             </p>
             <div className="receipt-box">
-              <span>Заявка: <strong>{requestId}</strong></span>
+              <span>Заявка: <strong>{order.orderId}</strong></span>
               <span>Сумма: <strong>{money(totalPrice)} ₸</strong></span>
               <span>Товаров: <strong>{cartItems.reduce((a, b) => a + b.quantity, 0)} шт.</strong></span>
             </div>
@@ -157,6 +169,7 @@ export function KaspiQrModal({
                 Сообщить об оплате и отправить заявку
               </button>
             </div>
+            {reportError && <p role="alert">{reportError}</p>}
 
             <p className="kaspi-merchant-note">
               Получатель: <strong>MAESTRO MUSIC STORE</strong> · Ссылка: <a href={OFFICIAL_KASPI_PAY_LINK} target="_blank" rel="noopener noreferrer" style={{ color: "var(--kaspi)", textDecoration: "underline" }}>pay.kaspi.kz</a>

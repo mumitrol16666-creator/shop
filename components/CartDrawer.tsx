@@ -3,18 +3,22 @@
 import Image from "next/image";
 import { useRef, useState } from "react";
 import {
-  buildWhatsAppOrderUrl,
-  DEFAULT_WHATSAPP_PHONE,
   installment,
   money,
   type CartItem,
 } from "../lib/catalog-data";
+
+export type CheckoutIntent = {
+  fulfilmentMethod: string;
+  paymentMethod: string;
+};
 
 type CartDrawerProps = {
   cartOpen: boolean;
   setCartOpen: (open: boolean) => void;
   cartItems: CartItem[];
   cartCount: number;
+  totalPrice: number;
   updateCartQuantity: (key: string, delta: number) => void;
   removeCartItem: (key: string) => void;
   customerName: string;
@@ -25,8 +29,11 @@ type CartDrawerProps = {
   setCustomerCity: (city: string) => void;
   customerComment: string;
   setCustomerComment: (comment: string) => void;
-  onSubmitOrder: () => void;
-  onOpenKaspiQr: () => void;
+  onSubmitOrder: (intent: CheckoutIntent) => Promise<void>;
+  onOpenKaspiQr: (intent: CheckoutIntent) => Promise<void>;
+  reconciliationMessage?: string;
+  hasPriceChanges?: boolean;
+  onAcceptPriceChanges?: () => void;
 };
 
 export function CartDrawer({
@@ -34,6 +41,7 @@ export function CartDrawer({
   setCartOpen,
   cartItems,
   cartCount,
+  totalPrice,
   updateCartQuantity,
   removeCartItem,
   customerName,
@@ -46,54 +54,51 @@ export function CartDrawer({
   setCustomerComment,
   onSubmitOrder,
   onOpenKaspiQr,
+  reconciliationMessage,
+  hasPriceChanges,
+  onAcceptPriceChanges,
 }: CartDrawerProps) {
   const [deliveryMethod, setDeliveryMethod] = useState("Самовывоз в магазине (Актобе)");
   const [paymentMethod, setPaymentMethod] = useState("Kaspi Рассрочка 0-0-12");
   const orderFormRef = useRef<HTMLFormElement>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   if (!cartOpen) return null;
 
-  const totalPrice = cartItems.reduce(
-    (acc, item) => acc + (item.price || 0) * item.quantity,
-    0,
-  );
-
-  const handleSendToWhatsApp = (e: React.FormEvent) => {
+  const handleSendToWhatsApp = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!cartItems.length) {
       alert("Корзина пуста. Добавьте товар из каталога.");
       return;
     }
 
-    const fullComment = [
-      `Способ доставки: ${deliveryMethod}`,
-      `Способ оплаты: ${paymentMethod}`,
-      customerComment ? `Комментарий: ${customerComment}` : "",
-    ]
-      .filter(Boolean)
-      .join(" | ");
-
-    const waUrl = buildWhatsAppOrderUrl({
-      phone: DEFAULT_WHATSAPP_PHONE,
-      customerName,
-      customerPhone,
-      customerCity: customerCity || "Актобе",
-      customerComment: fullComment,
-      cartItems,
-      totalPrice,
-    });
-
-    window.open(waUrl, "_blank", "noopener,noreferrer");
-    onSubmitOrder();
+    setIsSubmitting(true);
+    try {
+      await onSubmitOrder({ fulfilmentMethod: deliveryMethod, paymentMethod });
+    } catch (error) {
+      alert(error instanceof Error ? error.message : "Не удалось оформить заказ.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
-  const handleKaspiPayClick = () => {
+  const handleKaspiPayClick = async () => {
     if (!cartItems.length) {
       alert("Корзина пуста. Добавьте товар из каталога.");
       return;
     }
     if (!orderFormRef.current?.reportValidity()) return;
-    onOpenKaspiQr();
+    setIsSubmitting(true);
+    try {
+      await onOpenKaspiQr({
+        fulfilmentMethod: deliveryMethod,
+        paymentMethod: "Kaspi QR / Оплата картой",
+      });
+    } catch (error) {
+      alert(error instanceof Error ? error.message : "Не удалось подготовить оплату.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -203,6 +208,12 @@ export function CartDrawer({
         )}
 
         <form ref={orderFormRef} className="order-form" onSubmit={handleSendToWhatsApp}>
+          {reconciliationMessage && <p role="status">{reconciliationMessage}</p>}
+          {hasPriceChanges && onAcceptPriceChanges && (
+            <button type="button" onClick={onAcceptPriceChanges}>
+              Принять новую цену
+            </button>
+          )}
           <label>
             Ваше имя *
             <input
@@ -306,7 +317,7 @@ export function CartDrawer({
                 type="button"
                 className="kaspi-pay-cart-button"
                 onClick={handleKaspiPayClick}
-                disabled={!cartItems.length}
+                disabled={!cartItems.length || isSubmitting}
               >
                 <span className="kaspi-badge-small">kaspi</span>
                 <span>Оплатить через Kaspi QR / Рассрочка</span>
@@ -315,7 +326,7 @@ export function CartDrawer({
               <button
                 type="submit"
                 className="whatsapp-submit-button"
-                disabled={!cartItems.length}
+                disabled={!cartItems.length || isSubmitting}
               >
                 <span className="wa-icon">💬</span>
                 <span>Оформить заказ в WhatsApp</span>

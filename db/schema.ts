@@ -39,6 +39,30 @@ export const CRM_SYNC_STATUSES = [
   "succeeded",
   "failed",
 ] as const;
+export const ORDER_STATUSES = [
+  "draft",
+  "pending_contact",
+  "awaiting_payment",
+  "payment_reported",
+  "paid",
+  "processing",
+  "completed",
+  "cancelled",
+  "expired",
+] as const;
+export const PAYMENT_STATUSES = [
+  "awaiting_payment",
+  "payment_reported",
+  "paid",
+  "cancelled",
+] as const;
+export const RESERVATION_STATUSES = [
+  "reserved",
+  "confirmed",
+  "released",
+  "expired",
+] as const;
+export const ACTOR_TYPES = ["customer", "admin", "provider", "system"] as const;
 
 export const courseRecords = sqliteTable(
   "course_records",
@@ -187,6 +211,7 @@ export const productPricing = sqliteTable(
     recommendedPriceKzt: integer("recommended_price_kzt").notNull().default(0),
     manualPriceKzt: integer("manual_price_kzt"),
     finalPriceKzt: integer("final_price_kzt").notNull().default(0),
+    pricingVersion: integer("pricing_version").notNull().default(1),
     taxAmountKzt: integer("tax_amount_kzt").notNull().default(0),
     bankAmountKzt: integer("bank_amount_kzt").notNull().default(0),
     sellerAmountKzt: integer("seller_amount_kzt").notNull().default(0),
@@ -346,6 +371,139 @@ export const crmSyncLogs = sqliteTable(
   ],
 );
 
+export const orders = sqliteTable(
+  "orders",
+  {
+    id: text("id").primaryKey(),
+    publicToken: text("public_token").notNull(),
+    idempotencyKey: text("idempotency_key").notNull(),
+    payloadHash: text("payload_hash").notNull(),
+    customerName: text("customer_name").notNull(),
+    customerPhone: text("customer_phone").notNull(),
+    customerCity: text("customer_city").notNull(),
+    customerComment: text("customer_comment").notNull().default(""),
+    fulfilmentMethod: text("fulfilment_method").notNull(),
+    paymentMethod: text("payment_method").notNull(),
+    subtotalKzt: integer("subtotal_kzt").notNull(),
+    discountKzt: integer("discount_kzt").notNull().default(0),
+    totalKzt: integer("total_kzt").notNull(),
+    currency: text("currency").notNull().default("KZT"),
+    status: text("status", { enum: ORDER_STATUSES }).notNull(),
+    isTest: integer("is_test", { mode: "boolean" }).notNull().default(false),
+    createdAt: text("created_at").notNull(),
+    updatedAt: text("updated_at").notNull(),
+  },
+  (table) => [
+    uniqueIndex("orders_public_token_unique").on(table.publicToken),
+    uniqueIndex("orders_idempotency_key_unique").on(table.idempotencyKey),
+    index("orders_status_created_idx").on(table.status, table.createdAt),
+    check("orders_totals_nonnegative_check", sql`${table.subtotalKzt} >= 0 and ${table.discountKzt} >= 0 and ${table.totalKzt} >= 0`),
+    check("orders_currency_check", sql`${table.currency} = 'KZT'`),
+    check("orders_status_check", sql`${table.status} in ('draft', 'pending_contact', 'awaiting_payment', 'payment_reported', 'paid', 'processing', 'completed', 'cancelled', 'expired')`),
+  ],
+);
+
+export const orderItems = sqliteTable(
+  "order_items",
+  {
+    id: text("id").primaryKey(),
+    orderId: text("order_id")
+      .notNull()
+      .references(() => orders.id, { onDelete: "cascade" }),
+    productId: text("product_id").notNull(),
+    productSku: text("product_sku").notNull(),
+    variantId: text("variant_id").notNull(),
+    variantSku: text("variant_sku").notNull(),
+    bundleSku: text("bundle_sku").notNull(),
+    titleSnapshot: text("title_snapshot").notNull(),
+    variantSnapshot: text("variant_snapshot").notNull(),
+    componentSnapshotJson: text("component_snapshot_json").notNull().default("[]"),
+    quantity: integer("quantity").notNull(),
+    unitPriceKzt: integer("unit_price_kzt").notNull(),
+    discountKzt: integer("discount_kzt").notNull().default(0),
+    lineTotalKzt: integer("line_total_kzt").notNull(),
+    pricingVersion: text("pricing_version").notNull(),
+    createdAt: text("created_at").notNull(),
+  },
+  (table) => [
+    index("order_items_order_idx").on(table.orderId),
+    index("order_items_variant_sku_idx").on(table.variantSku),
+    check("order_items_quantity_positive_check", sql`${table.quantity} > 0`),
+    check("order_items_totals_nonnegative_check", sql`${table.unitPriceKzt} >= 0 and ${table.discountKzt} >= 0 and ${table.lineTotalKzt} >= 0`),
+  ],
+);
+
+export const payments = sqliteTable(
+  "payments",
+  {
+    id: text("id").primaryKey(),
+    orderId: text("order_id")
+      .notNull()
+      .references(() => orders.id, { onDelete: "cascade" }),
+    method: text("method").notNull(),
+    status: text("status", { enum: PAYMENT_STATUSES }).notNull(),
+    amountKzt: integer("amount_kzt").notNull(),
+    reportedAt: text("reported_at"),
+    verifiedAt: text("verified_at"),
+    reference: text("reference"),
+    receiptMetadataJson: text("receipt_metadata_json").notNull().default("{}"),
+    createdAt: text("created_at").notNull(),
+    updatedAt: text("updated_at").notNull(),
+  },
+  (table) => [
+    uniqueIndex("payments_order_unique").on(table.orderId),
+    index("payments_status_idx").on(table.status),
+    check("payments_amount_nonnegative_check", sql`${table.amountKzt} >= 0`),
+    check("payments_status_check", sql`${table.status} in ('awaiting_payment', 'payment_reported', 'paid', 'cancelled')`),
+  ],
+);
+
+export const orderStatusHistory = sqliteTable(
+  "order_status_history",
+  {
+    id: text("id").primaryKey(),
+    orderId: text("order_id")
+      .notNull()
+      .references(() => orders.id, { onDelete: "cascade" }),
+    fromStatus: text("from_status", { enum: ORDER_STATUSES }),
+    toStatus: text("to_status", { enum: ORDER_STATUSES }).notNull(),
+    actorType: text("actor_type", { enum: ACTOR_TYPES }).notNull(),
+    actorId: text("actor_id"),
+    reason: text("reason"),
+    createdAt: text("created_at").notNull(),
+  },
+  (table) => [
+    index("order_status_history_order_created_idx").on(table.orderId, table.createdAt),
+    check("order_status_history_actor_check", sql`${table.actorType} in ('customer', 'admin', 'provider', 'system')`),
+  ],
+);
+
+export const stockReservations = sqliteTable(
+  "stock_reservations",
+  {
+    id: text("id").primaryKey(),
+    orderId: text("order_id")
+      .notNull()
+      .references(() => orders.id, { onDelete: "cascade" }),
+    variantId: text("variant_id")
+      .notNull()
+      .references(() => productVariants.id),
+    variantSku: text("variant_sku").notNull(),
+    quantity: integer("quantity").notNull(),
+    status: text("status", { enum: RESERVATION_STATUSES }).notNull(),
+    expiresAt: text("expires_at").notNull(),
+    createdAt: text("created_at").notNull(),
+    updatedAt: text("updated_at").notNull(),
+  },
+  (table) => [
+    uniqueIndex("stock_reservations_order_variant_unique").on(table.orderId, table.variantId),
+    index("stock_reservations_status_expiry_idx").on(table.status, table.expiresAt),
+    index("stock_reservations_variant_idx").on(table.variantId),
+    check("stock_reservations_quantity_positive_check", sql`${table.quantity} > 0`),
+    check("stock_reservations_status_check", sql`${table.status} in ('reserved', 'confirmed', 'released', 'expired')`),
+  ],
+);
+
 export type Product = typeof products.$inferSelect;
 export type NewProduct = typeof products.$inferInsert;
 export type ProductVariant = typeof productVariants.$inferSelect;
@@ -358,3 +516,13 @@ export type CrmSyncLog = typeof crmSyncLogs.$inferSelect;
 export type NewCrmSyncLog = typeof crmSyncLogs.$inferInsert;
 export type CourseRecord = typeof courseRecords.$inferSelect;
 export type NewCourseRecord = typeof courseRecords.$inferInsert;
+export type Order = typeof orders.$inferSelect;
+export type NewOrder = typeof orders.$inferInsert;
+export type OrderItem = typeof orderItems.$inferSelect;
+export type NewOrderItem = typeof orderItems.$inferInsert;
+export type Payment = typeof payments.$inferSelect;
+export type NewPayment = typeof payments.$inferInsert;
+export type OrderStatusHistory = typeof orderStatusHistory.$inferSelect;
+export type NewOrderStatusHistory = typeof orderStatusHistory.$inferInsert;
+export type StockReservation = typeof stockReservations.$inferSelect;
+export type NewStockReservation = typeof stockReservations.$inferInsert;

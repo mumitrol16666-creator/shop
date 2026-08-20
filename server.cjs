@@ -3,6 +3,7 @@ const fs = require("fs");
 const path = require("path");
 const zlib = require("zlib");
 const crypto = require("crypto");
+const commerceCore = require("./dist-vps/commerce-core.cjs");
 
 const PORT = Number(process.env.PORT || 3000);
 const HOST = "0.0.0.0";
@@ -10,6 +11,7 @@ const PUBLIC_DIR = process.env.PUBLIC_DIR || path.join(__dirname, "public");
 const DATA_DIR = process.env.DATA_DIR || path.join(__dirname, ".runtime-data");
 const DATA_FILE = path.join(DATA_DIR, "products.json");
 const COURSES_FILE = path.join(DATA_DIR, "courses.json");
+const COMMERCE_FILE = path.join(DATA_DIR, "commerce.json");
 const UPLOADS_DIR = path.join(DATA_DIR, "uploads");
 const SEED_PRODUCTS_FILE = path.join(__dirname, "data/products.json");
 const SEED_COURSES_FILE = path.join(__dirname, "data/courses.json");
@@ -19,6 +21,9 @@ const ADMIN_PASSWORD_SALT = process.env.ADMIN_PASSWORD_SALT || "6ec46d8955935973
 const ADMIN_PASSWORD_HASH = process.env.ADMIN_PASSWORD_HASH || "914d0810c4fd1aa5e6c6b401bec3a3449645ea9a46e8f5061813be7cc5be1ba097ee32648fa9644bbb20af2e4346f08bcda2d9c385f080eb28cf72cf48fcbc2d";
 const SESSION_SECRET = process.env.ADMIN_SESSION_SECRET || crypto.randomBytes(32).toString("hex");
 const loginAttempts = new Map();
+const commerceAttempts = new Map();
+const COMMERCE_CORE_V2 = process.env.COMMERCE_CORE_V2 !== "0";
+let commerceMutationQueue = Promise.resolve();
 
 const MIME_TYPES = {
   ".html": "text/html; charset=utf-8",
@@ -127,6 +132,18 @@ function clearFailedLogins(req) {
   loginAttempts.delete(clientIp(req));
 }
 
+function commerceRateAllowed(req) {
+  const key = clientIp(req);
+  const now = Date.now();
+  const current = commerceAttempts.get(key);
+  if (!current || current.resetAt <= now) {
+    commerceAttempts.set(key, { count: 1, resetAt: now + 60_000 });
+    return true;
+  }
+  current.count += 1;
+  return current.count <= 30;
+}
+
 function requireAdmin(req, res) {
   if (isAdminRequest(req)) return true;
   sendJson(res, 401, { error: "Требуется вход администратора" });
@@ -170,6 +187,10 @@ function writeJsonAtomic(target, value) {
 
 ensureRuntimeFile(DATA_FILE, SEED_PRODUCTS_FILE);
 ensureRuntimeFile(COURSES_FILE, SEED_COURSES_FILE);
+fs.mkdirSync(path.dirname(COMMERCE_FILE), { recursive: true });
+if (!fs.existsSync(COMMERCE_FILE)) {
+  writeJsonAtomic(COMMERCE_FILE, commerceCore.emptyCommerceStoreState());
+}
 fs.mkdirSync(UPLOADS_DIR, { recursive: true });
 
 function serveStaticFile(req, res, filePath, contentType, isHtml = false) {
@@ -243,6 +264,227 @@ function writeCourses(courses) {
   } catch (err) {
     console.error("Error writing courses:", err);
     return false;
+  }
+}
+
+function readCommerceState() {
+  try {
+    const parsed = JSON.parse(fs.readFileSync(COMMERCE_FILE, "utf-8"));
+    if (parsed?.schemaVersion === 1) return parsed;
+  } catch (error) {
+    console.error("commerce_state_read_failed", { message: error?.message });
+  }
+  return commerceCore.emptyCommerceStoreState();
+}
+
+function writeCommerceState(state) {
+  writeJsonAtomic(COMMERCE_FILE, state);
+}
+
+function withCommerceMutation(work) {
+  const operation = commerceMutationQueue.then(work, work);
+  commerceMutationQueue = operation.catch(() => undefined);
+  return operation;
+}
+
+function readJsonBody(req, maxBytes = 128 * 1024) {
+  return new Promise((resolve, reject) => {
+    let body = "";
+    req.on("data", (chunk) => {
+      body += chunk;
+      if (body.length > maxBytes) reject(new Error("REQUEST_TOO_LARGE"));
+    });
+    req.on("end", () => {
+      try {
+        resolve(JSON.parse(body || "{}"));
+      } catch {
+        reject(new Error("INVALID_JSON"));
+      }
+    });
+    req.on("error", reject);
+  });
+}
+
+function commerceStatus(code) {
+  return {
+    INVALID_REQUEST: 400,
+    PRODUCT_NOT_FOUND: 404,
+    VARIANT_REQUIRED: 409,
+    VARIANT_NOT_FOUND: 409,
+    VARIANT_OUT_OF_STOCK: 409,
+    INSUFFICIENT_STOCK: 409,
+    INVALID_BUNDLE: 409,
+    INVALID_COMPONENT: 409,
+    PRICE_CHANGED: 409,
+    CART_INVALID: 409,
+    ORDER_NOT_FOUND: 404,
+    ORDER_EXPIRED: 410,
+    PAYMENT_ALREADY_REPORTED: 409,
+    PAYMENT_METHOD_NOT_REPORTABLE: 409,
+    FORBIDDEN_TRANSITION: 409,
+    IDEMPOTENCY_REQUIRED: 400,
+    IDEMPOTENCY_CONFLICT: 409,
+    RATE_LIMITED: 429,
+  }[code] || 500;
+}
+
+function sendCommerceError(res, error) {
+  const shape = commerceCore.toErrorResponse(error);
+  const status = commerceStatus(shape.error.code);
+  if (status >= 500) console.error("commerce_api_failed", { code: shape.error.code });
+  sendJson(res, status, shape);
+}
+
+function requestAllowsSmoke(req, payload) {
+  return payload?.testMode === true && req.headers["x-maestro-smoke-test"] === "stage1";
+}
+
+function baseCommerceCatalog(state = readCommerceState()) {
+  const usage = commerceCore.reservationUsage(commerceCore.expireReservationsInMemory(state));
+  return commerceCore.buildCatalogReadModels(readProducts(), usage);
+}
+
+async function handleCommerceRequest(req, res, pathname) {
+  const requestId = String(req.headers["x-request-id"] || crypto.randomUUID());
+  const startedAt = Date.now();
+  try {
+    if (!commerceRateAllowed(req)) {
+      throw commerceCore.commerceError("RATE_LIMITED", "Слишком много запросов. Повторите через минуту.", { recoverable: true });
+    }
+
+    if (pathname === "/api/catalog" && req.method === "GET") {
+      const state = readCommerceState();
+      const products = baseCommerceCatalog(state);
+      sendJson(res, 200, { schemaVersion: 1, catalogVersion: commerceCore.catalogVersion(products), products });
+      return;
+    }
+
+    if (pathname.startsWith("/api/products/") && req.method === "GET") {
+      const identifier = decodeURIComponent(pathname.slice("/api/products/".length));
+      const product = commerceCore.productByIdentifier(baseCommerceCatalog(), {
+        productId: identifier,
+        productSku: identifier,
+        slug: identifier,
+      });
+      if (!product) throw commerceCore.commerceError("PRODUCT_NOT_FOUND", "Товар не найден.", { recoverable: false });
+      sendJson(res, 200, { product });
+      return;
+    }
+
+    if (pathname === "/api/cart/validate" && req.method === "POST") {
+      const payload = await readJsonBody(req);
+      let products = baseCommerceCatalog();
+      if (requestAllowsSmoke(req, payload)) products = [...products, commerceCore.stage1SmokeProduct()];
+      sendJson(res, 200, { reconciliation: commerceCore.reconcileCart(products, payload.cart) });
+      return;
+    }
+
+    if (pathname === "/api/orders" && req.method === "POST") {
+      const payload = await readJsonBody(req);
+      const idempotencyKey = String(req.headers["idempotency-key"] || "").trim();
+      if (!idempotencyKey) {
+        throw commerceCore.commerceError("IDEMPOTENCY_REQUIRED", "Для создания заказа нужен Idempotency-Key.", { recoverable: true });
+      }
+      const smoke = requestAllowsSmoke(req, payload);
+      if (payload.testMode && !smoke) {
+        throw commerceCore.commerceError("INVALID_REQUEST", "Тестовый режим доступен только production smoke.", { recoverable: false });
+      }
+      const result = await withCommerceMutation(() => {
+        const state = readCommerceState();
+        let products = commerceCore.buildCatalogReadModels(readProducts());
+        if (smoke) products = [...products, commerceCore.stage1SmokeProduct()];
+        const created = commerceCore.createOrderInMemory({
+          state,
+          products,
+          request: payload,
+          idempotencyKey,
+          reservationTtlMinutes: Math.max(5, Number(process.env.COMMERCE_RESERVATION_TTL_MINUTES || 30)),
+        });
+        writeCommerceState(created.state);
+        return created;
+      });
+      console.info("commerce_order_created", {
+        requestId,
+        orderId: result.order.orderId,
+        idempotencyRef: commerceCore.stableHash(idempotencyKey),
+        status: result.order.status,
+        replayed: result.replayed,
+        test: smoke,
+        durationMs: Date.now() - startedAt,
+      });
+      sendJson(res, result.replayed ? 200 : 201, { order: result.order, replayed: result.replayed });
+      return;
+    }
+
+    const paymentReport = pathname.match(/^\/api\/orders\/([^/]+)\/payment-report$/);
+    if (paymentReport && req.method === "POST") {
+      const payload = await readJsonBody(req);
+      const order = await withCommerceMutation(() => {
+        const changed = commerceCore.reportPaymentInMemory({
+          state: readCommerceState(),
+          orderId: decodeURIComponent(paymentReport[1]),
+          reference: payload.reference,
+          receiptMetadata: payload.receiptMetadata,
+          reportedReservationTtlMinutes: Math.max(30, Number(process.env.COMMERCE_REPORTED_RESERVATION_TTL_MINUTES || 1440)),
+        });
+        writeCommerceState(changed.state);
+        return changed.order;
+      });
+      console.info("commerce_payment_transition", {
+        requestId,
+        orderId: order.orderId,
+        status: order.status,
+        durationMs: Date.now() - startedAt,
+      });
+      sendJson(res, 200, { order });
+      return;
+    }
+
+    const confirm = pathname.match(/^\/api\/admin\/orders\/([^/]+)\/confirm-payment$/);
+    if (confirm && req.method === "POST") {
+      if (!requireAdmin(req, res)) return;
+      const order = await withCommerceMutation(() => {
+        const changed = commerceCore.confirmPaymentInMemory({
+          state: readCommerceState(),
+          orderId: decodeURIComponent(confirm[1]),
+          actorType: "admin",
+        });
+        writeCommerceState(changed.state);
+        return changed.order;
+      });
+      sendJson(res, 200, { order });
+      return;
+    }
+
+    const cancel = pathname.match(/^\/api\/admin\/orders\/([^/]+)\/cancel$/);
+    if (cancel && req.method === "POST") {
+      if (!requireAdmin(req, res)) return;
+      const payload = await readJsonBody(req);
+      const order = await withCommerceMutation(() => {
+        const changed = commerceCore.cancelOrderInMemory({
+          state: readCommerceState(),
+          orderId: decodeURIComponent(cancel[1]),
+          actorType: "admin",
+          reason: payload.reason,
+        });
+        writeCommerceState(changed.state);
+        return changed.order;
+      });
+      sendJson(res, 200, { order });
+      return;
+    }
+
+    const publicOrder = pathname.match(/^\/api\/orders\/([^/]+)$/);
+    if (publicOrder && req.method === "GET") {
+      const state = commerceCore.expireReservationsInMemory(readCommerceState());
+      writeCommerceState(state);
+      sendJson(res, 200, { order: commerceCore.publicOrderFromState(state, decodeURIComponent(publicOrder[1])) });
+      return;
+    }
+
+    sendJson(res, 404, { error: { code: "ORDER_NOT_FOUND", message: "Маршрут не найден.", recoverable: false } });
+  } catch (error) {
+    sendCommerceError(res, error);
   }
 }
 
@@ -332,6 +574,19 @@ const server = http.createServer((req, res) => {
 
   if (pathname === "/api/admin/logout" && req.method === "POST") {
     sendJson(res, 200, { success: true }, { "Set-Cookie": sessionCookie(req, "", 0) });
+    return;
+  }
+
+  if (
+    COMMERCE_CORE_V2 &&
+    (pathname === "/api/catalog" ||
+      pathname === "/api/cart/validate" ||
+      pathname === "/api/orders" ||
+      pathname.startsWith("/api/orders/") ||
+      pathname.startsWith("/api/admin/orders/") ||
+      pathname.startsWith("/api/products/"))
+  ) {
+    void handleCommerceRequest(req, res, pathname);
     return;
   }
 
