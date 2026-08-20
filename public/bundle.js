@@ -14306,15 +14306,18 @@ function ProductModal({
   onClose,
   onAddToCart
 }) {
+  const [installmentMonths, setInstallmentMonths] = (0, import_react4.useState)(12);
+  const [isPlayingSound, setIsPlayingSound] = (0, import_react4.useState)(false);
+  const [selectedStrings, setSelectedStrings] = (0, import_react4.useState)(null);
+  const showProPackOption = selected ? selected.allowProPack !== false : false;
+  const showCourseOption = selected ? selected.attachedCourseId !== "none" : false;
+  const showStringsUpsell = selected ? selected.allowStringsUpsell !== false : false;
   const proPackTitle = selected?.proPackTitle || "\u0427\u0435\u0445\u043E\u043B + \u0420\u0435\u043C\u0435\u043D\u044C + VIP \u0414\u043E\u0441\u0442\u0443\u043F";
-  const proPackPrice = selected.proPackPrice !== void 0 ? selected.proPackPrice : 8900;
-  const showProPackOption = selected.allowProPack !== false;
-  const showCourseOption = selected.attachedCourseId !== "none";
-  const showStringsUpsell = selected.allowStringsUpsell !== false;
+  const proPackPrice = selected?.proPackPrice !== void 0 ? selected.proPackPrice : 8900;
   const [selectedBundle, setSelectedBundle] = (0, import_react4.useState)(
     showCourseOption ? "gift_course" : showProPackOption ? "pro_pack" : "base"
   );
-  const [selectedStrings, setSelectedStrings] = (0, import_react4.useState)(null);
+  if (!selected) return null;
   const attachedCourse = showCourseOption ? resolveAttachedCourse(selected) : null;
   const selectedImage = selectedVariant?.image || selected.image;
   const basePrice = selectedVariant?.price || selected.price || 0;
@@ -17300,7 +17303,7 @@ function PurchaserView({
   const [other, setOther] = (0, import_react12.useState)(300);
   const [taxPercent, setTaxPercent] = (0, import_react12.useState)(3);
   const [bankPercent, setBankPercent] = (0, import_react12.useState)(11);
-  const [installmentMonths2, setInstallmentMonths2] = (0, import_react12.useState)(12);
+  const [installmentMonths, setInstallmentMonths] = (0, import_react12.useState)(12);
   const [sellerPercent, setSellerPercent] = (0, import_react12.useState)(5);
   const [markup, setMarkup] = (0, import_react12.useState)(35);
   const [manualPricing, setManualPricing] = (0, import_react12.useState)(false);
@@ -17446,7 +17449,7 @@ function PurchaserView({
     setOther(preset.otherCostsKzt);
     setTaxPercent(preset.taxPercent);
     setBankPercent(preset.bankInstallmentPercent);
-    setInstallmentMonths2(preset.installmentMonths);
+    setInstallmentMonths(preset.installmentMonths);
     setSellerPercent(preset.sellerPercent);
     setMarkup(preset.targetProfitPercent);
     setIsDirty(true);
@@ -17511,7 +17514,7 @@ function PurchaserView({
       setOther(p.otherCostsKzt);
       setTaxPercent(p.taxPercent);
       setBankPercent(p.bankInstallmentPercent);
-      setInstallmentMonths2(p.installmentMonths);
+      setInstallmentMonths(p.installmentMonths);
       setSellerPercent(p.sellerPercent);
       setMarkup(p.targetProfitPercent);
       setManualPricing(p.pricingMode === "manual");
@@ -17634,7 +17637,7 @@ function PurchaserView({
             otherCostsKzt: other,
             taxPercent,
             bankInstallmentPercent: bankPercent,
-            installmentMonths: installmentMonths2,
+            installmentMonths,
             sellerPercent,
             targetProfitPercent: markup,
             pricingMode: manualPricing ? "manual" : "auto",
@@ -17806,7 +17809,7 @@ function PurchaserView({
           otherCostsKzt: other,
           taxPercent,
           bankInstallmentPercent: bankPercent,
-          installmentMonths: installmentMonths2,
+          installmentMonths,
           sellerPercent,
           targetProfitPercent: markup
         }
@@ -18680,10 +18683,10 @@ function PurchaserView({
                 "input",
                 {
                   type: "number",
-                  value: installmentMonths2 === 0 ? "" : installmentMonths2,
+                  value: installmentMonths === 0 ? "" : installmentMonths,
                   onFocus: (e) => e.target.select(),
                   onChange: (e) => {
-                    setInstallmentMonths2(+e.target.value);
+                    setInstallmentMonths(+e.target.value);
                     setIsDirty(true);
                   }
                 }

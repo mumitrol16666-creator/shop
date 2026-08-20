@@ -36,16 +36,21 @@ export function ProductModal({
   onClose,
   onAddToCart,
 }: ProductModalProps) {
+  const [installmentMonths, setInstallmentMonths] = useState<number>(12);
+  const [isPlayingSound, setIsPlayingSound] = useState(false);
+  const [selectedStrings, setSelectedStrings] = useState<"elixir" | "daddario" | null>(null);
+
+  const showProPackOption = selected ? selected.allowProPack !== false : false;
+  const showCourseOption = selected ? selected.attachedCourseId !== "none" : false;
+  const showStringsUpsell = selected ? selected.allowStringsUpsell !== false : false;
   const proPackTitle = selected?.proPackTitle || "Чехол + Ремень + VIP Доступ";
-  const proPackPrice = selected.proPackPrice !== undefined ? selected.proPackPrice : 8900;
-  const showProPackOption = selected.allowProPack !== false;
-  const showCourseOption = selected.attachedCourseId !== "none";
-  const showStringsUpsell = selected.allowStringsUpsell !== false;
+  const proPackPrice = selected?.proPackPrice !== undefined ? selected.proPackPrice : 8900;
 
   const [selectedBundle, setSelectedBundle] = useState<"base" | "gift_course" | "pro_pack">(
     showCourseOption ? "gift_course" : showProPackOption ? "pro_pack" : "base"
   );
-  const [selectedStrings, setSelectedStrings] = useState<"elixir" | "daddario" | null>(null);
+
+  if (!selected) return null;
 
   const attachedCourse = showCourseOption ? resolveAttachedCourse(selected) : null;
   const selectedImage = selectedVariant?.image || selected.image;
