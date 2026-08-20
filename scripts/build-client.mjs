@@ -1,11 +1,11 @@
 import * as esbuild from "esbuild";
 import path from "node:path";
 
-const root = "/Users/vladislav/Documents/Maestro/site";
+const root = process.cwd();
 
 async function build() {
   try {
-    const res = await esbuild.build({
+    await esbuild.build({
       entryPoints: [path.join(root, "src/main.tsx")],
       bundle: true,
       format: "esm",
@@ -39,6 +39,7 @@ async function build() {
     console.log("✅ ESBuild ESM bundle compiled successfully (minified)!");
   } catch (err) {
     console.error("ESBuild error:", err);
+    process.exitCode = 1;
   }
 }
-build();
+await build();

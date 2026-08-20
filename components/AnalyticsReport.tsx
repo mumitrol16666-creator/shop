@@ -21,7 +21,7 @@ export function AnalyticsReport() {
       })
     );
 
-    fetch("/api/products")
+    fetch("/api/products?scope=all", { credentials: "same-origin", cache: "no-store" })
       .then((res) => res.json())
       .then((data) => {
         if (data && data.products) {

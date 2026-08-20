@@ -1,7 +1,8 @@
 import fs from "node:fs";
 import path from "node:path";
 import { and, eq, inArray } from "drizzle-orm";
-import { getDb } from "../../../db";
+import { getD1Binding, getDb } from "../../../db";
+import { isAdminRequest } from "../../../lib/admin-auth-server";
 import {
   crmSyncLogs,
   productPricing,
@@ -152,6 +153,22 @@ function routeError(error: unknown) {
   return message;
 }
 
+function toPublicProduct<T extends Record<string, any>>(product: T) {
+  const {
+    adminPricing: _adminPricing,
+    supplierName: _supplierName,
+    supplierProductUrl: _supplierProductUrl,
+    ...safe
+  } = product;
+  if (Array.isArray(safe.variantItems)) {
+    safe.variantItems = safe.variantItems.map((variant: Record<string, any>) => {
+      const { adminPricing: _variantPricing, ...publicVariant } = variant;
+      return publicVariant;
+    });
+  }
+  return safe;
+}
+
 async function readCatalog(includeDrafts: boolean) {
   const db = getDb();
   if (db) {
@@ -281,7 +298,7 @@ async function readCatalog(includeDrafts: boolean) {
         !p.isStored ||
         p.publicationStatus === "published" ||
         !p.publicationStatus,
-    );
+    ).map(toPublicProduct);
   }
   return localList;
 }
@@ -289,6 +306,9 @@ async function readCatalog(includeDrafts: boolean) {
 export async function GET(request: Request) {
   try {
     const includeDrafts = new URL(request.url).searchParams.get("scope") === "all";
+    if (includeDrafts && !(await isAdminRequest(request))) {
+      return Response.json({ error: "Требуется вход администратора" }, { status: 401 });
+    }
     const catalog = await readCatalog(includeDrafts);
     return Response.json({ products: catalog, count: catalog.length });
   } catch (error) {
@@ -298,6 +318,9 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
   try {
+    if (!(await isAdminRequest(request))) {
+      return Response.json({ error: "Требуется вход администратора" }, { status: 401 });
+    }
     const payload = (await request.json()) as ProductPayload;
     const name = clean(payload.name);
     const sku = clean(payload.sku).toUpperCase();
@@ -448,54 +471,124 @@ export async function POST(request: Request) {
     }
     writeLocalProducts(localList);
 
-    // Also attempt D1 update if available
-    const db = getDb();
-    if (db) {
+    // Persist the complete catalog record atomically when D1 is available.
+    const d1 = getD1Binding();
+    if (d1) {
       try {
-        const existingDbProduct = (
-          await db
-            .select()
-            .from(products)
-            .where(eq(products.sku, sku))
-            .limit(1)
-        )[0];
+        const existingDbProduct = await d1
+          .prepare("SELECT id FROM products WHERE sku = ? LIMIT 1")
+          .bind(sku)
+          .first<{ id: string }>();
         const dbProdId = existingDbProduct?.id ?? String(productId);
         const now = new Date().toISOString();
-
-        if (existingDbProduct) {
-          await db
-            .update(products)
-            .set({
+        const publicationStatus = payload.publish ? "published" : "draft";
+        const statements = [
+          d1.prepare(`INSERT INTO products (
+              id, name, short_name, sku, slug, category, main_photo_url,
+              description, features_json, target_audience, seo_title,
+              seo_description, status, updated_at
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'active', ?)
+            ON CONFLICT(id) DO UPDATE SET
+              name=excluded.name, short_name=excluded.short_name, sku=excluded.sku,
+              slug=excluded.slug, category=excluded.category,
+              main_photo_url=excluded.main_photo_url, description=excluded.description,
+              features_json=excluded.features_json,
+              target_audience=excluded.target_audience, seo_title=excluded.seo_title,
+              seo_description=excluded.seo_description, status='active', updated_at=excluded.updated_at`)
+            .bind(
+              dbProdId,
               name,
-              shortName: name,
+              name,
               sku,
-              slug: slugFromSku(sku) || dbProdId,
+              slugFromSku(sku) || dbProdId,
               category,
-              mainPhotoUrl: photoUrl,
+              photoUrl,
               description,
-              featuresJson: JSON.stringify(payload.features ?? []),
-              targetAudience: clean(payload.targetAudience) || null,
-              updatedAt: now,
-            })
-            .where(eq(products.id, dbProdId));
-        } else {
-          await db.insert(products).values({
-            id: dbProdId,
-            name,
-            shortName: name,
-            sku,
-            slug: slugFromSku(sku) || dbProdId,
-            category,
-            mainPhotoUrl: photoUrl,
-            description,
-            featuresJson: JSON.stringify(payload.features ?? []),
-            targetAudience: clean(payload.targetAudience) || null,
-            seoTitle: name,
-            seoDescription: description.slice(0, 160),
-          });
-        }
+              JSON.stringify(payload.features ?? []),
+              clean(payload.targetAudience) || null,
+              name,
+              description.slice(0, 160),
+              now,
+            ),
+          d1.prepare("DELETE FROM product_pricing WHERE product_id = ?").bind(dbProdId),
+          d1.prepare("DELETE FROM product_variants WHERE product_id = ?").bind(dbProdId),
+          ...variantItems.map((variant, index) => {
+            const variantId = clean(variant.id) || `${dbProdId}-variant-${index + 1}`;
+            return d1.prepare(`INSERT INTO product_variants (
+                id, product_id, name, sku, barcode, color_name, color_hex,
+                secondary_color_hex, size, photo_url, stock_quantity,
+                reserved_quantity, reorder_point, status, updated_at
+              ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0, 0, 'active', ?)`)
+              .bind(
+                variantId,
+                dbProdId,
+                clean(variant.name) || `Вариант ${index + 1}`,
+                clean(variant.sku).toUpperCase() || `${sku}-${index + 1}`,
+                clean(variant.barcode) || null,
+                clean(variant.colorName) || null,
+                clean(variant.color) || null,
+                clean(variant.secondary) || null,
+                clean(variant.size) || null,
+                clean(variant.image) || photoUrl,
+                integerOrZero(variant.stock),
+                now,
+              );
+          }),
+          d1.prepare(`INSERT INTO product_pricing (
+              id, product_id, variant_id, purchase_currency, purchase_price,
+              currency_rate, purchase_price_kzt, china_delivery_kzt, cargo_kzt,
+              customs_kzt, packaging_kzt, setup_kzt, marketing_kzt,
+              other_costs_kzt, fixed_cost_kzt, tax_percent,
+              bank_installment_percent, installment_months, seller_percent,
+              target_profit_percent, pricing_mode, recommended_price_kzt,
+              manual_price_kzt, final_price_kzt, tax_amount_kzt,
+              bank_amount_kzt, seller_amount_kzt, net_revenue_kzt, profit_kzt,
+              margin_percent, markup_on_cost_percent, calculated_at, updated_at
+            ) VALUES (?, ?, NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`)
+            .bind(
+              `${dbProdId}-pricing`, dbProdId, purchaseCurrency,
+              pricingInput.purchasePrice, pricingInput.currencyRate,
+              money(calculation.purchasePriceKzt), money(pricingInput.chinaDeliveryKzt),
+              money(pricingInput.cargoKzt), money(pricingInput.customsKzt),
+              money(pricingInput.packagingKzt), money(pricingInput.setupKzt),
+              money(pricingInput.marketingKzt), money(pricingInput.otherCostsKzt),
+              money(calculation.fixedCostKzt), pricingInput.taxPercent,
+              pricingInput.bankInstallmentPercent,
+              integerOrZero(payload.pricing?.installmentMonths) || 12,
+              pricingInput.sellerPercent, pricingInput.targetProfitPercent,
+              pricingMode, money(calculation.recommendedPriceKzt),
+              payload.pricing?.manualPriceKzt ?? null,
+              money(calculation.finalPriceKzt), money(calculation.taxAmountKzt),
+              money(calculation.bankAmountKzt), money(calculation.sellerAmountKzt),
+              money(calculation.netRevenueKzt), money(calculation.profitKzt),
+              calculation.marginPercent, calculation.markupOnCostPercent, now, now,
+            ),
+          d1.prepare(`INSERT INTO product_publications (
+              id, product_id, status, storefront_visible, published_at, updated_at
+            ) VALUES (?, ?, ?, ?, ?, ?)
+            ON CONFLICT(product_id) DO UPDATE SET
+              status=excluded.status, storefront_visible=excluded.storefront_visible,
+              published_at=excluded.published_at, updated_at=excluded.updated_at`)
+            .bind(
+              `${dbProdId}-publication`, dbProdId, publicationStatus,
+              payload.publish ? 1 : 0, payload.publish ? now : null, now,
+            ),
+          d1.prepare(`INSERT INTO crm_sync_logs (
+              id, product_id, event, status, idempotency_key, payload_json, created_at, updated_at
+            ) VALUES (?, ?, ?, 'pending', ?, ?, ?, ?)`)
+            .bind(
+              `sync-${crypto.randomUUID()}`,
+              dbProdId,
+              payload.publish ? "product_approved" : "product_updated",
+              `${dbProdId}:${now}`,
+              JSON.stringify({ sku, publicationStatus }),
+              now,
+              now,
+            ),
+        ];
+        await d1.batch(statements);
       } catch (e) {
-        console.warn("DB write warning:", e);
+        throw new Error("Не удалось сохранить товар в постоянной базе", { cause: e });
       }
     }
 

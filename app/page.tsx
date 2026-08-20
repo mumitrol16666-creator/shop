@@ -33,7 +33,7 @@ export default function Home() {
 
   useEffect(() => {
     let active = true;
-    fetch("/api/products?scope=all")
+    fetch("/api/products")
       .then((res) => (res.ok ? res.json() : Promise.reject(new Error("Failed"))))
       .then((data: { products?: Product[] }) => {
         if (active && Array.isArray(data.products)) {
@@ -99,7 +99,6 @@ export default function Home() {
 
   const chooseCategory = (item: string) => {
     setCategory(item);
-    setView("store");
     document.getElementById("catalog")?.scrollIntoView({ behavior: "smooth" });
   };
 

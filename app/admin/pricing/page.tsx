@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
+import { AdminAccessGate, useAdminAccess } from "../../../components/AdminAccessGate";
 import { ProductModal } from "../../../components/ProductModal";
 import { PurchaserView } from "../../../components/PurchaserView";
 import {
@@ -12,13 +13,16 @@ import {
   variantsFor,
 } from "../../../lib/catalog-data";
 
-const AUTH_KEY = "maestro_admin_auth";
-const VALID_PASSWORDS = new Set(["Anastacia123!", "maestro2026", "admin", "1234"]);
-
 export default function AdminPricingPage() {
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
-  const [passwordInput, setPasswordInput] = useState("");
-  const [authError, setAuthError] = useState("");
+  return (
+    <AdminAccessGate>
+      <AdminPricingContent />
+    </AdminAccessGate>
+  );
+}
+
+function AdminPricingContent() {
+  const { logout } = useAdminAccess();
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState("Все");
   const [selected, setSelected] = useState<Product | null>(null);
@@ -28,20 +32,8 @@ export default function AdminPricingPage() {
   const [storedProducts, setStoredProducts] = useState<Product[]>([]);
 
   useEffect(() => {
-    try {
-      const stored = sessionStorage.getItem(AUTH_KEY);
-      if (stored === "true") {
-        setIsAuthenticated(true);
-      }
-    } catch {
-      // sessionStorage unavailable
-    }
-  }, []);
-
-  useEffect(() => {
-    if (!isAuthenticated) return;
     let active = true;
-    fetch("/api/products?scope=all")
+    fetch("/api/products?scope=all", { credentials: "same-origin", cache: "no-store" })
       .then((res) => (res.ok ? res.json() : Promise.reject(new Error("Failed"))))
       .then((data: { products?: Product[] }) => {
         if (active && Array.isArray(data.products)) {
@@ -52,7 +44,7 @@ export default function AdminPricingPage() {
     return () => {
       active = false;
     };
-  }, [isAuthenticated]);
+  }, []);
 
   const mergedProducts = useMemo(() => {
     return mergeBySku(defaultProducts, storedProducts);
@@ -82,70 +74,12 @@ export default function AdminPricingPage() {
     });
   }, [mergedProducts, category, query]);
 
-  const handleLogin = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (VALID_PASSWORDS.has(passwordInput.trim())) {
-      setIsAuthenticated(true);
-      setAuthError("");
-      try {
-        sessionStorage.setItem(AUTH_KEY, "true");
-      } catch {}
-    } else {
-      setAuthError("Неверный пароль администратора. Попробуйте еще раз.");
-    }
-  };
-
-  const handleLogout = () => {
-    setIsAuthenticated(false);
-    setPasswordInput("");
-    try {
-      sessionStorage.removeItem(AUTH_KEY);
-    } catch {}
-  };
-
   const openProduct = (product: Product) => {
     const variants = variantsFor(product);
     setSelected(product);
     setSelectedVariant(variants[0] ?? null);
     setRequestedQuantity(1);
   };
-
-  if (!isAuthenticated) {
-    return (
-      <main className="admin-auth-screen">
-        <div className="admin-auth-card">
-          <div className="brand-mark large">M</div>
-          <h2>Панель закупщика Maestro</h2>
-          <p>Введите пароль администратора для доступа к управлению ценообразованием, юнит-экономикой и складом.</p>
-
-          <form onSubmit={handleLogin} className="admin-auth-form">
-            <label>
-              Пароль
-              <input
-                type="password"
-                value={passwordInput}
-                onChange={(e) => {
-                  setPasswordInput(e.target.value);
-                  setAuthError("");
-                }}
-                placeholder="Введите пароль"
-                autoFocus
-              />
-            </label>
-            {authError && <div className="admin-auth-error">{authError}</div>}
-            <div className="admin-auth-actions">
-              <Link href="/" className="secondary-button">
-                ← На витрину
-              </Link>
-              <button type="submit" className="primary-button">
-                Войти в панель
-              </button>
-            </div>
-          </form>
-        </div>
-      </main>
-    );
-  }
 
   return (
     <main className="site-shell">
@@ -161,7 +95,7 @@ export default function AdminPricingPage() {
         <nav className="admin-nav">
           <a href="#inventory">Склад поставки</a>
           <Link href="/">← Перейти на витрину</Link>
-          <button type="button" className="admin-logout-btn" onClick={handleLogout}>
+          <button type="button" className="admin-logout-btn" onClick={() => void logout()}>
             Выйти
           </button>
         </nav>

@@ -86,7 +86,6 @@ export function Topbar({
             onChange={(e) => {
               setQuery(e.target.value);
               setIsSearchFocused(true);
-              if (setView && view !== "store") setView("store");
             }}
             placeholder="Поиск по каталогу..."
             aria-label="Поиск по каталогу"
@@ -165,26 +164,23 @@ export function Topbar({
       <div className="mobile-nav-strip">
         <button
           type="button"
-          className={`mobile-nav-btn ${view === "store" ? "active" : ""}`}
+          className="mobile-nav-btn active"
           onClick={() => {
-            setView?.("store");
             window.scrollTo({ top: 0, behavior: "smooth" });
           }}
         >
           <span>🎸</span>
           <small>Каталог</small>
         </button>
-        <button
-          type="button"
-          className={`mobile-nav-btn ${view === "academy" ? "active" : ""}`}
-          onClick={() => {
-            setView?.("academy");
-            window.scrollTo({ top: 0, behavior: "smooth" });
-          }}
+        <a
+          href="https://maestro-school.duckdns.org/login"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mobile-nav-btn"
         >
           <span>🎓</span>
           <small>Обучение</small>
-        </button>
+        </a>
         <a
           href="https://maestro-school.duckdns.org/login"
           target="_blank"

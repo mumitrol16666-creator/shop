@@ -27,6 +27,18 @@ jobs:
             
             # 1. Go to project directory
             cd ${{ secrets.DEPLOY_PATH || '/var/www/shop.maestro.com.kz' }}
+
+            # Preserve the live catalog before replacing tracked application files.
+            mkdir -p .runtime-data/uploads
+            if [ ! -f .runtime-data/products.json ] && [ -f data/products.json ]; then
+              cp data/products.json .runtime-data/products.json
+            fi
+            if [ ! -f .runtime-data/courses.json ] && [ -f data/courses.json ]; then
+              cp data/courses.json .runtime-data/courses.json
+            fi
+            if [ -d public/uploads ]; then
+              cp -Rn public/uploads/. .runtime-data/uploads/ || true
+            fi
             
             # 2. Pull latest code from main
             git fetch origin main

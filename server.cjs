@@ -2,12 +2,23 @@ const http = require("http");
 const fs = require("fs");
 const path = require("path");
 const zlib = require("zlib");
+const crypto = require("crypto");
 
-const PORT = 3000;
+const PORT = Number(process.env.PORT || 3000);
 const HOST = "0.0.0.0";
-const PUBLIC_DIR = path.join(__dirname, "public");
-const DATA_FILE = path.join(__dirname, "data/products.json");
-const COURSES_FILE = path.join(__dirname, "data/courses.json");
+const PUBLIC_DIR = process.env.PUBLIC_DIR || path.join(__dirname, "public");
+const DATA_DIR = process.env.DATA_DIR || path.join(__dirname, ".runtime-data");
+const DATA_FILE = path.join(DATA_DIR, "products.json");
+const COURSES_FILE = path.join(DATA_DIR, "courses.json");
+const UPLOADS_DIR = path.join(DATA_DIR, "uploads");
+const SEED_PRODUCTS_FILE = path.join(__dirname, "data/products.json");
+const SEED_COURSES_FILE = path.join(__dirname, "data/courses.json");
+const SESSION_COOKIE = "maestro_admin_session";
+const SESSION_TTL_SECONDS = 12 * 60 * 60;
+const ADMIN_PASSWORD_SALT = process.env.ADMIN_PASSWORD_SALT || "6ec46d8955935973cd4e4089f7ebf149";
+const ADMIN_PASSWORD_HASH = process.env.ADMIN_PASSWORD_HASH || "914d0810c4fd1aa5e6c6b401bec3a3449645ea9a46e8f5061813be7cc5be1ba097ee32648fa9644bbb20af2e4346f08bcda2d9c385f080eb28cf72cf48fcbc2d";
+const SESSION_SECRET = process.env.ADMIN_SESSION_SECRET || crypto.randomBytes(32).toString("hex");
+const loginAttempts = new Map();
 
 const MIME_TYPES = {
   ".html": "text/html; charset=utf-8",
@@ -27,6 +38,137 @@ const MIME_TYPES = {
 function isCompressible(type) {
   return /text|javascript|json|svg|css/i.test(type || "");
 }
+
+function applySecurityHeaders(req, res) {
+  res.setHeader("X-Content-Type-Options", "nosniff");
+  res.setHeader("X-Frame-Options", "DENY");
+  res.setHeader("Referrer-Policy", "strict-origin-when-cross-origin");
+  res.setHeader("Permissions-Policy", "camera=(), microphone=(), geolocation=()");
+  res.setHeader("Cross-Origin-Resource-Policy", "same-origin");
+  if ((req.headers["x-forwarded-proto"] || "").includes("https")) {
+    res.setHeader("Strict-Transport-Security", "max-age=31536000; includeSubDomains");
+  }
+}
+
+function sendJson(res, status, payload, extraHeaders = {}) {
+  res.writeHead(status, {
+    "Content-Type": "application/json; charset=utf-8",
+    "Cache-Control": "no-store",
+    ...extraHeaders,
+  });
+  res.end(JSON.stringify(payload));
+}
+
+function parseCookies(req) {
+  const result = {};
+  for (const part of String(req.headers.cookie || "").split(";")) {
+    const [key, ...value] = part.trim().split("=");
+    if (key) result[key] = decodeURIComponent(value.join("="));
+  }
+  return result;
+}
+
+function signSession(expiresAt) {
+  return crypto.createHmac("sha256", SESSION_SECRET).update(String(expiresAt)).digest("hex");
+}
+
+function createSessionToken() {
+  const expiresAt = Math.floor(Date.now() / 1000) + SESSION_TTL_SECONDS;
+  return `${expiresAt}.${signSession(expiresAt)}`;
+}
+
+function isAdminRequest(req) {
+  const token = parseCookies(req)[SESSION_COOKIE] || "";
+  const [expiresRaw, signature = ""] = token.split(".");
+  const expiresAt = Number(expiresRaw);
+  if (!Number.isFinite(expiresAt) || expiresAt <= Date.now() / 1000) return false;
+  const expected = signSession(expiresRaw);
+  const left = Buffer.from(signature, "hex");
+  const right = Buffer.from(expected, "hex");
+  return left.length === right.length && left.length > 0 && crypto.timingSafeEqual(left, right);
+}
+
+function sessionCookie(req, token, maxAge = SESSION_TTL_SECONDS) {
+  const secure = String(req.headers["x-forwarded-proto"] || "").includes("https") ? "; Secure" : "";
+  return `${SESSION_COOKIE}=${encodeURIComponent(token)}; Path=/; HttpOnly; SameSite=Strict; Max-Age=${maxAge}${secure}`;
+}
+
+function verifyPassword(password) {
+  const actual = crypto.scryptSync(String(password || ""), ADMIN_PASSWORD_SALT, 64);
+  const expected = Buffer.from(ADMIN_PASSWORD_HASH, "hex");
+  return actual.length === expected.length && crypto.timingSafeEqual(actual, expected);
+}
+
+function clientIp(req) {
+  return String(req.headers["x-forwarded-for"] || req.socket.remoteAddress || "unknown").split(",")[0].trim();
+}
+
+function loginAllowed(req) {
+  const key = clientIp(req);
+  const now = Date.now();
+  const current = loginAttempts.get(key);
+  if (!current || current.resetAt <= now) {
+    loginAttempts.set(key, { count: 0, resetAt: now + 15 * 60 * 1000 });
+    return true;
+  }
+  return current.count < 8;
+}
+
+function recordFailedLogin(req) {
+  const key = clientIp(req);
+  const current = loginAttempts.get(key) || { count: 0, resetAt: Date.now() + 15 * 60 * 1000 };
+  current.count += 1;
+  loginAttempts.set(key, current);
+}
+
+function clearFailedLogins(req) {
+  loginAttempts.delete(clientIp(req));
+}
+
+function requireAdmin(req, res) {
+  if (isAdminRequest(req)) return true;
+  sendJson(res, 401, { error: "Требуется вход администратора" });
+  return false;
+}
+
+function publicProduct(product) {
+  if (!product || typeof product !== "object") return product;
+  const { adminPricing: _adminPricing, supplierName: _supplierName, supplierProductUrl: _supplierUrl, ...safe } = product;
+  if (Array.isArray(safe.variantItems)) {
+    safe.variantItems = safe.variantItems.map((variant) => {
+      const { adminPricing: _variantPricing, ...publicVariant } = variant || {};
+      return publicVariant;
+    });
+  }
+  return safe;
+}
+
+function publicProducts(products) {
+  return products
+    .filter((product) => !product.publicationStatus || product.publicationStatus === "published")
+    .map(publicProduct);
+}
+
+function ensureRuntimeFile(target, seed) {
+  fs.mkdirSync(path.dirname(target), { recursive: true });
+  if (!fs.existsSync(target)) {
+    if (fs.existsSync(seed)) fs.copyFileSync(seed, target);
+    else fs.writeFileSync(target, "[]\n", "utf-8");
+  }
+}
+
+function writeJsonAtomic(target, value) {
+  fs.mkdirSync(path.dirname(target), { recursive: true });
+  const temp = `${target}.${process.pid}.tmp`;
+  const backup = `${target}.bak`;
+  fs.writeFileSync(temp, `${JSON.stringify(value, null, 2)}\n`, "utf-8");
+  if (fs.existsSync(target)) fs.copyFileSync(target, backup);
+  fs.renameSync(temp, target);
+}
+
+ensureRuntimeFile(DATA_FILE, SEED_PRODUCTS_FILE);
+ensureRuntimeFile(COURSES_FILE, SEED_COURSES_FILE);
+fs.mkdirSync(UPLOADS_DIR, { recursive: true });
 
 function serveStaticFile(req, res, filePath, contentType, isHtml = false) {
   try {
@@ -72,8 +214,7 @@ function readProducts() {
 
 function writeProducts(products) {
   try {
-    fs.mkdirSync(path.dirname(DATA_FILE), { recursive: true });
-    fs.writeFileSync(DATA_FILE, JSON.stringify(products, null, 2), "utf-8");
+    writeJsonAtomic(DATA_FILE, products);
     return true;
   } catch (err) {
     console.error("Error writing products:", err);
@@ -95,8 +236,7 @@ function readCourses() {
 
 function writeCourses(courses) {
   try {
-    fs.mkdirSync(path.dirname(COURSES_FILE), { recursive: true });
-    fs.writeFileSync(COURSES_FILE, JSON.stringify(courses, null, 2), "utf-8");
+    writeJsonAtomic(COURSES_FILE, courses);
     return true;
   } catch (err) {
     console.error("Error writing courses:", err);
@@ -131,14 +271,19 @@ function calculatePrice(pricing) {
 const server = http.createServer((req, res) => {
   const parsedUrl = new URL(req.url, `http://${req.headers.host || "localhost"}`);
   let pathname = decodeURIComponent(parsedUrl.pathname);
-
-  // Set CORS headers
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  applySecurityHeaders(req, res);
 
   if (req.method === "OPTIONS") {
-    res.writeHead(204);
+    const origin = req.headers.origin;
+    const expectedOrigin = `${String(req.headers["x-forwarded-proto"] || "http").split(",")[0]}://${req.headers.host}`;
+    if (origin && origin !== expectedOrigin) {
+      sendJson(res, 403, { error: "Cross-origin request denied" });
+      return;
+    }
+    res.writeHead(204, {
+      "Access-Control-Allow-Methods": "GET, POST, DELETE, OPTIONS",
+      "Access-Control-Allow-Headers": "Content-Type",
+    });
     res.end();
     return;
   }
@@ -147,11 +292,53 @@ const server = http.createServer((req, res) => {
   // API ENDPOINTS
   // =========================================================================
 
+  if (pathname === "/api/admin/session" && req.method === "GET") {
+    if (!isAdminRequest(req)) {
+      sendJson(res, 401, { authenticated: false });
+      return;
+    }
+    sendJson(res, 200, { authenticated: true });
+    return;
+  }
+
+  if (pathname === "/api/admin/login" && req.method === "POST") {
+    if (!loginAllowed(req)) {
+      sendJson(res, 429, { error: "Слишком много попыток. Повторите через 15 минут." });
+      return;
+    }
+    let body = "";
+    req.on("data", (chunk) => {
+      body += chunk;
+      if (body.length > 16_384) req.destroy();
+    });
+    req.on("end", () => {
+      try {
+        const payload = JSON.parse(body || "{}");
+        if (!verifyPassword(payload.password)) {
+          recordFailedLogin(req);
+          sendJson(res, 401, { error: "Неверный пароль администратора" });
+          return;
+        }
+        clearFailedLogins(req);
+        sendJson(res, 200, { success: true }, { "Set-Cookie": sessionCookie(req, createSessionToken()) });
+      } catch {
+        sendJson(res, 400, { error: "Некорректный запрос" });
+      }
+    });
+    return;
+  }
+
+  if (pathname === "/api/admin/logout" && req.method === "POST") {
+    sendJson(res, 200, { success: true }, { "Set-Cookie": sessionCookie(req, "", 0) });
+    return;
+  }
+
   // =========================================================================
   // =========================================================================
   // FILE UPLOAD API
   // =========================================================================
   if (pathname === "/api/upload" && req.method === "POST") {
+    if (!requireAdmin(req, res)) return;
     let body = "";
     req.on("data", (chunk) => (body += chunk));
     req.on("end", () => {
@@ -164,17 +351,18 @@ const server = http.createServer((req, res) => {
           return;
         }
 
-        const uploadsDir = path.join(PUBLIC_DIR, "uploads");
-        if (!fs.existsSync(uploadsDir)) {
-          fs.mkdirSync(uploadsDir, { recursive: true });
-        }
-
-        const ext = path.extname(filename || "photo.jpg") || ".jpg";
+        const allowedExtensions = new Set([".jpg", ".jpeg", ".png", ".webp"]);
+        const requestedExtension = (path.extname(filename || "photo.jpg") || ".jpg").toLowerCase();
+        const ext = allowedExtensions.has(requestedExtension) ? requestedExtension : ".jpg";
         const cleanBase64 = base64.includes(",") ? base64.split(",")[1] : base64.replace(/^data:[^;]+;base64,/, "");
         const buffer = Buffer.from(cleanBase64, "base64");
+        if (!buffer.length || buffer.length > 8 * 1024 * 1024) {
+          sendJson(res, 400, { error: "Файл пустой или превышает 8 МБ" });
+          return;
+        }
         
         const safeName = `img_${Date.now()}_${Math.random().toString(36).substring(2, 7)}${ext.toLowerCase()}`;
-        const filePath = path.join(uploadsDir, safeName);
+        const filePath = path.join(UPLOADS_DIR, safeName);
         fs.writeFileSync(filePath, buffer);
 
         const url = `/uploads/${safeName}`;
@@ -203,6 +391,7 @@ const server = http.createServer((req, res) => {
     }
 
     if (req.method === "POST") {
+      if (!requireAdmin(req, res)) return;
       let body = "";
       req.on("data", (chunk) => (body += chunk));
       req.on("end", () => {
@@ -261,17 +450,38 @@ const server = http.createServer((req, res) => {
       });
       return;
     }
+
+    if (req.method === "DELETE") {
+      if (!requireAdmin(req, res)) return;
+      const id = parsedUrl.searchParams.get("id");
+      if (!id) {
+        sendJson(res, 400, { error: "Не указан ID курса" });
+        return;
+      }
+      const courses = readCourses();
+      const filtered = courses.filter((course) => String(course.id) !== id);
+      if (filtered.length === courses.length) {
+        sendJson(res, 404, { error: "Курс не найден" });
+        return;
+      }
+      writeCourses(filtered);
+      sendJson(res, 200, { success: true, count: filtered.length });
+      return;
+    }
   }
 
   if (pathname === "/api/products") {
     if (req.method === "GET") {
       const products = readProducts();
-      res.writeHead(200, { "Content-Type": "application/json; charset=utf-8" });
-      res.end(JSON.stringify({ products, count: products.length }));
+      const includeAdmin = parsedUrl.searchParams.get("scope") === "all";
+      if (includeAdmin && !requireAdmin(req, res)) return;
+      const visibleProducts = includeAdmin ? products : publicProducts(products);
+      sendJson(res, 200, { products: visibleProducts, count: visibleProducts.length });
       return;
     }
 
     if (req.method === "POST") {
+      if (!requireAdmin(req, res)) return;
       let body = "";
       req.on("data", (chunk) => (body += chunk));
       req.on("end", () => {
@@ -379,6 +589,16 @@ const server = http.createServer((req, res) => {
     const indexPath = path.join(PUBLIC_DIR, "index.html");
     if (fs.existsSync(indexPath)) {
       serveStaticFile(req, res, indexPath, "text/html; charset=utf-8", true);
+      return;
+    }
+  }
+
+  if (pathname.startsWith("/uploads/")) {
+    const uploadName = path.basename(pathname);
+    const uploadPath = path.join(UPLOADS_DIR, uploadName);
+    if (fs.existsSync(uploadPath) && fs.statSync(uploadPath).isFile()) {
+      const ext = path.extname(uploadPath).toLowerCase();
+      serveStaticFile(req, res, uploadPath, MIME_TYPES[ext] || "application/octet-stream", false);
       return;
     }
   }

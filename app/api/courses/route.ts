@@ -1,5 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
+import { getD1Binding } from "../../../db";
+import { isAdminRequest } from "../../../lib/admin-auth-server";
 import { COURSES, type Course } from "../../../lib/courses-data";
 
 export const dynamic = "force-dynamic";
@@ -45,6 +47,20 @@ function writeLocalCourses(items: Course[]) {
 
 export async function GET() {
   try {
+    const d1 = getD1Binding();
+    if (d1) {
+      const result = await d1.prepare("SELECT data_json FROM course_records ORDER BY updated_at DESC").all();
+      const stored = (result.results || [])
+        .map((row: { data_json?: string }) => {
+          try {
+            return row.data_json ? (JSON.parse(row.data_json) as Course) : null;
+          } catch {
+            return null;
+          }
+        })
+        .filter((course: Course | null): course is Course => Boolean(course));
+      if (stored.length > 0) return Response.json({ courses: stored, count: stored.length });
+    }
     const list = readLocalCourses();
     return Response.json({ courses: list, count: list.length });
   } catch (error) {
@@ -57,6 +73,9 @@ export async function GET() {
 
 export async function POST(request: Request) {
   try {
+    if (!(await isAdminRequest(request))) {
+      return Response.json({ error: "Требуется вход администратора" }, { status: 401 });
+    }
     const payload = (await request.json()) as Course;
     if (!payload.title || !payload.title.trim()) {
       return Response.json({ error: "Укажите название курса" }, { status: 400 });
@@ -99,7 +118,19 @@ export async function POST(request: Request) {
       list.push(finalCourse);
     }
 
-    writeLocalCourses(list);
+    const d1 = getD1Binding();
+    if (d1) {
+      const now = new Date().toISOString();
+      await d1.batch([
+        d1.prepare(`INSERT INTO course_records (id, slug, data_json, updated_at)
+          VALUES (?, ?, ?, ?)
+          ON CONFLICT(id) DO UPDATE SET
+            slug=excluded.slug, data_json=excluded.data_json, updated_at=excluded.updated_at`)
+          .bind(finalCourse.id, finalCourse.slug, JSON.stringify(finalCourse), now),
+      ]);
+    } else if (!writeLocalCourses(list)) {
+      throw new Error("Не удалось сохранить курс");
+    }
     return Response.json({ success: true, course: finalCourse }, { status: 200 });
   } catch (error) {
     return Response.json(
@@ -111,15 +142,24 @@ export async function POST(request: Request) {
 
 export async function DELETE(request: Request) {
   try {
+    if (!(await isAdminRequest(request))) {
+      return Response.json({ error: "Требуется вход администратора" }, { status: 401 });
+    }
     const url = new URL(request.url);
     const id = url.searchParams.get("id");
     if (!id) {
       return Response.json({ error: "Не указан ID курса для удаления" }, { status: 400 });
     }
 
+    const d1 = getD1Binding();
+    if (d1) {
+      await d1.batch([d1.prepare("DELETE FROM course_records WHERE id = ?").bind(id)]);
+      const countResult = await d1.prepare("SELECT COUNT(*) AS count FROM course_records").first<{ count: number }>();
+      return Response.json({ success: true, count: Number(countResult?.count || 0) });
+    }
     const list = readLocalCourses();
     const filtered = list.filter((c) => c.id !== id);
-    writeLocalCourses(filtered);
+    if (!writeLocalCourses(filtered)) throw new Error("Не удалось удалить курс");
     return Response.json({ success: true, count: filtered.length });
   } catch (error) {
     return Response.json(

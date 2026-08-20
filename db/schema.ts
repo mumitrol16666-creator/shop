@@ -40,6 +40,18 @@ export const CRM_SYNC_STATUSES = [
   "failed",
 ] as const;
 
+export const courseRecords = sqliteTable(
+  "course_records",
+  {
+    id: text("id").primaryKey(),
+    slug: text("slug").notNull(),
+    dataJson: text("data_json").notNull(),
+    createdAt: text("created_at").notNull().default(sql`CURRENT_TIMESTAMP`),
+    updatedAt: text("updated_at").notNull().default(sql`CURRENT_TIMESTAMP`),
+  },
+  (table) => [uniqueIndex("course_records_slug_unique").on(table.slug)],
+);
+
 export const products = sqliteTable(
   "products",
   {
@@ -344,3 +356,5 @@ export type ProductPublication = typeof productPublications.$inferSelect;
 export type NewProductPublication = typeof productPublications.$inferInsert;
 export type CrmSyncLog = typeof crmSyncLogs.$inferSelect;
 export type NewCrmSyncLog = typeof crmSyncLogs.$inferInsert;
+export type CourseRecord = typeof courseRecords.$inferSelect;
+export type NewCourseRecord = typeof courseRecords.$inferInsert;
