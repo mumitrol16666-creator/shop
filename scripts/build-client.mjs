@@ -31,9 +31,12 @@ async function build() {
       },
       external: ["tailwindcss"],
       jsx: "automatic",
+      minify: true,
+      treeShaking: true,
+      legalComments: "none",
       logLevel: "info",
     });
-    console.log("✅ ESBuild ESM bundle compiled successfully!");
+    console.log("✅ ESBuild ESM bundle compiled successfully (minified)!");
   } catch (err) {
     console.error("ESBuild error:", err);
   }

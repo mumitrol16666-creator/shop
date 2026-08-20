@@ -127,14 +127,16 @@ export function Storefront({
     },
   ];
   const [heroIndex, setHeroIndex] = useState(0);
-  const currentHero = HERO_PREVIEWS[heroIndex];
+  const currentHero = HERO_PREVIEWS[heroIndex] || HERO_PREVIEWS[0];
 
   const matchingHeroProduct = useMemo(() => {
+    if (!currentHero) return featuredProduct || filteredProducts[0];
+    const heroSku = (currentHero.sku || "").toLowerCase();
     return (
       filteredProducts.find(
         (p) =>
-          p.sku?.toLowerCase().includes(currentHero.sku.toLowerCase()) ||
-          p.name.toLowerCase().includes(currentHero.sku.toLowerCase()),
+          (p.sku && p.sku.toLowerCase().includes(heroSku)) ||
+          (p.name && p.name.toLowerCase().includes(heroSku)),
       ) ||
       featuredProduct ||
       filteredProducts[0]

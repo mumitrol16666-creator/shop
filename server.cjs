@@ -1,6 +1,7 @@
 const http = require("http");
 const fs = require("fs");
 const path = require("path");
+const zlib = require("zlib");
 
 const PORT = 3000;
 const HOST = "0.0.0.0";
@@ -22,6 +23,41 @@ const MIME_TYPES = {
   ".ttf": "font/ttf",
   ".ico": "image/x-icon",
 };
+
+function isCompressible(type) {
+  return /text|javascript|json|svg|css/i.test(type || "");
+}
+
+function serveStaticFile(req, res, filePath, contentType, isHtml = false) {
+  try {
+    const stat = fs.statSync(filePath);
+    const acceptEncoding = req.headers["accept-encoding"] || "";
+
+    const headers = {
+      "Content-Type": contentType,
+      "Cache-Control": isHtml ? "no-cache, must-revalidate" : "public, max-age=86400",
+    };
+
+    const rawStream = fs.createReadStream(filePath);
+
+    if (/\bbr\b/.test(acceptEncoding) && isCompressible(contentType)) {
+      headers["Content-Encoding"] = "br";
+      res.writeHead(200, headers);
+      rawStream.pipe(zlib.createBrotliCompress()).pipe(res);
+    } else if (/\bgzip\b/.test(acceptEncoding) && isCompressible(contentType)) {
+      headers["Content-Encoding"] = "gzip";
+      res.writeHead(200, headers);
+      rawStream.pipe(zlib.createGzip()).pipe(res);
+    } else {
+      headers["Content-Length"] = stat.size;
+      res.writeHead(200, headers);
+      rawStream.pipe(res);
+    }
+  } catch (err) {
+    res.writeHead(404, { "Content-Type": "text/plain" });
+    res.end("File not found");
+  }
+}
 
 function readProducts() {
   try {
@@ -342,8 +378,7 @@ const server = http.createServer((req, res) => {
   if (pathname === "/" || pathname === "/admin" || pathname.startsWith("/admin/")) {
     const indexPath = path.join(PUBLIC_DIR, "index.html");
     if (fs.existsSync(indexPath)) {
-      res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
-      fs.createReadStream(indexPath).pipe(res);
+      serveStaticFile(req, res, indexPath, "text/html; charset=utf-8", true);
       return;
     }
   }
@@ -352,16 +387,14 @@ const server = http.createServer((req, res) => {
   if (fs.existsSync(filePath) && fs.statSync(filePath).isFile()) {
     const ext = path.extname(filePath).toLowerCase();
     const contentType = MIME_TYPES[ext] || "application/octet-stream";
-    res.writeHead(200, { "Content-Type": contentType });
-    fs.createReadStream(filePath).pipe(res);
+    serveStaticFile(req, res, filePath, contentType, false);
     return;
   }
 
   // Fallback to index.html for client SPA routes
   const fallbackIndex = path.join(PUBLIC_DIR, "index.html");
   if (fs.existsSync(fallbackIndex)) {
-    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
-    fs.createReadStream(fallbackIndex).pipe(res);
+    serveStaticFile(req, res, fallbackIndex, "text/html; charset=utf-8", true);
     return;
   }
 
