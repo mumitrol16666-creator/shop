@@ -766,6 +766,14 @@ export function PurchaserView({
               <div className="util-btn-group">
                 <button
                   type="button"
+                  className="util-btn analytics-highlight-btn"
+                  onClick={() => window.open("/admin/analytics", "_blank")}
+                  title="Открыть сводный финансовый отчет и аналитику склада в новом окне для печати"
+                >
+                  📊 Аналитика склада
+                </button>
+                <button
+                  type="button"
                   className="util-btn"
                   onClick={() => setIsCourseModalOpen(true)}
                 >

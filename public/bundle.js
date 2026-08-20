@@ -766,7 +766,7 @@ var require_scheduler = __commonJS({
 var require_react_dom_production = __commonJS({
   "node_modules/react-dom/cjs/react-dom.production.js"(exports) {
     "use strict";
-    var React2 = require_react();
+    var React3 = require_react();
     function formatProdErrorMessage(code) {
       var url = "https://react.dev/errors/" + code;
       if (1 < arguments.length) {
@@ -806,7 +806,7 @@ var require_react_dom_production = __commonJS({
         implementation
       };
     }
-    var ReactSharedInternals = React2.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE;
+    var ReactSharedInternals = React3.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE;
     function getCrossOriginStringAs(as, input) {
       if ("font" === as) return "";
       if ("string" === typeof input)
@@ -942,7 +942,7 @@ var require_react_dom_client_production = __commonJS({
   "node_modules/react-dom/cjs/react-dom-client.production.js"(exports) {
     "use strict";
     var Scheduler = require_scheduler();
-    var React2 = require_react();
+    var React3 = require_react();
     var ReactDOM2 = require_react_dom();
     function formatProdErrorMessage(code) {
       var url = "https://react.dev/errors/" + code;
@@ -1133,7 +1133,7 @@ var require_react_dom_client_production = __commonJS({
       return null;
     }
     var isArrayImpl = Array.isArray;
-    var ReactSharedInternals = React2.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE;
+    var ReactSharedInternals = React3.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE;
     var ReactDOMSharedInternals = ReactDOM2.__DOM_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE;
     var sharedNotPendingObject = {
       pending: false,
@@ -12579,7 +12579,7 @@ var require_react_dom_client_production = __commonJS({
         0 === i && attemptExplicitHydrationTarget(target);
       }
     };
-    var isomorphicReactPackageVersion$jscomp$inline_1840 = React2.version;
+    var isomorphicReactPackageVersion$jscomp$inline_1840 = React3.version;
     if ("19.2.6" !== isomorphicReactPackageVersion$jscomp$inline_1840)
       throw Error(
         formatProdErrorMessage(
@@ -12747,7 +12747,7 @@ var require_jsx_runtime = __commonJS({
 });
 
 // src/main.tsx
-var import_react14 = __toESM(require_react(), 1);
+var import_react15 = __toESM(require_react(), 1);
 var import_client = __toESM(require_client(), 1);
 
 // app/page.tsx
@@ -17849,6 +17849,16 @@ function PurchaserView({
               )
             ] }),
             /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)("div", { className: "util-btn-group", children: [
+              /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
+                "button",
+                {
+                  type: "button",
+                  className: "util-btn analytics-highlight-btn",
+                  onClick: () => window.open("/admin/analytics", "_blank"),
+                  title: "\u041E\u0442\u043A\u0440\u044B\u0442\u044C \u0441\u0432\u043E\u0434\u043D\u044B\u0439 \u0444\u0438\u043D\u0430\u043D\u0441\u043E\u0432\u044B\u0439 \u043E\u0442\u0447\u0435\u0442 \u0438 \u0430\u043D\u0430\u043B\u0438\u0442\u0438\u043A\u0443 \u0441\u043A\u043B\u0430\u0434\u0430 \u0432 \u043D\u043E\u0432\u043E\u043C \u043E\u043A\u043D\u0435 \u0434\u043B\u044F \u043F\u0435\u0447\u0430\u0442\u0438",
+                  children: "\u{1F4CA} \u0410\u043D\u0430\u043B\u0438\u0442\u0438\u043A\u0430 \u0441\u043A\u043B\u0430\u0434\u0430"
+                }
+              ),
               /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)(
                 "button",
                 {
@@ -19492,24 +19502,479 @@ function AdminPricingPage() {
   ] });
 }
 
-// src/main.tsx
+// components/AnalyticsReport.tsx
+var import_react14 = __toESM(require_react(), 1);
 var import_jsx_runtime16 = __toESM(require_jsx_runtime(), 1);
-function App() {
-  const [pathname, setPathname] = (0, import_react14.useState)(window.location.pathname);
+function AnalyticsReport() {
+  const [products2, setProducts] = (0, import_react14.useState)([]);
+  const [loading, setLoading] = (0, import_react14.useState)(true);
+  const [kaspiFeeSimPercent, setKaspiFeeSimPercent] = (0, import_react14.useState)(11);
+  const [reportDate, setReportDate] = (0, import_react14.useState)("");
   (0, import_react14.useEffect)(() => {
+    setReportDate(
+      (/* @__PURE__ */ new Date()).toLocaleDateString("ru-RU", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit"
+      })
+    );
+    fetch("/api/products").then((res) => res.json()).then((data) => {
+      if (data && data.products) {
+        setProducts(data.products);
+      }
+    }).catch((err) => console.error("Error fetching products for analytics:", err)).finally(() => setLoading(false));
+  }, []);
+  const getProductEconomics = (product, simKaspiFee) => {
+    const pricing = product.adminPricing;
+    const rate = pricing?.purchaseCurrency === "CNY" ? pricing?.currencyRate || 70 : pricing?.purchaseCurrency === "USD" ? pricing?.currencyRate || 500 : 1;
+    const purchaseKzt = (pricing?.purchasePrice || 0) * rate;
+    const directCost = purchaseKzt + (pricing?.chinaDeliveryKzt || 0) + (pricing?.cargoKzt || 0) + (pricing?.customsKzt || 0) + (pricing?.packagingKzt || 0) + (pricing?.setupKzt || 0) + (pricing?.marketingKzt || 0) + (pricing?.otherCostsKzt || 0);
+    const retailPrice = product.price || 0;
+    const qty = product.quantity || 1;
+    const taxDeduction = retailPrice * ((pricing?.taxPercent || 3) / 100);
+    const bankDeduction = retailPrice * (simKaspiFee / 100);
+    const sellerDeduction = retailPrice * ((pricing?.sellerPercent || 5) / 100);
+    const totalDeductions = taxDeduction + bankDeduction + sellerDeduction;
+    const netProfitPerUnit = directCost > 0 && retailPrice > 0 ? retailPrice - directCost - totalDeductions : retailPrice * 0.35;
+    const totalStockCost = directCost * qty;
+    const totalStockRevenue = retailPrice * qty;
+    const totalStockNetProfit = netProfitPerUnit * qty;
+    const marginPercent = retailPrice > 0 ? Math.round(netProfitPerUnit / retailPrice * 100) : 0;
+    const roiPercent = directCost > 0 ? Math.round(netProfitPerUnit / directCost * 100) : 0;
+    return {
+      directCost: Math.round(directCost),
+      retailPrice,
+      qty,
+      taxDeduction: Math.round(taxDeduction),
+      bankDeduction: Math.round(bankDeduction),
+      sellerDeduction: Math.round(sellerDeduction),
+      netProfitPerUnit: Math.round(netProfitPerUnit),
+      totalStockCost: Math.round(totalStockCost),
+      totalStockRevenue: Math.round(totalStockRevenue),
+      totalStockNetProfit: Math.round(totalStockNetProfit),
+      marginPercent,
+      roiPercent
+    };
+  };
+  const analytics = (0, import_react14.useMemo)(() => {
+    let totalStockQty = 0;
+    let totalCostKzt = 0;
+    let totalRevenueKzt = 0;
+    let totalNetProfitKzt = 0;
+    const categoryStats = {};
+    const items = products2.map((p) => {
+      const eco = getProductEconomics(p, kaspiFeeSimPercent);
+      totalStockQty += eco.qty;
+      totalCostKzt += eco.totalStockCost;
+      totalRevenueKzt += eco.totalStockRevenue;
+      totalNetProfitKzt += eco.totalStockNetProfit;
+      const cat = p.category || "\u0414\u0440\u0443\u0433\u043E\u0435";
+      if (!categoryStats[cat]) {
+        categoryStats[cat] = { count: 0, qty: 0, cost: 0, revenue: 0, profit: 0 };
+      }
+      categoryStats[cat].count += 1;
+      categoryStats[cat].qty += eco.qty;
+      categoryStats[cat].cost += eco.totalStockCost;
+      categoryStats[cat].revenue += eco.totalStockRevenue;
+      categoryStats[cat].profit += eco.totalStockNetProfit;
+      return {
+        product: p,
+        eco
+      };
+    });
+    items.sort((a, b) => b.eco.totalStockNetProfit - a.eco.totalStockNetProfit);
+    const overallMarginPercent = totalRevenueKzt > 0 ? Math.round(totalNetProfitKzt / totalRevenueKzt * 100) : 0;
+    const overallRoiPercent = totalCostKzt > 0 ? Math.round(totalNetProfitKzt / totalCostKzt * 100) : 0;
+    return {
+      totalStockQty,
+      totalCostKzt,
+      totalRevenueKzt,
+      totalNetProfitKzt,
+      overallMarginPercent,
+      overallRoiPercent,
+      categoryStats,
+      items
+    };
+  }, [products2, kaspiFeeSimPercent]);
+  return /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("div", { className: "analytics-page-root", children: [
+    /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("header", { className: "analytics-top-bar no-print", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("div", { className: "analytics-brand-area", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("div", { className: "analytics-logo-badge", children: "MAESTRO" }),
+        /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("div", { children: [
+          /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("h1", { children: "\u0424\u0438\u043D\u0430\u043D\u0441\u043E\u0432\u0430\u044F \u0430\u043D\u0430\u043B\u0438\u0442\u0438\u043A\u0430 \u0438 \u0421\u0432\u043E\u0434\u043A\u0430 \u0441\u043A\u043B\u0430\u0434\u0430" }),
+          /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("p", { children: "\u0423\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0447\u0435\u0441\u043A\u0438\u0439 \u043E\u0442\u0447\u0435\u0442 \u044E\u043D\u0438\u0442-\u044D\u043A\u043E\u043D\u043E\u043C\u0438\u043A\u0438 \u0438 \u0434\u043E\u0445\u043E\u0434\u043D\u043E\u0441\u0442\u0438 \u0430\u0441\u0441\u043E\u0440\u0442\u0438\u043C\u0435\u043D\u0442\u0430" })
+        ] })
+      ] }),
+      /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("div", { className: "analytics-actions", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime16.jsx)(
+          "button",
+          {
+            type: "button",
+            className: "analytics-btn secondary",
+            onClick: () => window.location.href = "/admin/pricing",
+            children: "\u2190 \u0412 \u0440\u0435\u0434\u0430\u043A\u0442\u043E\u0440 \u0446\u0435\u043D"
+          }
+        ),
+        /* @__PURE__ */ (0, import_jsx_runtime16.jsx)(
+          "button",
+          {
+            type: "button",
+            className: "analytics-btn primary",
+            onClick: () => window.print(),
+            children: "\u{1F5A8} \u0420\u0430\u0441\u043F\u0435\u0447\u0430\u0442\u0430\u0442\u044C \u043E\u0442\u0447\u0435\u0442 (PDF / A4)"
+          }
+        )
+      ] })
+    ] }),
+    /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("main", { className: "analytics-sheet", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("div", { className: "sheet-header", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("div", { className: "sheet-header-left", children: /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("div", { className: "sheet-title-group", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("span", { className: "sheet-watermark-tag", children: "\u041E\u0424\u0418\u0426\u0418\u0410\u041B\u042C\u041D\u042B\u0419 \u041E\u0422\u0427\u0415\u0422 \u0421\u0415\u0422\u0418 MAESTRO" }),
+          /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("h2", { children: "\u0421\u0432\u043E\u0434\u043D\u0430\u044F \u0430\u043D\u0430\u043B\u0438\u0442\u0438\u043A\u0430 \u043A\u0430\u043F\u0438\u0442\u0430\u043B\u0430 \u0438 \u044E\u043D\u0438\u0442-\u044D\u043A\u043E\u043D\u043E\u043C\u0438\u043A\u0438" }),
+          /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("span", { className: "sheet-meta-date", children: [
+            "\u0421\u0444\u043E\u0440\u043C\u0438\u0440\u043E\u0432\u0430\u043D\u043E: ",
+            reportDate || "20 \u0430\u0432\u0433\u0443\u0441\u0442\u0430 2026 \u0433.",
+            " \xB7 \u0412\u0430\u043B\u044E\u0442\u0430: KZT (\u20B8)"
+          ] })
+        ] }) }),
+        /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("div", { className: "sheet-header-right", children: /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("div", { className: "sheet-status-box", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("span", { className: "sheet-status-indicator", children: "\u25CF \u0410\u041A\u0422\u0423\u0410\u041B\u042C\u041D\u041E" }),
+          /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("strong", { children: [
+            "\u0411\u0430\u0437\u0430 \u0442\u043E\u0432\u0430\u0440\u043E\u0432: ",
+            products2.length,
+            " \u043C\u043E\u0434\u0435\u043B\u0435\u0439"
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("small", { children: [
+            "\u041E\u0431\u0449\u0438\u0439 \u043E\u0441\u0442\u0430\u0442\u043E\u043A: ",
+            analytics.totalStockQty,
+            " \u0448\u0442."
+          ] })
+        ] }) })
+      ] }),
+      /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("section", { className: "analytics-kpi-grid", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("div", { className: "analytics-kpi-card gold-border", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("span", { className: "kpi-label", children: "\u{1F4B0} \u041A\u0430\u043F\u0438\u0442\u0430\u043B \u0432 \u0441\u0435\u0431\u0435\u0441\u0442\u043E\u0438\u043C\u043E\u0441\u0442\u0438" }),
+          /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("strong", { className: "kpi-value gold", children: [
+            money(analytics.totalCostKzt),
+            " \u20B8"
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("span", { className: "kpi-hint", children: "\u0417\u0430\u043A\u0443\u043F\u043A\u0430 + \u0434\u043E\u0441\u0442\u0430\u0432\u043A\u0430 + \u043A\u0430\u0440\u0433\u043E + \u0434\u043E\u0432\u043E\u0434\u043A\u0430" })
+        ] }),
+        /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("div", { className: "analytics-kpi-card", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("span", { className: "kpi-label", children: "\u{1F3F7}\uFE0F \u041E\u0436\u0438\u0434\u0430\u0435\u043C\u0430\u044F \u0432\u0430\u043B\u043E\u0432\u0430\u044F \u0432\u044B\u0440\u0443\u0447\u043A\u0430" }),
+          /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("strong", { className: "kpi-value", children: [
+            money(analytics.totalRevenueKzt),
+            " \u20B8"
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("span", { className: "kpi-hint", children: "\u041F\u0440\u0438 100% \u0440\u0435\u0430\u043B\u0438\u0437\u0430\u0446\u0438\u0438 \u043E\u0441\u0442\u0430\u0442\u043A\u043E\u0432" })
+        ] }),
+        /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("div", { className: "analytics-kpi-card green-border", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("span", { className: "kpi-label", children: "\u{1F3AF} \u041F\u0440\u043E\u0433\u043D\u043E\u0437\u043D\u0430\u044F \u0447\u0438\u0441\u0442\u0430\u044F \u043F\u0440\u0438\u0431\u044B\u043B\u044C" }),
+          /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("strong", { className: "kpi-value green", children: [
+            "+",
+            money(analytics.totalNetProfitKzt),
+            " \u20B8"
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("span", { className: "kpi-hint", children: [
+            "\u0417\u0430 \u0432\u044B\u0447\u0435\u0442\u043E\u043C Kaspi (",
+            kaspiFeeSimPercent,
+            "%), \u043D\u0430\u043B\u043E\u0433\u043E\u0432 \u0438 %"
+          ] })
+        ] }),
+        /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("div", { className: "analytics-kpi-card", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("span", { className: "kpi-label", children: "\u{1F4C8} \u0421\u0440\u0435\u0434\u043D\u044F\u044F \u0440\u0435\u043D\u0442\u0430\u0431\u0435\u043B\u044C\u043D\u043E\u0441\u0442\u044C (ROI)" }),
+          /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("strong", { className: "kpi-value", children: [
+            analytics.overallRoiPercent,
+            "%"
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("span", { className: "kpi-hint", children: [
+            "\u041C\u0430\u0440\u0436\u0438\u043D\u0430\u043B\u044C\u043D\u043E\u0441\u0442\u044C \u043F\u0440\u043E\u0434\u0430\u0436: ",
+            analytics.overallMarginPercent,
+            "%"
+          ] })
+        ] }),
+        /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("div", { className: "analytics-kpi-card", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("span", { className: "kpi-label", children: "\u{1F4E6} \u0412\u0441\u0435\u0433\u043E \u0442\u043E\u0432\u0430\u0440\u0430 \u043D\u0430 \u0441\u043A\u043B\u0430\u0434\u0435" }),
+          /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("strong", { className: "kpi-value", children: [
+            analytics.totalStockQty,
+            " ",
+            /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("small", { style: { fontSize: "14px", fontWeight: 700 }, children: "\u0448\u0442." })
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("span", { className: "kpi-hint", children: [
+            products2.length,
+            " \u0430\u043A\u0442\u0438\u0432\u043D\u044B\u0445 \u0442\u043E\u0432\u0430\u0440\u043D\u044B\u0445 \u043F\u043E\u0437\u0438\u0446\u0438\u0439"
+          ] })
+        ] })
+      ] }),
+      /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("section", { className: "analytics-section-box no-print", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("div", { className: "section-box-head between", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("div", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("h3", { children: "\u{1F39B} \u0421\u0438\u043C\u0443\u043B\u044F\u0442\u043E\u0440 \u0430\u043A\u0446\u0438\u0439 \u0438 \u043A\u043E\u043C\u0438\u0441\u0441\u0438\u0439 Kaspi \u0420\u0430\u0441\u0441\u0440\u043E\u0447\u043A\u0438" }),
+            /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("p", { children: "\u041E\u0446\u0435\u043D\u0438\u0442\u0435 \u0438\u0437\u043C\u0435\u043D\u0435\u043D\u0438\u0435 \u0447\u0438\u0441\u0442\u043E\u0439 \u043F\u0440\u0438\u0431\u044B\u043B\u0438 \u0441\u0435\u0442\u0438 \u043F\u0440\u0438 \u0441\u043C\u0435\u043D\u0435 \u0442\u0430\u0440\u0438\u0444\u0430 Kaspi (\u0441\u0442\u0430\u043D\u0434\u0430\u0440\u0442 0-0-12 vs Kaspi \u0416\u04B1\u043C\u0430)" })
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("div", { className: "kaspi-sim-badge", children: [
+            "\u0422\u0435\u043A\u0443\u0449\u0430\u044F \u043A\u043E\u043C\u0438\u0441\u0441\u0438\u044F \u0432 \u0440\u0430\u0441\u0447\u0435\u0442\u0435: ",
+            /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("strong", { children: [
+              kaspiFeeSimPercent,
+              "%"
+            ] })
+          ] })
+        ] }),
+        /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("div", { className: "kaspi-sim-controls", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("div", { className: "sim-presets-row", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime16.jsx)(
+              "button",
+              {
+                type: "button",
+                className: `sim-preset-btn ${kaspiFeeSimPercent === 0 ? "active" : ""}`,
+                onClick: () => setKaspiFeeSimPercent(0),
+                children: "0% (\u041F\u0440\u044F\u043C\u0430\u044F \u043E\u043F\u043B\u0430\u0442\u0430 \u043D\u0430\u043B/\u043A\u0430\u0440\u0442\u0430)"
+              }
+            ),
+            /* @__PURE__ */ (0, import_jsx_runtime16.jsx)(
+              "button",
+              {
+                type: "button",
+                className: `sim-preset-btn ${kaspiFeeSimPercent === 11 ? "active" : ""}`,
+                onClick: () => setKaspiFeeSimPercent(11),
+                children: "11% (Kaspi Red / \u0420\u0430\u0441\u0441\u0440\u043E\u0447\u043A\u0430 0-0-12)"
+              }
+            ),
+            /* @__PURE__ */ (0, import_jsx_runtime16.jsx)(
+              "button",
+              {
+                type: "button",
+                className: `sim-preset-btn ${kaspiFeeSimPercent === 18 ? "active" : ""}`,
+                onClick: () => setKaspiFeeSimPercent(18),
+                children: "18% (Kaspi \u0416\u04B1\u043C\u0430 0-0-24)"
+              }
+            ),
+            /* @__PURE__ */ (0, import_jsx_runtime16.jsx)(
+              "button",
+              {
+                type: "button",
+                className: `sim-preset-btn ${kaspiFeeSimPercent === 22 ? "active" : ""}`,
+                onClick: () => setKaspiFeeSimPercent(22),
+                children: "22% (\u0421\u0443\u043F\u0435\u0440-\u0430\u043A\u0446\u0438\u044F Kaspi 0-0-24)"
+              }
+            )
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("div", { className: "sim-slider-row", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("label", { children: [
+              "\u0422\u043E\u0447\u043D\u044B\u0439 \u0432\u044B\u0431\u043E\u0440 % \u043A\u043E\u043C\u0438\u0441\u0441\u0438\u0438 Kaspi:",
+              /* @__PURE__ */ (0, import_jsx_runtime16.jsx)(
+                "input",
+                {
+                  type: "range",
+                  min: "0",
+                  max: "25",
+                  step: "1",
+                  value: kaspiFeeSimPercent,
+                  onChange: (e) => setKaspiFeeSimPercent(Number(e.target.value))
+                }
+              )
+            ] }),
+            /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("span", { className: "sim-slider-val", children: [
+              kaspiFeeSimPercent,
+              "%"
+            ] })
+          ] })
+        ] })
+      ] }),
+      /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("section", { className: "analytics-section-box", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("div", { className: "section-box-head", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("h3", { children: "\u{1F4CA} \u0421\u0442\u0440\u0443\u043A\u0442\u0443\u0440\u0430 \u043A\u0430\u043F\u0438\u0442\u0430\u043B\u0430 \u0438 \u043F\u0440\u0438\u0431\u044B\u043B\u0438 \u043F\u043E \u043A\u0430\u0442\u0435\u0433\u043E\u0440\u0438\u044F\u043C" }),
+          /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("p", { children: "\u0420\u0430\u0441\u043F\u0440\u0435\u0434\u0435\u043B\u0435\u043D\u0438\u0435 \u0437\u0430\u043F\u0430\u0441\u043E\u0432, \u0438\u043D\u0432\u0435\u0441\u0442\u0438\u0446\u0438\u0439 \u0438 \u043E\u0436\u0438\u0434\u0430\u0435\u043C\u043E\u0433\u043E \u0434\u043E\u0445\u043E\u0434\u0430 \u043F\u043E \u0442\u043E\u0432\u0430\u0440\u043D\u044B\u043C \u0433\u0440\u0443\u043F\u043F\u0430\u043C" })
+        ] }),
+        /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("div", { className: "category-bars-list", children: Object.entries(analytics.categoryStats).map(([categoryName, stats]) => {
+          const sharePercent = analytics.totalCostKzt > 0 ? Math.round(stats.cost / analytics.totalCostKzt * 100) : 0;
+          const profitShare = analytics.totalNetProfitKzt > 0 ? Math.round(stats.profit / analytics.totalNetProfitKzt * 100) : 0;
+          return /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("div", { className: "category-bar-row", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("div", { className: "category-bar-meta", children: [
+              /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("div", { className: "cat-title-group", children: [
+                /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("strong", { children: categoryName }),
+                /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("span", { children: [
+                  stats.count,
+                  " \u043C\u043E\u0434\u0435\u043B\u0435\u0439 \xB7 ",
+                  stats.qty,
+                  " \u0448\u0442. \u043D\u0430 \u0441\u043A\u043B\u0430\u0434\u0435"
+                ] })
+              ] }),
+              /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("div", { className: "cat-fin-group", children: [
+                /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("span", { children: [
+                  "\u0418\u043D\u0432\u0435\u0441\u0442\u0438\u0440\u043E\u0432\u0430\u043D\u043E: ",
+                  /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("strong", { children: [
+                    money(stats.cost),
+                    " \u20B8"
+                  ] }),
+                  " (",
+                  sharePercent,
+                  "%)"
+                ] }),
+                /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("span", { className: "cat-profit-pill", children: [
+                  "\u041F\u0440\u0438\u0431\u044B\u043B\u044C: +",
+                  money(stats.profit),
+                  " \u20B8 (",
+                  profitShare,
+                  "%)"
+                ] })
+              ] })
+            ] }),
+            /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("div", { className: "category-progress-track", children: /* @__PURE__ */ (0, import_jsx_runtime16.jsx)(
+              "div",
+              {
+                className: "category-progress-fill",
+                style: { width: `${Math.max(5, sharePercent)}%` }
+              }
+            ) })
+          ] }, categoryName);
+        }) })
+      ] }),
+      /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("section", { className: "analytics-section-box", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("div", { className: "section-box-head between", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("div", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("h3", { children: "\u{1F451} \u0420\u0435\u0439\u0442\u0438\u043D\u0433 \u043C\u0430\u0440\u0436\u0438\u043D\u0430\u043B\u044C\u043D\u043E\u0441\u0442\u0438 \u0442\u043E\u0432\u0430\u0440\u043E\u0432 (ABC-\u0430\u043D\u0430\u043B\u0438\u0437 \u0441\u043A\u043B\u0430\u0434\u0430)" }),
+            /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("p", { children: "\u0421\u043E\u0440\u0442\u0438\u0440\u043E\u0432\u043A\u0430 \u043F\u043E \u0432\u043A\u043B\u0430\u0434\u0443 \u0432 \u0441\u043E\u0432\u043E\u043A\u0443\u043F\u043D\u0443\u044E \u0447\u0438\u0441\u0442\u0443\u044E \u043F\u0440\u0438\u0431\u044B\u043B\u044C \u043F\u0430\u0440\u0442\u0438\u0438 (\u043E\u0442 \u0441\u0430\u043C\u044B\u0445 \u0434\u043E\u0445\u043E\u0434\u043D\u044B\u0445 \u043A \u0431\u0430\u0437\u043E\u0432\u044B\u043C)" })
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("span", { className: "table-count-pill", children: [
+            analytics.items.length,
+            " \u043F\u043E\u0437\u0438\u0446\u0438\u0439"
+          ] })
+        ] }),
+        /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("div", { className: "analytics-table-wrap", children: /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("table", { className: "analytics-data-table", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("thead", { children: /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("tr", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("th", { style: { width: "40px" }, children: "#" }),
+            /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("th", { children: "\u0418\u043D\u0441\u0442\u0440\u0443\u043C\u0435\u043D\u0442 / \u0410\u0440\u0442\u0438\u043A\u0443\u043B" }),
+            /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("th", { children: "\u041A\u0430\u0442\u0435\u0433\u043E\u0440\u0438\u044F" }),
+            /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("th", { children: "\u041E\u0441\u0442\u0430\u0442\u043E\u043A" }),
+            /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("th", { children: "\u0421\u0435\u0431\u0435\u0441\u0442\u043E\u0438\u043C\u043E\u0441\u0442\u044C" }),
+            /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("th", { children: "\u0420\u043E\u0437\u043D\u0438\u0446\u0430 (\u0412\u0438\u0442\u0440\u0438\u043D\u0430)" }),
+            /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("th", { children: "\u0427\u0438\u0441\u0442\u044B\u043C\u0438 \u0441 1 \u0448\u0442." }),
+            /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("th", { children: "\u041F\u0440\u0438\u0431\u044B\u043B\u044C \u043F\u0430\u0440\u0442\u0438\u0438" }),
+            /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("th", { children: "\u041C\u0430\u0440\u0436\u0430 %" }),
+            /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("th", { children: "\u041A\u043B\u0430\u0441\u0441" })
+          ] }) }),
+          /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("tbody", { children: analytics.items.map((item, idx) => {
+            const p = item.product;
+            const eco = item.eco;
+            const isTopA = idx < 3 || eco.marginPercent >= 35;
+            const isB = !isTopA && eco.marginPercent >= 25;
+            return /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("tr", { children: [
+              /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("td", { className: "center-cell muted", children: idx + 1 }),
+              /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("td", { children: /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("div", { className: "table-product-cell", children: [
+                /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("div", { className: "table-thumb", children: /* @__PURE__ */ (0, import_jsx_runtime16.jsx)(Image, { src: p.image, alt: "", fill: true, unoptimized: true, sizes: "36px", style: { objectFit: "contain" } }) }),
+                /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("div", { children: [
+                  /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("strong", { children: p.name }),
+                  /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("span", { className: "table-sku", children: p.sku })
+                ] })
+              ] }) }),
+              /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("td", { children: /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("span", { className: "table-cat-badge", children: p.category }) }),
+              /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("td", { className: "center-cell font-bold", children: [
+                eco.qty,
+                " \u0448\u0442."
+              ] }),
+              /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("td", { className: "num-cell", children: eco.directCost > 0 ? `${money(eco.directCost)} \u20B8` : "\u2014" }),
+              /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("td", { className: "num-cell font-bold", children: eco.retailPrice > 0 ? `${money(eco.retailPrice)} \u20B8` : "\u2014" }),
+              /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("td", { className: "num-cell profit-green", children: [
+                "+",
+                money(eco.netProfitPerUnit),
+                " \u20B8"
+              ] }),
+              /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("td", { className: "num-cell batch-profit", children: [
+                "+",
+                money(eco.totalStockNetProfit),
+                " \u20B8"
+              ] }),
+              /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("td", { className: "center-cell", children: /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("span", { className: `margin-badge ${eco.marginPercent >= 35 ? "high" : eco.marginPercent >= 20 ? "mid" : "low"}`, children: [
+                eco.marginPercent,
+                "%"
+              ] }) }),
+              /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("td", { className: "center-cell", children: /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("span", { className: `abc-badge ${isTopA ? "class-a" : isB ? "class-b" : "class-c"}`, children: isTopA ? "Class A" : isB ? "Class B" : "Class C" }) })
+            ] }, p.id || idx);
+          }) }),
+          /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("tfoot", { children: /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("tr", { className: "table-total-row", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("td", { colSpan: 3, children: /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("strong", { children: "\u0418\u0422\u041E\u0413\u041E \u041F\u041E \u0412\u0421\u0415\u041C\u0423 \u0421\u041A\u041B\u0410\u0414\u0423:" }) }),
+            /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("td", { className: "center-cell", children: /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("strong", { children: [
+              analytics.totalStockQty,
+              " \u0448\u0442."
+            ] }) }),
+            /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("td", { className: "num-cell", children: /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("strong", { children: [
+              money(analytics.totalCostKzt),
+              " \u20B8"
+            ] }) }),
+            /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("td", { className: "num-cell", children: /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("strong", { children: [
+              money(analytics.totalRevenueKzt),
+              " \u20B8"
+            ] }) }),
+            /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("td", { className: "num-cell muted", children: "\u2014" }),
+            /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("td", { className: "num-cell total-profit", children: /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("strong", { children: [
+              "+",
+              money(analytics.totalNetProfitKzt),
+              " \u20B8"
+            ] }) }),
+            /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("td", { className: "center-cell", children: /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("strong", { children: [
+              analytics.overallMarginPercent,
+              "%"
+            ] }) }),
+            /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("td", { className: "center-cell", children: "\u2713" })
+          ] }) })
+        ] }) })
+      ] }),
+      /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("footer", { className: "sheet-footer", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("div", { className: "sheet-signature-box", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("div", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("strong", { children: "\u0420\u0443\u043A\u043E\u0432\u043E\u0434\u0438\u0442\u0435\u043B\u044C \u043C\u0430\u0433\u0430\u0437\u0438\u043D\u0430 Maestro:" }),
+            /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("div", { className: "sign-line" }),
+            /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("small", { children: "\u041F\u043E\u0434\u043F\u0438\u0441\u044C / \u0420\u0430\u0441\u0448\u0438\u0444\u0440\u043E\u0432\u043A\u0430" })
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("div", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("strong", { children: "\u0413\u043B\u0430\u0432\u043D\u044B\u0439 \u0442\u043E\u0432\u0430\u0440\u043E\u0432\u0435\u0434 \u0438 \u0437\u0430\u043A\u0443\u043F\u0449\u0438\u043A:" }),
+            /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("div", { className: "sign-line" }),
+            /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("small", { children: "\u041F\u043E\u0434\u043F\u0438\u0441\u044C / \u0420\u0430\u0441\u0448\u0438\u0444\u0440\u043E\u0432\u043A\u0430" })
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("div", { className: "stamp-box", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("span", { children: "\u041C.\u041F." }),
+            /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("small", { children: "\u0428\u0442\u0430\u043C\u043F \u043F\u0440\u0435\u0434\u043F\u0440\u0438\u044F\u0442\u0438\u044F" })
+          ] })
+        ] }),
+        /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)("div", { className: "sheet-legal-note", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("span", { children: "MAESTRO MUSIC STORE & ACADEMY \xB7 \u0433. \u0410\u043A\u0442\u043E\u0431\u0435, \u041A\u0430\u0437\u0430\u0445\u0441\u0442\u0430\u043D \xB7 shop.maestro.com.kz" }),
+          /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("span", { children: "\u041A\u043E\u043D\u0444\u0438\u0434\u0435\u043D\u0446\u0438\u0430\u043B\u044C\u043D\u043E \xB7 \u0414\u043E\u043A\u0443\u043C\u0435\u043D\u0442 \u0432\u043D\u0443\u0442\u0440\u0435\u043D\u043D\u0435\u0433\u043E \u0443\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0447\u0435\u0441\u043A\u043E\u0433\u043E \u0443\u0447\u0435\u0442\u0430" })
+        ] })
+      ] })
+    ] })
+  ] });
+}
+
+// app/admin/analytics/page.tsx
+var import_jsx_runtime17 = __toESM(require_jsx_runtime(), 1);
+function AdminAnalyticsPage() {
+  return /* @__PURE__ */ (0, import_jsx_runtime17.jsx)(AnalyticsReport, {});
+}
+
+// src/main.tsx
+var import_jsx_runtime18 = __toESM(require_jsx_runtime(), 1);
+function App() {
+  const [pathname, setPathname] = (0, import_react15.useState)(window.location.pathname);
+  (0, import_react15.useEffect)(() => {
     const handlePop = () => setPathname(window.location.pathname);
     window.addEventListener("popstate", handlePop);
     return () => window.removeEventListener("popstate", handlePop);
   }, []);
-  if (pathname.startsWith("/admin")) {
-    return /* @__PURE__ */ (0, import_jsx_runtime16.jsx)(AdminPricingPage, {});
+  if (pathname === "/admin/analytics" || pathname.startsWith("/admin/analytics")) {
+    return /* @__PURE__ */ (0, import_jsx_runtime18.jsx)(AdminAnalyticsPage, {});
   }
-  return /* @__PURE__ */ (0, import_jsx_runtime16.jsx)(Home, {});
+  if (pathname.startsWith("/admin")) {
+    return /* @__PURE__ */ (0, import_jsx_runtime18.jsx)(AdminPricingPage, {});
+  }
+  return /* @__PURE__ */ (0, import_jsx_runtime18.jsx)(Home, {});
 }
 var rootElement = document.getElementById("root");
 if (rootElement) {
   import_client.default.createRoot(rootElement).render(
-    /* @__PURE__ */ (0, import_jsx_runtime16.jsx)(import_react14.default.StrictMode, { children: /* @__PURE__ */ (0, import_jsx_runtime16.jsx)(App, {}) })
+    /* @__PURE__ */ (0, import_jsx_runtime18.jsx)(import_react15.default.StrictMode, { children: /* @__PURE__ */ (0, import_jsx_runtime18.jsx)(App, {}) })
   );
 }
 /*! Bundled license information:
