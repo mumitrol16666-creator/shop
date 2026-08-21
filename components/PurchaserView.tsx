@@ -416,6 +416,46 @@ export function PurchaserView({
     if (found) applyPreset(found);
   };
 
+  
+  const startNewProduct = () => {
+    setEditingProductId(undefined);
+    setCurrentPublicationStatus("draft");
+    setInternalName("");
+    setInternalSku(`MAESTRO-${Date.now().toString().slice(-4)}`);
+    setInternalCategory("Электрогитары");
+    setInternalPhoto("/placeholder.png");
+    setInternalDescription("");
+    setFeaturesText("");
+    setTargetAudience("Для начинающих");
+    setAttachedCourseId("auto");
+    setInternalAudioUrl("");
+    setInternalAllowProPack(true);
+    setInternalProPackTitle("Чехол + Ремень + VIP Доступ");
+    setInternalProPackPrice(8900);
+    setInternalAllowStrings(true);
+    setHasDiscount(false);
+    setDiscountPercent(15);
+    setOriginalPriceInput(0);
+    setModelVariants([
+      {
+        id: `var-${Date.now()}-1`,
+        name: "Основной цвет",
+        color: "#181511",
+        colorName: "Black",
+        sku: `MAESTRO-${Date.now().toString().slice(-4)}-BLK`,
+        barcode: "",
+        size: "Full Size",
+        stock: 1,
+        image: "",
+      },
+    ]);
+    setActiveTab("general");
+    setIsDirty(true);
+    setNotice("➕ Создание нового товара. Заполните поля и сохраните.");
+    window.setTimeout(() => setNotice(""), 3000);
+    document.querySelector(".modern-editor-card")?.scrollIntoView({ behavior: "smooth" });
+  };
+
   const editStoredProduct = (product: Product) => {
     setEditingProductId(product.databaseId || String(product.id));
     setCurrentPublicationStatus(product.publicationStatus === "published" ? "published" : "draft");
@@ -902,6 +942,14 @@ export function PurchaserView({
               </div>
 
               <div className="util-btn-group">
+                <button
+                  type="button"
+                  className="util-btn add-new-product-btn"
+                  onClick={startNewProduct}
+                  title="Создать новую карточку товара с нуля"
+                >
+                  ➕ Новый товар
+                </button>
                 <button
                   type="button"
                   className="util-btn analytics-highlight-btn"
@@ -1860,6 +1908,14 @@ export function PurchaserView({
           </div>
 
           <div className="inventory-heading-tools">
+            <button
+              type="button"
+              className="primary-button small"
+              onClick={startNewProduct}
+              title="Создать новый товар"
+            >
+              + Добавить товар
+            </button>
             <div className="inventory-status-tabs">
               <button
                 type="button"
