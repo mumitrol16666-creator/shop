@@ -24,3 +24,10 @@ test("Stage 2 responsive: tablet/mobile filters use the shared sheet trigger", (
   assert.match(css, /store-sheet \.store-catalog-toolbar \{[^}]*display: grid/);
   assert.match(css, /store-sheet \{[^}]*align-self: end/);
 });
+
+test("Stage 2 responsive: mobile bottom navigation and safe-area contracts exist", () => {
+  assert.match(css, /\.store-mobile-nav/);
+  assert.match(css, /grid-template-columns: repeat\(5, 1fr\)/);
+  assert.match(css, /env\(safe-area-inset-bottom/);
+  assert.match(css, /\.store-mobile-nav__badge/);
+});

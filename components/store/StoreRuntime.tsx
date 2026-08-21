@@ -9,6 +9,7 @@ import { buildWhatsAppOrderUrl, type CartItem } from "../../lib/catalog-data";
 import type { ProductReadModel, PublicOrder } from "../../lib/commerce/types";
 import { cartItemFromReconciled, cartItemsFromOrder } from "../../lib/commerce/ui-adapter";
 import { StoreHeader } from "./header/StoreHeader";
+import { MobileNav } from "./header/MobileNav";
 import { HomePage } from "./home/HomePage";
 import { CatalogPage } from "./catalog/CatalogPage";
 import { ProductPage } from "./product/ProductPage";
@@ -82,6 +83,8 @@ function StoreRuntimeInner({ products, route }: { products: ProductReadModel[]; 
         {route.kind === "cart" && <CartPage onCheckout={() => setCartOpen(true)} />}
         {route.kind === "not-found" && <section className="store-page store-not-found"><p className="store-eyebrow">404</p><h1>Страница не найдена</h1><p>Проверьте адрес или вернитесь в каталог.</p><Link className="store-primary-action" href="/catalog">Открыть каталог</Link></section>}
       </main>
+
+      <MobileNav route={route} cartCount={cartCount} onCartOpen={() => setCartOpen(true)} />
 
       <CartDrawer
         cartOpen={cartOpen}

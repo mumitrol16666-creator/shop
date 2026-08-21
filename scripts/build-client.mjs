@@ -1,10 +1,12 @@
 import * as esbuild from "esbuild";
 import path from "node:path";
+import { readFile, writeFile } from "node:fs/promises";
 
 const root = process.cwd();
 
 async function build() {
   try {
+    // 1. Build Client JS bundle
     await esbuild.build({
       entryPoints: [path.join(root, "src/main.tsx")],
       bundle: true,
@@ -39,6 +41,8 @@ async function build() {
       legalComments: "none",
       logLevel: "info",
     });
+
+    // 2. Build VPS commerce core bundle
     await esbuild.build({
       entryPoints: [path.join(root, "lib/commerce/vps-entry.ts")],
       bundle: true,
@@ -52,7 +56,15 @@ async function build() {
       legalComments: "none",
       logLevel: "info",
     });
-    console.log("✅ ESBuild ESM bundle compiled successfully (minified)!");
+
+    // 3. Build & Minify CSS bundle
+    const css1 = await readFile(path.join(root, "app/globals.css"), "utf8");
+    const css2 = await readFile(path.join(root, "components/store/store-routes.css"), "utf8");
+    const combined = `${css1}\n${css2}`;
+    const cssRes = await esbuild.transform(combined, { loader: "css", minify: true });
+    await writeFile(path.join(root, "public/bundle.css"), cssRes.code);
+
+    console.log("✅ ESBuild ESM bundle & minified CSS compiled successfully!");
   } catch (err) {
     console.error("ESBuild error:", err);
     process.exitCode = 1;
