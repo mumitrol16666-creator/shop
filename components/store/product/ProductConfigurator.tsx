@@ -36,9 +36,9 @@ export function ProductConfigurator({
   const maxQuantity = selectedVariant?.availableQuantity || 1;
 
   const toggleComponent = (sku: string) => {
-    setComponentSkus((current) => current.includes(sku)
-      ? current.filter((item) => item !== sku)
-      : [...current, sku]);
+    setComponentSkus((current) =>
+      current.includes(sku) ? current.filter((item) => item !== sku) : [...current, sku],
+    );
   };
 
   const add = () => {
@@ -49,75 +49,144 @@ export function ProductConfigurator({
 
   return (
     <div className={`store-configurator ${compact ? "store-configurator--compact" : ""}`}>
-      <fieldset>
-        <legend>1. Вариант</legend>
+      {/* 1. VARIANT SELECTION */}
+      <div className="store-config-section">
+        <div className="store-config-section__header">
+          <span className="store-config-step">1</span>
+          <h3>Вариант расцветки</h3>
+        </div>
         <div className="store-option-grid">
-          {product.variants.map((variant) => (
-            <button
-              key={variant.sku}
-              type="button"
-              className={variantSku === variant.sku ? "is-selected" : ""}
-              disabled={variant.status !== "active"}
-              onClick={() => {
-                setVariantSku(variant.sku);
-                setQuantity(1);
-              }}
-              aria-pressed={variantSku === variant.sku}
-            >
-              <span>{variant.title}</span>
-              <small>{variant.availableQuantity > 0 ? `${variant.availableQuantity} шт.` : "Нет в наличии"}</small>
-            </button>
-          ))}
+          {product.variants.map((variant) => {
+            const isSelected = variantSku === variant.sku;
+            const isAvailable = variant.status === "active" && variant.availableQuantity > 0;
+            return (
+              <button
+                key={variant.sku}
+                type="button"
+                className={`store-variant-btn ${isSelected ? "is-selected" : ""}`}
+                disabled={!isAvailable}
+                onClick={() => {
+                  setVariantSku(variant.sku);
+                  setQuantity(1);
+                }}
+                aria-pressed={isSelected}
+              >
+                <span className="store-variant-title">{variant.title}</span>
+                <span className={`store-variant-stock ${isAvailable ? "in-stock" : "out-of-stock"}`}>
+                  {isAvailable ? `${variant.availableQuantity} шт.` : "Нет"}
+                </span>
+              </button>
+            );
+          })}
         </div>
-        {!variantSku && <p className="store-field-hint">Выберите доступный вариант — цена пересчитается серверной моделью.</p>}
-      </fieldset>
+        {!variantSku && (
+          <p className="store-field-hint">⚠️ Пожалуйста, выберите нужный цвет для оформления заказа.</p>
+        )}
+      </div>
 
-      <fieldset>
-        <legend>2. Комплектация</legend>
+      {/* 2. BUNDLE SELECTION */}
+      <div className="store-config-section">
+        <div className="store-config-section__header">
+          <span className="store-config-step">2</span>
+          <h3>Комплектация</h3>
+        </div>
         <div className="store-option-stack">
-          {product.bundleDefinitions.filter((bundle) => bundle.eligible).map((bundle) => (
-            <button
-              key={bundle.sku}
-              type="button"
-              className={bundleSku === bundle.sku ? "is-selected" : ""}
-              onClick={() => setBundleSku(bundle.sku)}
-              aria-pressed={bundleSku === bundle.sku}
-            >
-              <span><strong>{bundle.title}</strong><small>{bundle.description}</small></span>
-              <b>{bundle.priceDelta ? `+${money(bundle.priceDelta)} ₸` : "Без доплаты"}</b>
-            </button>
-          ))}
-        </div>
-      </fieldset>
-
-      {product.componentDefinitions.some((component) => component.price > 0) && (
-        <fieldset>
-          <legend>3. Дополнительно</legend>
-          <div className="store-option-stack">
-            {product.componentDefinitions.filter((component) => component.price > 0).map((component) => (
-              <label key={component.sku} className="store-component-option">
-                <input
-                  type="checkbox"
-                  checked={componentSkus.includes(component.sku)}
-                  onChange={() => toggleComponent(component.sku)}
-                />
-                <span>{component.title}</span>
-                <b>+{money(component.price)} ₸</b>
-              </label>
-            ))}
-          </div>
-        </fieldset>
-      )}
-
-      <div className="store-configurator-total">
-        <div><small>Итого</small><strong>{money(quote.final * quantity)} ₸</strong></div>
-        <div className="store-quantity" aria-label="Количество">
-          <button type="button" onClick={() => setQuantity((value) => Math.max(1, value - 1))} disabled={quantity <= 1}>−</button>
-          <span>{quantity}</span>
-          <button type="button" onClick={() => setQuantity((value) => Math.min(maxQuantity, value + 1))} disabled={!variantSku || quantity >= maxQuantity}>+</button>
+          {product.bundleDefinitions
+            .filter((bundle) => bundle.eligible)
+            .map((bundle) => {
+              const isSelected = bundleSku === bundle.sku;
+              return (
+                <button
+                  key={bundle.sku}
+                  type="button"
+                  className={`store-bundle-btn ${isSelected ? "is-selected" : ""}`}
+                  onClick={() => setBundleSku(bundle.sku)}
+                  aria-pressed={isSelected}
+                >
+                  <div className="store-bundle-radio">
+                    <span className={`store-radio-dot ${isSelected ? "is-active" : ""}`} />
+                  </div>
+                  <div className="store-bundle-copy">
+                    <strong>{bundle.title}</strong>
+                    {bundle.description && <small>{bundle.description}</small>}
+                  </div>
+                  <div className="store-bundle-price">
+                    {bundle.priceDelta ? (
+                      <span className="store-bundle-delta">+{money(bundle.priceDelta)} ₸</span>
+                    ) : (
+                      <span className="store-bundle-free">Без доплаты</span>
+                    )}
+                  </div>
+                </button>
+              );
+            })}
         </div>
       </div>
-      <button type="button" className="store-primary-action" onClick={add} disabled={!variantSku || !maxQuantity}>
+
+      {/* 3. OPTIONAL UPSELLS */}
+      {product.componentDefinitions.some((component) => component.price > 0) && (
+        <div className="store-config-section">
+          <div className="store-config-section__header">
+            <span className="store-config-step">3</span>
+            <h3>Дополнительно со скидкой</h3>
+          </div>
+          <div className="store-option-stack">
+            {product.componentDefinitions
+              .filter((component) => component.price > 0)
+              .map((component) => {
+                const isChecked = componentSkus.includes(component.sku);
+                return (
+                  <label
+                    key={component.sku}
+                    className={`store-component-option ${isChecked ? "is-checked" : ""}`}
+                  >
+                    <input
+                      type="checkbox"
+                      checked={isChecked}
+                      onChange={() => toggleComponent(component.sku)}
+                    />
+                    <span className="store-component-title">{component.title}</span>
+                    <span className="store-component-price">+{money(component.price)} ₸</span>
+                  </label>
+                );
+              })}
+          </div>
+        </div>
+      )}
+
+      {/* TOTAL & ACTIONS */}
+      <div className="store-configurator-total">
+        <div>
+          <small>Итоговая стоимость:</small>
+          <strong>{money(quote.final * quantity)} ₸</strong>
+        </div>
+        <div className="store-quantity" aria-label="Количество">
+          <button
+            type="button"
+            onClick={() => setQuantity((value) => Math.max(1, value - 1))}
+            disabled={quantity <= 1}
+            aria-label="Уменьшить количество"
+          >
+            −
+          </button>
+          <span>{quantity}</span>
+          <button
+            type="button"
+            onClick={() => setQuantity((value) => Math.min(maxQuantity, value + 1))}
+            disabled={!variantSku || quantity >= maxQuantity}
+            aria-label="Увеличить количество"
+          >
+            +
+          </button>
+        </div>
+      </div>
+
+      <button
+        type="button"
+        className="store-primary-action"
+        onClick={add}
+        disabled={!variantSku || !maxQuantity}
+      >
         {variantSku ? "Добавить в корзину" : "Выберите вариант"}
       </button>
     </div>
