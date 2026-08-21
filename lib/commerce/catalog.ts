@@ -174,7 +174,12 @@ export function buildCatalogReadModels(
           reservedQuantity: held,
           availableQuantity,
           status: availableQuantity > 0 ? ("active" as const) : ("out_of_stock" as const),
-          currentPrice: asMoney(variant.price, currentBasePrice),
+          currentPrice: asMoney(
+            product.variantItems && typeof variant.price === "number" && variant.price > 0
+              ? variant.price
+              : currentBasePrice,
+            currentBasePrice,
+          ),
         };
       });
 
