@@ -453,7 +453,7 @@ export function PurchaserView({
     setIsDirty(true);
     setNotice("➕ Создание нового товара. Заполните поля и сохраните.");
     window.setTimeout(() => setNotice(""), 3000);
-    document.querySelector(".modern-editor-card")?.scrollIntoView({ behavior: "smooth" });
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const editStoredProduct = (product: Product) => {
@@ -1902,9 +1902,31 @@ export function PurchaserView({
          ========================================================================= */}
       <section className="inventory-card" id="inventory">
         <div className="card-heading">
-          <div>
-            <p className="eyebrow">СКЛАД ПОСТАВКИ</p>
-            <h2>Товары и партии ({displayedInventoryProducts.length})</h2>
+          <div style={{ display: "flex", alignItems: "center", gap: "16px", flexWrap: "wrap" }}>
+            <div>
+              <p className="eyebrow">СКЛАД ПОСТАВКИ</p>
+              <h2>Товары и партии ({displayedInventoryProducts.length})</h2>
+            </div>
+            <button
+              type="button"
+              onClick={startNewProduct}
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "8px",
+                padding: "10px 22px",
+                background: "linear-gradient(135deg, #d6a43f, #b98322)",
+                color: "#181511",
+                border: "none",
+                borderRadius: "10px",
+                fontWeight: "800",
+                fontSize: "14px",
+                cursor: "pointer",
+                boxShadow: "0 4px 14px rgba(214, 164, 63, 0.4)",
+              }}
+            >
+              <span>➕</span> Добавить новый товар
+            </button>
           </div>
 
           <div className="inventory-heading-tools">
