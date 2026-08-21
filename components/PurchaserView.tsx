@@ -1052,12 +1052,12 @@ export function PurchaserView({
             <div className="tab-pane-content">
               <div className="tab-section-head">
                 <strong>Основная информация о модели</strong>
-                <p>Название, категория, фотографии, звукозапись и описание для покупателей.</p>
+                <p>Название, категория, фотографии, звукозапись и описание для покупателей на витрине.</p>
               </div>
 
               <div className="model-info-grid">
-                <label>
-                  Название модели
+                <div className="editor-field-card">
+                  <span className="field-label-text">Название модели</span>
                   <input
                     value={internalName}
                     onChange={(e) => {
@@ -1066,9 +1066,10 @@ export function PurchaserView({
                     }}
                     placeholder="например, Электрогитара ST-20 HSS"
                   />
-                </label>
-                <label>
-                  Базовый артикул (SKU)
+                </div>
+
+                <div className="editor-field-card">
+                  <span className="field-label-text">Базовый артикул (SKU)</span>
                   <input
                     value={internalSku}
                     onChange={(e) => {
@@ -1077,9 +1078,10 @@ export function PurchaserView({
                     }}
                     placeholder="EG-ST20"
                   />
-                </label>
-                <label>
-                  Категория на сайте
+                </div>
+
+                <div className="editor-field-card">
+                  <span className="field-label-text">Категория на сайте</span>
                   <select
                     value={internalCategory}
                     onChange={(e) => {
@@ -1093,9 +1095,10 @@ export function PurchaserView({
                         <option key={cat} value={cat}>{cat}</option>
                       ))}
                   </select>
-                </label>
-                <label>
-                  Маркетинговый бейдж
+                </div>
+
+                <div className="editor-field-card">
+                  <span className="field-label-text">Маркетинговый бейдж</span>
                   <input
                     value={targetAudience}
                     onChange={(e) => {
@@ -1104,9 +1107,10 @@ export function PurchaserView({
                     }}
                     placeholder="Для начинающих / Хит продаж / Sale"
                   />
-                </label>
-                <label className="full-width">
-                  <span>📸 Главное фото инструмента (PNG / JPG / WebP)</span>
+                </div>
+
+                <div className="editor-field-card full-width">
+                  <span className="field-label-text">📸 Главное фото инструмента (PNG / JPG / WebP)</span>
                   <div style={{ display: "flex", gap: "10px", alignItems: "center", marginTop: "4px" }}>
                     <input
                       style={{ flex: 1 }}
@@ -1125,8 +1129,8 @@ export function PurchaserView({
                         display: "inline-flex",
                         alignItems: "center",
                         gap: "6px",
-                        padding: "8px 14px",
-                        borderRadius: "8px",
+                        padding: "10px 18px",
+                        borderRadius: "10px",
                       }}
                     >
                       📁 {isUploadingPhoto ? "Загрузка..." : "Загрузить фото"}
@@ -1143,29 +1147,29 @@ export function PurchaserView({
                   </div>
                   {internalPhoto && (
                     <div style={{
-                      marginTop: "8px",
+                      marginTop: "12px",
                       display: "inline-flex",
                       alignItems: "center",
-                      gap: "12px",
+                      gap: "14px",
                       background: "#faf8f5",
-                      padding: "8px 14px",
+                      padding: "10px 16px",
                       borderRadius: "12px",
-                      border: "1px solid var(--line)",
+                      border: "1.5px solid var(--line)",
                     }}>
-                      <div style={{ position: "relative", width: "48px", height: "48px", borderRadius: "8px", overflow: "hidden", background: "#fff", border: "1px solid var(--line)" }}>
-                        <Image src={internalPhoto} alt="Превью" fill unoptimized sizes="48px" style={{ objectFit: "contain" }} />
+                      <div style={{ position: "relative", width: "52px", height: "52px", borderRadius: "10px", overflow: "hidden", background: "#fff", border: "1px solid var(--line)" }}>
+                        <Image src={internalPhoto} alt="Превью" fill unoptimized sizes="52px" style={{ objectFit: "contain" }} />
                       </div>
                       <div>
-                        <strong style={{ display: "block", fontSize: "12px", color: "var(--ink)" }}>Превью изображения</strong>
-                        <small style={{ color: "var(--muted)", fontSize: "11px" }}>Путь: {internalPhoto}</small>
+                        <strong style={{ display: "block", fontSize: "13px", color: "var(--ink)", fontWeight: 800 }}>Превью изображения</strong>
+                        <small style={{ color: "var(--muted)", fontSize: "11.5px" }}>Путь: {internalPhoto}</small>
                       </div>
                     </div>
                   )}
-                </label>
+                </div>
 
-                <label className="full-width">
-                  🎵 Аудиозапись звучания инструмента (MP3 / Прямая ссылка)
-                  <div style={{ display: "flex", gap: "10px", marginTop: "4px" }}>
+                <div className="editor-field-card full-width">
+                  <span className="field-label-text">🎵 Аудиозапись звучания инструмента (MP3 / Прямая ссылка)</span>
+                  <div style={{ display: "flex", gap: "10px", alignItems: "center", marginTop: "4px" }}>
                     <input
                       style={{ flex: 1 }}
                       value={internalAudioUrl}
@@ -1179,7 +1183,7 @@ export function PurchaserView({
                       <button
                         type="button"
                         className="outline-button small"
-                        style={{ whiteSpace: "nowrap", display: "inline-flex", alignItems: "center", gap: "5px" }}
+                        style={{ whiteSpace: "nowrap", display: "inline-flex", alignItems: "center", gap: "6px", height: "42px", padding: "0 16px" }}
                         onClick={() => {
                           if (isPlayingAudioPreview) {
                             stopProductAudio();
@@ -1194,26 +1198,29 @@ export function PurchaserView({
                       </button>
                     )}
                   </div>
-                  <small style={{ color: "var(--muted)", fontSize: "11.5px", marginTop: "4px", display: "block" }}>
-                    💡 Если поле пустое, кнопка «Послушать» на витрине скрыта. Воспроизводится только при наличии ссылки на реальный файл.
+                  <small style={{ color: "var(--muted)", fontSize: "12px", marginTop: "6px", display: "block" }}>
+                    💡 Если поле пустое, кнопка «Послушать» на витрине скрыта. Воспроизводится только при наличии ссылки на реальный аудиофайл.
                   </small>
-                </label>
+                </div>
 
-                <label className="full-width">
-                  Краткое описание инструмента
+                <div className="editor-field-card full-width">
+                  <span className="field-label-text">Краткое описание инструмента</span>
                   <textarea
                     rows={3}
+                    style={{ marginTop: "4px" }}
                     value={internalDescription}
                     onChange={(e) => {
                       setInternalDescription(e.target.value);
                       setIsDirty(true);
                     }}
-                    placeholder="Универсальная электрогитара формы ST для первых занятий..."
+                    placeholder="Универсальная электрогитара формы ST для первых занятий и домашней практики."
                   />
-                </label>
-                <label className="full-width">
-                  Преимущества и характеристики (через запятую)
+                </div>
+
+                <div className="editor-field-card full-width">
+                  <span className="field-label-text">Преимущества и характеристики (через запятую)</span>
                   <input
+                    style={{ marginTop: "4px" }}
                     value={featuresText}
                     onChange={(e) => {
                       setFeaturesText(e.target.value);
@@ -1221,7 +1228,7 @@ export function PurchaserView({
                     }}
                     placeholder="Форма корпуса ST, Конфигурация HSS, 6 цветов, Стандартная мензура"
                   />
-                </label>
+                </div>
               </div>
             </div>
           )}
