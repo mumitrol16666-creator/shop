@@ -9,17 +9,28 @@ import { quoteConfiguration } from "../../../lib/commerce/pricing";
 export function ProductConfigurator({
   product,
   compact = false,
+  selectedVariantSku: externalVariantSku,
+  onVariantSelect,
   onAdded,
 }: {
   product: ProductReadModel;
   compact?: boolean;
+  selectedVariantSku?: string;
+  onVariantSelect?: (sku: string) => void;
   onAdded?: () => void;
 }) {
   const commerceCart = useCommerceCart();
   const selectableVariants = product.variants.filter((variant) => variant.status === "active");
-  const [variantSku, setVariantSku] = useState<string>(() =>
+  const [internalVariantSku, setInternalVariantSku] = useState<string>(() =>
     product.selectionRequired ? "" : selectableVariants[0]?.sku || "",
   );
+
+  const variantSku = externalVariantSku !== undefined ? externalVariantSku : internalVariantSku;
+  const handleVariantClick = (sku: string) => {
+    setInternalVariantSku(sku);
+    onVariantSelect?.(sku);
+  };
+
   const [bundleSku, setBundleSku] = useState(BUNDLE_SKUS.base as string);
   const [componentSkus, setComponentSkus] = useState<string[]>([]);
   const [quantity, setQuantity] = useState(1);
@@ -66,7 +77,7 @@ export function ProductConfigurator({
                 className={`store-variant-btn ${isSelected ? "is-selected" : ""}`}
                 disabled={!isAvailable}
                 onClick={() => {
-                  setVariantSku(variant.sku);
+                  handleVariantClick(variant.sku);
                   setQuantity(1);
                 }}
                 aria-pressed={isSelected}
