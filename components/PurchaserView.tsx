@@ -189,7 +189,7 @@ export function PurchaserView({
 
           // Every uploaded product gets the same square canvas and breathing
           // room, so cards and modals stay visually consistent.
-          const outputSize = 1400;
+          const outputSize = 1100;
           const normalizedCanvas = document.createElement("canvas");
           normalizedCanvas.width = outputSize;
           normalizedCanvas.height = outputSize;
@@ -216,21 +216,37 @@ export function PurchaserView({
             drawHeight,
           );
 
-          const maxUploadBytes = 760 * 1024;
-          let quality = 0.84;
-          let compressedDataUrl = normalizedCanvas.toDataURL("image/webp", quality);
-          const webpSupported = compressedDataUrl.startsWith("data:image/webp");
+          const maxUploadBytes = 280 * 1024;
+          let quality = 0.82;
+          let mime = "image/webp";
+          let compressedDataUrl = normalizedCanvas.toDataURL(mime, quality);
+          let formatSupported = compressedDataUrl.startsWith("data:image/webp");
+          if (!formatSupported) {
+            mime = "image/jpeg";
+            compressedDataUrl = normalizedCanvas.toDataURL(mime, quality);
+          }
           const approximateBytes = (dataUrl: string) => Math.ceil((dataUrl.length * 3) / 4);
-          while (webpSupported && approximateBytes(compressedDataUrl) > maxUploadBytes && quality > 0.44) {
+          while (approximateBytes(compressedDataUrl) > maxUploadBytes && quality > 0.40) {
             quality -= 0.08;
-            compressedDataUrl = normalizedCanvas.toDataURL("image/webp", quality);
+            compressedDataUrl = normalizedCanvas.toDataURL(mime, quality);
+          }
+          // If still over budget, scale down resolution
+          if (approximateBytes(compressedDataUrl) > maxUploadBytes) {
+            const smallCanvas = document.createElement("canvas");
+            smallCanvas.width = 850;
+            smallCanvas.height = 850;
+            const sCtx = smallCanvas.getContext("2d");
+            if (sCtx) {
+              sCtx.drawImage(normalizedCanvas, 0, 0, 850, 850);
+              compressedDataUrl = smallCanvas.toDataURL(mime, 0.75);
+            }
           }
 
           const baseName = file.name.replace(/\.[^.]+$/, "") || "photo";
           const fallbackExtension = file.type === "image/png" ? "png" : "jpg";
           resolve({
             dataUrl: compressedDataUrl,
-            filename: `${baseName}.${webpSupported ? "webp" : fallbackExtension}`,
+            filename: `${baseName}.${formatSupported ? "webp" : "jpg"}`,
           });
         };
         img.onerror = () => resolve({ dataUrl: rawBase64, filename: file.name });
