@@ -42,7 +42,7 @@ function StoreRuntimeInner({ products, route }: { products: ProductReadModel[]; 
   const cartCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
   const announce = (message: string) => {
     setNotice(message);
-    window.setTimeout(() => setNotice(""), 3000);
+    window.setTimeout(() => setNotice(""), 3500);
   };
 
   const createServerOrder = (intent: CheckoutIntent) => cart.createOrder({
@@ -118,7 +118,27 @@ function StoreRuntimeInner({ products, route }: { products: ProductReadModel[]; 
         customerComment={customerComment}
         onPaymentReported={(order) => { setPaymentOrder(order); announce("Сообщение об оплате отправлено на проверку."); }}
       />
-      {notice && <div className="toast" role="status">{notice}</div>}
+      {notice && (
+        <div className="store-toast-banner" role="status">
+          <div className="store-toast-content">
+            <span className="store-toast-icon">✓</span>
+            <div className="store-toast-text">
+              <strong>{notice}</strong>
+              <small>Товар зарезервирован для оформления</small>
+            </div>
+            <button
+              type="button"
+              className="store-toast-action"
+              onClick={() => {
+                setNotice("");
+                setCartOpen(true);
+              }}
+            >
+              В корзину →
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

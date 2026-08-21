@@ -8,9 +8,20 @@ import { SearchCombobox } from "./SearchCombobox";
 export function StoreHeader({ cartCount, onCartOpen }: { cartCount: number; onCartOpen: () => void }) {
   const [compact, setCompact] = useState(false);
   const [secondaryVisible, setSecondaryVisible] = useState(true);
+  const [bump, setBump] = useState(false);
+  const prevCount = useRef(cartCount);
   const lastY = useRef(0);
   const directionDistance = useRef(0);
   const direction = useRef<"up" | "down">("up");
+
+  useEffect(() => {
+    if (cartCount > prevCount.current) {
+      setBump(true);
+      const timer = setTimeout(() => setBump(false), 900);
+      return () => clearTimeout(timer);
+    }
+    prevCount.current = cartCount;
+  }, [cartCount]);
 
   useEffect(() => {
     const onScroll = () => {
@@ -43,7 +54,12 @@ export function StoreHeader({ cartCount, onCartOpen }: { cartCount: number; onCa
         <Link href="/catalog" className="store-catalog-link">Каталог</Link>
         <SearchCombobox />
         <a className="store-header__contact" href="https://wa.me/77775055788" target="_blank" rel="noopener noreferrer">+7 777 505-57-88</a>
-        <button type="button" className="store-cart-button" onClick={onCartOpen} aria-label={`Корзина, ${cartCount} товаров`}>
+        <button
+          type="button"
+          className={`store-cart-button ${bump ? "is-cart-bumped" : ""}`}
+          onClick={onCartOpen}
+          aria-label={`Корзина, ${cartCount} товаров`}
+        >
           <span aria-hidden="true">🛒</span><span>Корзина</span><b>{cartCount}</b>
         </button>
       </div>

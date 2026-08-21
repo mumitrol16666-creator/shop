@@ -1727,3 +1727,186 @@ html, body {
     animation-duration: .01ms !important;
   }
 }
+
+/* =========================================================================
+   ADD TO CART CELEBRATION & MICRO-ANIMATIONS
+   ========================================================================= */
+
+.store-add-to-cart-btn {
+  position: relative;
+  overflow: hidden;
+  transition: all 240ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.store-add-to-cart-btn.is-added-celebrate {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+  color: #ffffff !important;
+  border-color: #34d399 !important;
+  box-shadow: 0 0 25px rgba(16, 185, 129, 0.55), 0 4px 15px rgba(0, 0, 0, 0.4) !important;
+  transform: scale(1.02);
+  animation: btnCelebratePulse 1.8s ease-in-out;
+}
+
+@keyframes btnCelebratePulse {
+  0% { transform: scale(0.96); }
+  25% { transform: scale(1.04); }
+  50% { transform: scale(1); }
+  75% { transform: scale(1.02); }
+  100% { transform: scale(1); }
+}
+
+.store-btn-added-state {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-weight: 700;
+  animation: fadeInPop 280ms cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.store-btn-added-state svg {
+  stroke: #ffffff;
+  stroke-dasharray: 24;
+  stroke-dashoffset: 24;
+  animation: drawCheck 400ms ease-out 100ms forwards;
+}
+
+@keyframes drawCheck {
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes fadeInPop {
+  0% { opacity: 0; transform: scale(0.7); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+/* Header Cart Bump */
+.store-cart-button.is-cart-bumped {
+  animation: cartButtonBump 600ms cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.store-cart-button.is-cart-bumped b {
+  background: #10b981 !important;
+  color: #fff !important;
+  transform: scale(1.3);
+  box-shadow: 0 0 12px rgba(16, 185, 129, 0.8);
+  transition: all 250ms ease;
+}
+
+@keyframes cartButtonBump {
+  0% { transform: scale(1); }
+  30% { transform: scale(1.12); border-color: var(--store-amber); }
+  60% { transform: scale(0.96); }
+  100% { transform: scale(1); }
+}
+
+/* Mobile Nav Cart Bump */
+.store-mobile-nav__item.is-cart-bumped .store-mobile-nav__cart-wrap {
+  animation: mobileCartBump 600ms cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.store-mobile-nav__item.is-cart-bumped .store-mobile-nav__badge {
+  background: #10b981 !important;
+  transform: scale(1.35);
+  box-shadow: 0 0 12px rgba(16, 185, 129, 0.8);
+  transition: all 250ms ease;
+}
+
+@keyframes mobileCartBump {
+  0% { transform: scale(1); }
+  35% { transform: scale(1.25) rotate(-8deg); }
+  70% { transform: scale(0.95); }
+  100% { transform: scale(1) rotate(0deg); }
+}
+
+/* Luxury Toast Banner */
+.store-toast-banner {
+  position: fixed;
+  top: 24px;
+  right: 24px;
+  z-index: 10000;
+  max-width: 420px;
+  width: calc(100vw - 48px);
+  animation: toastSlideDown 350ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes toastSlideDown {
+  0% { opacity: 0; transform: translateY(-24px) scale(0.94); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.store-toast-content {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 18px;
+  background: rgba(26, 22, 17, 0.96);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(214, 164, 63, 0.45);
+  border-radius: 16px;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.6), 0 0 20px rgba(214, 164, 63, 0.15);
+}
+
+.store-toast-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 900;
+  font-size: 16px;
+  flex-shrink: 0;
+  box-shadow: 0 0 10px rgba(16, 185, 129, 0.4);
+}
+
+.store-toast-text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.store-toast-text strong {
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.store-toast-text small {
+  color: var(--store-muted);
+  font-size: 12px;
+}
+
+.store-toast-action {
+  padding: 8px 14px;
+  background: var(--store-amber);
+  color: #17140f;
+  border: none;
+  border-radius: 10px;
+  font-size: 12px;
+  font-weight: 800;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 160ms ease;
+  box-shadow: 0 4px 12px rgba(214, 164, 63, 0.3);
+}
+
+.store-toast-action:hover {
+  filter: brightness(1.1);
+  transform: translateX(2px);
+}
+
+@media (max-width: 768px) {
+  .store-toast-banner {
+    top: auto;
+    bottom: calc(76px + env(safe-area-inset-bottom, 0px));
+    right: 16px;
+    left: 16px;
+    width: auto;
+    max-width: none;
+  }
+}

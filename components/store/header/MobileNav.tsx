@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect, useRef, useState } from "react";
 import type { StoreRoute } from "../StoreRuntime";
 
 type MobileNavProps = {
@@ -14,6 +15,17 @@ export function MobileNav({ route, cartCount, onCartOpen }: MobileNavProps) {
   const isCatalog = route.kind === "catalog";
   const isPicker = route.kind === "picker";
   const isCart = route.kind === "cart";
+
+  const [bump, setBump] = useState(false);
+  const prevCount = useRef(cartCount);
+  useEffect(() => {
+    if (cartCount > prevCount.current) {
+      setBump(true);
+      const timer = setTimeout(() => setBump(false), 900);
+      return () => clearTimeout(timer);
+    }
+    prevCount.current = cartCount;
+  }, [cartCount]);
 
   return (
     <nav className="store-mobile-nav" aria-label="Мобильная навигация">
@@ -43,7 +55,12 @@ export function MobileNav({ route, cartCount, onCartOpen }: MobileNavProps) {
         <span>Подбор</span>
       </Link>
 
-      <button type="button" className={`store-mobile-nav__item ${isCart ? "is-active" : ""}`} onClick={onCartOpen} aria-label={`Корзина, ${cartCount} товаров`}>
+      <button
+        type="button"
+        className={`store-mobile-nav__item ${isCart ? "is-active" : ""} ${bump ? "is-cart-bumped" : ""}`}
+        onClick={onCartOpen}
+        aria-label={`Корзина, ${cartCount} товаров`}
+      >
         <div className="store-mobile-nav__cart-wrap">
           <svg className="store-mobile-nav__icon" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <circle cx="8" cy="21" r="1" />

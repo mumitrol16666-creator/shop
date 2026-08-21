@@ -34,6 +34,7 @@ export function ProductConfigurator({
   const [bundleSku, setBundleSku] = useState(BUNDLE_SKUS.base as string);
   const [componentSkus, setComponentSkus] = useState<string[]>([]);
   const [quantity, setQuantity] = useState(1);
+  const [justAdded, setJustAdded] = useState(false);
 
   const selectedVariant = product.variants.find((variant) => variant.sku === variantSku);
   const quote = useMemo(() => {
@@ -55,6 +56,8 @@ export function ProductConfigurator({
   const add = () => {
     if (!variantSku) return;
     commerceCart.add({ product, variantSku, bundleSku, componentSkus, quantity });
+    setJustAdded(true);
+    setTimeout(() => setJustAdded(false), 2000);
     onAdded?.();
   };
 
@@ -194,11 +197,20 @@ export function ProductConfigurator({
 
       <button
         type="button"
-        className="store-primary-action"
+        className={`store-primary-action store-add-to-cart-btn ${justAdded ? "is-added-celebrate" : ""}`}
         onClick={add}
         disabled={!variantSku || !maxQuantity}
       >
-        {variantSku ? "Добавить в корзину" : "Выберите вариант"}
+        {justAdded ? (
+          <span className="store-btn-added-state">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <polyline points="20 6 9 17 4 12" />
+            </svg>
+            Добавлено в корзину!
+          </span>
+        ) : (
+          variantSku ? "Добавить в корзину" : "Выберите вариант"
+        )}
       </button>
     </div>
   );
