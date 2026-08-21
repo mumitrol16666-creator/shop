@@ -399,9 +399,24 @@ export async function POST(request: Request) {
       ? payload.variants.reduce((sum, v) => sum + (v.stock || 0), 0)
       : integerOrZero(payload.variant?.stockQuantity) || 1;
 
-    const variantItems = payload.variants && payload.variants.length > 0
+    const rawVariants = payload.variants && payload.variants.length > 0
       ? payload.variants
       : [
+          {
+            id: payload.variantId || variantSku,
+            name: variantName,
+            stock: integerOrZero(payload.variant?.stockQuantity) || 1,
+            color: payload.variant?.colorHex || "#8a8175",
+            sku: variantSku,
+            image: photoUrl,
+            price: calculation.finalPriceKzt,
+          },
+        ];
+    const variantItems = rawVariants.map((v) => ({
+      ...v,
+      price: calculation.finalPriceKzt,
+    }));
+    const _ignored = [
           {
             id: payload.variantId || variantSku,
             name: variantName,
