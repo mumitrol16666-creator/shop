@@ -873,12 +873,12 @@ html, body {
 .store-product-main-image,
 .store-product-gallery > div:first-child {
   position: relative;
-  height: 560px;
+  height: 520px;
   border-radius: 20px;
   overflow: hidden;
-  background: #eee7dc;
+  background: radial-gradient(circle at 50% 35%, #2a2319 0%, #15120e 100%);
   border: 1px solid var(--store-line);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.45);
 }
 
 .store-product-main-image img,
@@ -888,23 +888,23 @@ html, body {
 
 .store-product-thumbs {
   display: flex;
-  gap: 12px;
+  gap: 10px;
   overflow-x: auto;
-  padding: 4px 2px 8px;
+  padding: 6px 2px 8px;
 }
 
 .store-thumb-btn,
 .store-product-thumbs button {
   position: relative;
-  width: 78px;
-  height: 78px;
+  width: 74px;
+  height: 74px;
   flex-shrink: 0;
   border: 2px solid var(--store-line);
   border-radius: 12px;
-  background: #eee7dc;
+  background: #241f19;
   overflow: hidden;
   cursor: pointer;
-  padding: 0;
+  padding: 3px;
   transition: all 180ms ease;
 }
 
@@ -918,23 +918,27 @@ html, body {
 .store-product-thumbs button.is-selected {
   border-color: var(--store-amber);
   box-shadow: 0 0 0 2px var(--store-amber);
-  transform: scale(1.04);
+  background: #2d261e;
+  transform: scale(1.05);
 }
 
-.store-thumb-label {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: rgba(24, 21, 17, 0.88);
-  color: #fff;
-  font-size: 9px;
-  font-weight: 800;
-  text-align: center;
-  padding: 2px 4px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+.store-product-price {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  margin: 12px 0 16px;
+  flex-wrap: wrap;
+}
+
+.store-product-price strong {
+  color: var(--store-amber);
+  font-size: 28px;
+  font-family: Georgia, serif;
+}
+
+.store-product-price span {
+  color: var(--store-muted);
+  font-size: 14px;
 }
 
 .store-gallery-caption {

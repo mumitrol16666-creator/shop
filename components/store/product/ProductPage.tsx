@@ -89,7 +89,7 @@ export function ProductPage({
                       sizes="72px"
                       style={{ objectFit: "contain" }}
                     />
-                    <span className="store-thumb-label">{item.title}</span>
+                    
                   </button>
                 );
               })}
