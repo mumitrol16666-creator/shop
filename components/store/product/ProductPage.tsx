@@ -113,10 +113,10 @@ export function ProductPage({
               : "Нет в наличии"}
           </p>
           <div className="store-product-price">
-            <strong>{money(product.defaultPrice.final)} ₸</strong>
-            <span>от {money(installment(product.defaultPrice.final, 12))} ₸/мес</span>
+            <strong className="store-main-price">{money(product.defaultPrice.final)} ₸</strong>
+            <span className="store-installment-badge">от {money(installment(product.defaultPrice.final, 12))} ₸/мес</span>
           </div>
-          <p>{product.description}</p>
+          <p className="store-product-desc">{product.description}</p>
 
           <ProductConfigurator
             key={product.id}

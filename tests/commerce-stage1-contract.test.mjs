@@ -47,8 +47,8 @@ test("Contract: UI pricing and checkout bridge use the shared domain and server 
   assert.match(modal, /quoteConfiguration/);
   assert.doesNotMatch(modal, /basePrice \+ bundleDelta \+ stringsDelta/);
   assert.match(qr, /payment-report/);
-  assert.match(vpsHtml, /bundle\.js\?v=12/);
-  assert.doesNotMatch(vpsHtml, /bundle\.js\?v=11/);
+  assert.match(vpsHtml, /bundle\.js\?v=13/);
+  assert.doesNotMatch(vpsHtml, /bundle\.js\?v=12/);
 });
 
 test("Contract: client has no paid mutation and trusted confirmation is authenticated", async () => {
