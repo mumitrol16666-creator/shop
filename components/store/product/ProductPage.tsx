@@ -71,15 +71,18 @@ export function ProductPage({
             <div className="store-product-thumbs" aria-label="Галерея цветов">
               {galleryItems.map((item) => {
                 const isSelected = item.image === activeImage;
+                const matchedVariant = item.sku ? product.variants.find((v) => v.sku === item.sku) : null;
+                const isOutOfStock = Boolean(matchedVariant && (matchedVariant.status !== "active" || matchedVariant.availableQuantity <= 0));
+
                 return (
                   <button
                     key={item.image}
                     type="button"
-                    className={`store-thumb-btn ${isSelected ? "is-selected" : ""}`}
+                    className={`store-thumb-btn ${isSelected ? "is-selected" : ""} ${isOutOfStock ? "is-out-of-stock-thumb" : ""}`}
                     onClick={() => {
                       if (item.sku) setSelectedVariantSku(item.sku);
                     }}
-                    title={item.title}
+                    title={isOutOfStock ? `${item.title} (нет в наличии)` : item.title}
                   >
                     <Image
                       src={item.image}
@@ -89,7 +92,7 @@ export function ProductPage({
                       sizes="72px"
                       style={{ objectFit: "contain" }}
                     />
-                    
+                    {isOutOfStock && <span className="thumb-stock-badge">✕</span>}
                   </button>
                 );
               })}
@@ -97,9 +100,17 @@ export function ProductPage({
           )}
 
           <p className="store-gallery-caption">
-            {selectedVariant
-              ? `Выбран цвет: ${selectedVariant.title} (${selectedVariant.availableQuantity > 0 ? `в наличии ${selectedVariant.availableQuantity} шт.` : "нет в наличии"})`
-              : "Фотография товара · выберите цвет в панели справа для переключения фото"}
+            {selectedVariant ? (
+              selectedVariant.status === "active" && selectedVariant.availableQuantity > 0 ? (
+                <span>Выбран цвет: <strong>{selectedVariant.title}</strong> · в наличии {selectedVariant.availableQuantity} шт.</span>
+              ) : (
+                <span style={{ color: "#ff6b63", fontWeight: 700 }}>
+                  Выбран цвет: {selectedVariant.title} · ✕ Нет в наличии
+                </span>
+              )
+            ) : (
+              "Фотография товара · выберите цвет в панели справа"
+            )}
           </p>
         </section>
 

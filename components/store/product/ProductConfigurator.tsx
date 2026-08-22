@@ -37,6 +37,13 @@ export function ProductConfigurator({
   const [justAdded, setJustAdded] = useState(false);
 
   const selectedVariant = product.variants.find((variant) => variant.sku === variantSku);
+  const isVariantAvailable = Boolean(
+    selectedVariant &&
+    selectedVariant.status === "active" &&
+    selectedVariant.availableQuantity > 0
+  );
+  const maxQuantity = isVariantAvailable ? selectedVariant.availableQuantity : 0;
+
   const quote = useMemo(() => {
     if (!variantSku) return product.defaultPrice;
     try {
@@ -45,7 +52,6 @@ export function ProductConfigurator({
       return product.defaultPrice;
     }
   }, [product, variantSku, bundleSku, componentSkus]);
-  const maxQuantity = selectedVariant?.availableQuantity || 1;
 
   const toggleComponent = (sku: string) => {
     setComponentSkus((current) =>
@@ -54,8 +60,14 @@ export function ProductConfigurator({
   };
 
   const add = () => {
-    if (!variantSku) return;
-    commerceCart.add({ product, variantSku, bundleSku, componentSkus, quantity });
+    if (!variantSku || !isVariantAvailable || maxQuantity < 1) return;
+    commerceCart.add({
+      product,
+      variantSku,
+      bundleSku,
+      componentSkus,
+      quantity: Math.min(quantity, maxQuantity),
+    });
     setJustAdded(true);
     setTimeout(() => setJustAdded(false), 2000);
     onAdded?.();
@@ -178,16 +190,16 @@ export function ProductConfigurator({
           <button
             type="button"
             onClick={() => setQuantity((value) => Math.max(1, value - 1))}
-            disabled={quantity <= 1}
+            disabled={!isVariantAvailable || quantity <= 1}
             aria-label="Уменьшить количество"
           >
             −
           </button>
-          <span>{quantity}</span>
+          <span>{isVariantAvailable ? quantity : 0}</span>
           <button
             type="button"
             onClick={() => setQuantity((value) => Math.min(maxQuantity, value + 1))}
-            disabled={!variantSku || quantity >= maxQuantity}
+            disabled={!variantSku || !isVariantAvailable || quantity >= maxQuantity}
             aria-label="Увеличить количество"
           >
             +
@@ -197,7 +209,7 @@ export function ProductConfigurator({
 
       <button
         type="button"
-        className={`store-primary-action store-add-to-cart-btn ${justAdded ? "is-added-celebrate" : ""}`}
+        className={`store-primary-action store-add-to-cart-btn ${justAdded ? "is-added-celebrate" : ""} ${!maxQuantity ? "is-out-of-stock-btn" : ""}`}
         onClick={add}
         disabled={!variantSku || !maxQuantity}
       >
@@ -208,8 +220,12 @@ export function ProductConfigurator({
             </svg>
             Добавлено в корзину!
           </span>
+        ) : !variantSku ? (
+          "Выберите вариант"
+        ) : !maxQuantity ? (
+          "Нет в наличии"
         ) : (
-          variantSku ? "Добавить в корзину" : "Выберите вариант"
+          "Добавить в корзину"
         )}
       </button>
     </div>

@@ -131,6 +131,13 @@ export function CommerceCartProvider({
   }, [reconcileServer]);
 
   const add = useCallback((configuration: AddConfiguration) => {
+    const variant = configuration.product.variants.find(
+      (v) => v.sku === configuration.variantSku,
+    );
+    if (!variant || variant.status !== "active" || variant.availableQuantity <= 0) {
+      console.warn("cart_add_rejected_out_of_stock", { sku: configuration.variantSku });
+      return;
+    }
     const bundleSku = configuration.bundleSku || BUNDLE_SKUS.base;
     const componentSkus = configuration.componentSkus || [];
     const quote = quoteConfiguration(configuration.product, {
@@ -138,13 +145,17 @@ export function CommerceCartProvider({
       bundleSku,
       componentSkus,
     });
+    const addQuantity = Math.min(
+      Math.max(1, configuration.quantity),
+      variant.availableQuantity,
+    );
     const created = createCartDraftLine({
       productId: configuration.product.id,
       productSku: configuration.product.sku,
       variantSku: configuration.variantSku,
       bundleSku,
       componentSkus,
-      quantity: configuration.quantity,
+      quantity: addQuantity,
       observedPricingVersion: quote.pricingVersion,
       observedFinal: quote.final,
     });
@@ -152,7 +163,7 @@ export function CommerceCartProvider({
       const existing = current.lines.find((line) => line.lineId === created.lineId);
       const lines = existing
         ? current.lines.map((line) => line.lineId === created.lineId
-          ? { ...line, quantity: line.quantity + created.quantity }
+          ? { ...line, quantity: Math.min(variant.availableQuantity, line.quantity + created.quantity) }
           : line)
         : [...current.lines, created];
       return { schemaVersion: CART_SCHEMA_VERSION, updatedAt: new Date().toISOString(), lines };
