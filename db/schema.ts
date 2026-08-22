@@ -382,6 +382,8 @@ export const orders = sqliteTable(
     customerPhone: text("customer_phone").notNull(),
     customerCity: text("customer_city").notNull(),
     customerComment: text("customer_comment").notNull().default(""),
+    deliveryAddress: text("delivery_address").notNull().default(""),
+    preferredContactTime: text("preferred_contact_time").notNull().default(""),
     fulfilmentMethod: text("fulfilment_method").notNull(),
     paymentMethod: text("payment_method").notNull(),
     subtotalKzt: integer("subtotal_kzt").notNull(),

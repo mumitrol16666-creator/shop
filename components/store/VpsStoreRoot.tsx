@@ -17,6 +17,9 @@ function resolveRoute(pathname: string, products: ProductReadModel[]): StoreRout
   }
   if (pathname === "/picker") return { kind: "picker" };
   if (pathname === "/cart") return { kind: "cart" };
+  if (pathname === "/checkout") return { kind: "checkout" };
+  const orderToken = pathname.match(/^\/order\/([a-f0-9]{48})\/?$/)?.[1];
+  if (orderToken) return { kind: "order", token: orderToken };
   return { kind: "not-found" };
 }
 

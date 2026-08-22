@@ -12,7 +12,7 @@ export function HomePage({ products, onNotice }: { products: ProductReadModel[];
   const preview = inStock.slice(0, 8);
   return (
     <>
-      <div className="store-announcement">⚡ Бесплатная отстройка мастером · Доставка по Казахстану · Kaspi 0-0-12</div>
+      <div className="store-announcement">⚡ Бесплатная отстройка мастером · Доставка по Актобе · Kaspi Pay</div>
       <section className="store-home-hero">
         <div>
           <p className="store-eyebrow">MAESTRO MUSIC STORE · АКТОБЕ</p>
@@ -22,7 +22,7 @@ export function HomePage({ products, onNotice }: { products: ProductReadModel[];
             <Link href="/catalog" className="store-primary-action">Смотреть каталог</Link>
             <Link href="/picker" className="store-secondary-action">Подобрать для новичка</Link>
           </div>
-          <div className="store-home-stats"><span><strong>{inStock.length}</strong> моделей в наличии</span><span><strong>100%</strong> ручная проверка</span><span><strong>1–3 дня</strong> доставка по РК</span></div>
+          <div className="store-home-stats"><span><strong>{inStock.length}</strong> моделей в наличии</span><span><strong>100%</strong> ручная проверка</span><span><strong>Актобе</strong> самовывоз и доставка</span></div>
         </div>
         {featured && (
           <Link href={`/product/${featured.slug}`} className="store-featured-card">
@@ -62,10 +62,9 @@ export function HomePage({ products, onNotice }: { products: ProductReadModel[];
 
       <section className="store-reviews store-section"><p className="store-eyebrow">ОТЗЫВЫ</p><h2>Покупатели ценят подготовку инструмента</h2><div><blockquote>«Гитара пришла настроенной, ребёнок смог начать заниматься сразу.»<cite>Айгерим, Астана</cite></blockquote><blockquote>«ST-20 без фона, гриф удобный. Видно, что инструмент проверяли.»<cite>Данияр, Алматы</cite></blockquote><blockquote>«Помогли выбрать укулеле и быстро отправили в Шымкент.»<cite>Нурлан, Шымкент</cite></blockquote></div></section>
 
-      <section className="store-faq store-section"><p className="store-eyebrow">ЧАСТЫЕ ВОПРОСЫ</p><h2>Перед покупкой</h2><details><summary>Можно ли выбрать конкретный цвет?</summary><p>Да. На странице товара показаны реальные доступные варианты и их остатки.</p></details><details><summary>Инструмент действительно настраивают?</summary><p>Да, каждый инструмент проходит проверку и базовую доводку мастером.</p></details><details><summary>Как проходит доставка?</summary><p>Упаковываем инструмент и отправляем по Казахстану согласованной службой доставки.</p></details></section>
+      <section className="store-faq store-section"><p className="store-eyebrow">ЧАСТЫЕ ВОПРОСЫ</p><h2>Перед покупкой</h2><details><summary>Можно ли выбрать конкретный цвет?</summary><p>Да. На странице товара показаны реальные доступные варианты и их остатки.</p></details><details><summary>Инструмент действительно настраивают?</summary><p>Да, каждый инструмент проходит проверку и базовую доводку мастером.</p></details><details><summary>Как получить заказ?</summary><p>Доступны самовывоз из магазина и доставка по городу Актобе. Детали подтвердит менеджер.</p></details></section>
 
-      <footer className="store-footer"><div><strong>MAESTRO MUSIC STORE</strong><p>Актобе · Доставка по Казахстану</p></div><nav><Link href="/catalog">Каталог</Link><Link href="/picker">Подбор</Link><a href="https://wa.me/77775055788">WhatsApp</a></nav></footer>
+      <footer className="store-footer"><div><strong>MAESTRO MUSIC STORE</strong><p>Актобе · Самовывоз и доставка по городу</p></div><nav><Link href="/catalog">Каталог</Link><Link href="/picker">Подбор</Link><a href="https://wa.me/77775055788">WhatsApp</a></nav></footer>
     </>
   );
 }
-

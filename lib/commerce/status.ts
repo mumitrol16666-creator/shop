@@ -3,8 +3,8 @@ import type { OrderStatus } from "./types";
 
 const transitions: Record<OrderStatus, readonly OrderStatus[]> = {
   draft: ["pending_contact", "awaiting_payment", "cancelled"],
-  pending_contact: ["awaiting_payment", "cancelled", "expired"],
-  awaiting_payment: ["payment_reported", "cancelled", "expired"],
+  pending_contact: ["awaiting_payment", "paid", "cancelled", "expired"],
+  awaiting_payment: ["payment_reported", "paid", "cancelled", "expired"],
   payment_reported: ["paid", "cancelled", "expired"],
   paid: ["processing"],
   processing: ["completed", "cancelled"],

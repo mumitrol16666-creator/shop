@@ -41,6 +41,7 @@ type CartContextValue = {
   add: (configuration: AddConfiguration) => void;
   updateQuantity: (lineId: string, delta: number) => void;
   remove: (lineId: string) => void;
+  clear: () => void;
   acceptPriceChanges: () => void;
   reconcile: (force?: boolean) => Promise<CartReconciliation>;
   createOrder: (input: Omit<CreateOrderRequest, "cart">) => Promise<PublicOrder>;
@@ -176,6 +177,11 @@ export function CommerceCartProvider({
     }));
   }, []);
 
+  const clear = useCallback(() => {
+    setDraft(emptyCartDraft());
+    localStorage.removeItem(STORAGE_KEY);
+  }, []);
+
   const acceptPriceChanges = useCallback(() => {
     const currentById = new Map(reconciliation.lines.map((line) => [line.lineId, line]));
     setDraft((current) => ({
@@ -225,10 +231,11 @@ export function CommerceCartProvider({
     add,
     updateQuantity,
     remove,
+    clear,
     acceptPriceChanges,
     reconcile: reconcileServer,
     createOrder,
-  }), [draft, reconciliation, isReconciling, error, add, updateQuantity, remove, acceptPriceChanges, reconcileServer, createOrder]);
+  }), [draft, reconciliation, isReconciling, error, add, updateQuantity, remove, clear, acceptPriceChanges, reconcileServer, createOrder]);
 
   return <CommerceCartContext.Provider value={value}>{children}</CommerceCartContext.Provider>;
 }

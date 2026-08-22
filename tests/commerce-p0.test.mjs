@@ -83,12 +83,12 @@ test("P0: payment report handoff is structured and never claims paid", () => {
 });
 
 test("P0: UI wiring keeps one catalog source, explicit configuration and required contacts", async () => {
-  const [page, runtime, vpsRoot, configurator, cart, kaspi, css] = await Promise.all([
+  const [page, runtime, vpsRoot, configurator, checkout, kaspi, css] = await Promise.all([
     readSource("../app/page.tsx"),
     readSource("../components/store/StoreRuntime.tsx"),
     readSource("../components/store/VpsStoreRoot.tsx"),
     readSource("../components/store/product/ProductConfigurator.tsx"),
-    readSource("../components/CartDrawer.tsx"),
+    readSource("../components/store/checkout/CheckoutPage.tsx"),
     readSource("../components/KaspiQrModal.tsx"),
     readSource("../app/globals.css"),
   ]);
@@ -100,10 +100,10 @@ test("P0: UI wiring keeps one catalog source, explicit configuration and require
   assert.match(configurator, /product\.selectionRequired \? ""/);
   assert.match(configurator, /disabled=\{!variantSku \|\| !maxQuantity\}/);
   assert.match(configurator, /"Выберите вариант"/);
-  assert.match(cart, /reportValidity\(\)/);
-  assert.match(cart, /name="customerName"[\s\S]*?required/);
-  assert.match(cart, /name="customerPhone"[\s\S]*?required/);
-  assert.match(cart, /pattern="\(\?:\\D\*\\d\)\{10,\}\\D\*"/);
+  assert.match(checkout, /<form[\s\S]*?onSubmit=\{submit\}/);
+  assert.match(checkout, /name="customerName"[\s\S]{0,80}?required/);
+  assert.match(checkout, /name="customerPhone"[\s\S]{0,80}?required/);
+  assert.match(checkout, /pattern="\(\?:\\D\*\\d\)\{10,\}\\D\*"/);
   assert.match(kaspi, /payment-report/);
   assert.match(kaspi, /paymentStatus: "payment_reported"/);
   assert.match(kaspi, /Требуется ручная проверка/);

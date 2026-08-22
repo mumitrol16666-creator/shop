@@ -3,6 +3,11 @@ import { commerceError } from "./errors";
 import { stableHash } from "./pricing";
 import { assertOrderTransition } from "./status";
 import {
+  normalizeFulfilmentMethod,
+  normalizePaymentMethod,
+  orderDisplayId,
+} from "./checkout";
+import {
   COMMERCE_STATE_SCHEMA_VERSION,
   type CommerceStoreState,
   type CreateOrderRequest,
@@ -96,6 +101,8 @@ const normalizedPayload = (request: CreateOrderRequest) => ({
     phone: request.customer.phone.replace(/\s+/g, " ").trim(),
     city: request.customer.city.trim(),
     comment: request.customer.comment?.trim() || "",
+    deliveryAddress: request.customer.deliveryAddress?.trim() || "",
+    preferredContactTime: request.customer.preferredContactTime?.trim() || "",
   },
   fulfilment: { method: request.fulfilment.method.trim() },
   payment: { method: request.payment.method.trim() },
@@ -240,6 +247,8 @@ export function createOrderInMemory(input: {
 
   const customerName = input.request.customer.name.trim();
   const customerPhone = input.request.customer.phone.trim();
+  const fulfilmentMethod = normalizeFulfilmentMethod(input.request.fulfilment.method);
+  const paymentMethod = normalizePaymentMethod(input.request.payment.method);
   if (!customerName) {
     throw commerceError("INVALID_REQUEST", "Укажите имя покупателя.", {
       recoverable: true,
@@ -250,6 +259,25 @@ export function createOrderInMemory(input: {
     throw commerceError("INVALID_REQUEST", "Укажите корректный телефон.", {
       recoverable: true,
       field: "customer.phone",
+    });
+  }
+  if (!fulfilmentMethod) {
+    throw commerceError("INVALID_REQUEST", "Выберите самовывоз или доставку по Актобе.", {
+      recoverable: true,
+      field: "fulfilment.method",
+    });
+  }
+  const deliveryAddress = input.request.customer.deliveryAddress?.trim() || "";
+  if (fulfilmentMethod === "aktobe_delivery" && deliveryAddress.length < 5) {
+    throw commerceError("INVALID_REQUEST", "Укажите адрес доставки в Актобе.", {
+      recoverable: true,
+      field: "customer.deliveryAddress",
+    });
+  }
+  if (!paymentMethod) {
+    throw commerceError("INVALID_REQUEST", "Выберите способ оплаты.", {
+      recoverable: true,
+      field: "payment.method",
     });
   }
 
@@ -289,13 +317,15 @@ export function createOrderInMemory(input: {
     customerPhone,
     customerCity: input.request.customer.city.trim() || "Актобе",
     customerComment: input.request.customer.comment?.trim() || "",
-    fulfilmentMethod: input.request.fulfilment.method.trim() || "Самовывоз",
-    paymentMethod: input.request.payment.method.trim() || "Kaspi",
+    deliveryAddress,
+    preferredContactTime: input.request.customer.preferredContactTime?.trim().slice(0, 120) || "",
+    fulfilmentMethod,
+    paymentMethod,
     subtotal: reconciliation.totals.subtotal,
     discount: reconciliation.totals.discount,
     total: reconciliation.totals.final,
     currency: reconciliation.totals.currency,
-    status: "awaiting_payment",
+    status: paymentMethod === "kaspi_pay" ? "awaiting_payment" : "pending_contact",
     isTest: input.request.testMode === true,
     createdAt: nowIso,
     updatedAt: nowIso,
@@ -334,7 +364,7 @@ export function createOrderInMemory(input: {
   const history: OrderStatusHistoryRecord = {
     id: crypto.randomUUID(),
     orderId,
-    toStatus: "awaiting_payment",
+    toStatus: order.status,
     actorType: "customer",
     reason: `order_created:${publicId}`,
     createdAt: nowIso,
@@ -384,10 +414,16 @@ export function publicOrderFromState(
   }
   return {
     orderId: order.id,
+    displayId: orderDisplayId(order.createdAt, order.publicToken),
     publicToken: order.publicToken,
     status: order.status,
     paymentStatus: payment.status,
-    customer: { name: order.customerName, city: order.customerCity },
+    customer: {
+      name: order.customerName,
+      city: order.customerCity,
+      deliveryAddress: order.deliveryAddress || undefined,
+      preferredContactTime: order.preferredContactTime || undefined,
+    },
     fulfilmentMethod: order.fulfilmentMethod,
     paymentMethod: order.paymentMethod,
     items: items.map((item) => ({
@@ -410,6 +446,10 @@ export function publicOrderFromState(
     },
     createdAt: order.createdAt,
     updatedAt: order.updatedAt,
+    reservationExpiresAt: state.reservations
+      .filter((reservation) => reservation.orderId === order.id && reservation.status === "reserved")
+      .map((reservation) => reservation.expiresAt)
+      .sort()[0],
   };
 }
 

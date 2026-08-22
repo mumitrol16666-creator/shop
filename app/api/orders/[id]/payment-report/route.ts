@@ -6,6 +6,7 @@ import {
 } from "../../../../../lib/commerce/api-support";
 import { commerceError } from "../../../../../lib/commerce/errors";
 import { reportPaymentD1 } from "../../../../../lib/commerce/d1-store";
+import { notifyPaymentReported } from "../../../../../lib/commerce/mystore-info";
 
 export const dynamic = "force-dynamic";
 
@@ -34,6 +35,7 @@ export async function POST(request: Request) {
       status: order.status,
       durationMs: Date.now() - startedAt,
     });
+    await notifyPaymentReported(order, new URL(request.url).origin);
     return Response.json({ order }, { headers: noStoreHeaders });
   } catch (error) {
     return commerceFailure(error);

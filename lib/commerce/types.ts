@@ -221,6 +221,8 @@ export type OrderRecord = {
   customerPhone: string;
   customerCity: string;
   customerComment: string;
+  deliveryAddress: string;
+  preferredContactTime: string;
   fulfilmentMethod: string;
   paymentMethod: string;
   subtotal: number;
@@ -305,6 +307,8 @@ export type CreateOrderRequest = {
     phone: string;
     city: string;
     comment?: string;
+    deliveryAddress?: string;
+    preferredContactTime?: string;
   };
   fulfilment: {
     method: string;
@@ -317,12 +321,15 @@ export type CreateOrderRequest = {
 
 export type PublicOrder = {
   orderId: string;
+  displayId: string;
   publicToken: string;
   status: OrderStatus;
   paymentStatus: PaymentStatus;
   customer: {
     name: string;
     city: string;
+    deliveryAddress?: string;
+    preferredContactTime?: string;
   };
   fulfilmentMethod: string;
   paymentMethod: string;
@@ -346,4 +353,5 @@ export type PublicOrder = {
   };
   createdAt: string;
   updatedAt: string;
+  reservationExpiresAt?: string;
 };

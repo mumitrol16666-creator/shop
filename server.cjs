@@ -66,6 +66,38 @@ function sendJson(res, status, payload, extraHeaders = {}) {
   res.end(JSON.stringify(payload));
 }
 
+function escapeTelegramHtml(value) {
+  return String(value || "").replace(/[&<>]/g, (symbol) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" })[symbol]);
+}
+
+async function sendMyStoreInfo(text) {
+  const token = String(process.env.TELEGRAM_BOT_TOKEN || "").trim();
+  const chatId = String(process.env.TELEGRAM_CHAT_ID || "").trim();
+  if (!token || !chatId) {
+    console.warn("mystore_info_skipped", { reason: "telegram_not_configured" });
+    return false;
+  }
+  try {
+    const response = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ chat_id: chatId, text, parse_mode: "HTML", disable_web_page_preview: true }),
+      signal: AbortSignal.timeout(5000),
+    });
+    if (!response.ok) console.error("mystore_info_failed", { status: response.status });
+    return response.ok;
+  } catch (error) {
+    console.error("mystore_info_failed", { error: error?.message || "unknown" });
+    return false;
+  }
+}
+
+function orderPublicUrl(req, order) {
+  const proto = String(req.headers["x-forwarded-proto"] || "http").split(",")[0].trim();
+  const host = String(req.headers["x-forwarded-host"] || req.headers.host || "shop.maestro.com.kz").split(",")[0].trim();
+  return `${proto}://${host}/order/${order.publicToken}`;
+}
+
 function parseCookies(req) {
   const result = {};
   for (const part of String(req.headers.cookie || "").split(";")) {
@@ -412,6 +444,11 @@ async function handleCommerceRequest(req, res, pathname) {
         test: smoke,
         durationMs: Date.now() - startedAt,
       });
+      if (!result.replayed && !smoke) {
+        const items = result.order.items.map((item) => `• ${escapeTelegramHtml(item.title)} × ${item.quantity}`).join("\n");
+        const address = result.order.customer.deliveryAddress ? `\n📍 ${escapeTelegramHtml(result.order.customer.deliveryAddress)}` : "";
+        void sendMyStoreInfo(`<b>🛒 Новый заказ ${escapeTelegramHtml(result.order.displayId)}</b>\n${items}\n\n<b>${Number(result.order.totals.final).toLocaleString("ru-RU")} ₸</b>\nКлиент: ${escapeTelegramHtml(result.order.customer.name)} · ${escapeTelegramHtml(payload.customer.phone)}${address}\n<a href="${escapeTelegramHtml(orderPublicUrl(req, result.order))}">Открыть заказ</a>`);
+      }
       sendJson(res, result.replayed ? 200 : 201, { order: result.order, replayed: result.replayed });
       return;
     }
@@ -436,6 +473,7 @@ async function handleCommerceRequest(req, res, pathname) {
         status: order.status,
         durationMs: Date.now() - startedAt,
       });
+      void sendMyStoreInfo(`<b>💳 Оплата отправлена на проверку</b>\nЗаказ ${escapeTelegramHtml(order.displayId)} · <b>${Number(order.totals.final).toLocaleString("ru-RU")} ₸</b>\n<a href="${escapeTelegramHtml(orderPublicUrl(req, order))}">Открыть заказ</a>`);
       sendJson(res, 200, { order });
       return;
     }
@@ -873,7 +911,8 @@ const server = http.createServer((req, res) => {
   const normalizedPath = pathname.length > 1 ? pathname.replace(/\/+$/, "") : pathname;
   const categoryMatch = normalizedPath.match(/^\/catalog\/([^/]+)$/);
   const productMatch = normalizedPath.match(/^\/product\/([^/]+)$/);
-  const knownStaticRoute = normalizedPath === "/catalog" || normalizedPath === "/picker" || normalizedPath === "/cart";
+  const orderPageMatch = normalizedPath.match(/^\/order\/([a-f0-9]{48})$/);
+  const knownStaticRoute = normalizedPath === "/catalog" || normalizedPath === "/picker" || normalizedPath === "/cart" || normalizedPath === "/checkout" || Boolean(orderPageMatch);
   const knownCategoryRoute = Boolean(categoryMatch && commerceCore.isCanonicalCategorySlug(categoryMatch[1]));
   const knownProductRoute = Boolean(productMatch && commerceCore.productByIdentifier(baseCommerceCatalog(), {
     slug: decodeURIComponent(productMatch[1]),

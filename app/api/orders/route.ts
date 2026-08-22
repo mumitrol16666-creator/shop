@@ -11,6 +11,7 @@ import {
 } from "../../../lib/commerce/api-support";
 import type { CreateOrderRequest } from "../../../lib/commerce/types";
 import { stableHash } from "../../../lib/commerce/pricing";
+import { notifyNewOrder } from "../../../lib/commerce/mystore-info";
 
 export const dynamic = "force-dynamic";
 
@@ -50,6 +51,9 @@ export async function POST(request: Request) {
       test: includeSmoke,
       durationMs: Date.now() - startedAt,
     });
+    if (!result.replayed && !includeSmoke) {
+      await notifyNewOrder(result.order, new URL(request.url).origin, payload.customer.phone);
+    }
     return Response.json(result, {
       status: result.replayed ? 200 : 201,
       headers: noStoreHeaders,

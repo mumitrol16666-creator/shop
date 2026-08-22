@@ -128,7 +128,7 @@ export function ProductPage({
 
           <div className="store-delivery-summary">
             <span>✓ Бесплатная отстройка мастером перед отправкой</span>
-            <span>✓ Экспресс-доставка до двери по Казахстану</span>
+            <span>✓ Самовывоз и доставка по Актобе</span>
             <span>✓ Подарочный видеокурс и поддержка школы</span>
           </div>
         </section>

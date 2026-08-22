@@ -18,7 +18,7 @@ async function migratedDatabase(t) {
   const directory = await mkdtemp(path.join(tmpdir(), "maestro-stage1-db-"));
   const database = path.join(directory, "commerce.sqlite");
   t.after(() => rm(directory, { recursive: true, force: true }));
-  for (const file of ["0000_product_catalog.sql", "0001_premium_rocket_raccoon.sql", "0002_absurd_meggan.sql"]) {
+  for (const file of ["0000_product_catalog.sql", "0001_premium_rocket_raccoon.sql", "0002_absurd_meggan.sql", "0003_stage3_checkout.sql"]) {
     const sql = normalizeMigration(await readFile(path.join(root, "drizzle", file), "utf8"));
     const result = sqlite(database, `.bail on\nPRAGMA foreign_keys=ON;\n${sql}`);
     assert.equal(result.status, 0, result.stderr);

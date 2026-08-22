@@ -1,6 +1,7 @@
 import { reconcileCart } from "./cart";
 import { ensureSeedCatalogInD1, type D1BindingLike } from "./d1-catalog";
 import { commerceError } from "./errors";
+import { orderDisplayId } from "./checkout";
 import {
   assertCreateOrderRequest,
   createOrderInMemory,
@@ -107,7 +108,7 @@ async function readPublicOrderBy(
   if (!order) {
     throw commerceError("ORDER_NOT_FOUND", "Заказ не найден.", { recoverable: false });
   }
-  const [itemsResult, payment] = await Promise.all([
+  const [itemsResult, payment, reservation] = await Promise.all([
     d1
       .prepare("SELECT * FROM order_items WHERE order_id = ? ORDER BY created_at, id")
       .bind(String(order.id))
@@ -116,6 +117,10 @@ async function readPublicOrderBy(
       .prepare("SELECT * FROM payments WHERE order_id = ? LIMIT 1")
       .bind(String(order.id))
       .first<Record<string, unknown>>(),
+    d1
+      .prepare("SELECT expires_at FROM stock_reservations WHERE order_id = ? AND status = 'reserved' ORDER BY expires_at LIMIT 1")
+      .bind(String(order.id))
+      .first<{ expires_at: string }>(),
   ]);
   if (!payment) {
     throw commerceError("INTERNAL_ERROR", "У заказа отсутствует платёжная запись.", {
@@ -124,12 +129,15 @@ async function readPublicOrderBy(
   }
   return {
     orderId: String(order.id),
+    displayId: orderDisplayId(String(order.created_at), String(order.public_token)),
     publicToken: String(order.public_token),
     status: String(order.status) as OrderStatus,
     paymentStatus: String(payment.status) as PaymentStatus,
     customer: {
       name: String(order.customer_name),
       city: String(order.customer_city),
+      deliveryAddress: String(order.delivery_address || "") || undefined,
+      preferredContactTime: String(order.preferred_contact_time || "") || undefined,
     },
     fulfilmentMethod: String(order.fulfilment_method),
     paymentMethod: String(order.payment_method),
@@ -153,6 +161,7 @@ async function readPublicOrderBy(
     },
     createdAt: String(order.created_at),
     updatedAt: String(order.updated_at),
+    reservationExpiresAt: reservation?.expires_at,
   };
 }
 
@@ -254,10 +263,11 @@ export async function createOrderD1(input: {
     input.d1
       .prepare(`INSERT INTO orders (
         id, public_token, idempotency_key, payload_hash, customer_name,
-        customer_phone, customer_city, customer_comment, fulfilment_method,
+        customer_phone, customer_city, customer_comment, delivery_address,
+        preferred_contact_time, fulfilment_method,
         payment_method, subtotal_kzt, discount_kzt, total_kzt, currency,
         status, is_test, created_at, updated_at
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'KZT', ?, ?, ?, ?)`)
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'KZT', ?, ?, ?, ?)`)
       .bind(
         order.id,
         order.publicToken,
@@ -267,6 +277,8 @@ export async function createOrderD1(input: {
         order.customerPhone,
         order.customerCity,
         order.customerComment,
+        order.deliveryAddress,
+        order.preferredContactTime,
         order.fulfilmentMethod,
         order.paymentMethod,
         order.subtotal,
@@ -490,7 +502,7 @@ export async function confirmPaymentD1(input: {
               reserved_quantity = MAX(0, reserved_quantity - ?),
               updated_at = ?
           WHERE id = ? AND EXISTS (
-            SELECT 1 FROM orders WHERE id = ? AND status = 'payment_reported'
+            SELECT 1 FROM orders WHERE id = ? AND status IN ('pending_contact', 'awaiting_payment', 'payment_reported')
           )`)
         .bind(reservation.quantity, reservation.quantity, nowIso, reservation.variant_id, order.id),
     ),
@@ -498,11 +510,11 @@ export async function confirmPaymentD1(input: {
       .prepare(`INSERT INTO order_status_history (
         id, order_id, from_status, to_status, actor_type, actor_id, reason, created_at
       ) SELECT ?, ?, ?, 'paid', ?, ?, 'trusted_payment_confirmation', ?
-        WHERE EXISTS (SELECT 1 FROM orders WHERE id = ? AND status = 'payment_reported')`)
+        WHERE EXISTS (SELECT 1 FROM orders WHERE id = ? AND status IN ('pending_contact', 'awaiting_payment', 'payment_reported'))`)
       .bind(crypto.randomUUID(), order.id, order.status, input.actorType, input.actorId ?? null, nowIso, order.id),
     input.d1.prepare("UPDATE stock_reservations SET status = 'confirmed', updated_at = ? WHERE order_id = ? AND status = 'reserved'").bind(nowIso, order.id),
-    input.d1.prepare("UPDATE payments SET status = 'paid', verified_at = ?, updated_at = ? WHERE order_id = ? AND status = 'payment_reported'").bind(nowIso, nowIso, order.id),
-    input.d1.prepare("UPDATE orders SET status = 'paid', updated_at = ? WHERE id = ? AND status = 'payment_reported'").bind(nowIso, order.id),
+    input.d1.prepare("UPDATE payments SET status = 'paid', verified_at = ?, updated_at = ? WHERE order_id = ? AND status IN ('awaiting_payment', 'payment_reported')").bind(nowIso, nowIso, order.id),
+    input.d1.prepare("UPDATE orders SET status = 'paid', updated_at = ? WHERE id = ? AND status IN ('pending_contact', 'awaiting_payment', 'payment_reported')").bind(nowIso, order.id),
   ]);
   return readPublicOrderBy(input.d1, "public_token", order.public_token);
 }

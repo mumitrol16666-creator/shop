@@ -33,16 +33,18 @@ test("Contract: cart persistence is versioned identifiers-only and reconciles on
 });
 
 test("Contract: UI pricing and checkout bridge use the shared domain and server order", async () => {
-  const [page, runtime, configurator, modal, qr, vpsHtml] = await Promise.all([
+  const [page, runtime, checkout, configurator, modal, qr, vpsHtml] = await Promise.all([
     source("../app/page.tsx"),
     source("../components/store/StoreRuntime.tsx"),
+    source("../components/store/checkout/CheckoutPage.tsx"),
     source("../components/store/product/ProductConfigurator.tsx"),
     source("../components/ProductModal.tsx"),
     source("../components/KaspiQrModal.tsx"),
     source("../public/index.html"),
   ]);
   assert.match(page, /commerceCatalog\(\)/);
-  assert.match(runtime, /cart\.createOrder/);
+  assert.match(runtime, /<CheckoutPage/);
+  assert.match(checkout, /cart\.createOrder/);
   assert.match(configurator, /quoteConfiguration/);
   assert.match(modal, /quoteConfiguration/);
   assert.doesNotMatch(modal, /basePrice \+ bundleDelta \+ stringsDelta/);

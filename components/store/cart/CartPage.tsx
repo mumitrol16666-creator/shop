@@ -5,7 +5,7 @@ import Link from "next/link";
 import { money } from "../../../lib/catalog-data";
 import { useCommerceCart } from "../../CommerceCartProvider";
 
-export function CartPage({ onCheckout }: { onCheckout: () => void }) {
+export function CartPage() {
   const cart = useCommerceCart();
   const lines = cart.reconciliation.lines;
   return (
@@ -31,7 +31,7 @@ export function CartPage({ onCheckout }: { onCheckout: () => void }) {
             {cart.isReconciling && <p role="status">Проверяем цены и остатки…</p>}
             {cart.error && <p role="alert">{cart.error}</p>}
             {cart.reconciliation.state === "changed" && <button type="button" onClick={cart.acceptPriceChanges}>Принять новую цену</button>}
-            <button type="button" className="store-primary-action" onClick={onCheckout} disabled={cart.reconciliation.state !== "ready"}>Продолжить оформление</button>
+            {cart.reconciliation.state === "ready" ? <Link className="store-primary-action" href="/checkout">Продолжить оформление</Link> : <button type="button" className="store-primary-action" disabled>Продолжить оформление</button>}
             <Link href="/catalog" className="store-text-link">Продолжить покупки</Link>
           </aside>
         </div>
@@ -39,4 +39,3 @@ export function CartPage({ onCheckout }: { onCheckout: () => void }) {
     </div>
   );
 }
-
