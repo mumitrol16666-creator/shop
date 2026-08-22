@@ -707,12 +707,17 @@ export function PurchaserView({
       };
 
       setStoredProducts((current) => {
-        const withoutSaved = current.filter(
+        const index = current.findIndex(
           (p) =>
-            String(p.id) !== String(updatedProduct.id) &&
-            (p.sku && updatedProduct.sku ? p.sku.toLowerCase() !== updatedProduct.sku.toLowerCase() : true),
+            String(p.id) === String(updatedProduct.id) ||
+            (p.sku && updatedProduct.sku && p.sku.toLowerCase() === updatedProduct.sku.toLowerCase()),
         );
-        return [...withoutSaved, updatedProduct];
+        if (index >= 0) {
+          const copy = [...current];
+          copy[index] = updatedProduct;
+          return copy;
+        }
+        return [updatedProduct, ...current];
       });
 
       setEditingProductId(data.product.databaseId || String(data.product.id));
@@ -1550,322 +1555,399 @@ export function PurchaserView({
             </div>
           )}
 
-          {/* TAB 4: PRICING & UNIT ECONOMICS */}
+          {/* TAB 2: PRICING & UNIT ECONOMICS */}
           {activeTab === "pricing" && (
-            <div className="tab-pane-content">
+            <div className="tab-pane-content pricing-pane">
               <div className="tab-section-head">
                 <strong>Калькулятор себестоимости и Kaspi Рассрочки 0-0-12</strong>
                 <p>Прямой расчет юнит-экономики из Китая с учетом комиссий, налогов и чистой маржи.</p>
               </div>
 
-              <div className="calculator-form">
-                <label>
-                  Валюта закупки
-                  <select
-                    value={currency}
-                    onChange={(e) => {
-                      setCurrency(e.target.value as "CNY" | "USD" | "KZT");
+              {/* 1. Блок расходов и логистики */}
+              <div className="pricing-section-block">
+                <div className="pricing-section-header">
+                  <span className="pricing-badge-step">1</span>
+                  <div>
+                    <strong>Закупка и логистика (Китай / Импорт)</strong>
+                    <small>Базовые затраты на закупку товара и доставку в Казахстан</small>
+                  </div>
+                </div>
+
+                <div className="pricing-grid-cards">
+                  <div className="editor-field-card">
+                    <span className="field-label-text">Валюта закупки</span>
+                    <select
+                      value={currency}
+                      onChange={(e) => {
+                        setCurrency(e.target.value as "CNY" | "USD" | "KZT");
+                        setIsDirty(true);
+                      }}
+                    >
+                      <option value="CNY">¥ Юань (CNY)</option>
+                      <option value="USD">$ Доллар (USD)</option>
+                      <option value="KZT">₸ Тенге (KZT)</option>
+                    </select>
+                  </div>
+
+                  {currency === "CNY" && (
+                    <div className="editor-field-card">
+                      <span className="field-label-text">Курс юаня, ₸</span>
+                      <input
+                        type="number"
+                        step="0.1"
+                        value={cnyRate}
+                        onFocus={(e) => e.target.select()}
+                        onChange={(e) => {
+                          setCnyRate(+e.target.value);
+                          setIsDirty(true);
+                        }}
+                      />
+                    </div>
+                  )}
+
+                  {currency === "USD" && (
+                    <div className="editor-field-card">
+                      <span className="field-label-text">Курс доллара, ₸</span>
+                      <input
+                        type="number"
+                        step="1"
+                        value={usdRate}
+                        onFocus={(e) => e.target.select()}
+                        onChange={(e) => {
+                          setUsdRate(+e.target.value);
+                          setIsDirty(true);
+                        }}
+                      />
+                    </div>
+                  )}
+
+                  <div className="editor-field-card">
+                    <span className="field-label-text">Закупка за единицу ({currency})</span>
+                    <input
+                      type="number"
+                      value={purchase === 0 ? "" : purchase}
+                      onFocus={(e) => e.target.select()}
+                      onChange={(e) => {
+                        setPurchase(+e.target.value);
+                        setIsDirty(true);
+                      }}
+                    />
+                  </div>
+
+                  <div className="editor-field-card">
+                    <span className="field-label-text">Доставка по Китаю, ₸</span>
+                    <input
+                      type="number"
+                      value={delivery === 0 ? "" : delivery}
+                      onFocus={(e) => e.target.select()}
+                      onChange={(e) => {
+                        setDelivery(+e.target.value);
+                        setIsDirty(true);
+                      }}
+                    />
+                  </div>
+
+                  <div className="editor-field-card">
+                    <span className="field-label-text">Карго / Доставка в РК, ₸</span>
+                    <input
+                      type="number"
+                      value={cargo === 0 ? "" : cargo}
+                      onFocus={(e) => e.target.select()}
+                      onChange={(e) => {
+                        setCargo(+e.target.value);
+                        setIsDirty(true);
+                      }}
+                    />
+                  </div>
+
+                  <div className="editor-field-card">
+                    <span className="field-label-text">Таможня / Оформление, ₸</span>
+                    <input
+                      type="number"
+                      value={customs === 0 ? "" : customs}
+                      onFocus={(e) => e.target.select()}
+                      onChange={(e) => {
+                        setCustoms(+e.target.value);
+                        setIsDirty(true);
+                      }}
+                    />
+                  </div>
+
+                  <div className="editor-field-card">
+                    <span className="field-label-text">Упаковка / Коробка, ₸</span>
+                    <input
+                      type="number"
+                      value={packaging === 0 ? "" : packaging}
+                      onFocus={(e) => e.target.select()}
+                      onChange={(e) => {
+                        setPackaging(+e.target.value);
+                        setIsDirty(true);
+                      }}
+                    />
+                  </div>
+
+                  <div className="editor-field-card">
+                    <span className="field-label-text">Доводка мастера, ₸</span>
+                    <input
+                      type="number"
+                      value={setupCost === 0 ? "" : setupCost}
+                      onFocus={(e) => e.target.select()}
+                      onChange={(e) => {
+                        setSetupCost(+e.target.value);
+                        setIsDirty(true);
+                      }}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* 2. Блок налогов и комиссий */}
+              <div className="pricing-section-block">
+                <div className="pricing-section-header">
+                  <span className="pricing-badge-step">2</span>
+                  <div>
+                    <strong>Маркетинг, налоги и Kaspi Рассрочка</strong>
+                    <small>Комиссии банков, продавца и маркетинговые издержки</small>
+                  </div>
+                </div>
+
+                <div className="pricing-grid-cards">
+                  <div className="editor-field-card">
+                    <span className="field-label-text">Маркетинг / Лид, ₸</span>
+                    <input
+                      type="number"
+                      value={marketingCost === 0 ? "" : marketingCost}
+                      onFocus={(e) => e.target.select()}
+                      onChange={(e) => {
+                        setMarketingCost(+e.target.value);
+                        setIsDirty(true);
+                      }}
+                    />
+                  </div>
+
+                  <div className="editor-field-card">
+                    <span className="field-label-text">Прочие расходы, ₸</span>
+                    <input
+                      type="number"
+                      value={other === 0 ? "" : other}
+                      onFocus={(e) => e.target.select()}
+                      onChange={(e) => {
+                        setOther(+e.target.value);
+                        setIsDirty(true);
+                      }}
+                    />
+                  </div>
+
+                  <div className="editor-field-card">
+                    <span className="field-label-text">Налог (УСН), %</span>
+                    <input
+                      type="number"
+                      value={taxPercent === 0 ? "" : taxPercent}
+                      onFocus={(e) => e.target.select()}
+                      onChange={(e) => {
+                        setTaxPercent(+e.target.value);
+                        setIsDirty(true);
+                      }}
+                    />
+                  </div>
+
+                  <div className="editor-field-card">
+                    <span className="field-label-text">Kaspi Рассрочка, %</span>
+                    <input
+                      type="number"
+                      value={bankPercent === 0 ? "" : bankPercent}
+                      onFocus={(e) => e.target.select()}
+                      onChange={(e) => {
+                        setBankPercent(+e.target.value);
+                        setIsDirty(true);
+                      }}
+                    />
+                  </div>
+
+                  <div className="editor-field-card">
+                    <span className="field-label-text">Срок рассрочки, мес.</span>
+                    <input
+                      type="number"
+                      value={installmentMonths === 0 ? "" : installmentMonths}
+                      onFocus={(e) => e.target.select()}
+                      onChange={(e) => {
+                        setInstallmentMonths(+e.target.value);
+                        setIsDirty(true);
+                      }}
+                    />
+                  </div>
+
+                  <div className="editor-field-card">
+                    <span className="field-label-text">Комиссия продавца, %</span>
+                    <input
+                      type="number"
+                      value={sellerPercent === 0 ? "" : sellerPercent}
+                      onFocus={(e) => e.target.select()}
+                      onChange={(e) => {
+                        setSellerPercent(+e.target.value);
+                        setIsDirty(true);
+                      }}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* 3. Режим ценообразования */}
+              <div className="pricing-section-block">
+                <div className="pricing-section-header">
+                  <span className="pricing-badge-step">3</span>
+                  <div>
+                    <strong>Режим расчета розничной цены</strong>
+                    <small>Выберите автоматический расчёт по целевой марже или ручной фикс</small>
+                  </div>
+                </div>
+
+                <div className="pricing-mode-toolbar">
+                  <button
+                    type="button"
+                    className={`pricing-mode-btn ${!manualPricing ? "active" : ""}`}
+                    onClick={() => {
+                      setManualPricing(false);
                       setIsDirty(true);
                     }}
                   >
-                    <option value="CNY">¥ Юань (CNY)</option>
-                    <option value="USD">$ Доллар (USD)</option>
-                    <option value="KZT">₸ Тенге (KZT)</option>
-                  </select>
-                </label>
-                {currency === "CNY" && (
-                  <label>
-                    Курс юаня, ₸
-                    <input
-                      type="number"
-                      step="0.1"
-                      value={cnyRate}
-                      onFocus={(e) => e.target.select()}
-                      onChange={(e) => {
-                        setCnyRate(+e.target.value);
-                        setIsDirty(true);
-                      }}
-                    />
-                  </label>
-                )}
-                {currency === "USD" && (
-                  <label>
-                    Курс доллара, ₸
-                    <input
-                      type="number"
-                      step="1"
-                      value={usdRate}
-                      onFocus={(e) => e.target.select()}
-                      onChange={(e) => {
-                        setUsdRate(+e.target.value);
-                        setIsDirty(true);
-                      }}
-                    />
-                  </label>
-                )}
-                <label>
-                  Закупка за единицу
-                  <input
-                    type="number"
-                    value={purchase === 0 ? "" : purchase}
-                    onFocus={(e) => e.target.select()}
-                    onChange={(e) => {
-                      setPurchase(+e.target.value);
-                      setIsDirty(true);
-                    }}
-                  />
-                </label>
-                <label>
-                  Доставка по Китаю, ₸
-                  <input
-                    type="number"
-                    value={delivery === 0 ? "" : delivery}
-                    onFocus={(e) => e.target.select()}
-                    onChange={(e) => {
-                      setDelivery(+e.target.value);
-                      setIsDirty(true);
-                    }}
-                  />
-                </label>
-                <label>
-                  Карго / Доставка в РК, ₸
-                  <input
-                    type="number"
-                    value={cargo === 0 ? "" : cargo}
-                    onFocus={(e) => e.target.select()}
-                    onChange={(e) => {
-                      setCargo(+e.target.value);
-                      setIsDirty(true);
-                    }}
-                  />
-                </label>
-                <label>
-                  Таможня / Оформление, ₸
-                  <input
-                    type="number"
-                    value={customs === 0 ? "" : customs}
-                    onFocus={(e) => e.target.select()}
-                    onChange={(e) => {
-                      setCustoms(+e.target.value);
-                      setIsDirty(true);
-                    }}
-                  />
-                </label>
-                <label>
-                  Упаковка / Коробка, ₸
-                  <input
-                    type="number"
-                    value={packaging === 0 ? "" : packaging}
-                    onFocus={(e) => e.target.select()}
-                    onChange={(e) => {
-                      setPackaging(+e.target.value);
-                      setIsDirty(true);
-                    }}
-                  />
-                </label>
-                <label>
-                  Доводка / Отстройка мастера, ₸
-                  <input
-                    type="number"
-                    value={setupCost === 0 ? "" : setupCost}
-                    onFocus={(e) => e.target.select()}
-                    onChange={(e) => {
-                      setSetupCost(+e.target.value);
-                      setIsDirty(true);
-                    }}
-                  />
-                </label>
-                <label>
-                  Маркетинг / Лид, ₸
-                  <input
-                    type="number"
-                    value={marketingCost === 0 ? "" : marketingCost}
-                    onFocus={(e) => e.target.select()}
-                    onChange={(e) => {
-                      setMarketingCost(+e.target.value);
-                      setIsDirty(true);
-                    }}
-                  />
-                </label>
-                <label>
-                  Прочие расходы, ₸
-                  <input
-                    type="number"
-                    value={other === 0 ? "" : other}
-                    onFocus={(e) => e.target.select()}
-                    onChange={(e) => {
-                      setOther(+e.target.value);
-                      setIsDirty(true);
-                    }}
-                  />
-                </label>
-                <label>
-                  Налог (УСН), %
-                  <input
-                    type="number"
-                    value={taxPercent === 0 ? "" : taxPercent}
-                    onFocus={(e) => e.target.select()}
-                    onChange={(e) => {
-                      setTaxPercent(+e.target.value);
-                      setIsDirty(true);
-                    }}
-                  />
-                </label>
-                <label>
-                  Kaspi Рассрочка, %
-                  <input
-                    type="number"
-                    value={bankPercent === 0 ? "" : bankPercent}
-                    onFocus={(e) => e.target.select()}
-                    onChange={(e) => {
-                      setBankPercent(+e.target.value);
-                      setIsDirty(true);
-                    }}
-                  />
-                </label>
-                <label>
-                  Срок рассрочки, мес.
-                  <input
-                    type="number"
-                    value={installmentMonths === 0 ? "" : installmentMonths}
-                    onFocus={(e) => e.target.select()}
-                    onChange={(e) => {
-                      setInstallmentMonths(+e.target.value);
-                      setIsDirty(true);
-                    }}
-                  />
-                </label>
-                <label>
-                  Комиссия продавца, %
-                  <input
-                    type="number"
-                    value={sellerPercent === 0 ? "" : sellerPercent}
-                    onFocus={(e) => e.target.select()}
-                    onChange={(e) => {
-                      setSellerPercent(+e.target.value);
-                      setIsDirty(true);
-                    }}
-                  />
-                </label>
-                <label>
-                  Желаемая прибыль (маржа), %
-                  <input
-                    type="number"
-                    value={markup === 0 ? "" : markup}
-                    onFocus={(e) => e.target.select()}
-                    onChange={(e) => {
-                      setMarkup(+e.target.value);
-                      setIsDirty(true);
-                    }}
-                  />
-                </label>
-                <label>
-                  Итоговая розничная цена, ₸
-                  <input
-                    type="number"
-                    value={
-                      Math.round(manualPricing ? manualPrice : recommendedPrice) === 0
-                        ? ""
-                        : Math.round(manualPricing ? manualPrice : recommendedPrice)
-                    }
-                    onFocus={(e) => e.target.select()}
-                    onChange={(e) => {
-                      setManualPricing(true);
-                      setManualPrice(+e.target.value);
-                      setIsDirty(true);
-                    }}
-                  />
-                </label>
-                <label className="toggle-label">
-                  Режим цены
+                    ⚡ Автоматически по марже ({markup}%)
+                  </button>
                   <button
                     type="button"
-                    className={manualPricing ? "toggle-button active" : "toggle-button"}
+                    className={`pricing-mode-btn ${manualPricing ? "active" : ""}`}
                     onClick={() => {
-                      setManualPricing((value) => !value);
+                      setManualPricing(true);
                       setManualPrice(Math.round(recommendedPrice));
                       setIsDirty(true);
                     }}
                   >
-                    {manualPricing ? "Ручная" : "Автоматическая"}
+                    ✍️ Ручная фиксированная цена
                   </button>
-                </label>
-              </div>
-
-              {/* Discount Section */}
-              <div className="card-subhead between" style={{ marginTop: "24px" }}>
-                <div>
-                  <strong>Скидка и старая зачёркнутая цена (Sale)</strong>
-                  <span>Привлечение внимания покупателей на витрине.</span>
                 </div>
-                <label className="discount-toggle-label">
-                  <input
-                    type="checkbox"
-                    checked={hasDiscount}
-                    onChange={(e) => {
-                      setHasDiscount(e.target.checked);
-                      setIsDirty(true);
-                    }}
-                  />
-                  <span>Включить скидку</span>
-                </label>
-              </div>
 
-              {hasDiscount && (
-                <div className="calculator-form discount-form">
-                  <label>
-                    Скидка, %
+                <div className="pricing-grid-cards">
+                  <div className="editor-field-card">
+                    <span className="field-label-text">Желаемая прибыль (маржа), %</span>
                     <input
                       type="number"
-                      min="1"
-                      max="90"
-                      value={discountPercent === 0 ? "" : discountPercent}
+                      value={markup === 0 ? "" : markup}
                       onFocus={(e) => e.target.select()}
                       onChange={(e) => {
-                        setDiscountPercent(Math.min(90, Math.max(1, +e.target.value)));
+                        setMarkup(+e.target.value);
                         setIsDirty(true);
                       }}
                     />
-                  </label>
-                  <label>
-                    Старая цена, ₸
+                  </div>
+
+                  <div className={`editor-field-card ${manualPricing ? "highlight-manual" : ""}`}>
+                    <span className="field-label-text">
+                      Итоговая розничная цена, ₸ {manualPricing && <span className="manual-badge">Ручная</span>}
+                    </span>
                     <input
                       type="number"
                       value={
-                        (originalPriceInput || Math.round(originalPriceDisplay)) === 0
+                        Math.round(manualPricing ? manualPrice : recommendedPrice) === 0
                           ? ""
-                          : (originalPriceInput || Math.round(originalPriceDisplay))
+                          : Math.round(manualPricing ? manualPrice : recommendedPrice)
                       }
                       onFocus={(e) => e.target.select()}
                       onChange={(e) => {
-                        setOriginalPriceInput(+e.target.value);
+                        setManualPricing(true);
+                        setManualPrice(+e.target.value);
                         setIsDirty(true);
                       }}
                     />
-                  </label>
-                  <label>
-                    Итого к оплате покупателем
-                    <input type="text" disabled value={`${money(Math.round(retail))} ₸`} />
-                  </label>
-                  <label>
-                    Выгода покупателя
-                    <input type="text" disabled value={`${money(savingsKzt)} ₸`} />
+                  </div>
+                </div>
+              </div>
+
+              {/* 4. Скидка и Sale */}
+              <div className="pricing-section-block discount-block">
+                <div className="discount-header-row">
+                  <div className="discount-title-group">
+                    <h4 className="discount-main-title">Скидка и старая зачёркнутая цена (Sale)</h4>
+                    <p className="discount-subtitle">Привлечение внимания покупателей на витрине интернет-магазина</p>
+                  </div>
+                  <label className="discount-switch-label">
+                    <input
+                      type="checkbox"
+                      checked={hasDiscount}
+                      onChange={(e) => {
+                        setHasDiscount(e.target.checked);
+                        setIsDirty(true);
+                      }}
+                    />
+                    <span className="discount-switch-text">Включить скидку на витрине</span>
                   </label>
                 </div>
-              )}
 
-              {/* 10 Unit Economics Metrics */}
-              <div className="calculation-summary" style={{ marginTop: "20px" }}>
-                <div><span>Закупка в тенге</span><strong>{money(purchaseKzt)} ₸</strong></div>
-                <div><span>Фикс. себестоимость</span><strong>{money(fixedCost)} ₸</strong></div>
-                <div><span>Точка безубыточности</span><strong>{money(breakEvenPrice)} ₸</strong></div>
-                <div><span>Налог ({taxPercent}%)</span><strong>{money(taxAmount)} ₸</strong></div>
-                <div><span>Kaspi Рассрочка</span><strong>{money(bankAmount)} ₸</strong></div>
-                <div><span>Продавец ({sellerPercent}%)</span><strong>{money(sellerAmount)} ₸</strong></div>
-                <div><span>Чистая выручка</span><strong>{money(netRevenue)} ₸</strong></div>
-                <div className="accent-result"><span>Прибыль с 1 шт.</span><strong>{money(profit)} ₸</strong></div>
-                <div><span>Маржа</span><strong>{margin.toFixed(1)}%</strong></div>
-                <div><span>Наценка к себестоимости</span><strong>{markupOnCost.toFixed(1)}%</strong></div>
+                {hasDiscount && (
+                  <div className="pricing-grid-cards" style={{ marginTop: "16px" }}>
+                    <div className="editor-field-card">
+                      <span className="field-label-text">Размер скидки, %</span>
+                      <input
+                        type="number"
+                        min="1"
+                        max="90"
+                        value={discountPercent === 0 ? "" : discountPercent}
+                        onFocus={(e) => e.target.select()}
+                        onChange={(e) => {
+                          setDiscountPercent(Math.min(90, Math.max(1, +e.target.value)));
+                          setIsDirty(true);
+                        }}
+                      />
+                    </div>
+                    <div className="editor-field-card">
+                      <span className="field-label-text">Старая зачёркнутая цена, ₸</span>
+                      <input
+                        type="number"
+                        value={
+                          (originalPriceInput || Math.round(originalPriceDisplay)) === 0
+                            ? ""
+                            : (originalPriceInput || Math.round(originalPriceDisplay))
+                        }
+                        onFocus={(e) => e.target.select()}
+                        onChange={(e) => {
+                          setOriginalPriceInput(+e.target.value);
+                          setIsDirty(true);
+                        }}
+                      />
+                    </div>
+                    <div className="editor-field-card">
+                      <span className="field-label-text">Итого к оплате покупателем</span>
+                      <input type="text" disabled value={`${money(Math.round(retail))} ₸`} />
+                    </div>
+                    <div className="editor-field-card">
+                      <span className="field-label-text">Выгода покупателя</span>
+                      <input type="text" disabled value={`${money(savingsKzt)} ₸`} />
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* 5. Итоговая юнит-экономика */}
+              <div className="pricing-section-block">
+                <div className="pricing-section-header">
+                  <span className="pricing-badge-step">5</span>
+                  <div>
+                    <strong>Итоговая юнит-экономика и прибыль</strong>
+                    <small>Живой расчет прибыльности и маржинальности с одной продажи</small>
+                  </div>
+                </div>
+
+                <div className="calculation-summary">
+                  <div><span>Закупка в тенге</span><strong>{money(purchaseKzt)} ₸</strong></div>
+                  <div><span>Фикс. себестоимость</span><strong>{money(fixedCost)} ₸</strong></div>
+                  <div><span>Точка безубыточности</span><strong>{money(breakEvenPrice)} ₸</strong></div>
+                  <div><span>Налог ({taxPercent}%)</span><strong>{money(taxAmount)} ₸</strong></div>
+                  <div><span>Kaspi Рассрочка</span><strong>{money(bankAmount)} ₸</strong></div>
+                  <div><span>Продавец ({sellerPercent}%)</span><strong>{money(sellerAmount)} ₸</strong></div>
+                  <div><span>Чистая выручка</span><strong>{money(netRevenue)} ₸</strong></div>
+                  <div className="accent-result"><span>Прибыль с 1 шт.</span><strong>{money(profit)} ₸</strong></div>
+                  <div><span>Маржа</span><strong>{margin.toFixed(1)}%</strong></div>
+                  <div><span>Наценка к себестоимости</span><strong>{markupOnCost.toFixed(1)}%</strong></div>
+                </div>
               </div>
             </div>
           )}
