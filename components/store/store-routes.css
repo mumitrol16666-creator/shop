@@ -2097,3 +2097,24 @@ html, body {
     max-width: none;
   }
 }
+
+/* Order Next Step & Secondary Action Interactivity */
+.store-secondary-action:hover {
+  background: rgba(255, 255, 255, 0.08) !important;
+  border-color: var(--store-amber) !important;
+  color: #ffffff !important;
+}
+
+.store-secondary-action:active {
+  transform: scale(0.98);
+}
+
+.store-secondary-action.is-refreshing {
+  opacity: 0.6 !important;
+  cursor: wait !important;
+}
+
+.store-whatsapp-link:hover {
+  background: #25d366 !important;
+  color: #ffffff !important;
+}
