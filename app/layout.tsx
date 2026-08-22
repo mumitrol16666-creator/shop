@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Manrope, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import "../components/store/store-routes.css";
@@ -20,7 +20,10 @@ export const metadata: Metadata = {
   icons: {
     icon: "/favicon.svg",
     shortcut: "/favicon.svg",
+    apple: "/apple-touch-icon.png",
   },
+  manifest: "/manifest.json",
+  appleWebApp: { capable: true, title: "Maestro", statusBarStyle: "black-translucent" },
   openGraph: {
     title: "Maestro — музыка начинается здесь",
     description: "Инструменты для первых аккордов и собственного звучания.",
@@ -33,6 +36,14 @@ export const metadata: Metadata = {
     description: "Инструменты для первых аккордов и собственного звучания.",
     images: ["/og-maestro.png"],
   },
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  viewportFit: "cover",
+  themeColor: "#181511",
 };
 
 export default function RootLayout({

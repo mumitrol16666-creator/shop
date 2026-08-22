@@ -14,7 +14,7 @@ export function MobileNav({ route, cartCount, onCartOpen }: MobileNavProps) {
   const isHome = route.kind === "home";
   const isCatalog = route.kind === "catalog";
   const isPicker = route.kind === "picker";
-  const isCart = route.kind === "cart";
+  const isCart = route.kind === "cart" || route.kind === "checkout";
 
   const [bump, setBump] = useState(false);
   const prevCount = useRef(cartCount);

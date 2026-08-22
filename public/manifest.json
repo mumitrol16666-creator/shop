@@ -3,20 +3,30 @@
   "short_name": "Maestro",
   "description": "Электрогитары, акустика и укулеле Maestro в Актобе.",
   "start_url": "/",
+  "id": "/",
+  "scope": "/",
+  "lang": "ru",
   "display": "standalone",
   "background_color": "#181511",
   "theme_color": "#181511",
   "icons": [
     {
-      "src": "/favicon.svg",
-      "sizes": "any",
-      "type": "image/svg+xml",
-      "purpose": "any maskable"
+      "src": "/pwa-icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
     },
     {
-      "src": "/og-maestro.png",
+      "src": "/pwa-icon-512.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     }
+  ],
+  "categories": ["shopping", "music"],
+  "shortcuts": [
+    { "name": "Каталог", "short_name": "Каталог", "url": "/catalog", "icons": [{ "src": "/pwa-icon-192.png", "sizes": "192x192" }] },
+    { "name": "Подобрать инструмент", "short_name": "Подбор", "url": "/picker", "icons": [{ "src": "/pwa-icon-192.png", "sizes": "192x192" }] },
+    { "name": "Корзина", "short_name": "Корзина", "url": "/cart", "icons": [{ "src": "/pwa-icon-192.png", "sizes": "192x192" }] }
   ]
 }

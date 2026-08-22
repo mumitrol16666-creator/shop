@@ -16,6 +16,7 @@ import { CartPage } from "./cart/CartPage";
 import { PickerPage } from "./picker/PickerPage";
 import { CheckoutPage } from "./checkout/CheckoutPage";
 import { OrderPage } from "./order/OrderPage";
+import { PwaLifecycle } from "./pwa/PwaLifecycle";
 
 export type StoreRoute =
   | { kind: "home" }
@@ -57,6 +58,7 @@ function StoreRuntimeInner({ products, route }: { products: ProductReadModel[]; 
       </main>
 
       <MobileNav route={route} cartCount={cartCount} onCartOpen={() => setCartOpen(true)} />
+      <PwaLifecycle allowInstallPrompt={route.kind !== "checkout" && route.kind !== "order"} />
 
       <CartDrawer
         cartOpen={cartOpen}
