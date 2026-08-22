@@ -72,24 +72,42 @@ function escapeTelegramHtml(value) {
 
 async function sendMyStoreInfo(text) {
   const token = String(process.env.TELEGRAM_BOT_TOKEN || "").trim();
-  const chatId = String(process.env.TELEGRAM_CHAT_ID || "").trim();
-  if (!token || !chatId) {
+  const rawChatIds = String(process.env.TELEGRAM_CHAT_ID || "").trim();
+  if (!token || !rawChatIds) {
     console.warn("mystore_info_skipped", { reason: "telegram_not_configured" });
     return false;
   }
-  try {
-    const response = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ chat_id: chatId, text, parse_mode: "HTML", disable_web_page_preview: true }),
-      signal: AbortSignal.timeout(5000),
-    });
-    if (!response.ok) console.error("mystore_info_failed", { status: response.status });
-    return response.ok;
-  } catch (error) {
-    console.error("mystore_info_failed", { error: error?.message || "unknown" });
-    return false;
+  const chatIds = rawChatIds
+    .split(",")
+    .map((s) => s.trim())
+    .filter(Boolean);
+  if (chatIds.length === 0) return false;
+
+  let anySuccess = false;
+  for (const chatId of chatIds) {
+    try {
+      const response = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          chat_id: chatId,
+          text,
+          parse_mode: "HTML",
+          disable_web_page_preview: true,
+        }),
+        signal: AbortSignal.timeout(5000),
+      });
+      if (response.ok) {
+        anySuccess = true;
+      } else {
+        const errorData = await response.text();
+        console.error("mystore_info_failed", { chatId, status: response.status, error: errorData });
+      }
+    } catch (error) {
+      console.error("mystore_info_failed", { chatId, error: error?.message || "unknown" });
+    }
   }
+  return anySuccess;
 }
 
 function adminOrderUrl(req, order) {
