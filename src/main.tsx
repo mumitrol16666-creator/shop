@@ -20,7 +20,7 @@ function App() {
     return <AdminAnalyticsPage />;
   }
 
-  if (pathname === "/admin/orders" || pathname.startsWith("/admin/orders")) {
+  if (pathname === "/admin" || pathname === "/admin/orders" || pathname.startsWith("/admin/orders")) {
     return <AdminOrdersPage />;
   }
 

@@ -52,6 +52,7 @@ test("Stage 5 contract: protected order queue and all admin actions are wired", 
   assert.match(server, /pathname === "\/api\/admin\/orders"/);
   assert.match(server, /transitionOrderInMemory/);
   assert.match(client, /AdminOrdersPage/);
+  assert.match(client, /pathname === "\/admin"/);
   assert.match(store, /transitionOrderD1/);
 });
 

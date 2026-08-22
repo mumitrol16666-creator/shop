@@ -1,12 +1,12 @@
-const CACHE_NAME = "maestro-store-v18";
+const CACHE_NAME = "maestro-store-v19";
 const CORE_ASSETS = [
   "/offline.html",
   "/manifest.json",
   "/favicon.svg",
   "/pwa-icon-192.png",
   "/pwa-icon-512.png",
-  "/bundle.css?v=18",
-  "/bundle.js?v=18",
+  "/bundle.css?v=19",
+  "/bundle.js?v=19",
 ];
 
 self.addEventListener("install", (event) => {
