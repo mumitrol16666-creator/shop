@@ -22,7 +22,7 @@ test("Stage 4 PWA: manifest has installable PNG icons, scope and store shortcuts
 
 test("Stage 4 PWA: service worker never caches commerce/admin mutations and provides safe offline fallback", async () => {
   const worker = await source("public/sw.js");
-  assert.match(worker, /maestro-store-v17/);
+  assert.match(worker, /maestro-store-v18/);
   assert.match(worker, /request\.method !== "GET"/);
   assert.match(worker, /url\.pathname\.startsWith\("\/api\/"\)/);
   assert.match(worker, /url\.pathname\.startsWith\("\/admin"\)/);

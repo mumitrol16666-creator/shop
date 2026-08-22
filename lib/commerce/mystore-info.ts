@@ -41,13 +41,19 @@ export function notifyNewOrder(order: PublicOrder, origin: string, phone: string
     `${lines}\n\n<b>${money(order.totals.final)} ₸</b> · ${escapeHtml(payment)}\n` +
     `${escapeHtml(fulfilment)}${address}${contactTime}\n` +
     `Клиент: ${escapeHtml(order.customer.name)} · ${escapeHtml(phone)}\n` +
-    `<a href="${escapeHtml(`${origin}/order/${order.publicToken}`)}">Открыть заказ</a>`,
+    `<a href="${escapeHtml(`${origin}/admin/orders?order=${encodeURIComponent(order.orderId)}`)}">Открыть в админке</a>`,
   );
 }
 
 export function notifyPaymentReported(order: PublicOrder, origin: string) {
   return sendTelegram(
     `<b>💳 Оплата отправлена на проверку</b>\nЗаказ ${escapeHtml(order.displayId)} · <b>${money(order.totals.final)} ₸</b>\n` +
-    `<a href="${escapeHtml(`${origin}/order/${order.publicToken}`)}">Открыть заказ</a>`,
+    `<a href="${escapeHtml(`${origin}/admin/orders?order=${encodeURIComponent(order.orderId)}`)}">Проверить в админке</a>`,
+  );
+}
+
+export function notifyAdminOrderStatus(order: PublicOrder, title: string) {
+  return sendTelegram(
+    `<b>${escapeHtml(title)}</b>\nЗаказ ${escapeHtml(order.displayId)} · <b>${money(order.totals.final)} ₸</b>`,
   );
 }

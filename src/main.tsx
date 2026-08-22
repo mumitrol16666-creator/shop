@@ -5,6 +5,7 @@ import "../components/store/store-routes.css";
 import { VpsStoreRoot } from "../components/store/VpsStoreRoot";
 import AdminPricingPage from "../app/admin/pricing/page";
 import AdminAnalyticsPage from "../app/admin/analytics/page";
+import AdminOrdersPage from "../app/admin/orders/page";
 
 function App() {
   const [pathname, setPathname] = useState(window.location.pathname);
@@ -17,6 +18,10 @@ function App() {
 
   if (pathname === "/admin/analytics" || pathname.startsWith("/admin/analytics")) {
     return <AdminAnalyticsPage />;
+  }
+
+  if (pathname === "/admin/orders" || pathname.startsWith("/admin/orders")) {
+    return <AdminOrdersPage />;
   }
 
   if (pathname.startsWith("/admin")) {

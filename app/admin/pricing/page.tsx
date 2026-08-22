@@ -93,8 +93,10 @@ function AdminPricingContent() {
         </div>
 
         <nav className="admin-nav">
-          <a href="#inventory">Склад поставки</a>
-          <Link href="/">← Перейти на витрину</Link>
+          <Link href="/admin/orders">Заказы</Link>
+          <Link className="is-active" href="/admin/pricing">Товары и цены</Link>
+          <Link href="/admin/analytics">Аналитика</Link>
+          <Link href="/">Витрина</Link>
           <button type="button" className="admin-logout-btn" onClick={() => void logout()}>
             Выйти
           </button>

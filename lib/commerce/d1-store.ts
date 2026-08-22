@@ -11,8 +11,10 @@ import {
 } from "./orders";
 import { assertOrderTransition } from "./status";
 import type {
+  AdminOrder,
   CreateOrderRequest,
   OrderStatus,
+  OrderStatusHistoryRecord,
   PaymentStatus,
   ProductReadModel,
   PublicOrder,
@@ -79,7 +81,7 @@ export async function cleanupExpiredD1(d1: CommerceD1, now = new Date()) {
       .prepare("SELECT status FROM orders WHERE id = ? LIMIT 1")
       .bind(orderId)
       .first<{ status: OrderStatus }>();
-    if (!order || !["awaiting_payment", "pending_contact"].includes(order.status)) continue;
+    if (!order || !["awaiting_payment", "pending_contact", "payment_reported"].includes(order.status)) continue;
     statements.push(
       d1
         .prepare(`INSERT INTO order_status_history (
@@ -89,7 +91,7 @@ export async function cleanupExpiredD1(d1: CommerceD1, now = new Date()) {
         .bind(crypto.randomUUID(), orderId, order.status, nowIso, orderId, order.status),
       d1
         .prepare(`UPDATE orders SET status = 'expired', updated_at = ?
-          WHERE id = ? AND status IN ('awaiting_payment', 'pending_contact')`)
+          WHERE id = ? AND status IN ('awaiting_payment', 'pending_contact', 'payment_reported')`)
         .bind(nowIso, orderId),
     );
   }
@@ -171,6 +173,106 @@ export async function readPublicOrderD1(
 ) {
   await cleanupExpiredD1(d1);
   return readPublicOrderBy(d1, "public_token", publicToken);
+}
+
+export async function listAdminOrdersD1(input: {
+  d1: CommerceD1;
+  includeTest?: boolean;
+  limit?: number;
+}) {
+  await cleanupExpiredD1(input.d1);
+  const limit = Math.min(500, Math.max(1, input.limit ?? 200));
+  const rows = await input.d1
+    .prepare(`SELECT * FROM orders
+      WHERE (? = 1 OR is_test = 0)
+      ORDER BY created_at DESC, id DESC
+      LIMIT ?`)
+    .bind(input.includeTest ? 1 : 0, limit)
+    .all<Record<string, unknown>>();
+  const orders = rows.results ?? [];
+  if (!orders.length) return [];
+  const ids = orders.map((order) => String(order.id));
+  const placeholders = ids.map(() => "?").join(",");
+  const [itemsResult, paymentsResult, reservationsResult, historyResult] = await Promise.all([
+    input.d1.prepare(`SELECT * FROM order_items WHERE order_id IN (${placeholders}) ORDER BY created_at, id`).bind(...ids).all<Record<string, unknown>>(),
+    input.d1.prepare(`SELECT * FROM payments WHERE order_id IN (${placeholders})`).bind(...ids).all<Record<string, unknown>>(),
+    input.d1.prepare(`SELECT order_id, MIN(expires_at) AS expires_at FROM stock_reservations WHERE order_id IN (${placeholders}) AND status = 'reserved' GROUP BY order_id`).bind(...ids).all<Record<string, unknown>>(),
+    input.d1.prepare(`SELECT * FROM order_status_history WHERE order_id IN (${placeholders}) ORDER BY created_at, id`).bind(...ids).all<Record<string, unknown>>(),
+  ]);
+  const items = itemsResult.results ?? [];
+  const payments = paymentsResult.results ?? [];
+  const reservations = reservationsResult.results ?? [];
+  const history = historyResult.results ?? [];
+  return orders.map((order): AdminOrder => {
+    const orderId = String(order.id);
+    const payment = payments.find((candidate) => String(candidate.order_id) === orderId);
+    if (!payment) {
+      throw commerceError("INTERNAL_ERROR", "У заказа отсутствует платёжная запись.", {
+        recoverable: true,
+      });
+    }
+    return {
+      orderId,
+      displayId: orderDisplayId(String(order.created_at), String(order.public_token)),
+      publicToken: String(order.public_token),
+      status: String(order.status) as OrderStatus,
+      paymentStatus: String(payment.status) as PaymentStatus,
+      customer: {
+        name: String(order.customer_name),
+        phone: String(order.customer_phone),
+        city: String(order.customer_city),
+        comment: String(order.customer_comment || "") || undefined,
+        deliveryAddress: String(order.delivery_address || "") || undefined,
+        preferredContactTime: String(order.preferred_contact_time || "") || undefined,
+      },
+      fulfilmentMethod: String(order.fulfilment_method),
+      paymentMethod: String(order.payment_method),
+      items: items
+        .filter((item) => String(item.order_id) === orderId)
+        .map((item) => ({
+          title: String(item.title_snapshot),
+          variant: String(item.variant_snapshot),
+          productSku: String(item.product_sku),
+          variantSku: String(item.variant_sku),
+          bundleSku: String(item.bundle_sku),
+          components: parseJson(String(item.component_snapshot_json || "[]"), []),
+          quantity: Number(item.quantity),
+          unitPrice: Number(item.unit_price_kzt),
+          discount: Number(item.discount_kzt),
+          lineTotal: Number(item.line_total_kzt),
+        })),
+      totals: {
+        subtotal: Number(order.subtotal_kzt),
+        discount: Number(order.discount_kzt),
+        final: Number(order.total_kzt),
+        currency: "KZT",
+      },
+      createdAt: String(order.created_at),
+      updatedAt: String(order.updated_at),
+      reservationExpiresAt: String(reservations.find((entry) => String(entry.order_id) === orderId)?.expires_at || "") || undefined,
+      payment: {
+        method: String(payment.method),
+        status: String(payment.status) as PaymentStatus,
+        reportedAt: String(payment.reported_at || "") || undefined,
+        verifiedAt: String(payment.verified_at || "") || undefined,
+        reference: String(payment.reference || "") || undefined,
+        receiptMetadata: parseJson(String(payment.receipt_metadata_json || "{}"), {}),
+      },
+      history: history
+        .filter((entry) => String(entry.order_id) === orderId)
+        .map((entry): OrderStatusHistoryRecord => ({
+          id: String(entry.id),
+          orderId,
+          fromStatus: entry.from_status ? String(entry.from_status) as OrderStatus : undefined,
+          toStatus: String(entry.to_status) as OrderStatus,
+          actorType: String(entry.actor_type) as OrderStatusHistoryRecord["actorType"],
+          actorId: String(entry.actor_id || "") || undefined,
+          reason: String(entry.reason || "") || undefined,
+          createdAt: String(entry.created_at),
+        })),
+      isTest: Boolean(order.is_test),
+    };
+  });
 }
 
 export async function createOrderD1(input: {
@@ -515,6 +617,45 @@ export async function confirmPaymentD1(input: {
     input.d1.prepare("UPDATE stock_reservations SET status = 'confirmed', updated_at = ? WHERE order_id = ? AND status = 'reserved'").bind(nowIso, order.id),
     input.d1.prepare("UPDATE payments SET status = 'paid', verified_at = ?, updated_at = ? WHERE order_id = ? AND status IN ('awaiting_payment', 'payment_reported')").bind(nowIso, nowIso, order.id),
     input.d1.prepare("UPDATE orders SET status = 'paid', updated_at = ? WHERE id = ? AND status IN ('pending_contact', 'awaiting_payment', 'payment_reported')").bind(nowIso, order.id),
+  ]);
+  return readPublicOrderBy(input.d1, "public_token", order.public_token);
+}
+
+export async function transitionOrderD1(input: {
+  d1: CommerceD1;
+  orderId: string;
+  toStatus: Extract<OrderStatus, "awaiting_payment" | "processing" | "completed">;
+  actorId?: string;
+  reason?: string;
+  now?: Date;
+}) {
+  const nowIso = (input.now ?? new Date()).toISOString();
+  const order = await input.d1
+    .prepare("SELECT id, public_token, status FROM orders WHERE id = ? LIMIT 1")
+    .bind(input.orderId)
+    .first<{ id: string; public_token: string; status: OrderStatus }>();
+  if (!order) throw commerceError("ORDER_NOT_FOUND", "Заказ не найден.", { recoverable: false });
+  assertOrderTransition(order.status, input.toStatus, "admin");
+  await input.d1.batch([
+    input.d1
+      .prepare(`INSERT INTO order_status_history (
+        id, order_id, from_status, to_status, actor_type, actor_id, reason, created_at
+      ) SELECT ?, ?, ?, ?, 'admin', ?, ?, ?
+        WHERE EXISTS (SELECT 1 FROM orders WHERE id = ? AND status = ?)`)
+      .bind(
+        crypto.randomUUID(),
+        order.id,
+        order.status,
+        input.toStatus,
+        input.actorId ?? null,
+        input.reason ?? `admin_${input.toStatus}`,
+        nowIso,
+        order.id,
+        order.status,
+      ),
+    input.d1
+      .prepare("UPDATE orders SET status = ?, updated_at = ? WHERE id = ? AND status = ?")
+      .bind(input.toStatus, nowIso, order.id, order.status),
   ]);
   return readPublicOrderBy(input.d1, "public_token", order.public_token);
 }

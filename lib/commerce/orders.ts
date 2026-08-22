@@ -9,10 +9,12 @@ import {
 } from "./checkout";
 import {
   COMMERCE_STATE_SCHEMA_VERSION,
+  type AdminOrder,
   type CommerceStoreState,
   type CreateOrderRequest,
   type OrderItemRecord,
   type OrderRecord,
+  type OrderStatus,
   type OrderStatusHistoryRecord,
   type PaymentRecord,
   type ProductReadModel,
@@ -190,7 +192,7 @@ export function expireReservationsInMemory(
   }
   for (const orderId of expiredOrderIds) {
     const order = state.orders.find((candidate) => candidate.id === orderId);
-    if (!order || !["awaiting_payment", "pending_contact"].includes(order.status)) continue;
+    if (!order || !["awaiting_payment", "pending_contact", "payment_reported"].includes(order.status)) continue;
     const fromStatus = order.status;
     order.status = "expired";
     order.updatedAt = nowIso;
@@ -453,6 +455,58 @@ export function publicOrderFromState(
   };
 }
 
+export function adminOrderFromState(
+  state: CommerceStoreState,
+  orderId: string,
+): AdminOrder {
+  const record = state.orders.find((candidate) => candidate.id === orderId);
+  if (!record) {
+    throw commerceError("ORDER_NOT_FOUND", "Заказ не найден.", { recoverable: false });
+  }
+  const publicOrder = publicOrderFromState(state, record.publicToken);
+  const payment = state.payments.find((candidate) => candidate.orderId === record.id);
+  if (!payment) {
+    throw commerceError("INTERNAL_ERROR", "У заказа отсутствует платёжная запись.", {
+      recoverable: true,
+    });
+  }
+  return {
+    ...publicOrder,
+    customer: {
+      ...publicOrder.customer,
+      phone: record.customerPhone,
+      comment: record.customerComment || undefined,
+    },
+    payment: {
+      method: payment.method,
+      status: payment.status,
+      reportedAt: payment.reportedAt,
+      verifiedAt: payment.verifiedAt,
+      reference: payment.reference,
+      receiptMetadata: payment.receiptMetadata
+        ? structuredClone(payment.receiptMetadata)
+        : undefined,
+    },
+    history: state.statusHistory
+      .filter((entry) => entry.orderId === record.id)
+      .sort((left, right) => left.createdAt.localeCompare(right.createdAt))
+      .map((entry) => structuredClone(entry)),
+    isTest: record.isTest,
+  };
+}
+
+export function listAdminOrdersInMemory(
+  state: CommerceStoreState,
+  options: { includeTest?: boolean; limit?: number } = {},
+): AdminOrder[] {
+  const limit = Math.min(500, Math.max(1, options.limit ?? 200));
+  return state.orders
+    .filter((order) => options.includeTest || !order.isTest)
+    .sort((left, right) => right.createdAt.localeCompare(left.createdAt))
+    .slice(0, limit)
+    .map((order) => adminOrderFromState(state, order.id));
+}
+
 export function reportPaymentInMemory(input: {
   state: CommerceStoreState;
   orderId: string;
@@ -568,6 +622,43 @@ export function confirmPaymentInMemory(input: {
     actorType: input.actorType,
     actorId: input.actorId,
     reason: "trusted_payment_confirmation",
+    createdAt: nowIso,
+  });
+  return {
+    state: next,
+    order: publicOrderFromState(next, mutableOrder.publicToken),
+  };
+}
+
+export function transitionOrderInMemory(input: {
+  state: CommerceStoreState;
+  orderId: string;
+  toStatus: Extract<OrderStatus, "awaiting_payment" | "processing" | "completed">;
+  actorId?: string;
+  reason?: string;
+  now?: Date;
+}) {
+  const now = input.now ?? new Date();
+  const nowIso = now.toISOString();
+  const state = expireReservationsInMemory(input.state, now);
+  const order = state.orders.find((candidate) => candidate.id === input.orderId);
+  if (!order) {
+    throw commerceError("ORDER_NOT_FOUND", "Заказ не найден.", { recoverable: false });
+  }
+  assertOrderTransition(order.status, input.toStatus, "admin");
+  const next = cloneState(state);
+  const mutableOrder = next.orders.find((candidate) => candidate.id === order.id)!;
+  const fromStatus = mutableOrder.status;
+  mutableOrder.status = input.toStatus;
+  mutableOrder.updatedAt = nowIso;
+  next.statusHistory.push({
+    id: crypto.randomUUID(),
+    orderId: order.id,
+    fromStatus,
+    toStatus: input.toStatus,
+    actorType: "admin",
+    actorId: input.actorId,
+    reason: input.reason || `admin_${input.toStatus}`,
     createdAt: nowIso,
   });
   return {

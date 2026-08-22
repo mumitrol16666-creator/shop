@@ -355,3 +355,20 @@ export type PublicOrder = {
   updatedAt: string;
   reservationExpiresAt?: string;
 };
+
+export type AdminOrder = Omit<PublicOrder, "customer"> & {
+  customer: PublicOrder["customer"] & {
+    phone: string;
+    comment?: string;
+  };
+  payment: {
+    method: string;
+    status: PaymentStatus;
+    reportedAt?: string;
+    verifiedAt?: string;
+    reference?: string;
+    receiptMetadata?: Record<string, unknown>;
+  };
+  history: OrderStatusHistoryRecord[];
+  isTest: boolean;
+};

@@ -92,10 +92,10 @@ async function sendMyStoreInfo(text) {
   }
 }
 
-function orderPublicUrl(req, order) {
+function adminOrderUrl(req, order) {
   const proto = String(req.headers["x-forwarded-proto"] || "http").split(",")[0].trim();
   const host = String(req.headers["x-forwarded-host"] || req.headers.host || "shop.maestro.com.kz").split(",")[0].trim();
-  return `${proto}://${host}/order/${order.publicToken}`;
+  return `${proto}://${host}/admin/orders?order=${encodeURIComponent(order.orderId)}`;
 }
 
 function parseCookies(req) {
@@ -447,7 +447,7 @@ async function handleCommerceRequest(req, res, pathname) {
       if (!result.replayed && !smoke) {
         const items = result.order.items.map((item) => `• ${escapeTelegramHtml(item.title)} × ${item.quantity}`).join("\n");
         const address = result.order.customer.deliveryAddress ? `\n📍 ${escapeTelegramHtml(result.order.customer.deliveryAddress)}` : "";
-        void sendMyStoreInfo(`<b>🛒 Новый заказ ${escapeTelegramHtml(result.order.displayId)}</b>\n${items}\n\n<b>${Number(result.order.totals.final).toLocaleString("ru-RU")} ₸</b>\nКлиент: ${escapeTelegramHtml(result.order.customer.name)} · ${escapeTelegramHtml(payload.customer.phone)}${address}\n<a href="${escapeTelegramHtml(orderPublicUrl(req, result.order))}">Открыть заказ</a>`);
+        void sendMyStoreInfo(`<b>🛒 Новый заказ ${escapeTelegramHtml(result.order.displayId)}</b>\n${items}\n\n<b>${Number(result.order.totals.final).toLocaleString("ru-RU")} ₸</b>\nКлиент: ${escapeTelegramHtml(result.order.customer.name)} · ${escapeTelegramHtml(payload.customer.phone)}${address}\n<a href="${escapeTelegramHtml(adminOrderUrl(req, result.order))}">Открыть в админке</a>`);
       }
       sendJson(res, result.replayed ? 200 : 201, { order: result.order, replayed: result.replayed });
       return;
@@ -473,8 +473,20 @@ async function handleCommerceRequest(req, res, pathname) {
         status: order.status,
         durationMs: Date.now() - startedAt,
       });
-      void sendMyStoreInfo(`<b>💳 Оплата отправлена на проверку</b>\nЗаказ ${escapeTelegramHtml(order.displayId)} · <b>${Number(order.totals.final).toLocaleString("ru-RU")} ₸</b>\n<a href="${escapeTelegramHtml(orderPublicUrl(req, order))}">Открыть заказ</a>`);
+      void sendMyStoreInfo(`<b>💳 Оплата отправлена на проверку</b>\nЗаказ ${escapeTelegramHtml(order.displayId)} · <b>${Number(order.totals.final).toLocaleString("ru-RU")} ₸</b>\n<a href="${escapeTelegramHtml(adminOrderUrl(req, order))}">Проверить в админке</a>`);
       sendJson(res, 200, { order });
+      return;
+    }
+
+    if (pathname === "/api/admin/orders" && req.method === "GET") {
+      if (!requireAdmin(req, res)) return;
+      const includeTest = new URL(req.url, `http://${req.headers.host || "localhost"}`).searchParams.get("include_test") === "1";
+      const state = commerceCore.expireReservationsInMemory(readCommerceState());
+      writeCommerceState(state);
+      sendJson(res, 200, {
+        orders: commerceCore.listAdminOrdersInMemory(state, { includeTest, limit: 200 }),
+        generatedAt: new Date().toISOString(),
+      });
       return;
     }
 
@@ -490,6 +502,30 @@ async function handleCommerceRequest(req, res, pathname) {
         writeCommerceState(changed.state);
         return changed.order;
       });
+      void sendMyStoreInfo(`<b>✅ Оплата подтверждена</b>\nЗаказ ${escapeTelegramHtml(order.displayId)} · <b>${Number(order.totals.final).toLocaleString("ru-RU")} ₸</b>`);
+      sendJson(res, 200, { order });
+      return;
+    }
+
+    const statusChange = pathname.match(/^\/api\/admin\/orders\/([^/]+)\/status$/);
+    if (statusChange && req.method === "POST") {
+      if (!requireAdmin(req, res)) return;
+      const payload = await readJsonBody(req);
+      const allowedStatuses = new Set(["awaiting_payment", "processing", "completed"]);
+      if (!allowedStatuses.has(payload.status)) {
+        throw commerceCore.commerceError("INVALID_REQUEST", "Недопустимый статус заказа.", { recoverable: true, field: "status" });
+      }
+      const order = await withCommerceMutation(() => {
+        const changed = commerceCore.transitionOrderInMemory({
+          state: readCommerceState(),
+          orderId: decodeURIComponent(statusChange[1]),
+          toStatus: payload.status,
+          reason: payload.reason,
+        });
+        writeCommerceState(changed.state);
+        return changed.order;
+      });
+      void sendMyStoreInfo(`<b>📦 Статус заказа изменён</b>\n${escapeTelegramHtml(order.displayId)} · ${escapeTelegramHtml(order.status)}`);
       sendJson(res, 200, { order });
       return;
     }
@@ -508,6 +544,7 @@ async function handleCommerceRequest(req, res, pathname) {
         writeCommerceState(changed.state);
         return changed.order;
       });
+      void sendMyStoreInfo(`<b>❌ Заказ отменён</b>\n${escapeTelegramHtml(order.displayId)}`);
       sendJson(res, 200, { order });
       return;
     }
@@ -621,7 +658,7 @@ const server = http.createServer((req, res) => {
       pathname === "/api/cart/validate" ||
       pathname === "/api/orders" ||
       pathname.startsWith("/api/orders/") ||
-      pathname.startsWith("/api/admin/orders/") ||
+      pathname.startsWith("/api/admin/orders") ||
       pathname.startsWith("/api/products/"))
   ) {
     void handleCommerceRequest(req, res, pathname);

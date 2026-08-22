@@ -42,8 +42,19 @@ queue prevents concurrent file-state writes.
 - `POST /api/orders` — server order creation; requires `Idempotency-Key`.
 - `GET /api/orders/:publicToken` — customer-safe snapshot without phone/comment/internal metadata.
 - `POST /api/orders/:id/payment-report` — customer may only report payment.
+- `GET /api/admin/orders` — authenticated operational queue with customer contacts, items, payment and status history.
 - `POST /api/admin/orders/:id/confirm-payment` — authenticated trusted transition to `paid`.
+- `POST /api/admin/orders/:id/status` — authenticated workflow transitions to `awaiting_payment`, `processing` or `completed`.
 - `POST /api/admin/orders/:id/cancel` — authenticated cancellation and reservation release.
+
+## Admin order workflow
+
+`/admin/orders` is the default admin entry point. It groups orders into new,
+payment review, paid/in progress and terminal queues. The administrator can
+contact the customer, confirm funds, hand an order to preparation, complete it
+or cancel a still-reserved order. Every change is validated by the shared
+status machine and appended to order history; the customer order page polls the
+same record and reflects the new state automatically.
 
 ## Migration and backup
 

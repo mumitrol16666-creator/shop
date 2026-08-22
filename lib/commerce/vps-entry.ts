@@ -2,15 +2,18 @@ export { buildCatalogReadModels, productByIdentifier, stage1SmokeProduct } from 
 export { catalogVersion, quoteConfiguration, stableHash } from "./pricing";
 export { reconcileCart } from "./cart";
 export {
+  adminOrderFromState,
   cancelOrderInMemory,
   assertCreateOrderRequest,
   confirmPaymentInMemory,
   createOrderInMemory,
   emptyCommerceStoreState,
   expireReservationsInMemory,
+  listAdminOrdersInMemory,
   publicOrderFromState,
   reportPaymentInMemory,
   reservationUsage,
+  transitionOrderInMemory,
 } from "./orders";
 export { CommerceDomainError, commerceError, toErrorResponse } from "./errors";
 export { assertOrderTransition, canTransitionOrder } from "./status";
