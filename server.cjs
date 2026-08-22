@@ -3,6 +3,23 @@ const fs = require("fs");
 const path = require("path");
 const zlib = require("zlib");
 const crypto = require("crypto");
+
+// Load .env file (if present) — only sets vars not already in process.env
+try {
+  const envPath = path.join(__dirname, ".env");
+  if (fs.existsSync(envPath)) {
+    for (const line of fs.readFileSync(envPath, "utf8").split("\n")) {
+      const trimmed = line.trim();
+      if (!trimmed || trimmed.startsWith("#")) continue;
+      const eqIdx = trimmed.indexOf("=");
+      if (eqIdx < 1) continue;
+      const key = trimmed.slice(0, eqIdx).trim();
+      const value = trimmed.slice(eqIdx + 1).trim();
+      if (!(key in process.env)) process.env[key] = value;
+    }
+  }
+} catch { /* .env is optional */ }
+
 const commerceCore = require("./dist-vps/commerce-core.cjs");
 
 const PORT = Number(process.env.PORT || 3000);
