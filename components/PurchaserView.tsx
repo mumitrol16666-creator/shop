@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { money, type Product, type Variant, variantsFor } from "../lib/catalog-data";
 import { type CostPreset, loadPresets, savePresets } from "../lib/presets";
 import { calculateProductPricing } from "../lib/product-pricing";
@@ -433,6 +433,14 @@ export function PurchaserView({
   };
 
   
+  const hasAutoSelectedFirst = useRef(false);
+  useEffect(() => {
+    if (!hasAutoSelectedFirst.current && filteredProducts.length > 0) {
+      hasAutoSelectedFirst.current = true;
+      editStoredProduct(filteredProducts[0]);
+    }
+  }, [filteredProducts]);
+
   const startNewProduct = () => {
     setEditingProductId(undefined);
     setCurrentPublicationStatus("draft");
@@ -465,6 +473,25 @@ export function PurchaserView({
         image: "",
       },
     ]);
+    setSelectedPresetId("");
+    setCurrency("CNY");
+    setCnyRate(70);
+    setUsdRate(500);
+    setPurchase(0);
+    setDelivery(0);
+    setCargo(0);
+    setCustoms(0);
+    setPackaging(0);
+    setSetupCost(0);
+    setMarketingCost(0);
+    setOther(0);
+    setTaxPercent(3);
+    setBankPercent(14);
+    setInstallmentMonths(12);
+    setSellerPercent(5);
+    setMarkup(35);
+    setManualPricing(false);
+    setManualPrice(0);
     setActiveTab("general");
     setIsDirty(true);
     setNotice("➕ Создание нового товара. Заполните поля и сохраните.");
@@ -475,12 +502,12 @@ export function PurchaserView({
   const editStoredProduct = (product: Product) => {
     setEditingProductId(product.databaseId || String(product.id));
     setCurrentPublicationStatus(product.publicationStatus === "published" ? "published" : "draft");
-    setInternalName(product.name);
-    setInternalSku(product.sku);
-    setInternalCategory(product.category);
-    setInternalPhoto(product.image);
-    setInternalDescription(product.description);
-    setFeaturesText(product.features.join(", "));
+    setInternalName(product.name || "");
+    setInternalSku(product.sku || "");
+    setInternalCategory(product.category || "Электрогитары");
+    setInternalPhoto(product.image || "");
+    setInternalDescription(product.description || "");
+    setFeaturesText(Array.isArray(product.features) ? product.features.join(", ") : "");
     setTargetAudience(product.badge ?? "");
     setAttachedCourseId(product.attachedCourseId || "auto");
     setInternalAudioUrl(product.audioUrl || "");
@@ -504,46 +531,65 @@ export function PurchaserView({
     );
     setOriginalPriceInput(product.originalPrice || 0);
 
-    const variants = variantsFor(product);
-    setModelVariants(
-      variants.length > 0
-        ? variants
-        : [
-            {
-              id: `var-${Date.now()}`,
-              name: "Стандарт",
-              sku: product.sku,
-              color: "#8a8175",
-              colorName: "Стандарт",
-              stock: product.quantity || 1,
-              image: product.image,
-            },
-          ],
-    );
+    const rawVariants = variantsFor(product);
+    const variants: Variant[] = Array.isArray(rawVariants) && rawVariants.length > 0
+      ? JSON.parse(JSON.stringify(rawVariants))
+      : [
+          {
+            id: `var-${Date.now()}`,
+            name: "Стандарт",
+            sku: product.sku || "SKU-1",
+            color: "#8a8175",
+            colorName: "Стандарт",
+            stock: product.quantity || 1,
+            image: product.image || "",
+          },
+        ];
+    setModelVariants(variants);
+
+    // Reset preset
+    setSelectedPresetId("");
 
     if (product.adminPricing) {
       const p = product.adminPricing;
-      setCurrency(p.purchaseCurrency);
-      setPurchase(p.purchasePrice);
-      if (p.purchaseCurrency === "CNY") setCnyRate(p.currencyRate);
-      if (p.purchaseCurrency === "USD") setUsdRate(p.currencyRate);
-      setDelivery(p.chinaDeliveryKzt);
-      setCargo(p.cargoKzt);
-      setCustoms(p.customsKzt);
-      setPackaging(p.packagingKzt);
-      setSetupCost(p.setupKzt);
-      setMarketingCost(p.marketingKzt);
-      setOther(p.otherCostsKzt);
-      setTaxPercent(p.taxPercent);
-      setBankPercent(p.bankInstallmentPercent);
-      setInstallmentMonths(p.installmentMonths);
-      setSellerPercent(p.sellerPercent);
-      setMarkup(p.targetProfitPercent);
+      setCurrency(p.purchaseCurrency || "CNY");
+      setPurchase(p.purchasePrice || 0);
+      if (p.purchaseCurrency === "CNY") setCnyRate(p.currencyRate || 70);
+      if (p.purchaseCurrency === "USD") setUsdRate(p.currencyRate || 500);
+      setDelivery(p.chinaDeliveryKzt || 0);
+      setCargo(p.cargoKzt || 0);
+      setCustoms(p.customsKzt || 0);
+      setPackaging(p.packagingKzt || 0);
+      setSetupCost(p.setupKzt || 0);
+      setMarketingCost(p.marketingKzt || 0);
+      setOther(p.otherCostsKzt || 0);
+      setTaxPercent(p.taxPercent !== undefined ? p.taxPercent : 3);
+      setBankPercent(p.bankInstallmentPercent !== undefined ? p.bankInstallmentPercent : 14);
+      setInstallmentMonths(p.installmentMonths || 12);
+      setSellerPercent(p.sellerPercent !== undefined ? p.sellerPercent : 5);
+      setMarkup(p.targetProfitPercent !== undefined ? p.targetProfitPercent : 35);
       setManualPricing(p.pricingMode === "manual");
-      setManualPrice(p.manualPriceKzt ?? product.price ?? 41000);
+      setManualPrice(p.manualPriceKzt ?? product.price ?? 0);
     } else {
+      // Complete reset for products without custom admin pricing - ZERO state leakage!
+      setCurrency("CNY");
+      setPurchase(0);
+      setCnyRate(70);
+      setUsdRate(500);
+      setDelivery(0);
+      setCargo(0);
+      setCustoms(0);
+      setPackaging(0);
+      setSetupCost(0);
+      setMarketingCost(0);
+      setOther(0);
+      setTaxPercent(3);
+      setBankPercent(14);
+      setInstallmentMonths(12);
+      setSellerPercent(5);
+      setMarkup(35);
       setManualPricing(true);
-      setManualPrice(product.price || 41000);
+      setManualPrice(product.price || 0);
     }
 
     setIsDirty(false);
