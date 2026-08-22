@@ -9205,3 +9205,358 @@ body.commerce-overlay-open {
   font-weight: 700;
   color: var(--ink);
 }
+
+/* =========================================================================
+   ADMIN ORDERS & RESERVATIONS MODAL
+   ========================================================================= */
+
+.orders-modal-card {
+  background: #ffffff;
+  border-radius: 20px;
+  width: 100%;
+  max-width: 900px;
+  max-height: 88vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+  border: 1px solid var(--line);
+  animation: fadeInPop 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.orders-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--line);
+  background: #faf8f5;
+}
+
+.order-badge-counter {
+  background: #e53935;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: 12px;
+  text-transform: uppercase;
+}
+
+.orders-modal-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 12px 24px;
+  background: #fff;
+  border-bottom: 1px solid var(--line);
+}
+
+.orders-tabs {
+  display: flex;
+  gap: 6px;
+}
+
+.orders-tabs button {
+  padding: 8px 14px;
+  border: 1px solid transparent;
+  background: #f5f3ee;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--muted);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.orders-tabs button.active {
+  background: #181511;
+  color: #fff;
+}
+
+.orders-actions-group {
+  display: flex;
+  gap: 8px;
+}
+
+.cancel-all-orders-btn {
+  padding: 8px 14px;
+  background: rgba(229, 57, 53, 0.1);
+  color: #e53935;
+  border: 1px solid rgba(229, 57, 53, 0.3);
+  border-radius: 8px;
+  font-size: 12.5px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.cancel-all-orders-btn:hover {
+  background: #e53935;
+  color: #fff;
+}
+
+.refresh-orders-btn {
+  padding: 8px 14px;
+  background: #f5f3ee;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  font-size: 12.5px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.orders-modal-body {
+  padding: 20px 24px;
+  overflow-y: auto;
+  flex: 1;
+  background: #fdfdfc;
+}
+
+.orders-empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--muted);
+}
+
+.orders-empty-state strong {
+  display: block;
+  font-size: 16px;
+  color: var(--ink);
+  margin-top: 12px;
+}
+
+.orders-empty-state p {
+  font-size: 13.5px;
+  margin-top: 4px;
+}
+
+.orders-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.order-card-item {
+  background: #fff;
+  border: 1.5px solid var(--line);
+  border-radius: 14px;
+  padding: 16px 20px;
+  transition: all 0.2s ease;
+}
+
+.order-card-item.payment_reported {
+  border-color: #f59e0b;
+  background: #fffdfa;
+  box-shadow: 0 4px 14px rgba(245, 158, 11, 0.08);
+}
+
+.order-card-item.paid {
+  border-color: #10b981;
+}
+
+.order-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--line);
+}
+
+.order-card-id-block {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.order-date {
+  font-size: 12.5px;
+  color: var(--muted);
+}
+
+.order-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-size: 11.5px;
+  font-weight: 800;
+}
+
+.order-badge.warning {
+  background: rgba(245, 158, 11, 0.15);
+  color: #b45309;
+}
+
+.order-badge.info {
+  background: rgba(59, 130, 246, 0.15);
+  color: #1d4ed8;
+}
+
+.order-badge.success {
+  background: rgba(16, 185, 129, 0.15);
+  color: #047857;
+}
+
+.order-badge.neutral {
+  background: rgba(107, 114, 128, 0.12);
+  color: #4b5563;
+}
+
+.order-total-block {
+  text-align: right;
+}
+
+.order-total-block span {
+  font-size: 12px;
+  color: var(--muted);
+  margin-right: 6px;
+}
+
+.order-total-block strong {
+  font-size: 16px;
+  color: var(--ink);
+}
+
+.order-card-details {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 20px;
+  padding: 14px 0;
+}
+
+@media (max-width: 700px) {
+  .order-card-details {
+    grid-template-columns: 1fr;
+  }
+}
+
+.order-customer-info {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 13.5px;
+}
+
+.order-phone-link {
+  display: inline-block;
+  margin-left: 8px;
+  color: var(--amber);
+  text-decoration: none;
+  font-weight: 700;
+}
+
+.order-wa-link {
+  display: inline-block;
+  margin-left: 8px;
+  background: #25d366;
+  color: #fff;
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.order-address-text {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.order-comment-box {
+  background: #f5f3ee;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-style: italic;
+  color: var(--ink);
+}
+
+.order-items-snapshot {
+  background: #faf8f5;
+  border-radius: 10px;
+  padding: 10px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.order-item-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+}
+
+.order-item-title {
+  display: flex;
+  flex-direction: column;
+}
+
+.order-item-title small {
+  color: var(--muted);
+  font-size: 11.5px;
+}
+
+.order-item-qty {
+  color: var(--muted);
+}
+
+.order-item-price {
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.order-card-footer-actions {
+  display: flex;
+  gap: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
+}
+
+.order-confirm-btn {
+  flex: 1;
+  padding: 10px 16px;
+  background: #10b981;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-weight: 800;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.order-confirm-btn:hover {
+  background: #059669;
+}
+
+.order-cancel-btn {
+  padding: 10px 16px;
+  background: #fff;
+  color: #e53935;
+  border: 1.5px solid #e53935;
+  border-radius: 8px;
+  font-weight: 800;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.order-cancel-btn:hover {
+  background: #e53935;
+  color: #fff;
+}
+
+.util-btn.orders-highlight-btn {
+  background: #181511;
+  color: #fff;
+  border-color: #181511;
+}
+
+.util-btn.orders-highlight-btn:hover {
+  background: var(--amber);
+  border-color: var(--amber);
+}

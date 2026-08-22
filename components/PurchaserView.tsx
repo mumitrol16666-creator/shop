@@ -9,6 +9,7 @@ import { MergeProductsModal } from "./MergeProductsModal";
 import { PresetManagerModal } from "./PresetManagerModal";
 import { PriceTagPrintModal } from "./PriceTagPrintModal";
 import { CourseEditorModal } from "./CourseEditorModal";
+import { AdminOrdersModal } from "./AdminOrdersModal";
 import { COURSES, type Course } from "../lib/courses-data";
 import { playProductAudio, stopProductAudio } from "../lib/sound-synth";
 
@@ -47,6 +48,7 @@ export function PurchaserView({
   const [isMergeModalOpen, setIsMergeModalOpen] = useState(false);
   const [isPrintModalOpen, setIsPrintModalOpen] = useState(false);
   const [isCourseModalOpen, setIsCourseModalOpen] = useState(false);
+  const [isOrdersModalOpen, setIsOrdersModalOpen] = useState(false);
   const [adminCourses, setAdminCourses] = useState<Course[]>(COURSES);
   const [bulkPresetId, setBulkPresetId] = useState<string>("");
   const [statusFilter, setStatusFilter] = useState<"all" | "published" | "draft">("all");
@@ -923,6 +925,14 @@ export function PurchaserView({
       />
 
       {/* Course Editor Modal */}
+      <AdminOrdersModal
+        isOpen={isOrdersModalOpen}
+        onClose={() => setIsOrdersModalOpen(false)}
+        onNotice={(msg) => {
+          setNotice(msg);
+          window.setTimeout(() => setNotice(""), 3500);
+        }}
+      />
       <CourseEditorModal
         isOpen={isCourseModalOpen}
         onClose={() => setIsCourseModalOpen(false)}
@@ -1009,6 +1019,14 @@ export function PurchaserView({
               </div>
 
               <div className="util-btn-group">
+                <button
+                  type="button"
+                  className="util-btn orders-highlight-btn"
+                  onClick={() => setIsOrdersModalOpen(true)}
+                  title="Просмотр заказов, подтверждение оплат и возврат забронированных товаров на полку"
+                >
+                  📦 Заказы и брони
+                </button>
                 <button
                   type="button"
                   className="util-btn add-new-product-btn"
