@@ -900,6 +900,30 @@ const server = http.createServer((req, res) => {
     }
   }
 
+  
+function saveBase64Image(dataUrl, defaultPrefix = "img") {
+  if (!dataUrl || typeof dataUrl !== "string" || !dataUrl.startsWith("data:image/")) {
+    return dataUrl;
+  }
+  try {
+    const matches = dataUrl.match(/^data:image\/([a-zA-Z0-9+]+);base64,(.+)$/);
+    if (!matches) return dataUrl;
+    const rawExt = matches[1].toLowerCase().replace("jpeg", "jpg");
+    const ext = ["jpg", "png", "webp"].includes(rawExt) ? `.${rawExt}` : ".jpg";
+    const cleanBase64 = matches[2];
+    const buffer = Buffer.from(cleanBase64, "base64");
+    if (!buffer.length || buffer.length > 10 * 1024 * 1024) return dataUrl;
+    const filename = `${defaultPrefix}_${Date.now()}_${Math.random().toString(36).substring(2, 7)}${ext}`;
+    const filePath = path.join(UPLOADS_DIR, filename);
+    fs.writeFileSync(filePath, buffer);
+    console.log(`📸 Auto-saved base64 image to file: /uploads/${filename} (${buffer.length} bytes)`);
+    return `/uploads/${filename}`;
+  } catch (err) {
+    console.error("Failed to extract and save base64 image:", err);
+    return dataUrl;
+  }
+}
+
   if (pathname === "/api/products") {
     if (req.method === "GET") {
       const products = readProducts();
@@ -931,7 +955,14 @@ const server = http.createServer((req, res) => {
           const discountPercent = hasDiscount ? payload.pricing.discountPercent : undefined;
           const originalPrice = hasDiscount ? (payload.pricing.originalPriceKzt || Math.round(finalPrice / (1 - (discountPercent / 100)))) : undefined;
           const publicationStatus = payload.publish ? "published" : "draft";
-          const normalizedVariants = normalizeVariantPayload(payload.variants, payload.photoUrl);
+          const cleanMainPhoto = saveBase64Image(payload.photoUrl);
+          payload.photoUrl = cleanMainPhoto;
+          if (Array.isArray(payload.variants)) {
+            for (const v of payload.variants) {
+              if (v.image) v.image = saveBase64Image(v.image);
+            }
+          }
+          const normalizedVariants = normalizeVariantPayload(payload.variants, cleanMainPhoto);
           const totalStock = normalizedVariants.reduce((sum, variant) => sum + variant.stock, 0);
 
           let updatedProduct;

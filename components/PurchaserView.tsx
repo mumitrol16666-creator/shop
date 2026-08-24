@@ -3,8 +3,12 @@
 import Image from "next/image";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { money, type Product, type Variant, variantsFor } from "../lib/catalog-data";
-import { type CostPreset, loadPresets, savePresets } from "../lib/presets";
+import { type CostPreset, loadPresets, loadPresetsRemote } from "../lib/presets";
 import { calculateProductPricing } from "../lib/product-pricing";
+import {
+  attributeSuggestionsForCategory,
+  normalizeVariantAttributes,
+} from "../lib/product-variants";
 import { MergeProductsModal } from "./MergeProductsModal";
 import { PresetManagerModal } from "./PresetManagerModal";
 import { PriceTagPrintModal } from "./PriceTagPrintModal";
@@ -12,6 +16,32 @@ import { CourseEditorModal } from "./CourseEditorModal";
 import { AdminOrdersModal } from "./AdminOrdersModal";
 import { COURSES, type Course } from "../lib/courses-data";
 import { playProductAudio, stopProductAudio } from "../lib/sound-synth";
+import {
+  BUNDLE_SKUS,
+  type BundleDefinition,
+  type ComponentDefinition,
+} from "../lib/commerce/types";
+
+const legacyStringComponents = (): ComponentDefinition[] => [
+  {
+    sku: "COMP-STRINGS-ELIXIR",
+    title: "Струны Elixir Nanoweb",
+    price: 4950,
+    kind: "physical",
+    inventoryTracked: false,
+    quantity: 1,
+    placement: "optional",
+  },
+  {
+    sku: "COMP-STRINGS-DADDARIO",
+    title: "Струны D'Addario Pro",
+    price: 2450,
+    kind: "physical",
+    inventoryTracked: false,
+    quantity: 1,
+    placement: "optional",
+  },
+];
 
 type PurchaserViewProps = {
   categories: string[];
@@ -81,23 +111,20 @@ export function PurchaserView({
   // Master product data
   const [editingProductId, setEditingProductId] = useState<string | undefined>();
   const [currentPublicationStatus, setCurrentPublicationStatus] = useState<"published" | "draft">("draft");
-  const [internalName, setInternalName] = useState("Электрогитара ST-20 HSS");
-  const [internalSku, setInternalSku] = useState("EG-ST20");
-  const [internalCategory, setInternalCategory] = useState("Электрогитары");
-  const [internalPhoto, setInternalPhoto] = useState("/products/01_st20_electric.png");
-  const [internalDescription, setInternalDescription] = useState(
-    "Универсальная электрогитара формы ST для первых занятий и домашней практики.",
-  );
-  const [featuresText, setFeaturesText] = useState(
-    "Форма корпуса ST, Конфигурация HSS, 6 цветов, Стандартная мензура",
-  );
+  const [internalName, setInternalName] = useState("Новый товар");
+  const [internalSku, setInternalSku] = useState("MAESTRO-001");
+  const [internalCategory, setInternalCategory] = useState("Аксессуары");
+  const [internalPhoto, setInternalPhoto] = useState("/placeholder.png");
+  const [internalDescription, setInternalDescription] = useState("");
+  const [featuresText, setFeaturesText] = useState("");
   const [targetAudience, setTargetAudience] = useState("Для начинающих");
-  const [attachedCourseId, setAttachedCourseId] = useState<string>("auto");
+  const [attachedCourseId, setAttachedCourseId] = useState<string>("none");
   const [internalAudioUrl, setInternalAudioUrl] = useState<string>("");
-  const [internalAllowProPack, setInternalAllowProPack] = useState<boolean>(true);
+  const [internalAllowProPack, setInternalAllowProPack] = useState<boolean>(false);
   const [internalProPackTitle, setInternalProPackTitle] = useState<string>("Чехол + Ремень + VIP Доступ");
   const [internalProPackPrice, setInternalProPackPrice] = useState<number>(8900);
-  const [internalAllowStrings, setInternalAllowStrings] = useState<boolean>(true);
+  const [internalAllowStrings, setInternalAllowStrings] = useState<boolean>(false);
+  const [internalComponents, setInternalComponents] = useState<ComponentDefinition[]>([]);
   const [activeTab, setActiveTab] = useState<"general" | "bundle" | "matrix" | "pricing">("general");
   const [isPlayingAudioPreview, setIsPlayingAudioPreview] = useState<boolean>(false);
   const [isUploadingPhoto, setIsUploadingPhoto] = useState<boolean>(false);
@@ -266,7 +293,8 @@ export function PurchaserView({
       const processed = await compressImage(file);
       const res = await fetch("/api/upload", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        credentials: "same-origin",
+        headers: getAdminHeaders(),
         body: JSON.stringify({ filename: processed.filename, base64: processed.dataUrl }),
       });
       const responseText = await res.text();
@@ -304,6 +332,11 @@ export function PurchaserView({
       colorName: "Санбёрст",
       stock: 1,
       size: "39″",
+      attributes: [
+        { name: "Цвет", value: "Санбёрст" },
+        { name: "Размер", value: "39″" },
+      ],
+      priceMode: "inherit",
       image: "/product-variants/eg-st20-snb.jpg",
     },
     {
@@ -314,6 +347,11 @@ export function PurchaserView({
       colorName: "Черный",
       stock: 2,
       size: "39″",
+      attributes: [
+        { name: "Цвет", value: "Черный" },
+        { name: "Размер", value: "39″" },
+      ],
+      priceMode: "inherit",
       image: "/product-variants/eg-st20-blk.jpg",
     },
     {
@@ -324,6 +362,11 @@ export function PurchaserView({
       colorName: "Белый",
       stock: 1,
       size: "39″",
+      attributes: [
+        { name: "Цвет", value: "Белый" },
+        { name: "Размер", value: "39″" },
+      ],
+      priceMode: "inherit",
       image: "/product-variants/eg-st20-wht.jpg",
     },
   ]);
@@ -339,9 +382,12 @@ export function PurchaserView({
     const loaded = loadPresets();
     setPresets(loaded);
     if (loaded[0]) {
-      setSelectedPresetId(loaded[0].id);
       setBulkPresetId(loaded[0].id);
     }
+    void loadPresetsRemote().then((remote) => {
+      setPresets(remote);
+      if (remote[0]) setBulkPresetId(remote[0].id);
+    }).catch(() => {});
   }, []);
 
   const rate = currency === "CNY" ? cnyRate : currency === "USD" ? usdRate : 1;
@@ -444,35 +490,41 @@ export function PurchaserView({
   }, [filteredProducts]);
 
   const startNewProduct = () => {
+    const defaultCategory = categories.includes("Аксессуары")
+      ? "Аксессуары"
+      : categories.find((category) => category !== "Все") || "Другое";
+    const nextSku = `MAESTRO-${Date.now().toString().slice(-4)}`;
     setEditingProductId(undefined);
     setCurrentPublicationStatus("draft");
     setInternalName("");
-    setInternalSku(`MAESTRO-${Date.now().toString().slice(-4)}`);
-    setInternalCategory("Электрогитары");
+    setInternalSku(nextSku);
+    setInternalCategory(defaultCategory);
     setInternalPhoto("/placeholder.png");
     setInternalDescription("");
     setFeaturesText("");
-    setTargetAudience("Для начинающих");
-    setAttachedCourseId("auto");
+    setTargetAudience("");
+    setAttachedCourseId("none");
     setInternalAudioUrl("");
-    setInternalAllowProPack(true);
+    setInternalAllowProPack(false);
     setInternalProPackTitle("Чехол + Ремень + VIP Доступ");
     setInternalProPackPrice(8900);
-    setInternalAllowStrings(true);
+    setInternalAllowStrings(false);
+    setInternalComponents([]);
     setHasDiscount(false);
     setDiscountPercent(15);
     setOriginalPriceInput(0);
     setModelVariants([
       {
         id: `var-${Date.now()}-1`,
-        name: "Основной цвет",
+        name: "Стандарт",
         color: "#181511",
-        colorName: "Black",
-        sku: `MAESTRO-${Date.now().toString().slice(-4)}-BLK`,
+        colorName: "",
+        sku: `${nextSku}-01`,
         barcode: "",
-        size: "Full Size",
         stock: 1,
         image: "",
+        attributes: [],
+        priceMode: "inherit",
       },
     ]);
     setSelectedPresetId("");
@@ -506,17 +558,22 @@ export function PurchaserView({
     setCurrentPublicationStatus(product.publicationStatus === "published" ? "published" : "draft");
     setInternalName(product.name || "");
     setInternalSku(product.sku || "");
-    setInternalCategory(product.category || "Электрогитары");
+    setInternalCategory(product.category || categories.find((category) => category !== "Все") || "Другое");
     setInternalPhoto(product.image || "");
     setInternalDescription(product.description || "");
     setFeaturesText(Array.isArray(product.features) ? product.features.join(", ") : "");
     setTargetAudience(product.badge ?? "");
-    setAttachedCourseId(product.attachedCourseId || "auto");
+    setAttachedCourseId(product.attachedCourseId || "none");
     setInternalAudioUrl(product.audioUrl || "");
-    setInternalAllowProPack(product.allowProPack !== false);
+    setInternalAllowProPack(product.allowProPack === true);
     setInternalProPackTitle(product.proPackTitle || "Чехол + Ремень + VIP Доступ");
     setInternalProPackPrice(product.proPackPrice !== undefined ? product.proPackPrice : 8900);
-    setInternalAllowStrings(product.allowStringsUpsell !== false);
+    setInternalAllowStrings(product.allowStringsUpsell === true);
+    setInternalComponents(
+      product.componentDefinitions?.filter((component) => component.kind !== "digital")
+        .map((component) => ({ ...component })) ??
+      (product.allowStringsUpsell === true ? legacyStringComponents() : []),
+    );
 
     // Discount
     const prodHasDiscount = Boolean(
@@ -535,7 +592,11 @@ export function PurchaserView({
 
     const rawVariants = variantsFor(product);
     const variants: Variant[] = Array.isArray(rawVariants) && rawVariants.length > 0
-      ? JSON.parse(JSON.stringify(rawVariants))
+      ? JSON.parse(JSON.stringify(rawVariants)).map((variant: Variant) => ({
+          ...variant,
+          attributes: normalizeVariantAttributes(variant),
+          priceMode: variant.priceMode === "override" ? "override" : "inherit",
+        }))
       : [
           {
             id: `var-${Date.now()}`,
@@ -545,6 +606,8 @@ export function PurchaserView({
             colorName: "Стандарт",
             stock: product.quantity || 1,
             image: product.image || "",
+            attributes: [],
+            priceMode: "inherit",
           },
         ];
     setModelVariants(variants);
@@ -604,14 +667,15 @@ export function PurchaserView({
     const nextIndex = modelVariants.length + 1;
     const newVariant: Variant = {
       id: `var-new-${Date.now()}`,
-      name: `Цвет / Вариант ${nextIndex}`,
+      name: `Вариант ${nextIndex}`,
       sku: `${internalSku}-${nextIndex}`,
       color: "#8a8175",
       colorName: "",
       barcode: "",
-      size: "39″",
       stock: 1,
       image: internalPhoto,
+      attributes: [],
+      priceMode: "inherit",
     };
     setModelVariants([...modelVariants, newVariant]);
     setIsDirty(true);
@@ -626,9 +690,61 @@ export function PurchaserView({
     setIsDirty(true);
   };
 
+  const addVariantAttribute = (variantIndex: number, name: string) => {
+    const trimmedName = name.trim();
+    if (!trimmedName) return;
+    setModelVariants((current) => current.map((variant, index) => {
+      if (index !== variantIndex) return variant;
+      const attributes = Array.isArray(variant.attributes)
+        ? variant.attributes
+        : normalizeVariantAttributes(variant);
+      if (attributes.some((attribute) => attribute.name.toLocaleLowerCase("ru-RU") === trimmedName.toLocaleLowerCase("ru-RU"))) {
+        return variant;
+      }
+      return { ...variant, attributes: [...attributes, { name: trimmedName, value: "" }] };
+    }));
+    setIsDirty(true);
+  };
+
+  const updateVariantAttribute = (
+    variantIndex: number,
+    attributeIndex: number,
+    patch: Partial<{ name: string; value: string }>,
+  ) => {
+    setModelVariants((current) => current.map((variant, index) => {
+      if (index !== variantIndex) return variant;
+      const attributes = Array.isArray(variant.attributes) ? [...variant.attributes] : [];
+      const currentAttribute = attributes[attributeIndex] || { name: "", value: "" };
+      attributes[attributeIndex] = { ...currentAttribute, ...patch };
+      const updated = { ...variant, attributes };
+      const colorAttribute = attributes.find((attribute) => /цвет/i.test(attribute.name));
+      const sizeAttribute = attributes.find((attribute) => /размер/i.test(attribute.name));
+      return {
+        ...updated,
+        colorName: colorAttribute?.value || undefined,
+        size: sizeAttribute?.value || undefined,
+      };
+    }));
+    setIsDirty(true);
+  };
+
+  const removeVariantAttribute = (variantIndex: number, attributeIndex: number) => {
+    setModelVariants((current) => current.map((variant, index) => {
+      if (index !== variantIndex) return variant;
+      const attributes = (variant.attributes || []).filter((_, index) => index !== attributeIndex);
+      return {
+        ...variant,
+        attributes,
+        colorName: attributes.find((attribute) => /цвет/i.test(attribute.name))?.value,
+        size: attributes.find((attribute) => /размер/i.test(attribute.name))?.value,
+      };
+    }));
+    setIsDirty(true);
+  };
+
   const removeVariantRow = (index: number) => {
     if (modelVariants.length <= 1) {
-      alert("У модели должен оставаться хотя бы один вариант (цвет).");
+      alert("У товара должен оставаться хотя бы один вариант.");
       return;
     }
     setModelVariants((current) => current.filter((_, idx) => idx !== index));
@@ -643,6 +759,7 @@ export function PurchaserView({
       id: `var-dup-${Date.now()}`,
       name: `${source.name} (копия)`,
       sku: `${source.sku}-COPY`,
+      attributes: (source.attributes || []).map((attribute) => ({ ...attribute })),
     };
     setModelVariants([...modelVariants, duplicated]);
     setIsDirty(true);
@@ -652,16 +769,149 @@ export function PurchaserView({
     return modelVariants.reduce((acc, v) => acc + (v.stock || 0), 0);
   }, [modelVariants]);
 
+  const inventoryOptions = useMemo(() => storedProducts.flatMap((product) =>
+    variantsFor(product).map((variant) => ({
+      key: `${product.sku}::${variant.sku}`,
+      productSku: product.sku,
+      variantSku: variant.sku,
+      title: `${product.name} — ${variant.name}`,
+      stock: Math.max(0, variant.stock || 0),
+    })),
+  ), [storedProducts]);
+
+  const updateComponent = (index: number, patch: Partial<ComponentDefinition>) => {
+    setInternalComponents((current) => current.map((component, componentIndex) =>
+      componentIndex === index ? { ...component, ...patch } : component,
+    ));
+    setIsDirty(true);
+  };
+
+  const addComponent = (placement: "optional" | "pro_pack") => {
+    const suffix = `${Date.now().toString(36)}-${internalComponents.length + 1}`.toUpperCase();
+    setInternalComponents((current) => [...current, {
+      sku: `COMP-${suffix}`,
+      title: placement === "pro_pack" ? "Новая позиция комплекта" : "Новая допродажа",
+      price: 0,
+      kind: "physical",
+      inventoryTracked: false,
+      quantity: 1,
+      placement,
+    }]);
+    if (placement === "optional") setInternalAllowStrings(true);
+    if (placement === "pro_pack") setInternalAllowProPack(true);
+    setIsDirty(true);
+  };
+
+  const removeComponent = (index: number) => {
+    setInternalComponents((current) => current.filter((_, componentIndex) => componentIndex !== index));
+    setIsDirty(true);
+  };
+
+  const linkComponentToInventory = (index: number, value: string) => {
+    const option = inventoryOptions.find((candidate) => candidate.key === value);
+    if (!option) {
+      updateComponent(index, {
+        linkedProductSku: undefined,
+        linkedVariantSku: undefined,
+        inventoryTracked: false,
+      });
+      return;
+    }
+    updateComponent(index, {
+      linkedProductSku: option.productSku,
+      linkedVariantSku: option.variantSku,
+      inventoryTracked: true,
+      title: option.title,
+      sku: `COMP-${option.variantSku}`.toUpperCase(),
+    });
+  };
+  const variantAttributeSuggestions = useMemo(
+    () => attributeSuggestionsForCategory(internalCategory),
+    [internalCategory],
+  );
+
   const saveProduct = async (publish: boolean) => {
     if (!internalName.trim() || !internalSku.trim() || !internalDescription.trim()) {
       setSaveState("error");
       setSaveMessage("Заполните название, SKU и описание товара.");
       return;
     }
-    if (!modelVariants.length || !modelVariants[0]?.name.trim()) {
+    if (!modelVariants.length || modelVariants.some((variant) => !variant.name.trim() || !variant.sku.trim())) {
       setSaveState("error");
-      setSaveMessage("Добавьте хотя бы один вариант (цвет).");
+      setSaveMessage("У каждого варианта должны быть название и SKU.");
       return;
+    }
+    const normalizedSkus = modelVariants.map((variant) => variant.sku.trim().toLocaleUpperCase("ru-RU"));
+    if (new Set(normalizedSkus).size !== normalizedSkus.length) {
+      setSaveState("error");
+      setSaveMessage("SKU вариантов не должны повторяться.");
+      return;
+    }
+    if (modelVariants.some((variant) => variant.priceMode === "override" && (!variant.price || variant.price <= 0))) {
+      setSaveState("error");
+      setSaveMessage("Заполните собственную цену у вариантов с отдельной ценой.");
+      return;
+    }
+    const enabledComponents = internalComponents.filter((component) =>
+      component.placement === "pro_pack" ? internalAllowProPack : internalAllowStrings,
+    );
+    const componentSkus = enabledComponents.map((component) => component.sku.trim().toUpperCase());
+    if (new Set(componentSkus).size !== componentSkus.length || componentSkus.some((sku) => !sku)) {
+      setSaveState("error");
+      setSaveMessage("У каждой позиции комплекта должен быть уникальный SKU.");
+      setActiveTab("bundle");
+      return;
+    }
+
+    const persistedComponents: ComponentDefinition[] = enabledComponents.map((component) => ({
+      ...component,
+      sku: component.sku.trim().toUpperCase(),
+      title: component.title.trim(),
+      price: Math.max(0, Math.round(component.price || 0)),
+      quantity: Math.max(1, Math.floor(component.quantity || 1)),
+      inventoryTracked: component.kind === "physical" && component.inventoryTracked === true,
+    }));
+    const persistedBundles: BundleDefinition[] = [{
+      id: "base",
+      sku: BUNDLE_SKUS.base,
+      title: "Базовая комплектация",
+      description: "Заводская комплектация",
+      componentSkus: [],
+      priceDelta: 0,
+      eligible: true,
+    }];
+    if (attachedCourseId !== "none") {
+      const courseSku = `COURSE-${attachedCourseId.toUpperCase()}`;
+      persistedComponents.push({
+        sku: courseSku,
+        title: adminCourses.find((course) => course.id === attachedCourseId)?.title || "Онлайн-курс Maestro",
+        price: 0,
+        kind: "digital",
+        inventoryTracked: false,
+        quantity: 1,
+      });
+      persistedBundles.push({
+        id: "gift_course",
+        sku: BUNDLE_SKUS.giftCourse,
+        title: "Товар + курс",
+        description: adminCourses.find((course) => course.id === attachedCourseId)?.title || "Онлайн-курс в подарок",
+        componentSkus: [courseSku],
+        priceDelta: 0,
+        eligible: true,
+      });
+    }
+    if (internalAllowProPack) {
+      persistedBundles.push({
+        id: "pro_pack",
+        sku: BUNDLE_SKUS.proPack,
+        title: "PRO комплект",
+        description: internalProPackTitle.trim() || "Расширенная комплектация",
+        componentSkus: persistedComponents
+          .filter((component) => component.placement === "pro_pack")
+          .map((component) => component.sku),
+        priceDelta: Math.max(0, Math.round(internalProPackPrice || 0)),
+        eligible: true,
+      });
     }
     if (percentExpenses >= 100) {
       setSaveState("error");
@@ -672,10 +922,23 @@ export function PurchaserView({
     setSaveState("saving");
     setSaveMessage(publish ? "Публикуем карточку на витрине..." : "Сохраняем черновик...");
     try {
-      const primaryVariant = modelVariants[0];
+      const variantsToSave = modelVariants.map((variant) => ({
+        ...variant,
+        name: variant.name.trim(),
+        sku: variant.sku.trim().toUpperCase(),
+        barcode: variant.barcode?.trim() || undefined,
+        image: variant.image || internalPhoto,
+        attributes: (variant.attributes || [])
+          .map((attribute) => ({ name: attribute.name.trim(), value: attribute.value.trim() }))
+          .filter((attribute) => attribute.name && attribute.value),
+        priceMode: variant.priceMode === "override" ? "override" as const : "inherit" as const,
+        price: variant.priceMode === "override" ? variant.price : undefined,
+      }));
+      const primaryVariant = variantsToSave[0];
       const response = await fetch("/api/products", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        credentials: "same-origin",
+        headers: getAdminHeaders(),
         body: JSON.stringify({
           productId: editingProductId,
           variantId: primaryVariant?.id,
@@ -684,6 +947,7 @@ export function PurchaserView({
           category: internalCategory,
           photoUrl: internalPhoto,
           description: internalDescription,
+          targetAudience,
           features: featuresText
             .split(",")
             .map((feature) => feature.trim())
@@ -693,17 +957,19 @@ export function PurchaserView({
           proPackTitle: internalProPackTitle.trim(),
           proPackPrice: internalProPackPrice,
           allowStringsUpsell: internalAllowStrings,
+          bundleDefinitions: persistedBundles,
+          componentDefinitions: persistedComponents,
           audioUrl: internalAudioUrl.trim() || undefined,
           variant: {
             name: primaryVariant.name,
             sku: primaryVariant.sku,
             barcode: primaryVariant.barcode,
-            colorName: primaryVariant.colorName || primaryVariant.name,
+            colorName: primaryVariant.colorName,
             colorHex: primaryVariant.color,
             size: primaryVariant.size,
             stockQuantity: totalModelStock,
           },
-          variants: modelVariants,
+          variants: variantsToSave,
           pricing: {
             purchaseCurrency: currency,
             purchasePrice: purchase,
@@ -738,8 +1004,8 @@ export function PurchaserView({
       const updatedProduct: Product = {
         ...data.product,
         quantity: totalModelStock,
-        variants: modelVariants.length,
-        variantItems: modelVariants,
+        variants: variantsToSave.length,
+        variantItems: variantsToSave,
         price: Math.round(retail),
         attachedCourseId: attachedCourseId === "none" ? undefined : attachedCourseId,
         audioUrl: internalAudioUrl.trim() || undefined,
@@ -747,6 +1013,8 @@ export function PurchaserView({
         proPackTitle: internalProPackTitle.trim(),
         proPackPrice: internalProPackPrice,
         allowStringsUpsell: internalAllowStrings,
+        bundleDefinitions: persistedBundles,
+        componentDefinitions: persistedComponents,
         originalPrice: hasDiscount && calculation ? Math.round(calculation.originalPriceKzt) : undefined,
         discountPercent: hasDiscount ? discountPercent : undefined,
         isDiscountActive: hasDiscount,
@@ -891,7 +1159,7 @@ export function PurchaserView({
       return [...kept, mergedMaster];
     });
     setSelectedProductIds(new Set());
-    setNotice(`Объединено в одну модель: ${mergedMaster.name} (${mergedMaster.variants} вар.)`);
+    setNotice(`Объединено в одну карточку: ${mergedMaster.name} (${mergedMaster.variants} вар.)`);
     window.setTimeout(() => setNotice(""), 3200);
   };
 
@@ -985,7 +1253,7 @@ export function PurchaserView({
                   )}
                   {lastSavedTime && <small className="last-saved-hint">Сохранено: {lastSavedTime}</small>}
                 </div>
-                <h2>{internalName || "Новая модель инструмента"}</h2>
+                <h2>{internalName || "Новый товар"}</h2>
                 <div className="editor-sku-row">
                   <span className="sku-badge">SKU: {internalSku}</span>
                   <span className="category-badge">{internalCategory}</span>
@@ -1002,9 +1270,11 @@ export function PurchaserView({
                   onChange={(e) => handleSelectPresetChange(e.target.value)}
                   aria-label="Выбрать шаблон расходов"
                 >
+                  <option value="">Индивидуальные настройки</option>
                   {presets.map((preset) => (
                     <option key={preset.id} value={preset.id}>
                       {preset.name} ({preset.purchaseCurrency})
+                      {preset.categoryHint === internalCategory ? " — подходит категории" : ""}
                     </option>
                   ))}
                 </select>
@@ -1103,8 +1373,8 @@ export function PurchaserView({
               className={`editor-tab-btn ${activeTab === "matrix" ? "active" : ""}`}
               onClick={() => setActiveTab("matrix")}
             >
-              <span>🎨</span>
-              <strong>3. Цвета и склад ({modelVariants.length})</strong>
+              <span>▦</span>
+              <strong>3. Варианты и склад ({modelVariants.length})</strong>
             </button>
             <button
               type="button"
@@ -1120,20 +1390,20 @@ export function PurchaserView({
           {activeTab === "general" && (
             <div className="tab-pane-content">
               <div className="tab-section-head">
-                <strong>Основная информация о модели</strong>
-                <p>Название, категория, фотографии, звукозапись и описание для покупателей на витрине.</p>
+                <strong>Основная информация о товаре</strong>
+                <p>Название, категория, фотографии, необязательное медиа и описание для покупателей.</p>
               </div>
 
               <div className="model-info-grid">
                 <div className="editor-field-card">
-                  <span className="field-label-text">Название модели</span>
+                  <span className="field-label-text">Название товара</span>
                   <input
                     value={internalName}
                     onChange={(e) => {
                       setInternalName(e.target.value);
                       setIsDirty(true);
                     }}
-                    placeholder="например, Электрогитара ST-20 HSS"
+                    placeholder="например, Каподастр алюминиевый"
                   />
                 </div>
 
@@ -1151,19 +1421,20 @@ export function PurchaserView({
 
                 <div className="editor-field-card">
                   <span className="field-label-text">Категория на сайте</span>
-                  <select
+                  <input
+                    list="maestro-product-categories"
                     value={internalCategory}
                     onChange={(e) => {
                       setInternalCategory(e.target.value);
+                      setSelectedPresetId("");
                       setIsDirty(true);
                     }}
-                  >
-                    {categories
-                      .filter((cat) => cat !== "Все")
-                      .map((cat) => (
-                        <option key={cat} value={cat}>{cat}</option>
-                      ))}
-                  </select>
+                    placeholder="Выберите или введите новую категорию"
+                  />
+                  <datalist id="maestro-product-categories">
+                    {categories.filter((cat) => cat !== "Все").map((cat) => <option key={cat} value={cat} />)}
+                  </datalist>
+                  <small>Новую категорию можно написать вручную — после публикации она появится в меню магазина.</small>
                 </div>
 
                 <div className="editor-field-card">
@@ -1179,7 +1450,7 @@ export function PurchaserView({
                 </div>
 
                 <div className="editor-field-card full-width">
-                  <span className="field-label-text">📸 Главное фото инструмента (PNG / JPG / WebP)</span>
+                  <span className="field-label-text">Главное фото товара (PNG / JPG / WebP)</span>
                   <div style={{ display: "flex", gap: "10px", alignItems: "center", marginTop: "4px" }}>
                     <input
                       style={{ flex: 1 }}
@@ -1237,7 +1508,7 @@ export function PurchaserView({
                 </div>
 
                 <div className="editor-field-card full-width">
-                  <span className="field-label-text">🎵 Аудиозапись звучания инструмента (MP3 / Прямая ссылка)</span>
+                  <span className="field-label-text">Аудио или демонстрация товара (необязательно)</span>
                   <div style={{ display: "flex", gap: "10px", alignItems: "center", marginTop: "4px" }}>
                     <input
                       style={{ flex: 1 }}
@@ -1273,7 +1544,7 @@ export function PurchaserView({
                 </div>
 
                 <div className="editor-field-card full-width">
-                  <span className="field-label-text">Краткое описание инструмента</span>
+                  <span className="field-label-text">Краткое описание товара</span>
                   <textarea
                     rows={3}
                     style={{ marginTop: "4px" }}
@@ -1282,7 +1553,7 @@ export function PurchaserView({
                       setInternalDescription(e.target.value);
                       setIsDirty(true);
                     }}
-                    placeholder="Универсальная электрогитара формы ST для первых занятий и домашней практики."
+                    placeholder="Что это за товар, кому подходит и чем полезен."
                   />
                 </div>
 
@@ -1295,7 +1566,7 @@ export function PurchaserView({
                       setFeaturesText(e.target.value);
                       setIsDirty(true);
                     }}
-                    placeholder="Форма корпуса ST, Конфигурация HSS, 6 цветов, Стандартная мензура"
+                    placeholder="Алюминиевый корпус, мягкая накладка, быстрый зажим"
                   />
                 </div>
               </div>
@@ -1307,7 +1578,7 @@ export function PurchaserView({
             <div className="tab-pane-content">
               <div className="tab-section-head">
                 <strong>Комплектация, подарки и допродажи</strong>
-                <p>Включайте или отключайте подарочный онлайн-курс, состав PRO-комплекта и предложение струн со скидкой 50% с помощью переключателей справа.</p>
+                <p>Курс, PRO-набор и дополнительные позиции сохраняются вместе с товаром. Физические позиции можно связать с реальным вариантом на складе.</p>
               </div>
 
               <div className="bundle-editor-grid">
@@ -1317,7 +1588,7 @@ export function PurchaserView({
                     <div className="bundle-card-top">
                       <span className="bundle-icon">🎁</span>
                       <div>
-                        <strong>1. Подарочный онлайн-курс к инструменту</strong>
+                        <strong>1. Подарочный онлайн-курс к товару</strong>
                         <span>Бесплатный видеокурс в подарок (ценность 19 900 ₸) при покупке</span>
                       </div>
                     </div>
@@ -1346,7 +1617,7 @@ export function PurchaserView({
                             setIsDirty(true);
                           }}
                         >
-                          <option value="auto">✨ Автоматически (по категории инструмента)</option>
+                          <option value="auto">Автоматически по категории товара</option>
                           {adminCourses.map((c) => (
                             <option key={c.id} value={c.id}>
                               🎓 {c.title} ({c.level}, {c.lessonsCount || 10} уроков)
@@ -1358,7 +1629,7 @@ export function PurchaserView({
                     </div>
                   ) : (
                     <div className="bundle-card-disabled-hint">
-                      <p>❌ <strong>Курс отключен</strong>. Товар продается только как инструмент в заводской коробке без онлайн-уроков.</p>
+                      <p><strong>Курс отключен.</strong> В карточке будет только обычная комплектация товара.</p>
                     </div>
                   )}
                 </div>
@@ -1414,6 +1685,36 @@ export function PurchaserView({
                           />
                         </label>
                       </div>
+                      <div className="card-subhead between" style={{ marginTop: 14 }}>
+                        <div>
+                          <strong>Состав PRO-комплекта</strong>
+                          <span>Добавьте чехол, ремень, струны или услугу. Связанные товары будут резервироваться на складе.</span>
+                        </div>
+                        <button type="button" className="primary-button small" onClick={() => addComponent("pro_pack")}>+ Позиция</button>
+                      </div>
+                      {internalComponents.filter((component) => component.placement === "pro_pack").map((component) => {
+                        const index = internalComponents.indexOf(component);
+                        const linkedKey = component.linkedVariantSku
+                          ? `${component.linkedProductSku || ""}::${component.linkedVariantSku}`
+                          : "";
+                        return (
+                          <div key={`${component.sku}-${index}`} className="editor-field-card full-width" style={{ marginTop: 10 }}>
+                            <div style={{ display: "grid", gridTemplateColumns: "minmax(190px, 1.5fr) minmax(160px, 1fr) 110px 90px auto", gap: 10, alignItems: "end" }}>
+                              <label>Товар со склада
+                                <select value={linkedKey} onChange={(event) => linkComponentToInventory(index, event.target.value)}>
+                                  <option value="">Без связи со складом</option>
+                                  {inventoryOptions.map((option) => <option key={option.key} value={option.key}>{option.title} · {option.stock} шт.</option>)}
+                                </select>
+                              </label>
+                              <label>Название<input value={component.title} onChange={(event) => updateComponent(index, { title: event.target.value })} /></label>
+                              <label>Количество<input type="number" min="1" value={component.quantity || 1} onChange={(event) => updateComponent(index, { quantity: Math.max(1, Number(event.target.value) || 1) })} /></label>
+                              <label>Тип<select value={component.kind} onChange={(event) => updateComponent(index, { kind: event.target.value as ComponentDefinition["kind"], inventoryTracked: event.target.value === "physical" && Boolean(component.linkedVariantSku) })}><option value="physical">Товар</option><option value="service">Услуга</option></select></label>
+                              <button type="button" className="outline-button small" onClick={() => removeComponent(index)}>Удалить</button>
+                            </div>
+                            <small>{component.inventoryTracked ? `Остаток контролируется по SKU ${component.linkedVariantSku}` : "Позиция не списывается со склада"}</small>
+                          </div>
+                        );
+                      })}
                       <span className="bundle-status-tag gold">✓ Покупатель сможет выбрать кнопку «👑 PRO Комплект (+{money(internalProPackPrice)} ₸)»</span>
                     </div>
                   ) : (
@@ -1423,14 +1724,14 @@ export function PurchaserView({
                   )}
                 </div>
 
-                {/* 3. STRINGS UPSELL (-50%) */}
+                {/* 3. OPTIONAL COMPONENTS */}
                 <div className={`bundle-config-card ${internalAllowStrings ? "enabled" : "disabled"}`}>
                   <div className="bundle-card-header-row">
                     <div className="bundle-card-top">
                       <span className="bundle-icon">⚡</span>
                       <div>
-                        <strong>3. Допродажа струн со скидкой 50% (Order Bump)</strong>
-                        <span>Выбор премиум-струн Elixir / D'Addario со скидкой 50%</span>
+                        <strong>3. Дополнительные товары и услуги</strong>
+                        <span>Струны, аксессуары и другие предложения перед добавлением в корзину</span>
                       </div>
                     </div>
 
@@ -1449,19 +1750,43 @@ export function PurchaserView({
 
                   {internalAllowStrings ? (
                     <div className="bundle-card-body">
-                      <div className="bump-preview-pills" style={{ display: "flex", gap: "10px", flexWrap: "wrap", margin: "4px 0" }}>
-                        <span style={{ fontSize: "12px", background: "#fff", padding: "6px 12px", borderRadius: "8px", border: "1px solid var(--line)", fontWeight: 700 }}>
-                          👑 Струны Elixir Nanoweb (USA): <strong>+4 950 ₸</strong> <del style={{ color: "var(--muted)" }}>9 900 ₸</del>
-                        </span>
-                        <span style={{ fontSize: "12px", background: "#fff", padding: "6px 12px", borderRadius: "8px", border: "1px solid var(--line)", fontWeight: 700 }}>
-                          🎸 Струны D'Addario Pro: <strong>+2 450 ₸</strong> <del style={{ color: "var(--muted)" }}>4 900 ₸</del>
-                        </span>
+                      <div className="card-subhead between">
+                        <div><strong>Предложения покупателю</strong><span>Цена здесь — доплата к основному товару.</span></div>
+                        <button type="button" className="primary-button small" onClick={() => addComponent("optional")}>+ Добавить</button>
                       </div>
-                      <span className="bundle-status-tag green">✓ Блок предложения запасных струн со скидкой -50% активен в карточке</span>
+                      {internalComponents.filter((component) => component.placement !== "pro_pack").map((component) => {
+                        const index = internalComponents.indexOf(component);
+                        const linkedKey = component.linkedVariantSku
+                          ? `${component.linkedProductSku || ""}::${component.linkedVariantSku}`
+                          : "";
+                        return (
+                          <div key={`${component.sku}-${index}`} className="editor-field-card full-width" style={{ marginTop: 10 }}>
+                            <div style={{ display: "grid", gridTemplateColumns: "minmax(190px, 1.5fr) minmax(160px, 1fr) 130px 100px auto", gap: 10, alignItems: "end" }}>
+                              <label>Товар со склада
+                                <select value={linkedKey} onChange={(event) => linkComponentToInventory(index, event.target.value)}>
+                                  <option value="">Без связи со складом</option>
+                                  {inventoryOptions.map((option) => <option key={option.key} value={option.key}>{option.title} · {option.stock} шт.</option>)}
+                                </select>
+                              </label>
+                              <label>Название<input value={component.title} onChange={(event) => updateComponent(index, { title: event.target.value })} /></label>
+                              <label>Доплата, ₸<input type="number" min="0" value={component.price || 0} onChange={(event) => updateComponent(index, { price: Math.max(0, Number(event.target.value) || 0) })} /></label>
+                              <label>Количество<input type="number" min="1" value={component.quantity || 1} onChange={(event) => updateComponent(index, { quantity: Math.max(1, Number(event.target.value) || 1) })} /></label>
+                              <button type="button" className="outline-button small" onClick={() => removeComponent(index)}>Удалить</button>
+                            </div>
+                            <div style={{ display: "grid", gridTemplateColumns: "160px minmax(180px, 1fr) 2fr", gap: 10, marginTop: 8 }}>
+                              <label>Тип<select value={component.kind} onChange={(event) => updateComponent(index, { kind: event.target.value as ComponentDefinition["kind"], inventoryTracked: event.target.value === "physical" && Boolean(component.linkedVariantSku) })}><option value="physical">Товар</option><option value="service">Услуга</option></select></label>
+                              <label>SKU предложения<input value={component.sku} onChange={(event) => updateComponent(index, { sku: event.target.value.toUpperCase() })} /></label>
+                              <small style={{ alignSelf: "end", paddingBottom: 11 }}>{component.inventoryTracked ? `Остаток контролируется по SKU ${component.linkedVariantSku}` : "Можно оставить без связи для цифровой услуги или товара вне каталога"}</small>
+                            </div>
+                          </div>
+                        );
+                      })}
+                      {internalComponents.every((component) => component.placement === "pro_pack") && <p>Пока нет предложений. Нажмите «Добавить» и выберите нужные струны или аксессуар.</p>}
+                      <span className="bundle-status-tag green">✓ Покупатель увидит только сохранённые и доступные позиции</span>
                     </div>
                   ) : (
                     <div className="bundle-card-disabled-hint">
-                      <p>❌ <strong>Спецпредложение струн отключено</strong>. Блок допродажи струн скрыт в карточке этого товара.</p>
+                      <p><strong>Дополнительные предложения отключены.</strong> В карточке останутся только варианты комплектации.</p>
                     </div>
                   )}
                 </div>
@@ -1469,151 +1794,122 @@ export function PurchaserView({
             </div>
           )}
 
-          {/* TAB 3: MATRIX & STOCK */}
+          {/* TAB 3: UNIVERSAL VARIANTS & STOCK */}
           {activeTab === "matrix" && (
             <div className="tab-pane-content">
               <div className="card-subhead between">
                 <div>
-                  <strong>Матрица цветов и модификаций модели ({modelVariants.length})</strong>
-                  <span>Все расцветки и размеры гитары хранятся в одной карточке. Общий остаток: <strong>{totalModelStock} шт.</strong></span>
+                  <strong>Варианты товара и склад ({modelVariants.length})</strong>
+                  <span>Размер не обязателен. Добавляйте только реальные отличия: цвет, калибр, совместимость, материал или мощность. Общий остаток: <strong>{totalModelStock} шт.</strong></span>
                 </div>
                 <button type="button" className="primary-button small" onClick={addVariantRow}>
-                  + Добавить вариант / цвет
+                  + Добавить вариант
                 </button>
               </div>
 
-              <div className="variant-matrix-table">
-                <div className="variant-matrix-head" style={{ gridTemplateColumns: "110px 100px 1.4fr 1.2fr 1.1fr 70px 85px 80px" }}>
-                  <span>Цвет</span>
-                  <span>Фото цвета</span>
-                  <span>Название цвета</span>
-                  <span>SKU варианта</span>
-                  <span>Штрихкод</span>
-                  <span>Размер</span>
-                  <span>Остаток</span>
-                  <span>Действия</span>
-                </div>
+              <div className="variant-editor-list">
                 {modelVariants.map((variant, index) => (
-                  <div className="variant-matrix-row" key={variant.id || `${variant.sku}-${index}`} style={{ gridTemplateColumns: "110px 100px 1.4fr 1.2fr 1.1fr 70px 85px 80px" }}>
-                    <div className="variant-color-input-wrap">
-                      <input
-                        type="color"
-                        value={variant.color || "#171717"}
-                        onChange={(e) => updateVariantRow(index, { color: e.target.value })}
-                        title="Выбрать цвет"
-                      />
-                      <input
-                        type="text"
-                        placeholder="#171717"
-                        value={variant.color || ""}
-                        onChange={(e) => updateVariantRow(index, { color: e.target.value })}
-                        className="color-hex-text"
-                      />
-                    </div>
-
-                    <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-                      <div
-                        style={{
-                          position: "relative",
-                          width: "36px",
-                          height: "36px",
-                          borderRadius: "8px",
-                          overflow: "hidden",
-                          background: "#faf8f5",
-                          border: "1.5px solid var(--line)",
-                          flexShrink: 0,
-                          cursor: "zoom-in",
-                          transition: "transform 0.2s ease, border-color 0.2s ease",
-                        }}
-                        className="variant-thumb-clickable"
-                        onClick={() =>
-                          setPreviewPhotoModal({
+                  <article className="variant-editor-card" key={variant.id || `${variant.sku}-${index}`}>
+                    <header className="variant-editor-card__header">
+                      <div className="variant-editor-photo">
+                        <button
+                          type="button"
+                          className="variant-editor-photo__preview"
+                          onClick={() => setPreviewPhotoModal({
                             url: variant.image || internalPhoto || "/placeholder.png",
-                            title: `${internalName} — ${variant.colorName || variant.name}`,
-                            subtitle: `SKU: ${variant.sku || internalSku} · Цвет: ${variant.color}`,
+                            title: `${internalName} — ${variant.name}`,
+                            subtitle: `SKU: ${variant.sku || internalSku}`,
                             variantIndex: index,
-                          })
-                        }
-                        title="🔍 Нажмите, чтобы открыть фото в полном размере"
-                      >
-                        <Image
-                          src={variant.image || internalPhoto || "/placeholder.png"}
-                          alt=""
-                          fill
-                          unoptimized
-                          sizes="36px"
-                          style={{ objectFit: "contain" }}
-                        />
+                          })}
+                          title="Открыть фото"
+                        >
+                          <Image
+                            src={variant.image || internalPhoto || "/placeholder.png"}
+                            alt=""
+                            fill
+                            unoptimized
+                            sizes="64px"
+                            style={{ objectFit: "contain" }}
+                          />
+                        </button>
+                        <label className="variant-editor-photo__upload">
+                          Загрузить фото
+                          <input
+                            type="file"
+                            accept="image/*"
+                            onChange={(e) => {
+                              const file = e.target.files?.[0];
+                              if (file) uploadImageFile(file, (url) => updateVariantRow(index, { image: url }));
+                            }}
+                          />
+                        </label>
+                        <small>Фото не влияет на цену</small>
                       </div>
-                      <label style={{ cursor: "pointer", fontSize: "11px", padding: "5px 7px", background: "#f4efe9", border: "1px solid var(--line)", borderRadius: "6px", fontWeight: 700 }} title="Загрузить фото для этого цвета">
-                        📷
+
+                      <label className="variant-editor-name">
+                        <span>Название варианта</span>
                         <input
-                          type="file"
-                          accept="image/*"
-                          style={{ display: "none" }}
-                          onChange={(e) => {
-                            const file = e.target.files?.[0];
-                            if (file) uploadImageFile(file, (url) => updateVariantRow(index, { image: url }));
-                          }}
+                          type="text"
+                          placeholder="Например, Золотой или 10–47"
+                          value={variant.name}
+                          onChange={(e) => updateVariantRow(index, { name: e.target.value })}
                         />
                       </label>
+
+                      <div className="variant-actions">
+                        <button type="button" className="action-icon-btn" onClick={() => duplicateVariantRow(index)} title="Дублировать вариант">⧉</button>
+                        <button type="button" className="action-icon-btn delete" onClick={() => removeVariantRow(index)} disabled={modelVariants.length <= 1} title="Удалить вариант">✕</button>
+                      </div>
+                    </header>
+
+                    <div className="variant-editor-core-grid">
+                      <label><span>SKU варианта</span><input type="text" placeholder="AC-CAPO-GOLD" value={variant.sku} onChange={(e) => updateVariantRow(index, { sku: e.target.value })} /></label>
+                      <label><span>Штрихкод</span><input type="text" placeholder="Необязательно" value={variant.barcode || ""} onChange={(e) => updateVariantRow(index, { barcode: e.target.value })} /></label>
+                      <label><span>Остаток</span><input type="number" min="0" value={variant.stock === 0 ? "" : variant.stock} onFocus={(e) => e.target.select()} onChange={(e) => updateVariantRow(index, { stock: Math.max(0, +e.target.value) })} /></label>
+                      <label>
+                        <span>Цена варианта</span>
+                        <select value={variant.priceMode === "override" ? "override" : "inherit"} onChange={(e) => updateVariantRow(index, { priceMode: e.target.value as "inherit" | "override", price: e.target.value === "override" ? (variant.price || Math.round(retail)) : undefined })}>
+                          <option value="inherit">Базовая цена товара</option>
+                          <option value="override">Своя цена</option>
+                        </select>
+                      </label>
+                      {variant.priceMode === "override" && (
+                        <label><span>Своя цена, ₸</span><input type="number" min="1" value={variant.price || ""} onFocus={(e) => e.target.select()} onChange={(e) => updateVariantRow(index, { price: Math.max(0, +e.target.value) })} /></label>
+                      )}
                     </div>
 
-                    <input
-                      type="text"
-                      placeholder="Название цвета"
-                      value={variant.colorName || variant.name}
-                      onChange={(e) => {
-                        updateVariantRow(index, { name: e.target.value, colorName: e.target.value });
-                      }}
-                    />
-                    <input
-                      type="text"
-                      placeholder="SKU"
-                      value={variant.sku}
-                      onChange={(e) => updateVariantRow(index, { sku: e.target.value })}
-                    />
-                    <input
-                      type="text"
-                      placeholder="Штрихкод"
-                      value={variant.barcode || ""}
-                      onChange={(e) => updateVariantRow(index, { barcode: e.target.value })}
-                    />
-                    <input
-                      type="text"
-                      placeholder="39″"
-                      value={variant.size || "39″"}
-                      onChange={(e) => updateVariantRow(index, { size: e.target.value })}
-                      className="size-input"
-                    />
-                    <input
-                      type="number"
-                      min="0"
-                      value={variant.stock === 0 ? "" : variant.stock}
-                      onFocus={(e) => e.target.select()}
-                      onChange={(e) => updateVariantRow(index, { stock: Math.max(0, +e.target.value) })}
-                      className="stock-input"
-                    />
-                    <div className="variant-actions">
-                      <button
-                        type="button"
-                        className="action-icon-btn"
-                        onClick={() => duplicateVariantRow(index)}
-                        title="Дублировать строку"
-                      >
-                        📋
-                      </button>
-                      <button
-                        type="button"
-                        className="action-icon-btn delete"
-                        onClick={() => removeVariantRow(index)}
-                        disabled={modelVariants.length <= 1}
-                        title="Удалить вариант"
-                      >
-                        ✕
-                      </button>
-                    </div>
-                  </div>
+                    <section className="variant-attributes-editor">
+                      <header>
+                        <div><strong>Характеристики варианта</strong><small>Укажите только то, чем этот SKU отличается от других.</small></div>
+                        <select
+                          value=""
+                          aria-label={`Добавить характеристику для ${variant.name}`}
+                          onChange={(e) => {
+                            addVariantAttribute(index, e.target.value);
+                            e.currentTarget.value = "";
+                          }}
+                        >
+                          <option value="">+ Добавить характеристику</option>
+                          {variantAttributeSuggestions
+                            .filter((name) => !(variant.attributes || []).some((attribute) => attribute.name.toLocaleLowerCase("ru-RU") === name.toLocaleLowerCase("ru-RU")))
+                            .map((name) => <option key={name} value={name}>{name}</option>)}
+                          <option value="Характеристика">Другое…</option>
+                        </select>
+                      </header>
+                      {(variant.attributes || []).length ? (
+                        <div className="variant-attribute-list">
+                          {(variant.attributes || []).map((attribute, attributeIndex) => (
+                            <div className="variant-attribute-row" key={`${attributeIndex}-${attribute.name}`}>
+                              <input aria-label="Название характеристики" placeholder="Например, Совместимость" value={attribute.name} onChange={(e) => updateVariantAttribute(index, attributeIndex, { name: e.target.value })} />
+                              <input aria-label="Значение характеристики" placeholder="Например, акустическая и электрогитара" value={attribute.value} onChange={(e) => updateVariantAttribute(index, attributeIndex, { value: e.target.value })} />
+                              {/цвет/i.test(attribute.name) && <input aria-label="Цвет для образца" className="variant-color-swatch" type="color" value={variant.color || "#8a8175"} onChange={(e) => updateVariantRow(index, { color: e.target.value })} />}
+                              <button type="button" className="action-icon-btn delete" onClick={() => removeVariantAttribute(index, attributeIndex)} title="Удалить характеристику">✕</button>
+                            </div>
+                          ))}
+                        </div>
+                      ) : <p className="variant-attributes-empty">Для стандартного товара характеристики можно не добавлять.</p>}
+                    </section>
+                  </article>
                 ))}
               </div>
             </div>
@@ -1751,7 +2047,7 @@ export function PurchaserView({
                   </div>
 
                   <div className="editor-field-card">
-                    <span className="field-label-text">Доводка мастера, ₸</span>
+                    <span className="field-label-text">Предпродажная подготовка / проверка, ₸</span>
                     <input
                       type="number"
                       value={setupCost === 0 ? "" : setupCost}
@@ -2047,7 +2343,7 @@ export function PurchaserView({
           <h2>Готовность каталога</h2>
           <div className="progress-ring">
             <strong>{filteredProducts.reduce((acc, p) => acc + (p.quantity || 0), 0)}</strong>
-            <span>инструментов на складе</span>
+            <span>товаров на складе</span>
           </div>
           <ul>
             <li><span>Всего моделей</span><strong>{filteredProducts.length}</strong></li>
@@ -2202,9 +2498,9 @@ export function PurchaserView({
                   type="button"
                   className="bulk-action-btn merge"
                   onClick={() => setIsMergeModalOpen(true)}
-                  title="Объединить несколько отдельных записей в одну карточку с матрицей цветов"
+                  title="Объединить несколько отдельных записей в одну карточку с вариантами"
                 >
-                  🔗 Объединить в 1 модель ({selectedProductIds.size})
+                  Объединить в 1 карточку ({selectedProductIds.size})
                 </button>
               )}
             </div>
