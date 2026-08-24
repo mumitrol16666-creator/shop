@@ -691,15 +691,11 @@ const server = http.createServer((req, res) => {
   applySecurityHeaders(req, res);
 
   if (req.method === "OPTIONS") {
-    const origin = req.headers.origin;
-    const expectedOrigin = `${String(req.headers["x-forwarded-proto"] || "http").split(",")[0]}://${req.headers.host}`;
-    if (origin && origin !== expectedOrigin) {
-      sendJson(res, 403, { error: "Cross-origin request denied" });
-      return;
-    }
     res.writeHead(204, {
-      "Access-Control-Allow-Methods": "GET, POST, DELETE, OPTIONS",
-      "Access-Control-Allow-Headers": "Content-Type",
+      "Access-Control-Allow-Origin": req.headers.origin || "*",
+      "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+      "Access-Control-Allow-Headers": "Content-Type, x-admin-token, Authorization, x-request-id",
+      "Access-Control-Allow-Credentials": "true",
     });
     res.end();
     return;

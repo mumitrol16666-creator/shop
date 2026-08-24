@@ -922,6 +922,11 @@ export function PurchaserView({
         eligible: true,
       });
     }
+    if (isUploadingPhoto) {
+      setSaveState("error");
+      setSaveMessage("⏳ Фотография ещё загружается на сервер. Подождите пару секунд...");
+      return;
+    }
     if (percentExpenses >= 100) {
       setSaveState("error");
       setSaveMessage("Сумма налога, банка и продавца должна быть меньше 100%.");
