@@ -11,22 +11,22 @@ const visualCategoryRail = [
   {
     slug: "acoustic-guitars",
     title: "Акустические гитары",
-    image: "/products/04_41_acoustic.webp",
+    image: "/product-variants/ag-41gl-nat.webp",
   },
   {
     slug: "classical-guitars",
     title: "Классические гитары",
-    image: "/products/05_classical_38_39.webp",
+    image: "/product-variants/cg-39-nat.webp",
   },
   {
     slug: "electric-guitars",
     title: "Электрогитары",
-    image: "/products/01_st20_electric.webp",
+    image: "/product-variants/eg-st20-blk.webp",
   },
   {
     slug: "ukuleles",
     title: "Укулеле",
-    image: "/products/03_23_ukulele.webp",
+    image: "/product-variants/uk-klh23-blk.webp",
   },
   {
     slug: "strings",
@@ -53,7 +53,7 @@ export function HomePage({
     : settings.deliveryEnabled ? "доставка по городу" : "самовывоз";
 
   return (
-    <>
+    <div className="store-home-page-container">
       {/* 1. Cinematic Dark Studio Hero Banner */}
       <section className="store-hero-cinematic">
         <div className="store-hero-cinematic__bg-wrap">
@@ -106,196 +106,199 @@ export function HomePage({
         </div>
       </section>
 
-      {/* 2. Visual Category Cards Rail (Light Section) */}
-      <section className="store-category-rail-section">
-        <div className="store-category-rail-grid">
-          {visualCategoryRail.map((cat) => (
-            <Link key={cat.slug} href={`/catalog/${cat.slug}`} className="store-category-rail-card">
-              <div className="store-category-rail-card__text">
-                <h3>{cat.title}</h3>
-                <span className="store-category-rail-card__arrow">→</span>
-              </div>
-              <div className="store-category-rail-card__img-wrap">
-                <Image
-                  src={cat.image}
-                  alt={cat.title}
-                  fill
-                  unoptimized
-                  sizes="180px"
-                  className="store-category-rail-card__img"
-                />
-              </div>
+      {/* 2. Light Luxurious Store Body (Categories, Products, Trust, School) */}
+      <div className="store-home-light-wrapper">
+        {/* Category Cards Rail */}
+        <section className="store-category-rail-section">
+          <div className="store-category-rail-grid">
+            {visualCategoryRail.map((cat) => (
+              <Link key={cat.slug} href={`/catalog/${cat.slug}`} className="store-category-rail-card">
+                <div className="store-category-rail-card__text">
+                  <h3>{cat.title}</h3>
+                  <span className="store-category-rail-card__arrow">→</span>
+                </div>
+                <div className="store-category-rail-card__img-wrap">
+                  <Image
+                    src={cat.image}
+                    alt={cat.title}
+                    fill
+                    unoptimized
+                    sizes="180px"
+                    className="store-category-rail-card__img"
+                  />
+                </div>
+              </Link>
+            ))}
+          </div>
+        </section>
+
+        {/* Popular Instruments Section */}
+        <section className="store-popular-section store-section" aria-labelledby="home-popular-title">
+          <div className="store-popular-header">
+            <h2 id="home-popular-title" className="store-popular-heading">Популярные инструменты</h2>
+            <Link href="/catalog" className="store-popular-view-all">
+              Смотреть все <span>→</span>
             </Link>
-          ))}
-        </div>
-      </section>
-
-      {/* 3. Popular Instruments Section */}
-      <section className="store-popular-section store-section" aria-labelledby="home-popular-title">
-        <div className="store-popular-header">
-          <h2 id="home-popular-title" className="store-popular-heading">Популярные инструменты</h2>
-          <Link href="/catalog" className="store-popular-view-all">
-            Смотреть все <span>→</span>
-          </Link>
-        </div>
-        <ProductGrid products={preview} onNotice={onNotice} />
-      </section>
-
-      {/* 4. Four-Column Trust / Advantages Bar */}
-      <section className="store-advantages-section" aria-label="Преимущества магазина Maestro">
-        <div className="store-advantages-grid">
-          <div className="store-advantage-item">
-            <div className="store-advantage-icon">
-              <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="#c59b4f" strokeWidth="1.8" strokeLinecap="round">
-                <path d="M6 3v8a6 6 0 0 0 12 0V3M12 17v4m-3 0h6" />
-              </svg>
-            </div>
-            <div className="store-advantage-text">
-              <h4>Настройка перед продажей</h4>
-              <p>Каждый инструмент проверен мастером</p>
-            </div>
           </div>
+          <ProductGrid products={preview} onNotice={onNotice} />
+        </section>
 
-          <div className="store-advantage-item">
-            <div className="store-advantage-icon">
-              <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="#c59b4f" strokeWidth="1.8" strokeLinecap="round">
-                <rect x="1" y="3" width="15" height="13" rx="2" />
-                <polygon points="16 8 20 8 23 11 23 16 16 16 16 8" />
-                <circle cx="5.5" cy="18.5" r="2.5" />
-                <circle cx="18.5" cy="18.5" r="2.5" />
-              </svg>
-            </div>
-            <div className="store-advantage-text">
-              <h4>Доставка и самовывоз</h4>
-              <p>Быстро и бережно в городе {settings.city}</p>
-            </div>
-          </div>
-
-          <div className="store-advantage-item">
-            <div className="store-advantage-icon">
-              <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="#c59b4f" strokeWidth="1.8" strokeLinecap="round">
-                <rect x="2" y="5" width="20" height="14" rx="2" />
-                <line x1="2" y1="10" x2="22" y2="10" />
-              </svg>
-            </div>
-            <div className="store-advantage-text">
-              <h4>Рассрочка</h4>
-              <p>Удобная рассрочка через Kaspi и банки</p>
-            </div>
-          </div>
-
-          <div className="store-advantage-item">
-            <div className="store-advantage-icon">
-              <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="#c59b4f" strokeWidth="1.8" strokeLinecap="round">
-                <path d="M3 18v-6a9 9 0 0 1 18 0v6" />
-                <path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z" />
-              </svg>
-            </div>
-            <div className="store-advantage-text">
-              <h4>Поддержка после покупки</h4>
-              <p>Консультации и помощь на всех этапах</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* 5. Music School Cross-Sell Luxury Banner */}
-      <section className="store-school-banner-section">
-        <div className="store-school-banner-card">
-          <div className="store-school-banner-bg">
-            <Image
-              src="/school-banner-piano.webp"
-              alt="Музыкальная школа Maestro"
-              fill
-              unoptimized
-              className="store-school-banner-img"
-            />
-            <div className="store-school-banner-overlay" />
-          </div>
-
-          <div className="store-school-banner-content">
-            <div className="store-school-banner-left">
-              <div className="store-school-emblem">
-                <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="#e0b872" strokeWidth="1.8">
-                  <path d="M12 3v14M8 5a4 4 0 0 0-4 4v2a4 4 0 0 0 4 4h8a4 4 0 0 0 4-4V9a4 4 0 0 0-4-4M12 17v4m-3 0h6" />
+        {/* Four-Column Trust / Advantages Bar */}
+        <section className="store-advantages-section" aria-label="Преимущества магазина Maestro">
+          <div className="store-advantages-grid">
+            <div className="store-advantage-item">
+              <div className="store-advantage-icon">
+                <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="#c59b4f" strokeWidth="1.8" strokeLinecap="round">
+                  <path d="M6 3v8a6 6 0 0 0 12 0V3M12 17v4m-3 0h6" />
                 </svg>
               </div>
-              <div className="store-school-text">
-                <h3>
-                  При магазине работает <br />
-                  музыкальная школа <span className="store-school-gold">Maestro</span>
-                </h3>
-                <ul className="store-school-bullets">
-                  <li><span>✓</span> Опытные преподаватели</li>
-                  <li><span>✓</span> Индивидуальный подход</li>
-                  <li><span>✓</span> Для детей и взрослых</li>
-                </ul>
+              <div className="store-advantage-text">
+                <h4>Настройка перед продажей</h4>
+                <p>Каждый инструмент проверен мастером</p>
               </div>
             </div>
 
-            <div className="store-school-banner-right">
-              <a
-                href={whatsappHref(settings, "Здравствуйте! Хочу записаться на пробный урок в музыкальную школу Maestro")}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="store-school-btn"
-              >
-                Записаться на пробный урок →
-              </a>
+            <div className="store-advantage-item">
+              <div className="store-advantage-icon">
+                <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="#c59b4f" strokeWidth="1.8" strokeLinecap="round">
+                  <rect x="1" y="3" width="15" height="13" rx="2" />
+                  <polygon points="16 8 20 8 23 11 23 16 16 16 16 8" />
+                  <circle cx="5.5" cy="18.5" r="2.5" />
+                  <circle cx="18.5" cy="18.5" r="2.5" />
+                </svg>
+              </div>
+              <div className="store-advantage-text">
+                <h4>Доставка и самовывоз</h4>
+                <p>Быстро и бережно в городе {settings.city}</p>
+              </div>
+            </div>
+
+            <div className="store-advantage-item">
+              <div className="store-advantage-icon">
+                <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="#c59b4f" strokeWidth="1.8" strokeLinecap="round">
+                  <rect x="2" y="5" width="20" height="14" rx="2" />
+                  <line x1="2" y1="10" x2="22" y2="10" />
+                </svg>
+              </div>
+              <div className="store-advantage-text">
+                <h4>Рассрочка</h4>
+                <p>Удобная рассрочка через Kaspi и банки</p>
+              </div>
+            </div>
+
+            <div className="store-advantage-item">
+              <div className="store-advantage-icon">
+                <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="#c59b4f" strokeWidth="1.8" strokeLinecap="round">
+                  <path d="M3 18v-6a9 9 0 0 1 18 0v6" />
+                  <path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z" />
+                </svg>
+              </div>
+              <div className="store-advantage-text">
+                <h4>Поддержка после покупки</h4>
+                <p>Консультации и помощь на всех этапах</p>
+              </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* 6. Assistant Entry Banner */}
-      <section className="store-assistant-entry store-section">
-        <div>
-          <p className="store-eyebrow">ПОМОЩЬ С ВЫБОРОМ</p>
-          <h2>Не знаете, какая гитара подойдёт?</h2>
-          <p>Ответьте на пять коротких вопросов. Подбор покажет только реальные доступные модели.</p>
-        </div>
-        <Link href="/picker" className="store-primary-action">Начать подбор</Link>
-      </section>
+        {/* Music School Cross-Sell Luxury Banner */}
+        <section className="store-school-banner-section">
+          <div className="store-school-banner-card">
+            <div className="store-school-banner-bg">
+              <Image
+                src="/school-banner-piano.webp"
+                alt="Музыкальная школа Maestro"
+                fill
+                unoptimized
+                className="store-school-banner-img"
+              />
+              <div className="store-school-banner-overlay" />
+            </div>
 
-      {/* 7. Reviews */}
-      <section className="store-reviews store-section">
-        <p className="store-eyebrow">ОТЗЫВЫ</p>
-        <h2>Покупатели ценят подготовку инструмента</h2>
-        <div>
-          <blockquote>
-            «Гитару настроили, ребёнок смог начать заниматься сразу.»
-            <cite>Айгерим, Актобе</cite>
-          </blockquote>
-          <blockquote>
-            «ST-20 без фона, гриф удобный. Видно, что инструмент проверяли.»
-            <cite>Данияр, Актобе</cite>
-          </blockquote>
-          <blockquote>
-            «Помогли выбрать укулеле и подготовили к самовывозу в тот же день.»
-            <cite>Нурлан, Актобе</cite>
-          </blockquote>
-        </div>
-      </section>
+            <div className="store-school-banner-content">
+              <div className="store-school-banner-left">
+                <div className="store-school-emblem">
+                  <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="#e0b872" strokeWidth="1.8">
+                    <path d="M12 3v14M8 5a4 4 0 0 0-4 4v2a4 4 0 0 0 4 4h8a4 4 0 0 0 4-4V9a4 4 0 0 0-4-4M12 17v4m-3 0h6" />
+                  </svg>
+                </div>
+                <div className="store-school-text">
+                  <h3>
+                    При магазине работает <br />
+                    музыкальная школа <span className="store-school-gold">Maestro</span>
+                  </h3>
+                  <ul className="store-school-bullets">
+                    <li><span>✓</span> Опытные преподаватели</li>
+                    <li><span>✓</span> Индивидуальный подход</li>
+                    <li><span>✓</span> Для детей и взрослых</li>
+                  </ul>
+                </div>
+              </div>
 
-      {/* 8. FAQ */}
-      <section className="store-faq store-section">
-        <p className="store-eyebrow">ЧАСТЫЕ ВОПРОСЫ</p>
-        <h2>Перед покупкой</h2>
-        <details>
-          <summary>Можно ли выбрать конкретный цвет?</summary>
-          <p>Да. На странице товара показаны реальные доступные варианты и их остатки.</p>
-        </details>
-        <details>
-          <summary>Инструмент действительно настраивают?</summary>
-          <p>Да, каждый инструмент проходит проверку и базовую доводку мастером.</p>
-        </details>
-        <details>
-          <summary>Как получить заказ?</summary>
-          <p>Доступны: {fulfilmentSummary} в городе {settings.city}. Детали подтвердит менеджер.</p>
-        </details>
-      </section>
+              <div className="store-school-banner-right">
+                <a
+                  href={whatsappHref(settings, "Здравствуйте! Хочу записаться на пробный урок в музыкальную школу Maestro")}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="store-school-btn"
+                >
+                  Записаться на пробный урок →
+                </a>
+              </div>
+            </div>
+          </div>
+        </section>
 
-      {/* 9. Footer */}
+        {/* Assistant Entry Banner */}
+        <section className="store-assistant-entry store-section">
+          <div>
+            <p className="store-eyebrow">ПОМОЩЬ С ВЫБОРОМ</p>
+            <h2>Не знаете, какая гитара подойдёт?</h2>
+            <p>Ответьте на пять коротких вопросов. Подбор покажет только реальные доступные модели.</p>
+          </div>
+          <Link href="/picker" className="store-primary-action">Начать подбор</Link>
+        </section>
+
+        {/* Reviews */}
+        <section className="store-reviews store-section">
+          <p className="store-eyebrow">ОТЗЫВЫ</p>
+          <h2>Покупатели ценят подготовку инструмента</h2>
+          <div>
+            <blockquote>
+              «Гитару настроили, ребёнок смог начать заниматься сразу.»
+              <cite>Айгерим, Актобе</cite>
+            </blockquote>
+            <blockquote>
+              «ST-20 без фона, гриф удобный. Видно, что инструмент проверяли.»
+              <cite>Данияр, Актобе</cite>
+            </blockquote>
+            <blockquote>
+              «Помогли выбрать укулеле и подготовили к самовывозу в тот же день.»
+              <cite>Нурлан, Актобе</cite>
+            </blockquote>
+          </div>
+        </section>
+
+        {/* FAQ */}
+        <section className="store-faq store-section">
+          <p className="store-eyebrow">ЧАСТЫЕ ВОПРОСЫ</p>
+          <h2>Перед покупкой</h2>
+          <details>
+            <summary>Можно ли выбрать конкретный цвет?</summary>
+            <p>Да. На странице товара показаны реальные доступные варианты и их остатки.</p>
+          </details>
+          <details>
+            <summary>Инструмент действительно настраивают?</summary>
+            <p>Да, каждый инструмент проходит проверку и базовую доводку мастером.</p>
+          </details>
+          <details>
+            <summary>Как получить заказ?</summary>
+            <p>Доступны: {fulfilmentSummary} в городе {settings.city}. Детали подтвердит менеджер.</p>
+          </details>
+        </section>
+      </div>
+
+      {/* Footer */}
       <footer className="store-footer">
         <div>
           <strong>MAESTRO MUSIC STORE</strong>
@@ -307,6 +310,6 @@ export function HomePage({
           <a href={whatsappHref(settings)}>WhatsApp</a>
         </nav>
       </footer>
-    </>
+    </div>
   );
 }

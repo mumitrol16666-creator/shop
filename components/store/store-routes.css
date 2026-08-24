@@ -3018,3 +3018,97 @@ html, body {
     grid-template-columns: 1fr;
   }
 }
+
+
+/* =========================================================================
+   LIGHT STORE BODY WRAPPER (MATCHING MOCKUP)
+   ========================================================================= */
+
+.store-home-light-wrapper {
+  background: #f8f7f4 !important;
+  color: #141416 !important;
+  padding-top: 36px;
+  padding-bottom: 60px;
+  position: relative;
+  z-index: 10;
+}
+
+.store-home-light-wrapper .store-section {
+  color: #141416 !important;
+}
+
+.store-home-light-wrapper .store-eyebrow {
+  color: #b88628 !important;
+  font-weight: 700;
+}
+
+.store-home-light-wrapper h2 {
+  color: #141416 !important;
+}
+
+.store-popular-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 22px;
+}
+
+.store-popular-heading {
+  font-family: var(--font-display, "Outfit", -apple-system, sans-serif);
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: #141416 !important;
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+
+.store-popular-view-all {
+  font-size: 0.98rem;
+  font-weight: 700;
+  color: #b88628 !important;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.store-popular-view-all:hover {
+  color: #8c6317 !important;
+}
+
+/* Light Reviews & FAQ Cards */
+.store-home-light-wrapper .store-reviews div {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.store-home-light-wrapper .store-reviews blockquote {
+  background: #ffffff !important;
+  border: 1px solid rgba(0, 0, 0, 0.07) !important;
+  border-radius: 16px !important;
+  padding: 20px 22px !important;
+  color: #2b2b30 !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03) !important;
+}
+
+.store-home-light-wrapper .store-reviews cite {
+  color: #8c8c94 !important;
+}
+
+.store-home-light-wrapper .store-faq details {
+  background: #ffffff !important;
+  border: 1px solid rgba(0, 0, 0, 0.07) !important;
+  border-radius: 14px !important;
+  padding: 16px 20px !important;
+  margin-bottom: 12px;
+  color: #1a1a1e !important;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02) !important;
+}
+
+.store-home-light-wrapper .store-faq summary {
+  color: #141416 !important;
+  font-weight: 700 !important;
+}
+
+.store-home-light-wrapper .store-faq p {
+  color: #55555e !important;
+}

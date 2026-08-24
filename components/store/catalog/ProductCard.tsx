@@ -32,6 +32,9 @@ export function ProductCard({
   const discount = usesBasePrice ? product.defaultPrice.discount : 0;
   const open = () => saveCatalogReturn(product.id);
   const badge = resolveProductBadge(product);
+  const cardImage = (product.variants && product.variants[0] && product.variants[0].image)
+    ? product.variants[0].image
+    : product.image;
 
   const toggleFavorite = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -71,7 +74,7 @@ export function ProductCard({
 
           <div className="store-product-card__img-wrap">
             <Image
-              src={product.image}
+              src={cardImage}
               alt={product.name}
               fill
               unoptimized
