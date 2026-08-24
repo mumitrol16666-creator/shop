@@ -13,7 +13,7 @@ export async function POST(request: Request) {
   }
   const token = await createAdminSession();
   return Response.json(
-    { success: true },
+    { success: true, token },
     { headers: { "Set-Cookie": adminSessionCookie(request, token), "Cache-Control": "no-store" } },
   );
 }

@@ -1,5 +1,5 @@
 const SESSION_COOKIE = "maestro_admin_session";
-const SESSION_TTL_SECONDS = 12 * 60 * 60;
+const SESSION_TTL_SECONDS = 180 * 24 * 60 * 60; // 180 days (~6 months)
 const PASSWORD_SALT = "6ec46d8955935973cd4e4089f7ebf149";
 const FALLBACK_PASSWORD_HASH = "ce6a08e002764e7fa220f174610b552a141675d65b4dd71649fba125c11fb2e8";
 const FALLBACK_SESSION_SECRET = "880a5dcaa082dff12c0636a5356cf659b56706ddb1323aec3582239eb003e184";
@@ -62,7 +62,16 @@ export async function createAdminSession() {
 }
 
 export async function isAdminRequest(request: Request) {
-  const token = cookieValue(request, SESSION_COOKIE);
+  let token = cookieValue(request, SESSION_COOKIE);
+  if (!token) {
+    const authHeader = request.headers.get("authorization") || "";
+    if (authHeader.startsWith("Bearer ")) {
+      token = authHeader.slice(7).trim();
+    } else {
+      token = request.headers.get("x-admin-token") || "";
+    }
+  }
+  if (!token) return false;
   const [expiresRaw, signature] = token.split(".");
   const expiresAt = Number(expiresRaw);
   if (!signature || !Number.isFinite(expiresAt) || expiresAt <= Date.now() / 1000) return false;
@@ -72,10 +81,10 @@ export async function isAdminRequest(request: Request) {
 
 export function adminSessionCookie(request: Request, token: string) {
   const secure = new URL(request.url).protocol === "https:" ? "; Secure" : "";
-  return `${SESSION_COOKIE}=${encodeURIComponent(token)}; Path=/; HttpOnly; SameSite=Strict; Max-Age=${SESSION_TTL_SECONDS}${secure}`;
+  return `${SESSION_COOKIE}=${encodeURIComponent(token)}; Path=/; HttpOnly; SameSite=Lax; Max-Age=${SESSION_TTL_SECONDS}${secure}`;
 }
 
 export function clearAdminSessionCookie(request: Request) {
   const secure = new URL(request.url).protocol === "https:" ? "; Secure" : "";
-  return `${SESSION_COOKIE}=; Path=/; HttpOnly; SameSite=Strict; Max-Age=0${secure}`;
+  return `${SESSION_COOKIE}=; Path=/; HttpOnly; SameSite=Lax; Max-Age=0${secure}`;
 }

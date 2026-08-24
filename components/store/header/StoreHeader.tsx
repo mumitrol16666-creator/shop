@@ -2,10 +2,11 @@
 
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { CATALOG_CATEGORIES } from "../../../lib/commerce/categories";
+import type { CatalogCategory } from "../../../lib/commerce/categories";
+import { whatsappHref, type StoreSettings } from "../../../lib/store-settings";
 import { SearchCombobox } from "./SearchCombobox";
 
-export function StoreHeader({ cartCount, onCartOpen }: { cartCount: number; onCartOpen: () => void }) {
+export function StoreHeader({ settings, categories, cartCount, onCartOpen }: { settings: StoreSettings; categories: CatalogCategory[]; cartCount: number; onCartOpen: () => void }) {
   const [compact, setCompact] = useState(false);
   const [secondaryVisible, setSecondaryVisible] = useState(true);
   const [bump, setBump] = useState(false);
@@ -49,23 +50,42 @@ export function StoreHeader({ cartCount, onCartOpen }: { cartCount: number; onCa
     <header className={`store-header ${compact ? "is-compact" : ""} ${secondaryVisible ? "is-secondary-visible" : "is-secondary-hidden"}`}>
       <div className="store-header__main">
         <Link href="/" className="store-brand" aria-label="Maestro Music Store — на главную">
-          <span>M</span><strong>MAESTRO<small>MUSIC STORE</small></strong>
+          <span>M</span>
+          <strong>MAESTRO<small>MUSIC STORE</small></strong>
         </Link>
-        <Link href="/catalog" className="store-catalog-link">Каталог</Link>
+        <Link href="/catalog" className="store-catalog-link">
+          <span>☰</span> Каталог
+        </Link>
         <SearchCombobox />
-        <a className="store-header__contact" href="https://wa.me/77775055788" target="_blank" rel="noopener noreferrer">+7 777 505-57-88</a>
+        <a className="store-header__contact" href={whatsappHref(settings)} target="_blank" rel="noopener noreferrer">
+          +{settings.whatsappPhone}
+        </a>
         <button
           type="button"
           className={`store-cart-button ${bump ? "is-cart-bumped" : ""}`}
           onClick={onCartOpen}
           aria-label={`Корзина, ${cartCount} товаров`}
         >
-          <span aria-hidden="true">🛒</span><span>Корзина</span><b>{cartCount}</b>
+          <span aria-hidden="true">🛒</span>
+          <span>Корзина</span>
+          <b>{cartCount}</b>
         </button>
       </div>
       <nav className="store-header__secondary" aria-label="Категории магазина">
-        {CATALOG_CATEGORIES.map((category) => <Link key={category.slug} href={`/catalog/${category.slug}`}>{category.displayName}</Link>)}
-        <Link href="/picker">Подобрать новичку</Link>
+        <div className="store-header__secondary-track">
+          {categories.map((category) => (
+            <Link
+              key={category.slug}
+              href={`/catalog/${category.slug}`}
+              className="store-header__category-pill"
+            >
+              {category.displayName}
+            </Link>
+          ))}
+          <Link href="/picker" className="store-header__picker-pill">
+            <span>✨</span> Подобрать новичку
+          </Link>
+        </div>
       </nav>
     </header>
   );

@@ -33,10 +33,10 @@ const UPLOADS_DIR = path.join(DATA_DIR, "uploads");
 const SEED_PRODUCTS_FILE = path.join(__dirname, "data/products.json");
 const SEED_COURSES_FILE = path.join(__dirname, "data/courses.json");
 const SESSION_COOKIE = "maestro_admin_session";
-const SESSION_TTL_SECONDS = 12 * 60 * 60;
+const SESSION_TTL_SECONDS = 180 * 24 * 60 * 60; // 180 days (~6 months)
 const ADMIN_PASSWORD_SALT = process.env.ADMIN_PASSWORD_SALT || "6ec46d8955935973cd4e4089f7ebf149";
 const ADMIN_PASSWORD_HASH = process.env.ADMIN_PASSWORD_HASH || "914d0810c4fd1aa5e6c6b401bec3a3449645ea9a46e8f5061813be7cc5be1ba097ee32648fa9644bbb20af2e4346f08bcda2d9c385f080eb28cf72cf48fcbc2d";
-const SESSION_SECRET = process.env.ADMIN_SESSION_SECRET || crypto.randomBytes(32).toString("hex");
+const SESSION_SECRET = process.env.ADMIN_SESSION_SECRET || "880a5dcaa082dff12c0636a5356cf659b56706ddb1323aec3582239eb003e184";
 const loginAttempts = new Map();
 const commerceAttempts = new Map();
 const COMMERCE_CORE_V2 = process.env.COMMERCE_CORE_V2 !== "0";
@@ -152,7 +152,16 @@ function createSessionToken() {
 }
 
 function isAdminRequest(req) {
-  const token = parseCookies(req)[SESSION_COOKIE] || "";
+  let token = parseCookies(req)[SESSION_COOKIE] || "";
+  if (!token) {
+    const authHeader = String(req.headers["authorization"] || "");
+    if (authHeader.startsWith("Bearer ")) {
+      token = authHeader.slice(7).trim();
+    } else {
+      token = String(req.headers["x-admin-token"] || "").trim();
+    }
+  }
+  if (!token) return false;
   const [expiresRaw, signature = ""] = token.split(".");
   const expiresAt = Number(expiresRaw);
   if (!Number.isFinite(expiresAt) || expiresAt <= Date.now() / 1000) return false;
@@ -164,7 +173,7 @@ function isAdminRequest(req) {
 
 function sessionCookie(req, token, maxAge = SESSION_TTL_SECONDS) {
   const secure = String(req.headers["x-forwarded-proto"] || "").includes("https") ? "; Secure" : "";
-  return `${SESSION_COOKIE}=${encodeURIComponent(token)}; Path=/; HttpOnly; SameSite=Strict; Max-Age=${maxAge}${secure}`;
+  return `${SESSION_COOKIE}=${encodeURIComponent(token)}; Path=/; HttpOnly; SameSite=Lax; Max-Age=${maxAge}${secure}`;
 }
 
 function verifyPassword(password) {
@@ -262,26 +271,55 @@ fs.mkdirSync(UPLOADS_DIR, { recursive: true });
 
 function serveStaticFile(req, res, filePath, contentType, isHtml = false) {
   try {
-    const stat = fs.statSync(filePath);
-    const acceptEncoding = req.headers["accept-encoding"] || "";
+    const acceptEncoding = String(req.headers["accept-encoding"] || "");
+    const acceptHeader = String(req.headers["accept"] || "");
+    const isApplicationBundle = /^bundle\.(?:js|css)$/.test(path.basename(filePath));
+    const isMedia = /\.(?:png|jpe?g|webp|svg|ico|woff2?|ttf)$/i.test(filePath);
+
+    let targetPath = filePath;
+    let targetContentType = contentType;
+    if (acceptHeader.includes("image/webp") && /\.(?:png|jpe?g)$/i.test(filePath)) {
+      const webpAlternative = filePath.replace(/\.(?:png|jpe?g)$/i, ".webp");
+      if (fs.existsSync(webpAlternative)) {
+        targetPath = webpAlternative;
+        targetContentType = "image/webp";
+      }
+    }
+
+    const targetStat = fs.statSync(targetPath);
+    const etag = `"${targetStat.size.toString(16)}-${Math.floor(targetStat.mtimeMs).toString(16)}"`;
+
+    if (req.headers["if-none-match"] === etag) {
+      res.writeHead(304, {
+        "ETag": etag,
+        "Cache-Control": isMedia ? "public, max-age=31536000, immutable" : "no-cache",
+      });
+      res.end();
+      return;
+    }
 
     const headers = {
-      "Content-Type": contentType,
-      "Cache-Control": isHtml ? "no-cache, must-revalidate" : "public, max-age=86400",
+      "Content-Type": targetContentType,
+      "ETag": etag,
+      "Cache-Control": isHtml || isApplicationBundle
+        ? "no-cache, must-revalidate"
+        : isMedia
+          ? "public, max-age=31536000, immutable"
+          : "public, max-age=86400",
     };
 
-    const rawStream = fs.createReadStream(filePath);
+    const rawStream = fs.createReadStream(targetPath);
 
-    if (/\bbr\b/.test(acceptEncoding) && isCompressible(contentType)) {
+    if (/\bbr\b/.test(acceptEncoding) && isCompressible(targetContentType)) {
       headers["Content-Encoding"] = "br";
       res.writeHead(200, headers);
       rawStream.pipe(zlib.createBrotliCompress()).pipe(res);
-    } else if (/\bgzip\b/.test(acceptEncoding) && isCompressible(contentType)) {
+    } else if (/\bgzip\b/.test(acceptEncoding) && isCompressible(targetContentType)) {
       headers["Content-Encoding"] = "gzip";
       res.writeHead(200, headers);
       rawStream.pipe(zlib.createGzip()).pipe(res);
     } else {
-      headers["Content-Length"] = stat.size;
+      headers["Content-Length"] = targetStat.size;
       res.writeHead(200, headers);
       rawStream.pipe(res);
     }
@@ -622,6 +660,31 @@ function calculatePrice(pricing) {
   return Math.round(autoPrice);
 }
 
+function normalizeVariantPayload(variants, basePhoto) {
+  if (!Array.isArray(variants)) return [];
+  return variants.map((variant, index) => {
+    const attributes = Array.isArray(variant?.attributes)
+      ? variant.attributes.flatMap((attribute) => {
+          const name = typeof attribute?.name === "string" ? attribute.name.trim() : "";
+          const value = typeof attribute?.value === "string" ? attribute.value.trim() : "";
+          return name && value ? [{ name, value }] : [];
+        })
+      : [];
+    const ownPrice = variant?.priceMode === "override" && Number(variant?.price) > 0;
+    return {
+      ...variant,
+      id: variant?.id || `variant-${Date.now()}-${index + 1}`,
+      name: String(variant?.name || `Вариант ${index + 1}`).trim(),
+      sku: String(variant?.sku || `SKU-${index + 1}`).trim().toUpperCase(),
+      stock: Math.max(0, Math.floor(Number(variant?.stock) || 0)),
+      image: variant?.image || basePhoto || "/placeholder.png",
+      attributes,
+      priceMode: ownPrice ? "override" : "inherit",
+      price: ownPrice ? Math.round(Number(variant.price)) : undefined,
+    };
+  });
+}
+
 const server = http.createServer((req, res) => {
   const parsedUrl = new URL(req.url, `http://${req.headers.host || "localhost"}`);
   let pathname = decodeURIComponent(parsedUrl.pathname);
@@ -868,6 +931,8 @@ const server = http.createServer((req, res) => {
           const discountPercent = hasDiscount ? payload.pricing.discountPercent : undefined;
           const originalPrice = hasDiscount ? (payload.pricing.originalPriceKzt || Math.round(finalPrice / (1 - (discountPercent / 100)))) : undefined;
           const publicationStatus = payload.publish ? "published" : "draft";
+          const normalizedVariants = normalizeVariantPayload(payload.variants, payload.photoUrl);
+          const totalStock = normalizedVariants.reduce((sum, variant) => sum + variant.stock, 0);
 
           let updatedProduct;
 
@@ -892,16 +957,15 @@ const server = http.createServer((req, res) => {
               proPackPrice: payload.proPackPrice !== undefined ? payload.proPackPrice : existing.proPackPrice,
               allowStringsUpsell: payload.allowStringsUpsell !== undefined ? payload.allowStringsUpsell : existing.allowStringsUpsell,
               audioUrl: payload.audioUrl !== undefined ? payload.audioUrl : existing.audioUrl,
-              variantItems: payload.variants || existing.variantItems || [],
-              variants: Array.isArray(payload.variants) ? payload.variants.length : (existing.variants || 1),
+              variantItems: normalizedVariants.length ? normalizedVariants : existing.variantItems || [],
+              variants: normalizedVariants.length || existing.variants || 1,
               adminPricing: payload.pricing || existing.adminPricing,
               publicationStatus,
               updatedAt: new Date().toISOString(),
             };
 
-            if (payload.variant) {
-              updatedProduct.quantity = payload.variant.stockQuantity || existing.quantity;
-            }
+            if (normalizedVariants.length) updatedProduct.quantity = totalStock;
+            else if (payload.variant) updatedProduct.quantity = payload.variant.stockQuantity || existing.quantity;
 
             products[existingIndex] = updatedProduct;
           } else {
@@ -917,9 +981,9 @@ const server = http.createServer((req, res) => {
               features: payload.features || [],
               badge: payload.targetAudience || "В наличии",
               price: finalPrice || 45000,
-              quantity: payload.variant?.stockQuantity || 1,
-              variants: Array.isArray(payload.variants) ? payload.variants.length : 1,
-              variantItems: payload.variants || [],
+              quantity: normalizedVariants.length ? totalStock : payload.variant?.stockQuantity || 1,
+              variants: normalizedVariants.length || 1,
+              variantItems: normalizedVariants,
               attachedCourseId: payload.attachedCourseId !== undefined ? payload.attachedCourseId : "none",
               allowProPack: payload.allowProPack !== undefined ? payload.allowProPack : false,
               proPackTitle: payload.proPackTitle || "Чехол + Ремень + VIP Доступ",

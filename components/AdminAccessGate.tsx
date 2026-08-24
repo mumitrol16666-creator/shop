@@ -15,6 +15,7 @@ type AdminAccessContextValue = {
 };
 
 const AdminAccessContext = createContext<AdminAccessContextValue | null>(null);
+const TOKEN_KEY = "maestro_admin_token";
 
 export function useAdminAccess() {
   const value = useContext(AdminAccessContext);
@@ -30,9 +31,23 @@ export function AdminAccessGate({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     let active = true;
-    fetch("/api/admin/session", { credentials: "same-origin", cache: "no-store" })
+    const storedToken = typeof window !== "undefined" ? localStorage.getItem(TOKEN_KEY) || "" : "";
+    const headers: Record<string, string> = storedToken ? { "x-admin-token": storedToken } : {};
+
+    fetch("/api/admin/session", {
+      credentials: "same-origin",
+      cache: "no-store",
+      headers,
+    })
       .then((response) => {
-        if (active) setStatus(response.ok ? "authenticated" : "guest");
+        if (active) {
+          if (response.ok) {
+            setStatus("authenticated");
+          } else {
+            if (storedToken) localStorage.removeItem(TOKEN_KEY);
+            setStatus("guest");
+          }
+        }
       })
       .catch(() => {
         if (active) setStatus("guest");
@@ -54,8 +69,11 @@ export function AdminAccessGate({ children }: { children: ReactNode }) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ password }),
       });
-      const data = (await response.json().catch(() => ({}))) as { error?: string };
-      if (!response.ok) throw new Error(data.error || "Не удалось войти");
+      const data = (await response.json().catch(() => ({}))) as { error?: string; token?: string };
+      if (!response.ok) throw new Error(data.error || "Неверный пароль");
+      if (data.token && typeof window !== "undefined") {
+        localStorage.setItem(TOKEN_KEY, data.token);
+      }
       setPassword("");
       setStatus("authenticated");
     } catch (loginError) {
@@ -66,6 +84,9 @@ export function AdminAccessGate({ children }: { children: ReactNode }) {
   };
 
   const logout = async () => {
+    if (typeof window !== "undefined") {
+      localStorage.removeItem(TOKEN_KEY);
+    }
     await fetch("/api/admin/logout", {
       method: "POST",
       credentials: "same-origin",
@@ -90,7 +111,7 @@ export function AdminAccessGate({ children }: { children: ReactNode }) {
         <div className="admin-auth-card">
           <div className="brand-mark large">M</div>
           <h2>Панель закупщика Maestro</h2>
-          <p>Введите пароль администратора. Проверка выполняется на сервере.</p>
+          <p>Введите пароль администратора. Вход сохраняется на этом устройстве.</p>
           <form onSubmit={login} className="admin-auth-form">
             <label>
               Пароль
