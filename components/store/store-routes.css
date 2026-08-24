@@ -2324,3 +2324,697 @@ html, body {
   transform: none !important;
   box-shadow: none !important;
 }
+
+
+/* =========================================================================
+   LUXURY REDESIGN (MATCHING STUDIO MOCKUP)
+   ========================================================================= */
+
+/* 1. CINEMATIC HERO SECTION */
+.store-hero-cinematic {
+  position: relative;
+  width: 100%;
+  min-height: 480px;
+  background: #0d0d0f;
+  color: #ffffff;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.store-hero-cinematic__bg-wrap {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+.store-hero-cinematic__bg-img {
+  object-fit: cover;
+  object-position: right center;
+  opacity: 0.92;
+}
+
+.store-hero-cinematic__overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    rgba(10, 10, 12, 0.96) 0%,
+    rgba(10, 10, 12, 0.88) 35%,
+    rgba(10, 10, 12, 0.45) 70%,
+    rgba(10, 10, 12, 0.2) 100%
+  );
+}
+
+.store-hero-cinematic__container {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 60px 24px;
+}
+
+.store-hero-cinematic__content {
+  max-width: 640px;
+}
+
+.store-hero-cinematic__title {
+  font-family: var(--font-display, "Outfit", "Playfair Display", -apple-system, sans-serif);
+  font-size: clamp(2.2rem, 5vw, 3.6rem);
+  font-weight: 700;
+  line-height: 1.15;
+  color: #ffffff;
+  margin: 0 0 16px 0;
+  letter-spacing: -0.02em;
+}
+
+.store-hero-cinematic__brand-gold {
+  font-family: "Playfair Display", Georgia, serif;
+  background: linear-gradient(135deg, #f5d799 0%, #d4a754 50%, #b88628 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 800;
+  font-style: italic;
+}
+
+.store-hero-cinematic__subtitle {
+  font-size: 1.15rem;
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.82);
+  margin: 0 0 28px 0;
+  font-weight: 400;
+}
+
+.store-hero-cinematic__actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 32px;
+  flex-wrap: wrap;
+}
+
+.store-hero-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: linear-gradient(135deg, #d4a754 0%, #b88628 100%);
+  color: #121214 !important;
+  font-weight: 700;
+  font-size: 1rem;
+  padding: 14px 28px;
+  border-radius: 12px;
+  text-decoration: none;
+  box-shadow: 0 8px 24px rgba(184, 134, 40, 0.35);
+  transition: all 0.25s ease;
+}
+
+.store-hero-btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 30px rgba(184, 134, 40, 0.5);
+  background: linear-gradient(135deg, #e2b968 0%, #c99636 100%);
+}
+
+.store-hero-btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  color: #ffffff !important;
+  font-weight: 600;
+  font-size: 1rem;
+  padding: 14px 26px;
+  border-radius: 12px;
+  text-decoration: none;
+  transition: all 0.25s ease;
+}
+
+.store-hero-btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.16);
+  border-color: rgba(255, 255, 255, 0.4);
+  transform: translateY(-2px);
+}
+
+.store-hero-cinematic__pills {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.store-hero-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 30px;
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.88);
+  font-weight: 500;
+}
+
+/* 2. VISUAL CATEGORY CARDS RAIL */
+.store-category-rail-section {
+  max-width: 1320px;
+  margin: 0 auto 36px auto;
+  padding: 0 24px;
+}
+
+.store-category-rail-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 16px;
+}
+
+.store-category-rail-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.07);
+  border-radius: 16px;
+  padding: 16px 14px 16px 18px;
+  text-decoration: none;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
+  transition: all 0.25s ease;
+  overflow: hidden;
+  height: 110px;
+  position: relative;
+}
+
+.store-category-rail-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.08);
+  border-color: rgba(184, 134, 40, 0.3);
+}
+
+.store-category-rail-card__text {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 8px;
+  z-index: 2;
+}
+
+.store-category-rail-card__text h3 {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #141416;
+  margin: 0;
+  line-height: 1.25;
+}
+
+.store-category-rail-card__arrow {
+  color: #b88628;
+  font-weight: 700;
+  font-size: 1.1rem;
+  transition: transform 0.2s ease;
+}
+
+.store-category-rail-card:hover .store-category-rail-card__arrow {
+  transform: translateX(4px);
+}
+
+.store-category-rail-card__img-wrap {
+  position: relative;
+  width: 70px;
+  height: 90px;
+  flex-shrink: 0;
+}
+
+.store-category-rail-card__img {
+  object-fit: contain;
+  transition: transform 0.3s ease;
+}
+
+.store-category-rail-card:hover .store-category-rail-card__img {
+  transform: scale(1.08);
+}
+
+/* 3. POPULAR INSTRUMENTS SECTION & LUXURY PRODUCT CARD */
+.store-popular-section {
+  max-width: 1320px;
+  margin: 0 auto 48px auto;
+  padding: 0 24px;
+}
+
+.store-popular-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 22px;
+}
+
+.store-popular-heading {
+  font-family: var(--font-display, "Outfit", -apple-system, sans-serif);
+  font-size: 1.65rem;
+  font-weight: 700;
+  color: #16161a;
+  margin: 0;
+}
+
+.store-popular-view-all {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #b88628;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.store-popular-view-all:hover {
+  color: #8c6317;
+}
+
+.modern-luxury-card {
+  background: #ffffff !important;
+  border: 1px solid rgba(0, 0, 0, 0.08) !important;
+  border-radius: 18px !important;
+  padding: 16px !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04) !important;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.modern-luxury-card:hover {
+  transform: translateY(-4px) !important;
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.09) !important;
+  border-color: rgba(184, 134, 40, 0.35) !important;
+}
+
+.store-product-card__image-container {
+  position: relative;
+  width: 100%;
+  height: 210px;
+  background: #faf8f5;
+  border-radius: 14px;
+  overflow: hidden;
+  margin-bottom: 14px;
+}
+
+.store-product-card__img-wrap {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  padding: 10px;
+}
+
+.store-product-card__img {
+  object-fit: contain;
+  transition: transform 0.35s ease;
+}
+
+.modern-luxury-card:hover .store-product-card__img {
+  transform: scale(1.05);
+}
+
+.store-product-card__badge-luxury {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 3;
+  background: #ffffff;
+  border: 1px solid rgba(184, 134, 40, 0.35);
+  color: #a37219;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.store-favorite-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 3;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.95rem;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+  transition: transform 0.2s ease;
+}
+
+.store-favorite-btn:hover {
+  transform: scale(1.15);
+}
+
+.store-product-card__copy {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.store-product-card__cat {
+  font-size: 0.78rem;
+  color: #8c8c94;
+  margin: 0 0 4px 0;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  font-weight: 600;
+}
+
+.store-product-card__title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #141416;
+  margin: 0 0 12px 0;
+  line-height: 1.35;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  min-height: 2.7em;
+}
+
+.store-product-card__price-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: auto;
+  padding-bottom: 8px;
+}
+
+.store-product-card__price-block {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.store-product-card__price {
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: #121214;
+}
+
+.store-product-card__old-price {
+  font-size: 0.9rem;
+  color: #9c9ca4;
+  text-decoration: line-through;
+}
+
+.store-product-card__cart-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #d4a754 0%, #b88628 100%);
+  color: #ffffff;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(184, 134, 40, 0.35);
+  transition: all 0.2s ease;
+}
+
+.store-product-card__cart-btn:hover {
+  transform: scale(1.1);
+  background: linear-gradient(135deg, #e0b868 0%, #c49231 100%);
+  box-shadow: 0 6px 18px rgba(184, 134, 40, 0.5);
+}
+
+.store-product-card__stock-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.8rem;
+  color: #64646e;
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+  padding-top: 8px;
+}
+
+.store-stock-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #25d366;
+}
+
+.store-stock-dot:not(.is-in-stock) {
+  background: #c87531;
+}
+
+.store-stock-label {
+  font-weight: 600;
+  color: #1a8f4c;
+}
+
+.store-installment-hint {
+  color: #8c8c94;
+  font-size: 0.78rem;
+}
+
+/* 4. FOUR-COLUMN TRUST ADVANTAGES BAR */
+.store-advantages-section {
+  max-width: 1320px;
+  margin: 0 auto 48px auto;
+  padding: 0 24px;
+}
+
+.store-advantages-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  background: #f7f5f0;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: 18px;
+  padding: 24px 28px;
+}
+
+.store-advantage-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.store-advantage-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  background: #ffffff;
+  border: 1px solid rgba(197, 155, 79, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+}
+
+.store-advantage-text h4 {
+  font-size: 0.98rem;
+  font-weight: 700;
+  color: #18181b;
+  margin: 0 0 4px 0;
+}
+
+.store-advantage-text p {
+  font-size: 0.82rem;
+  color: #6c6c74;
+  margin: 0;
+  line-height: 1.35;
+}
+
+/* 5. MUSIC SCHOOL CROSS-SELL LUXURY BANNER */
+.store-school-banner-section {
+  max-width: 1320px;
+  margin: 0 auto 56px auto;
+  padding: 0 24px;
+}
+
+.store-school-banner-card {
+  position: relative;
+  background: #0f0f12;
+  border-radius: 20px;
+  overflow: hidden;
+  min-height: 190px;
+  display: flex;
+  align-items: center;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+}
+
+.store-school-banner-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+.store-school-banner-img {
+  object-fit: cover;
+  object-position: right center;
+  opacity: 0.45;
+}
+
+.store-school-banner-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    rgba(12, 12, 15, 0.98) 0%,
+    rgba(12, 12, 15, 0.92) 45%,
+    rgba(12, 12, 15, 0.5) 80%,
+    rgba(12, 12, 15, 0.3) 100%
+  );
+}
+
+.store-school-banner-content {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  padding: 28px 36px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.store-school-banner-left {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.store-school-emblem {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: rgba(224, 184, 114, 0.12);
+  border: 1px solid rgba(224, 184, 114, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.store-school-text h3 {
+  font-family: var(--font-display, "Outfit", sans-serif);
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0 0 10px 0;
+  line-height: 1.25;
+}
+
+.store-school-gold {
+  font-family: "Playfair Display", Georgia, serif;
+  background: linear-gradient(135deg, #f5d799 0%, #d4a754 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 800;
+  font-style: italic;
+}
+
+.store-school-bullets {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  font-size: 0.88rem;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.store-school-bullets li {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.store-school-bullets span {
+  color: #e0b872;
+  font-weight: 800;
+}
+
+.store-school-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(135deg, #d4a754 0%, #b88628 100%);
+  color: #121214 !important;
+  font-weight: 700;
+  font-size: 0.98rem;
+  padding: 14px 28px;
+  border-radius: 12px;
+  text-decoration: none;
+  white-space: nowrap;
+  box-shadow: 0 6px 20px rgba(184, 134, 40, 0.35);
+  transition: all 0.25s ease;
+}
+
+.store-school-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 26px rgba(184, 134, 40, 0.5);
+  background: linear-gradient(135deg, #e2b968 0%, #c99636 100%);
+}
+
+/* RESPONSIVE DESIGN FOR LUXURY REDESIGN */
+@media (max-width: 1100px) {
+  .store-category-rail-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .store-advantages-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  .store-hero-cinematic {
+    min-height: 420px;
+  }
+  .store-hero-cinematic__container {
+    padding: 36px 16px;
+  }
+  .store-hero-cinematic__actions {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+  .store-hero-btn-primary, .store-hero-btn-secondary {
+    justify-content: center;
+  }
+  .store-category-rail-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+  .store-advantages-grid {
+    grid-template-columns: 1fr;
+    padding: 18px;
+  }
+  .store-school-banner-content {
+    padding: 24px 20px;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .store-school-bullets {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  .store-school-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .store-category-rail-grid {
+    grid-template-columns: 1fr;
+  }
+}
