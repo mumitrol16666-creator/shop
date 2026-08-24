@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { CATALOG_CATEGORIES, categoryBySlug } from "../../../lib/commerce/categories";
+import { categoriesFromCatalog } from "../../../lib/commerce/categories";
 import type { ProductReadModel } from "../../../lib/commerce/types";
 import { parseCatalogState, selectCatalogProducts, serializeCatalogState, type CatalogUrlState } from "../../../lib/storefront/catalog-state";
 import { consumeCatalogReturn } from "../../../lib/storefront/scroll-restoration";
@@ -30,7 +30,8 @@ export function CatalogPage({ products, categorySlug, onNotice }: { products: Pr
   const [filterSheetOpen, setFilterSheetOpen] = useState(false);
   const state = useMemo(() => parseCatalogState(searchParams), [searchParams]);
   const displayed = useMemo(() => selectCatalogProducts(products, categorySlug || null, state), [products, categorySlug, state]);
-  const category = categorySlug ? categoryBySlug(categorySlug) : null;
+  const categories = useMemo(() => categoriesFromCatalog(products), [products]);
+  const category = categorySlug ? categories.find((item) => item.slug === categorySlug) : null;
 
   useEffect(() => {
     const currentUrl = `${window.location.pathname}${window.location.search}`;
@@ -75,7 +76,7 @@ export function CatalogPage({ products, categorySlug, onNotice }: { products: Pr
 
       <nav className="store-category-rail" aria-label="Категории каталога">
         <Link href="/catalog" aria-current={!categorySlug ? "page" : undefined}>Все</Link>
-        {CATALOG_CATEGORIES.map((item) => <Link key={item.slug} href={`/catalog/${item.slug}`} aria-current={categorySlug === item.slug ? "page" : undefined}>{item.displayName}</Link>)}
+        {categories.map((item) => <Link key={item.slug} href={`/catalog/${item.slug}`} aria-current={categorySlug === item.slug ? "page" : undefined}>{item.displayName}</Link>)}
       </nav>
 
       <CatalogControls state={state} update={update} />

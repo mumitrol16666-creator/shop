@@ -76,6 +76,13 @@ export const courseRecords = sqliteTable(
   (table) => [uniqueIndex("course_records_slug_unique").on(table.slug)],
 );
 
+export const storeSettings = sqliteTable("store_settings", {
+  id: text("id").primaryKey(),
+  dataJson: text("data_json").notNull(),
+  createdAt: text("created_at").notNull().default(sql`CURRENT_TIMESTAMP`),
+  updatedAt: text("updated_at").notNull().default(sql`CURRENT_TIMESTAMP`),
+});
+
 export const products = sqliteTable(
   "products",
   {
@@ -131,6 +138,7 @@ export const productVariants = sqliteTable(
     colorHex: text("color_hex"),
     secondaryColorHex: text("secondary_color_hex"),
     size: text("size"),
+    attributesJson: text("attributes_json").notNull().default("[]"),
     photoUrl: text("photo_url").notNull(),
     galleryJson: text("gallery_json").notNull().default("[]"),
     stockQuantity: integer("stock_quantity").notNull().default(0),
@@ -518,6 +526,8 @@ export type CrmSyncLog = typeof crmSyncLogs.$inferSelect;
 export type NewCrmSyncLog = typeof crmSyncLogs.$inferInsert;
 export type CourseRecord = typeof courseRecords.$inferSelect;
 export type NewCourseRecord = typeof courseRecords.$inferInsert;
+export type StoreSettingsRecord = typeof storeSettings.$inferSelect;
+export type NewStoreSettingsRecord = typeof storeSettings.$inferInsert;
 export type Order = typeof orders.$inferSelect;
 export type NewOrder = typeof orders.$inferInsert;
 export type OrderItem = typeof orderItems.$inferSelect;

@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { categoryBySlug } from "../../lib/commerce/categories";
 import type { ProductReadModel } from "../../lib/commerce/types";
 import { StoreRuntime, type StoreRoute } from "./StoreRuntime";
 
@@ -9,7 +8,9 @@ function resolveRoute(pathname: string, products: ProductReadModel[]): StoreRout
   if (pathname === "/") return { kind: "home" };
   if (pathname === "/catalog") return { kind: "catalog" };
   const category = pathname.match(/^\/catalog\/([^/]+)\/?$/)?.[1];
-  if (category) return categoryBySlug(category) ? { kind: "catalog", categorySlug: category } : { kind: "not-found" };
+  if (category) return products.some((product) => product.categorySlug === category)
+    ? { kind: "catalog", categorySlug: category }
+    : { kind: "not-found" };
   const productSlug = pathname.match(/^\/product\/([^/]+)\/?$/)?.[1];
   if (productSlug) {
     const product = products.find((item) => item.slug === decodeURIComponent(productSlug));

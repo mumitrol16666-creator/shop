@@ -6,7 +6,7 @@ import { isAdminRequest } from "../../../lib/admin-auth-server";
 export const dynamic = "force-dynamic";
 
 export async function POST(request: Request) {
-  if (!isAdminRequest(request)) {
+  if (!(await isAdminRequest(request))) {
     return NextResponse.json({ error: "Требуется авторизация администратора" }, { status: 401 });
   }
 

@@ -29,6 +29,31 @@ type ProductPayload = {
   features?: string[];
   targetAudience?: string;
   attachedCourseId?: string;
+  audioUrl?: string;
+  allowProPack?: boolean;
+  proPackTitle?: string;
+  proPackPrice?: number;
+  allowStringsUpsell?: boolean;
+  bundleDefinitions?: Array<{
+    id?: string;
+    sku?: string;
+    title?: string;
+    description?: string;
+    componentSkus?: string[];
+    priceDelta?: number;
+    eligible?: boolean;
+  }>;
+  componentDefinitions?: Array<{
+    sku?: string;
+    title?: string;
+    price?: number;
+    kind?: "physical" | "digital" | "service";
+    inventoryTracked?: boolean;
+    linkedProductSku?: string;
+    linkedVariantSku?: string;
+    quantity?: number;
+    placement?: "optional" | "pro_pack";
+  }>;
   variant?: {
     name?: string;
     sku?: string;
@@ -51,6 +76,8 @@ type ProductPayload = {
     barcode?: string;
     colorName?: string;
     size?: string;
+    attributes?: Array<{ name?: string; value?: string }>;
+    priceMode?: "inherit" | "override";
     price?: number;
   }>;
   pricing?: {
@@ -96,6 +123,73 @@ const parseStringArray = (value: string) => {
   } catch {
     return [];
   }
+};
+
+const parseAttributes = (value: unknown) => {
+  try {
+    const parsed = typeof value === "string" ? JSON.parse(value) : value;
+    if (!Array.isArray(parsed)) return [];
+    return parsed.flatMap((item) => {
+      if (!item || typeof item !== "object") return [];
+      const name = clean((item as { name?: unknown }).name);
+      const attributeValue = clean((item as { value?: unknown }).value);
+      return name && attributeValue ? [{ name, value: attributeValue }] : [];
+    });
+  } catch {
+    return [];
+  }
+};
+
+const sanitizeComponents = (value: ProductPayload["componentDefinitions"]) => {
+  if (!Array.isArray(value)) return [];
+  const seen = new Set<string>();
+  return value.flatMap((component) => {
+    const sku = clean(component.sku).toUpperCase();
+    const title = clean(component.title);
+    if (!sku || !title || seen.has(sku)) return [];
+    seen.add(sku);
+    const kind = ["physical", "digital", "service"].includes(component.kind || "")
+      ? component.kind as "physical" | "digital" | "service"
+      : "physical";
+    const linkedVariantSku = clean(component.linkedVariantSku).toUpperCase();
+    return [{
+      sku,
+      title,
+      price: money(nonnegative(component.price)),
+      kind,
+      inventoryTracked: kind === "physical" && component.inventoryTracked === true && Boolean(linkedVariantSku),
+      linkedProductSku: clean(component.linkedProductSku).toUpperCase() || undefined,
+      linkedVariantSku: linkedVariantSku || undefined,
+      quantity: Math.max(1, integerOrZero(component.quantity) || 1),
+      placement: component.placement === "pro_pack" ? "pro_pack" as const : "optional" as const,
+    }];
+  });
+};
+
+const sanitizeBundles = (
+  value: ProductPayload["bundleDefinitions"],
+  validComponentSkus: Set<string>,
+) => {
+  if (!Array.isArray(value)) return [];
+  const seen = new Set<string>();
+  return value.flatMap((bundle) => {
+    const sku = clean(bundle.sku).toUpperCase();
+    const id = clean(bundle.id) || sku.toLowerCase().replace(/[^a-z0-9]+/g, "_");
+    const title = clean(bundle.title);
+    if (!sku || !title || seen.has(sku)) return [];
+    seen.add(sku);
+    return [{
+      id,
+      sku,
+      title,
+      description: clean(bundle.description),
+      componentSkus: [...new Set((bundle.componentSkus ?? [])
+        .map((componentSku) => clean(componentSku).toUpperCase())
+        .filter((componentSku) => validComponentSkus.has(componentSku)))],
+      priceDelta: money(nonnegative(bundle.priceDelta)),
+      eligible: bundle.eligible !== false,
+    }];
+  });
 };
 
 const slugFromSku = (sku: string) =>
@@ -214,10 +308,8 @@ export async function readCatalog(includeDrafts: boolean) {
           const prices = pricingRows.filter(
             (pricing) => pricing.productId === product.id,
           );
-          const publicPrice = prices.length
-            ? Math.min(...prices.map((pricing) => pricing.finalPriceKzt))
-            : 0;
-          const firstPricing = prices[0] ?? null;
+          const firstPricing = prices.find((pricing) => !pricing.variantId) ?? prices[0] ?? null;
+          const publicPrice = firstPricing?.finalPriceKzt ?? 0;
           const toAdminPricing = (pricing: ProductPricing | null | undefined) =>
             pricing
               ? {
@@ -278,10 +370,12 @@ export async function readCatalog(includeDrafts: boolean) {
                 secondary: variant.secondaryColorHex ?? undefined,
                 colorName: variant.colorName ?? undefined,
                 size: variant.size ?? undefined,
+                attributes: parseAttributes(variant.attributesJson),
                 barcode: variant.barcode ?? undefined,
                 sku: variant.sku,
                 image: variant.photoUrl,
                 price: variantPricing?.finalPriceKzt ?? undefined,
+                priceMode: variantPricing ? "override" : "inherit",
                 adminPricing: includeDrafts
                   ? toAdminPricing(variantPricing ?? null)
                   : undefined,
@@ -394,6 +488,21 @@ export async function POST(request: Request) {
     const originalPrice = hasDiscount
       ? payload.pricing?.originalPriceKzt || Math.round(calculation.originalPriceKzt)
       : undefined;
+    const componentDefinitions = sanitizeComponents(payload.componentDefinitions);
+    const bundleDefinitions = sanitizeBundles(
+      payload.bundleDefinitions,
+      new Set(componentDefinitions.map((component) => component.sku)),
+    );
+    const bundleMetadata = {
+      attachedCourseId: clean(payload.attachedCourseId) || "none",
+      audioUrl: clean(payload.audioUrl) || undefined,
+      allowProPack: payload.allowProPack === true,
+      proPackTitle: clean(payload.proPackTitle) || undefined,
+      proPackPrice: money(nonnegative(payload.proPackPrice)),
+      allowStringsUpsell: payload.allowStringsUpsell === true,
+      bundleDefinitions,
+      componentDefinitions,
+    };
 
     const totalStock = payload.variants && payload.variants.length > 0
       ? payload.variants.reduce((sum, v) => sum + (v.stock || 0), 0)
@@ -409,24 +518,20 @@ export async function POST(request: Request) {
             color: payload.variant?.colorHex || "#8a8175",
             sku: variantSku,
             image: photoUrl,
+            attributes: [],
+            priceMode: "inherit" as const,
             price: calculation.finalPriceKzt,
           },
         ];
-    const variantItems = rawVariants.map((v) => ({
-      ...v,
-      price: calculation.finalPriceKzt,
-    }));
-    const _ignored = [
-          {
-            id: payload.variantId || variantSku,
-            name: variantName,
-            stock: integerOrZero(payload.variant?.stockQuantity) || 1,
-            color: payload.variant?.colorHex || "#8a8175",
-            sku: variantSku,
-            image: photoUrl,
-            price: calculation.finalPriceKzt,
-          },
-        ];
+    const variantItems = rawVariants.map((variant) => {
+      const hasOwnPrice = variant.priceMode === "override" && nonnegative(variant.price) > 0;
+      return {
+        ...variant,
+        attributes: parseAttributes(variant.attributes),
+        priceMode: hasOwnPrice ? "override" as const : "inherit" as const,
+        price: hasOwnPrice ? money(nonnegative(variant.price)) : undefined,
+      };
+    });
 
     const localList = readLocalProducts();
     const targetId = payload.productId ? String(payload.productId) : null;
@@ -452,7 +557,7 @@ export async function POST(request: Request) {
       badge: clean(payload.targetAudience) || undefined,
       description,
       features: payload.features || [],
-      attachedCourseId: payload.attachedCourseId || (existingIndex >= 0 ? localList[existingIndex].attachedCourseId : undefined),
+      ...bundleMetadata,
       price: calculation.finalPriceKzt,
       originalPrice,
       discountPercent,
@@ -506,14 +611,14 @@ export async function POST(request: Request) {
         const statements = [
           d1.prepare(`INSERT INTO products (
               id, name, short_name, sku, slug, category, main_photo_url,
-              description, features_json, target_audience, seo_title,
+              description, features_json, bundle_json, target_audience, seo_title,
               seo_description, status, updated_at
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'active', ?)
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'active', ?)
             ON CONFLICT(id) DO UPDATE SET
               name=excluded.name, short_name=excluded.short_name, sku=excluded.sku,
               slug=excluded.slug, category=excluded.category,
               main_photo_url=excluded.main_photo_url, description=excluded.description,
-              features_json=excluded.features_json,
+              features_json=excluded.features_json, bundle_json=excluded.bundle_json,
               target_audience=excluded.target_audience, seo_title=excluded.seo_title,
               seo_description=excluded.seo_description, status='active', updated_at=excluded.updated_at`)
             .bind(
@@ -526,6 +631,7 @@ export async function POST(request: Request) {
               photoUrl,
               description,
               JSON.stringify(payload.features ?? []),
+              JSON.stringify(bundleMetadata),
               clean(payload.targetAudience) || null,
               name,
               description.slice(0, 160),
@@ -537,9 +643,9 @@ export async function POST(request: Request) {
             const variantId = clean(variant.id) || `${dbProdId}-variant-${index + 1}`;
             return d1.prepare(`INSERT INTO product_variants (
                 id, product_id, name, sku, barcode, color_name, color_hex,
-                secondary_color_hex, size, photo_url, stock_quantity,
+                secondary_color_hex, size, attributes_json, photo_url, stock_quantity,
                 reserved_quantity, reorder_point, status, updated_at
-              ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0, 0, 'active', ?)`)
+              ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0, 0, 'active', ?)`)
               .bind(
                 variantId,
                 dbProdId,
@@ -550,6 +656,7 @@ export async function POST(request: Request) {
                 clean(variant.color) || null,
                 clean(variant.secondary) || null,
                 clean(variant.size) || null,
+                JSON.stringify(parseAttributes(variant.attributes)),
                 clean(variant.image) || photoUrl,
                 integerOrZero(variant.stock),
                 now,
@@ -584,6 +691,23 @@ export async function POST(request: Request) {
               money(calculation.netRevenueKzt), money(calculation.profitKzt),
               calculation.marginPercent, calculation.markupOnCostPercent, now, now,
             ),
+          ...variantItems.flatMap((variant, index) => {
+            if (variant.priceMode !== "override" || !variant.price) return [];
+            const variantId = clean(variant.id) || `${dbProdId}-variant-${index + 1}`;
+            const variantPrice = money(variant.price);
+            return [
+              d1.prepare(`INSERT INTO product_pricing (
+                  id, product_id, variant_id, purchase_currency, purchase_price,
+                  currency_rate, purchase_price_kzt, fixed_cost_kzt, pricing_mode,
+                  recommended_price_kzt, manual_price_kzt, final_price_kzt,
+                  pricing_version, calculated_at, updated_at
+                ) VALUES (?, ?, ?, 'KZT', 0, 1, 0, 0, 'manual', ?, ?, ?, 1, ?, ?)`)
+                .bind(
+                  `${variantId}-pricing`, dbProdId, variantId,
+                  variantPrice, variantPrice, variantPrice, now, now,
+                ),
+            ];
+          }),
           d1.prepare(`INSERT INTO product_publications (
               id, product_id, status, storefront_visible, published_at, updated_at
             ) VALUES (?, ?, ?, ?, ?, ?)

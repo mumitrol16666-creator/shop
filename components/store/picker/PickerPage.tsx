@@ -5,6 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 import type { ProductReadModel } from "../../../lib/commerce/types";
 import { recommendProducts, type PickerAnswers } from "../../../lib/storefront/picker";
 import { ProductGrid } from "../catalog/ProductGrid";
+import { whatsappHref, type StoreSettings } from "../../../lib/store-settings";
 
 const STORAGE_KEY = "maestro-picker-v1";
 const questions = [
@@ -15,7 +16,7 @@ const questions = [
   { key: "priority", title: "Что важнее всего?", options: [["comfort", "Комфорт и мягкий старт"], ["price", "Минимальная цена"], ["sound", "Звук и возможности"]] },
 ] as const;
 
-export function PickerPage({ products, onNotice }: { products: ProductReadModel[]; onNotice: (message: string) => void }) {
+export function PickerPage({ settings, products, onNotice }: { settings: StoreSettings; products: ProductReadModel[]; onNotice: (message: string) => void }) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const step = Math.min(6, Math.max(1, Number(searchParams.get("step") || 1)));
@@ -38,7 +39,7 @@ export function PickerPage({ products, onNotice }: { products: ProductReadModel[
   const reset = () => { sessionStorage.removeItem(STORAGE_KEY); setAnswers({}); router.replace("/picker?step=1"); };
 
   if (step === 6) {
-    return <div className="store-page store-picker-page"><header><p className="store-eyebrow">РЕЗУЛЬТАТ ПОДБОРА</p><h1>Подходящие модели</h1><p>Рекомендации рассчитаны только по товарам, которые реально есть в каталоге и наличии.</p></header><ProductGrid products={recommendations} emptyMessage="Сейчас нет подходящих моделей. Напишите консультанту — предложим ближайший доступный вариант." onNotice={onNotice} />{recommendations.length < 3 && <a className="store-secondary-action" href="https://wa.me/77775055788" target="_blank" rel="noopener noreferrer">Уточнить у консультанта</a>}<button type="button" className="store-text-link" onClick={reset}>Пройти подбор заново</button></div>;
+    return <div className="store-page store-picker-page"><header><p className="store-eyebrow">РЕЗУЛЬТАТ ПОДБОРА</p><h1>Подходящие модели</h1><p>Рекомендации рассчитаны только по товарам, которые реально есть в каталоге и наличии.</p></header><ProductGrid products={recommendations} emptyMessage="Сейчас нет подходящих моделей. Напишите консультанту — предложим ближайший доступный вариант." onNotice={onNotice} />{recommendations.length < 3 && <a className="store-secondary-action" href={whatsappHref(settings)} target="_blank" rel="noopener noreferrer">Уточнить у консультанта</a>}<button type="button" className="store-text-link" onClick={reset}>Пройти подбор заново</button></div>;
   }
   const question = questions[step - 1];
   return (

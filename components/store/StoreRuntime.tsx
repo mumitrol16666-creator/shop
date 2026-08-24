@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { CartDrawer } from "../CartDrawer";
 import { CommerceCartProvider, useCommerceCart } from "../CommerceCartProvider";
 import type { CartItem } from "../../lib/catalog-data";
@@ -17,6 +17,8 @@ import { PickerPage } from "./picker/PickerPage";
 import { CheckoutPage } from "./checkout/CheckoutPage";
 import { OrderPage } from "./order/OrderPage";
 import { PwaLifecycle } from "./pwa/PwaLifecycle";
+import { categoriesFromCatalog } from "../../lib/commerce/categories";
+import { DEFAULT_STORE_SETTINGS, type StoreSettings } from "../../lib/store-settings";
 
 export type StoreRoute =
   | { kind: "home" }
@@ -36,8 +38,20 @@ function StoreRuntimeInner({ products, route }: { products: ProductReadModel[]; 
   const cart = useCommerceCart();
   const [cartOpen, setCartOpen] = useState(false);
   const [notice, setNotice] = useState("");
+  const [settings, setSettings] = useState<StoreSettings>(DEFAULT_STORE_SETTINGS);
   const cartItems = useMemo<CartItem[]>(() => cart.reconciliation.lines.map(cartItemFromReconciled), [cart.reconciliation.lines]);
   const cartCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+  const categories = useMemo(() => categoriesFromCatalog(products), [products]);
+  useEffect(() => {
+    const controller = new AbortController();
+    fetch("/api/store-settings", { cache: "no-store", signal: controller.signal })
+      .then((response) => response.ok ? response.json() : Promise.reject(new Error("settings unavailable")))
+      .then((payload: { settings?: StoreSettings }) => {
+        if (payload.settings) setSettings(payload.settings);
+      })
+      .catch(() => {});
+    return () => controller.abort();
+  }, []);
   const announce = (message: string) => {
     setNotice(message);
     window.setTimeout(() => setNotice(""), 3500);
@@ -45,14 +59,14 @@ function StoreRuntimeInner({ products, route }: { products: ProductReadModel[]; 
 
   return (
     <div className="store-app-shell">
-      <StoreHeader cartCount={cartCount} onCartOpen={() => setCartOpen(true)} />
+      <StoreHeader settings={settings} categories={categories} cartCount={cartCount} onCartOpen={() => setCartOpen(true)} />
       <main className="store-main">
-        {route.kind === "home" && <HomePage products={products} onNotice={announce} />}
+        {route.kind === "home" && <HomePage settings={settings} categories={categories} products={products} onNotice={announce} />}
         {route.kind === "catalog" && <CatalogPage products={products} categorySlug={route.categorySlug} onNotice={announce} />}
-        {route.kind === "product" && <ProductPage product={route.product} onNotice={announce} />}
-        {route.kind === "picker" && <PickerPage products={products} onNotice={announce} />}
+        {route.kind === "product" && <ProductPage settings={settings} product={route.product} onNotice={announce} />}
+        {route.kind === "picker" && <PickerPage settings={settings} products={products} onNotice={announce} />}
         {route.kind === "cart" && <CartPage />}
-        {route.kind === "checkout" && <CheckoutPage />}
+        {route.kind === "checkout" && <CheckoutPage settings={settings} />}
         {route.kind === "order" && <OrderPage token={route.token} />}
         {route.kind === "not-found" && <section className="store-page store-not-found"><p className="store-eyebrow">404</p><h1>Страница не найдена</h1><p>Проверьте адрес или вернитесь в каталог.</p><Link className="store-primary-action" href="/catalog">Открыть каталог</Link></section>}
       </main>

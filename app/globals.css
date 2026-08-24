@@ -4747,6 +4747,215 @@ button {
   color: var(--kaspi);
 }
 
+/* Universal product variants */
+.variant-editor-list {
+  display: grid;
+  gap: 14px;
+}
+
+.admin-catalog-loading {
+  width: min(720px, calc(100% - 32px));
+  margin: 72px auto;
+  padding: 28px;
+  border: 1px solid var(--line);
+  background: #fff;
+  color: var(--ink-soft);
+  text-align: center;
+  font-weight: 800;
+}
+
+.variant-editor-card {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fff;
+  overflow: hidden;
+}
+
+.variant-editor-card__header {
+  display: grid;
+  grid-template-columns: 190px minmax(220px, 1fr) auto;
+  gap: 18px;
+  align-items: center;
+  padding: 16px;
+  background: var(--paper-deep);
+  border-bottom: 1px solid var(--line);
+}
+
+.variant-editor-photo {
+  display: grid;
+  grid-template-columns: 64px 1fr;
+  gap: 4px 10px;
+  align-items: center;
+}
+
+.variant-editor-photo__preview {
+  grid-row: 1 / span 2;
+  position: relative;
+  width: 64px;
+  height: 64px;
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: #fff;
+  cursor: zoom-in;
+  overflow: hidden;
+}
+
+.variant-editor-photo__upload {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 32px;
+  padding: 5px 8px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: #fff;
+  font-size: 11px;
+  font-weight: 800;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.variant-editor-photo__upload input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.variant-editor-photo small,
+.variant-editor-name span,
+.variant-editor-core-grid label > span,
+.variant-attributes-editor small {
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.variant-editor-name,
+.variant-editor-core-grid label {
+  display: grid;
+  gap: 6px;
+}
+
+.variant-editor-card input,
+.variant-editor-card select {
+  width: 100%;
+  min-width: 0;
+  min-height: 40px;
+  padding: 8px 10px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: #fff;
+  color: var(--ink);
+  font: inherit;
+  font-size: 13px;
+}
+
+.variant-editor-card input:focus,
+.variant-editor-card select:focus {
+  outline: none;
+  border-color: var(--amber);
+  box-shadow: 0 0 0 3px rgba(200, 117, 49, 0.12);
+}
+
+.variant-editor-core-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(130px, 1fr));
+  gap: 12px;
+  padding: 16px;
+}
+
+.variant-attributes-editor {
+  padding: 14px 16px 16px;
+  border-top: 1px solid var(--line);
+  background: #fcfbf8;
+}
+
+.variant-attributes-editor > header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.variant-attributes-editor > header div {
+  display: grid;
+  gap: 3px;
+}
+
+.variant-attributes-editor > header select {
+  width: min(260px, 100%);
+}
+
+.variant-attribute-list {
+  display: grid;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.variant-attribute-row {
+  display: grid;
+  grid-template-columns: minmax(150px, 0.7fr) minmax(220px, 1.3fr) auto auto;
+  gap: 8px;
+  align-items: center;
+}
+
+.variant-color-swatch {
+  width: 40px !important;
+  padding: 3px !important;
+  cursor: pointer;
+}
+
+.variant-attributes-empty {
+  margin: 12px 0 0;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+@media (max-width: 1000px) {
+  .variant-editor-card__header {
+    grid-template-columns: 170px minmax(180px, 1fr) auto;
+  }
+
+  .variant-editor-core-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 700px) {
+  .variant-editor-card__header {
+    grid-template-columns: 1fr auto;
+  }
+
+  .variant-editor-photo {
+    grid-column: 1 / -1;
+  }
+
+  .variant-editor-core-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .variant-attributes-editor > header {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .variant-attributes-editor > header select {
+    width: 100%;
+  }
+
+  .variant-attribute-row {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .variant-attribute-row input:nth-child(2) {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+}
+
 .matrix-summary-bar {
   background: #faf8f5;
   padding: 12px 18px;

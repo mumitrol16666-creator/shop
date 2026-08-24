@@ -5,6 +5,7 @@ import { useCommerceCart } from "../../CommerceCartProvider";
 import { money } from "../../../lib/catalog-data";
 import { BUNDLE_SKUS, type ProductReadModel } from "../../../lib/commerce/types";
 import { quoteConfiguration } from "../../../lib/commerce/pricing";
+import { variantAttributeSummary } from "../../../lib/product-variants";
 
 export function ProductConfigurator({
   product,
@@ -42,7 +43,21 @@ export function ProductConfigurator({
     selectedVariant.status === "active" &&
     selectedVariant.availableQuantity > 0
   );
-  const maxQuantity = isVariantAvailable ? selectedVariant.availableQuantity : 0;
+  const selectedBundle = product.bundleDefinitions.find((bundle) => bundle.sku === bundleSku);
+  const maxQuantity = useMemo(() => {
+    if (!isVariantAvailable || !selectedVariant) return 0;
+    const inventoryComponents = [...new Set([
+      ...(selectedBundle?.componentSkus ?? []),
+      ...componentSkus,
+    ])]
+      .map((sku) => product.componentDefinitions.find((component) => component.sku === sku))
+      .filter((component) => component?.inventoryTracked === true);
+    return inventoryComponents.reduce((limit, component) => {
+      const available = Math.max(0, component?.availableQuantity ?? 0);
+      const units = Math.max(1, Math.floor(component?.quantity || 1));
+      return Math.min(limit, Math.floor(available / units));
+    }, selectedVariant.availableQuantity);
+  }, [componentSkus, isVariantAvailable, product.componentDefinitions, selectedBundle, selectedVariant]);
 
   const quote = useMemo(() => {
     if (!variantSku) return product.defaultPrice;
@@ -79,12 +94,13 @@ export function ProductConfigurator({
       <div className="store-config-section">
         <div className="store-config-section__header">
           <span className="store-config-step">1</span>
-          <h3>Вариант расцветки</h3>
+          <h3>Вариант товара</h3>
         </div>
         <div className="store-option-grid">
           {product.variants.map((variant) => {
             const isSelected = variantSku === variant.sku;
             const isAvailable = variant.status === "active" && variant.availableQuantity > 0;
+            const attributeSummary = variantAttributeSummary(variant.attributes);
             return (
               <button
                 key={variant.sku}
@@ -98,6 +114,7 @@ export function ProductConfigurator({
                 aria-pressed={isSelected}
               >
                 <span className="store-variant-title">{variant.title}</span>
+                {attributeSummary && <span className="store-variant-attributes">{attributeSummary}</span>}
                 <span className={`store-variant-stock ${isAvailable ? "in-stock" : "out-of-stock"}`}>
                   {isAvailable ? `${variant.availableQuantity} шт.` : "Нет"}
                 </span>
@@ -106,7 +123,7 @@ export function ProductConfigurator({
           })}
         </div>
         {!variantSku && (
-          <p className="store-field-hint">⚠️ Пожалуйста, выберите нужный цвет для оформления заказа.</p>
+          <p className="store-field-hint">Выберите нужный вариант для оформления заказа.</p>
         )}
       </div>
 
@@ -161,18 +178,20 @@ export function ProductConfigurator({
               .filter((component) => component.price > 0)
               .map((component) => {
                 const isChecked = componentSkus.includes(component.sku);
+                const isAvailable = !component.inventoryTracked || (component.availableQuantity ?? 0) >= (component.quantity || 1);
                 return (
                   <label
                     key={component.sku}
-                    className={`store-component-option ${isChecked ? "is-checked" : ""}`}
+                    className={`store-component-option ${isChecked ? "is-checked" : ""} ${!isAvailable ? "is-disabled" : ""}`}
                   >
                     <input
                       type="checkbox"
                       checked={isChecked}
+                      disabled={!isAvailable}
                       onChange={() => toggleComponent(component.sku)}
                     />
                     <span className="store-component-title">{component.title}</span>
-                    <span className="store-component-price">+{money(component.price)} ₸</span>
+                    <span className="store-component-price">{isAvailable ? `+${money(component.price)} ₸` : "Нет в наличии"}</span>
                   </label>
                 );
               })}

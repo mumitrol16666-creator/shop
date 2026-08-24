@@ -3,13 +3,16 @@
 import Image from "next/image";
 import Link from "next/link";
 import { installment, money } from "../../../lib/catalog-data";
+import { productPriceSummary } from "../../../lib/product-variants";
 import type { ProductReadModel } from "../../../lib/commerce/types";
 import { saveCatalogReturn } from "../../../lib/storefront/scroll-restoration";
 
 export function ProductCard({ product, onQuickView }: { product: ProductReadModel; onQuickView?: (product: ProductReadModel) => void }) {
-  const price = product.defaultPrice.final;
-  const original = product.defaultPrice.subtotal;
-  const discount = product.defaultPrice.discount;
+  const priceSummary = productPriceSummary(product);
+  const price = priceSummary.minimum;
+  const usesBasePrice = price === product.defaultPrice.final;
+  const original = usesBasePrice ? product.defaultPrice.subtotal : price;
+  const discount = usesBasePrice ? product.defaultPrice.discount : 0;
   const open = () => saveCatalogReturn(product.id);
   return (
     <article className="store-product-card" id={`product-${product.id}`} data-product-id={product.id}>
@@ -26,7 +29,7 @@ export function ProductCard({ product, onQuickView }: { product: ProductReadMode
             {product.availability.status === "in_stock" ? `В наличии · ${product.availability.totalAvailable}` : "Нет в наличии"}
           </span>
           <div className="store-card-price">
-            <strong>{money(price)} ₸</strong>
+            <strong>{priceSummary.hasRange ? "от " : ""}{money(price)} ₸</strong>
             {discount > 0 && <del>{money(original)} ₸</del>}
           </div>
           <small>от {money(installment(price, 12))} ₸/мес · {product.variants.length} вариант(а)</small>
@@ -39,4 +42,3 @@ export function ProductCard({ product, onQuickView }: { product: ProductReadMode
     </article>
   );
 }
-

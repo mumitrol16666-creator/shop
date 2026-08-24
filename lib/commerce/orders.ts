@@ -371,18 +371,18 @@ export function createOrderInMemory(input: {
     reason: `order_created:${publicId}`,
     createdAt: nowIso,
   };
-  const reservations: StockReservationRecord[] = reconciliation.lines.map(
-    (line) => ({
+  const reservations: StockReservationRecord[] = reconciliation.lines.flatMap(
+    (line) => line.inventoryRequirements.map((requirement) => ({
       id: crypto.randomUUID(),
       orderId,
-      variantId: line.variantId,
-      variantSku: line.variantSku,
-      quantity: line.quantity,
+      variantId: requirement.variantId,
+      variantSku: requirement.variantSku,
+      quantity: line.quantity * requirement.quantityPerUnit,
       status: "reserved",
       expiresAt: addMinutes(now, ttl),
       createdAt: nowIso,
       updatedAt: nowIso,
-    }),
+    })),
   );
 
   state.orders.push(order);

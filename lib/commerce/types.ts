@@ -42,6 +42,8 @@ export type CatalogVariant = {
   barcode?: string;
   colorName?: string;
   size?: string;
+  attributes: Array<{ name: string; value: string }>;
+  priceMode: "inherit" | "override";
   stockQuantity: number;
   reservedQuantity: number;
   availableQuantity: number;
@@ -50,7 +52,7 @@ export type CatalogVariant = {
 };
 
 export type BundleDefinition = {
-  id: "base" | "gift_course" | "pro_pack";
+  id: string;
   sku: string;
   title: string;
   description: string;
@@ -65,6 +67,20 @@ export type ComponentDefinition = {
   price: number;
   kind: "physical" | "digital" | "service";
   inventoryTracked: boolean;
+  linkedProductSku?: string;
+  linkedVariantSku?: string;
+  quantity?: number;
+  placement?: "optional" | "pro_pack";
+  availableQuantity?: number;
+  linkedVariantId?: string;
+};
+
+export type InventoryRequirement = {
+  variantId: string;
+  variantSku: string;
+  title: string;
+  quantityPerUnit: number;
+  availableQuantity: number;
 };
 
 export type ProductReadModel = {
@@ -169,6 +185,7 @@ export type ReconciledCartLine = {
   bundleTitle: string;
   componentSkus: string[];
   componentSnapshot: PriceComponent[];
+  inventoryRequirements: InventoryRequirement[];
   quantity: number;
   availableQuantity: number;
   pricing: PriceBreakdown;

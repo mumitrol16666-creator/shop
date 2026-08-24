@@ -116,6 +116,40 @@ export const DEFAULT_PRESETS: CostPreset[] = [
   },
 ];
 
+export function normalizeCostPresets(value: unknown): CostPreset[] {
+  if (!Array.isArray(value)) return DEFAULT_PRESETS;
+  const normalized = value.flatMap((item, index) => {
+    if (!item || typeof item !== "object") return [];
+    const source = item as Partial<CostPreset>;
+    const name = typeof source.name === "string" ? source.name.trim().slice(0, 100) : "";
+    if (!name) return [];
+    const number = (candidate: unknown) => Math.max(0, Number.isFinite(Number(candidate)) ? Number(candidate) : 0);
+    const purchaseCurrency = ["CNY", "USD", "KZT"].includes(source.purchaseCurrency || "")
+      ? source.purchaseCurrency as CostPreset["purchaseCurrency"]
+      : "KZT";
+    return [{
+      id: typeof source.id === "string" && source.id.trim() ? source.id.trim().slice(0, 80) : `preset-${index + 1}`,
+      name,
+      description: typeof source.description === "string" ? source.description.trim().slice(0, 240) : "",
+      categoryHint: typeof source.categoryHint === "string" ? source.categoryHint.trim().slice(0, 80) : "",
+      purchaseCurrency,
+      chinaDeliveryKzt: number(source.chinaDeliveryKzt),
+      cargoKzt: number(source.cargoKzt),
+      customsKzt: number(source.customsKzt),
+      packagingKzt: number(source.packagingKzt),
+      setupKzt: number(source.setupKzt),
+      marketingKzt: number(source.marketingKzt),
+      otherCostsKzt: number(source.otherCostsKzt),
+      taxPercent: number(source.taxPercent),
+      bankInstallmentPercent: number(source.bankInstallmentPercent),
+      installmentMonths: Math.max(1, Math.round(number(source.installmentMonths) || 12)),
+      sellerPercent: number(source.sellerPercent),
+      targetProfitPercent: number(source.targetProfitPercent),
+    }];
+  });
+  return normalized.length ? normalized : DEFAULT_PRESETS;
+}
+
 const STORAGE_KEY = "maestro_cost_presets";
 
 export function loadPresets(): CostPreset[] {
@@ -136,4 +170,25 @@ export function savePresets(presets: CostPreset[]): void {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(presets));
   } catch {}
+}
+
+export async function loadPresetsRemote(): Promise<CostPreset[]> {
+  const response = await fetch("/api/cost-presets", { cache: "no-store", credentials: "same-origin" });
+  const payload = await response.json();
+  if (!response.ok || !Array.isArray(payload.presets)) throw new Error(payload.error || "Шаблоны не загрузились");
+  const presets = normalizeCostPresets(payload.presets);
+  savePresets(presets);
+  return presets;
+}
+
+export async function savePresetsRemote(presets: CostPreset[]): Promise<void> {
+  const response = await fetch("/api/cost-presets", {
+    method: "PUT",
+    cache: "no-store",
+    credentials: "same-origin",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ presets: normalizeCostPresets(presets) }),
+  });
+  const payload = await response.json().catch(() => ({}));
+  if (!response.ok) throw new Error(payload.error || "Шаблоны не сохранились");
 }

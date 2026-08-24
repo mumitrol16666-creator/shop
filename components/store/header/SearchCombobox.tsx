@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useId, useRef, useState } from "react";
 import { money } from "../../../lib/catalog-data";
+import { productPriceSummary } from "../../../lib/product-variants";
 import type { ProductReadModel } from "../../../lib/commerce/types";
 
 export function SearchCombobox() {
@@ -113,8 +114,9 @@ export function SearchCombobox() {
       </label>
       {open && (
         <div className="store-search__results" id={listId} role="listbox">
-          {error ? <p role="alert">{error}</p> : results.length ? results.map((product, index) => (
-            <button
+          {error ? <p role="alert">{error}</p> : results.length ? results.map((product, index) => {
+            const priceSummary = productPriceSummary(product);
+            return <button
               id={`${listId}-${index}`}
               key={product.id}
               type="button"
@@ -126,9 +128,9 @@ export function SearchCombobox() {
             >
               <span className="store-search__thumb"><Image src={product.image} alt="" fill unoptimized sizes="48px" /></span>
               <span><strong>{product.name}</strong><small>{product.availability.status === "in_stock" ? "В наличии" : "Нет в наличии"}</small></span>
-              <b>{money(product.defaultPrice.final)} ₸</b>
-            </button>
-          )) : <p>По запросу ничего не найдено.</p>}
+              <b>{priceSummary.hasRange ? "от " : ""}{money(priceSummary.minimum)} ₸</b>
+            </button>;
+          }) : <p>По запросу ничего не найдено.</p>}
           <button type="button" className="store-search__all" onClick={() => { setOpen(false); router.push(allResultsUrl); }}>
             Все результаты →
           </button>

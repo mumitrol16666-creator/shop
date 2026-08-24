@@ -30,6 +30,7 @@ function AdminPricingContent() {
   const [requestedQuantity, setRequestedQuantity] = useState(1);
   const [notice, setNotice] = useState("");
   const [storedProducts, setStoredProducts] = useState<Product[]>([]);
+  const [catalogLoaded, setCatalogLoaded] = useState(false);
 
   useEffect(() => {
     let active = true;
@@ -40,7 +41,10 @@ function AdminPricingContent() {
           setStoredProducts(data.products);
         }
       })
-      .catch(() => {});
+      .catch(() => {})
+      .finally(() => {
+        if (active) setCatalogLoaded(true);
+      });
     return () => {
       active = false;
     };
@@ -96,6 +100,7 @@ function AdminPricingContent() {
           <Link href="/admin/orders">Заказы</Link>
           <Link className="is-active" href="/admin/pricing">Товары и цены</Link>
           <Link href="/admin/analytics">Аналитика</Link>
+          <Link href="/admin/settings">Настройки магазина</Link>
           <Link href="/">Витрина</Link>
           <button type="button" className="admin-logout-btn" onClick={() => void logout()}>
             Выйти
@@ -103,18 +108,22 @@ function AdminPricingContent() {
         </nav>
       </header>
 
-      <PurchaserView
-        categories={categories}
-        filteredProducts={filteredProducts}
-        storedProducts={storedProducts}
-        setStoredProducts={setStoredProducts}
-        openProduct={openProduct}
-        setMode={() => {}}
-        setCategory={setCategory}
-        query={query}
-        setQuery={setQuery}
-        setNotice={setNotice}
-      />
+      {catalogLoaded ? (
+        <PurchaserView
+          categories={categories}
+          filteredProducts={filteredProducts}
+          storedProducts={storedProducts}
+          setStoredProducts={setStoredProducts}
+          openProduct={openProduct}
+          setMode={() => {}}
+          setCategory={setCategory}
+          query={query}
+          setQuery={setQuery}
+          setNotice={setNotice}
+        />
+      ) : (
+        <section className="admin-catalog-loading" aria-live="polite">Загружаем актуальные товары и цены…</section>
+      )}
 
       <ProductModal
         selected={selected}

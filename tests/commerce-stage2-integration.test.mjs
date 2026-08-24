@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { products as legacyProducts } from "../lib/catalog-data.ts";
-import { categoryFromSource } from "../lib/commerce/categories.ts";
+import { categoriesFromCatalog, categoryFromSource } from "../lib/commerce/categories.ts";
 import { parseCatalogState, selectCatalogProducts } from "../lib/storefront/catalog-state.ts";
 import { recommendProducts } from "../lib/storefront/picker.ts";
 import { consumeCatalogReturn, saveCatalogReturn } from "../lib/storefront/scroll-restoration.ts";
@@ -56,4 +56,15 @@ test("Stage 2 integration: catalog return context is exact, one-shot and URL-spe
     if (previousWindow === undefined) delete globalThis.window;
     else globalThis.window = previousWindow;
   }
+});
+
+test("Stage 2 integration: storefront navigation includes categories created in admin", () => {
+  const custom = {
+    ...catalog[0],
+    categoryId: "pedals",
+    categorySlug: "pedals",
+    categoryDisplayName: "Педали эффектов",
+  };
+  const categories = categoriesFromCatalog([...catalog, custom]);
+  assert.equal(categories.some((category) => category.slug === "pedals" && category.displayName === "Педали эффектов"), true);
 });

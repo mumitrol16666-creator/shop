@@ -1,4 +1,5 @@
 import type { ProductReadModel } from "../commerce/types";
+import { productPriceSummary } from "../product-variants.ts";
 
 export type CatalogSort = "popular" | "price_asc" | "price_desc" | "discount";
 
@@ -60,7 +61,7 @@ export function selectCatalogProducts(
     if (categorySlug && product.categorySlug !== categorySlug) return false;
     if (state.availability === "in_stock" && product.availability.status !== "in_stock") return false;
     if (state.sale && !isDiscounted(product)) return false;
-    const price = product.defaultPrice.final;
+    const price = productPriceSummary(product).minimum;
     if (state.price === "under_30000" && price >= 30_000) return false;
     if (state.price === "30000_50000" && (price < 30_000 || price > 50_000)) return false;
     if (state.price === "over_50000" && price <= 50_000) return false;
@@ -68,10 +69,9 @@ export function selectCatalogProducts(
   });
 
   return selected.sort((left, right) => {
-    if (state.sort === "price_asc") return left.defaultPrice.final - right.defaultPrice.final;
-    if (state.sort === "price_desc") return right.defaultPrice.final - left.defaultPrice.final;
+    if (state.sort === "price_asc") return productPriceSummary(left).minimum - productPriceSummary(right).minimum;
+    if (state.sort === "price_desc") return productPriceSummary(right).minimum - productPriceSummary(left).minimum;
     if (state.sort === "discount") return right.defaultPrice.discount - left.defaultPrice.discount;
     return Number(right.availability.status === "in_stock") - Number(left.availability.status === "in_stock");
   });
 }
-

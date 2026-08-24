@@ -46,6 +46,46 @@ test("Stage 3: Aktobe delivery requires an address", () => {
   );
 });
 
+test("Stage 3: physical bundle components are reserved with the main product", () => {
+  const bundled = structuredClone(product);
+  bundled.componentDefinitions.push({
+    sku: "COMP-CASE",
+    title: "Чехол",
+    price: 0,
+    kind: "physical",
+    inventoryTracked: true,
+    linkedVariantId: "case-variant",
+    linkedVariantSku: "CASE-01",
+    linkedProductSku: "CASE",
+    quantity: 1,
+    availableQuantity: 5,
+    placement: "pro_pack",
+  });
+  bundled.bundleDefinitions.push({
+    id: "pro_pack",
+    sku: core.BUNDLE_SKUS.proPack,
+    title: "PRO",
+    description: "Гитара и чехол",
+    componentSkus: ["COMP-CASE"],
+    priceDelta: 5000,
+    eligible: true,
+  });
+  const input = request();
+  input.cart.lines[0].bundleSku = core.BUNDLE_SKUS.proPack;
+  input.cart.lines[0].observedPricingVersion = undefined;
+  input.cart.lines[0].observedFinal = undefined;
+  const created = core.createOrderInMemory({
+    state: core.emptyCommerceStoreState(),
+    products: [bundled],
+    request: input,
+    idempotencyKey: "stage3-bundle-stock",
+  });
+  assert.deepEqual(
+    created.state.reservations.map((reservation) => reservation.variantSku).sort(),
+    ["CASE-01", bundled.variants[0].sku].sort(),
+  );
+});
+
 test("Stage 3: storefront contains no Kazakhstan-wide delivery promise", async () => {
   const files = [
     "components/store/home/HomePage.tsx",

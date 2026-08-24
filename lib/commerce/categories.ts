@@ -35,3 +35,27 @@ export const categoryBySlug = (slug: string) =>
 
 export const isCanonicalCategorySlug = (slug: string) => Boolean(categoryBySlug(slug));
 
+export function categoriesFromCatalog(products: Array<{
+  categoryId: string;
+  categorySlug: string;
+  categoryDisplayName: string;
+}>): CatalogCategory[] {
+  const discovered = new Map<string, CatalogCategory>();
+  for (const product of products) {
+    if (!product.categorySlug || discovered.has(product.categorySlug)) continue;
+    discovered.set(product.categorySlug, {
+      id: product.categoryId || product.categorySlug,
+      slug: product.categorySlug,
+      displayName: product.categoryDisplayName || product.categorySlug,
+      aliases: [],
+    });
+  }
+  return [...discovered.values()].sort((left, right) => {
+    const leftIndex = CATALOG_CATEGORIES.findIndex((category) => category.slug === left.slug);
+    const rightIndex = CATALOG_CATEGORIES.findIndex((category) => category.slug === right.slug);
+    if (leftIndex >= 0 && rightIndex >= 0) return leftIndex - rightIndex;
+    if (leftIndex >= 0) return -1;
+    if (rightIndex >= 0) return 1;
+    return left.displayName.localeCompare(right.displayName, "ru");
+  });
+}

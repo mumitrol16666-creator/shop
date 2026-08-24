@@ -1,4 +1,8 @@
-import type { ProductReadModel } from "./commerce/types";
+import type {
+  BundleDefinition,
+  ComponentDefinition,
+  ProductReadModel,
+} from "./commerce/types";
 
 export type AdminPricing = {
   purchaseCurrency: "CNY" | "USD" | "KZT";
@@ -23,6 +27,11 @@ export type AdminPricing = {
   hasDiscount?: boolean;
 };
 
+export type VariantAttribute = {
+  name: string;
+  value: string;
+};
+
 export type Variant = {
   id?: string;
   name: string;
@@ -35,6 +44,8 @@ export type Variant = {
   barcode?: string;
   colorName?: string;
   size?: string;
+  attributes?: VariantAttribute[];
+  priceMode?: "inherit" | "override";
   price?: number;
   originalPrice?: number;
   discountPercent?: number;
@@ -61,6 +72,8 @@ export type Product = {
   proPackPrice?: number;
   proPackDescription?: string;
   allowStringsUpsell?: boolean;
+  bundleDefinitions?: BundleDefinition[];
+  componentDefinitions?: ComponentDefinition[];
   price?: number;
   originalPrice?: number;
   discountPercent?: number;
@@ -377,9 +390,9 @@ export const variantsByProduct: Record<string, Variant[]> = {
     { name: "Латунные", stock: 5, color: "#c7a653", sku: "STR-FOLK-BRASS", image: "/product-variants/str-folk-brass.jpg" },
   ],
   10: [
-    { name: "Золотой", stock: 2, color: "#c7a053", sku: "CAPO-ALLOY-GOLD", image: "/product-variants/capo-alloy-gold.jpg" },
-    { name: "Бронзовый", stock: 2, color: "#756f68", sku: "CAPO-ALLOY-BRZ", image: "/product-variants/capo-alloy-brz.jpg" },
-    { name: "Розовое золото", stock: 1, color: "#c9877e", sku: "CAPO-ALLOY-RGD", image: "/product-variants/capo-alloy-rgd.jpg" },
+    { name: "Золотой", stock: 2, color: "#c7a053", sku: "CAPO-ALLOY-GOLD", image: "/product-variants/capo-alloy-gold.jpg", attributes: [{ name: "Цвет", value: "Золотой" }], priceMode: "inherit" },
+    { name: "Бронзовый", stock: 2, color: "#756f68", sku: "CAPO-ALLOY-BRZ", image: "/product-variants/capo-alloy-brz.jpg", attributes: [{ name: "Цвет", value: "Бронзовый" }], priceMode: "inherit" },
+    { name: "Розовое золото", stock: 1, color: "#c9877e", sku: "CAPO-ALLOY-RGD", image: "/product-variants/capo-alloy-rgd.jpg", attributes: [{ name: "Цвет", value: "Розовое золото" }], priceMode: "inherit" },
   ],
   11: [
     { name: "Синяя молния", stock: 1, color: "#17479d", secondary: "#171717", sku: "STRAP-LIGHTNING", image: "/product-variants/strap-lightning.jpg" },
@@ -435,9 +448,11 @@ export const COMMERCE_STAGE0_ENABLED =
 
 export const productUnitPrice = (
   product: Pick<Product, "price">,
-  variant?: Pick<Variant, "price"> | null,
+  variant?: Pick<Variant, "price" | "priceMode"> | null,
 ) => {
-  const value = variant?.price ?? product.price ?? 0;
+  const value = variant?.priceMode === "override"
+    ? variant.price ?? product.price ?? 0
+    : product.price ?? 0;
   return Number.isFinite(value) && value >= 0 ? value : 0;
 };
 

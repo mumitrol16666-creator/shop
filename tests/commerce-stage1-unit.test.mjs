@@ -104,6 +104,41 @@ test("Unit: deleted product, removed variant and reduced stock become controlled
   assert.equal(core.reconcileCart([product], draftFor(product, { quantity: 2 })).invalidLines[0].errors[0].code, "INSUFFICIENT_STOCK");
 });
 
+test("Unit: linked bundle components limit quantity and report their own stock", () => {
+  const product = core.stage1SmokeProduct();
+  product.variants[0].availableQuantity = 10;
+  product.componentDefinitions.push({
+    sku: "COMP-LINKED-STRINGS",
+    title: "Струны со склада",
+    price: 1000,
+    kind: "physical",
+    inventoryTracked: true,
+    linkedVariantId: "strings-variant",
+    linkedVariantSku: "STRINGS-10",
+    linkedProductSku: "STRINGS",
+    quantity: 2,
+    availableQuantity: 3,
+    placement: "optional",
+  });
+  const ready = core.reconcileCart([product], draftFor(product, {
+    componentSkus: ["COMP-LINKED-STRINGS"],
+    observedPricingVersion: undefined,
+    observedFinal: undefined,
+  }));
+  assert.equal(ready.state, "ready");
+  assert.equal(ready.lines[0].availableQuantity, 1);
+  assert.equal(ready.lines[0].inventoryRequirements.length, 2);
+
+  const invalid = core.reconcileCart([product], draftFor(product, {
+    componentSkus: ["COMP-LINKED-STRINGS"],
+    quantity: 2,
+    observedPricingVersion: undefined,
+    observedFinal: undefined,
+  }));
+  assert.equal(invalid.state, "invalid");
+  assert.match(invalid.invalidLines[0].errors[0].message, /Струны со склада/);
+});
+
 test("Unit: only trusted actors can transition payment_reported to paid", () => {
   assert.equal(core.canTransitionOrder("payment_reported", "paid", "customer"), false);
   assert.equal(core.canTransitionOrder("payment_reported", "paid", "admin"), true);

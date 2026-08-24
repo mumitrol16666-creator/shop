@@ -3,15 +3,19 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { installment, money } from "../../../lib/catalog-data";
+import { productPriceSummary } from "../../../lib/product-variants";
 import type { ProductReadModel } from "../../../lib/commerce/types";
 import { ProductConfigurator } from "./ProductConfigurator";
+import type { StoreSettings } from "../../../lib/store-settings";
 
 export function ProductPage({
+  settings,
   product,
   onNotice,
 }: {
+  settings: StoreSettings;
   product: ProductReadModel;
   onNotice: (message: string) => void;
 }) {
@@ -22,16 +26,29 @@ export function ProductPage({
   );
 
   const selectedVariant = product.variants.find((v) => v.sku === selectedVariantSku);
-  const activeImage = selectedVariant?.image || product.image;
+  const [activeImage, setActiveImage] = useState(product.image);
+  useEffect(() => {
+    setSelectedVariantSku(product.selectionRequired ? "" : selectableVariants[0]?.sku || "");
+    setActiveImage(product.image);
+  }, [product.id]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const priceSummary = productPriceSummary(product);
+  const displayPrice = selectedVariant?.currentPrice ?? priceSummary.minimum;
+  const requiresInstrumentSetup = [
+    "electric-guitars",
+    "acoustic-guitars",
+    "classical-guitars",
+    "ukuleles",
+  ].includes(product.categorySlug);
 
   // Build unique gallery items (master photo + variants photos)
   const galleryItems = useMemo(() => {
-    const items: Array<{ image: string; title: string; sku?: string }> = [
-      { image: product.image, title: "Все цвета" },
+    const items: Array<{ image: string; title: string }> = [
+      { image: product.image, title: "Главное фото" },
     ];
     for (const v of product.variants) {
       if (v.image && !items.some((item) => item.image === v.image)) {
-        items.push({ image: v.image, title: v.title, sku: v.sku });
+        items.push({ image: v.image, title: v.title });
       }
     }
     return items;
@@ -68,21 +85,17 @@ export function ProductPage({
 
           {/* Interactive Color Thumbnails */}
           {galleryItems.length > 1 && (
-            <div className="store-product-thumbs" aria-label="Галерея цветов">
+            <div className="store-product-thumbs" aria-label="Фотографии товара">
               {galleryItems.map((item) => {
                 const isSelected = item.image === activeImage;
-                const matchedVariant = item.sku ? product.variants.find((v) => v.sku === item.sku) : null;
-                const isOutOfStock = Boolean(matchedVariant && (matchedVariant.status !== "active" || matchedVariant.availableQuantity <= 0));
 
                 return (
                   <button
                     key={item.image}
                     type="button"
-                    className={`store-thumb-btn ${isSelected ? "is-selected" : ""} ${isOutOfStock ? "is-out-of-stock-thumb" : ""}`}
-                    onClick={() => {
-                      if (item.sku) setSelectedVariantSku(item.sku);
-                    }}
-                    title={isOutOfStock ? `${item.title} (нет в наличии)` : item.title}
+                    className={`store-thumb-btn ${isSelected ? "is-selected" : ""}`}
+                    onClick={() => setActiveImage(item.image)}
+                    title={item.title}
                   >
                     <Image
                       src={item.image}
@@ -92,7 +105,6 @@ export function ProductPage({
                       sizes="72px"
                       style={{ objectFit: "contain" }}
                     />
-                    {isOutOfStock && <span className="thumb-stock-badge">✕</span>}
                   </button>
                 );
               })}
@@ -102,14 +114,14 @@ export function ProductPage({
           <p className="store-gallery-caption">
             {selectedVariant ? (
               selectedVariant.status === "active" && selectedVariant.availableQuantity > 0 ? (
-                <span>Выбран цвет: <strong>{selectedVariant.title}</strong> · в наличии {selectedVariant.availableQuantity} шт.</span>
+                <span>Выбран вариант: <strong>{selectedVariant.title}</strong> · в наличии {selectedVariant.availableQuantity} шт.</span>
               ) : (
                 <span style={{ color: "#ff6b63", fontWeight: 700 }}>
-                  Выбран цвет: {selectedVariant.title} · ✕ Нет в наличии
+                  Выбран вариант: {selectedVariant.title} · нет в наличии
                 </span>
               )
             ) : (
-              "Фотография товара · выберите цвет в панели справа"
+              "Фото можно листать отдельно. Для покупки выберите вариант справа."
             )}
           </p>
         </section>
@@ -124,8 +136,8 @@ export function ProductPage({
               : "Нет в наличии"}
           </p>
           <div className="store-product-price">
-            <strong className="store-main-price">{money(product.defaultPrice.final)} ₸</strong>
-            <span className="store-installment-badge">от {money(installment(product.defaultPrice.final, 12))} ₸/мес</span>
+            <strong className="store-main-price">{!selectedVariant && priceSummary.hasRange ? "от " : ""}{money(displayPrice)} ₸</strong>
+            <span className="store-installment-badge">от {money(installment(displayPrice, 12))} ₸/мес</span>
           </div>
           <p className="store-product-desc">{product.description}</p>
 
@@ -133,14 +145,18 @@ export function ProductPage({
             key={product.id}
             product={product}
             selectedVariantSku={selectedVariantSku}
-            onVariantSelect={(sku) => setSelectedVariantSku(sku)}
+            onVariantSelect={(sku) => {
+              setSelectedVariantSku(sku);
+              const variant = product.variants.find((candidate) => candidate.sku === sku);
+              if (variant?.image) setActiveImage(variant.image);
+            }}
             onAdded={() => onNotice("Товар добавлен в корзину.")}
           />
 
           <div className="store-delivery-summary">
-            <span>✓ Бесплатная отстройка мастером перед отправкой</span>
-            <span>✓ Самовывоз и доставка по Актобе</span>
-            <span>✓ Подарочный видеокурс и поддержка школы</span>
+            <span>{requiresInstrumentSetup ? "✓ Бесплатная отстройка мастером перед выдачей" : "✓ Проверка товара и комплектации перед выдачей"}</span>
+            <span>✓ {settings.pickupEnabled && settings.deliveryEnabled ? `Самовывоз и доставка по ${settings.city}` : settings.deliveryEnabled ? `Доставка по ${settings.city}` : `Самовывоз в ${settings.city}`}</span>
+            <span>{product.attachedCourseId && product.attachedCourseId !== "none" ? "✓ Учебные материалы и поддержка школы" : "✓ Консультация по выбору и использованию"}</span>
           </div>
         </section>
       </div>

@@ -65,11 +65,20 @@ export function quoteConfiguration(
     product.defaultPrice.base || product.defaultPrice.final,
   );
   const variantDelta = roundMoney(variant.currentPrice) - currentBase;
+  const bundledComponents = [...new Set(bundle.componentSkus)]
+    .map((sku) => product.componentDefinitions.find((candidate) => candidate.sku === sku))
+    .filter((component): component is NonNullable<typeof component> => Boolean(component));
+  const bundledSkus = new Set(bundledComponents.map((component) => component.sku));
   const components = [
     ...(bundle.priceDelta > 0
       ? [{ sku: bundle.sku, title: bundle.title, amount: roundMoney(bundle.priceDelta) }]
       : []),
-    ...selectedComponents.map((component) => ({
+    ...bundledComponents.map((component) => ({
+      sku: component.sku,
+      title: component.title,
+      amount: 0,
+    })),
+    ...selectedComponents.filter((component) => !bundledSkus.has(component.sku)).map((component) => ({
       sku: component.sku,
       title: component.title,
       amount: roundMoney(component.price),

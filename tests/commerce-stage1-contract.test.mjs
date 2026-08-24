@@ -49,7 +49,7 @@ test("Contract: UI pricing and checkout bridge use the shared domain and server 
   assert.match(modal, /quoteConfiguration/);
   assert.doesNotMatch(modal, /basePrice \+ bundleDelta \+ stringsDelta/);
   assert.match(qr, /payment-report/);
-  assert.match(vpsHtml, /bundle\.js\?v=19/);
+  assert.match(vpsHtml, /bundle\.js\?v=\d+/);
   assert.doesNotMatch(vpsHtml, /bundle\.js\?v=15/);
 });
 

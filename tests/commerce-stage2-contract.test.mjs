@@ -7,7 +7,7 @@ const source = (path) => readFile(new URL(path, import.meta.url), "utf8");
 test("Stage 2 contract: all public routes exist as framework pages", async () => {
   for (const path of ["../app/page.tsx", "../app/catalog/page.tsx", "../app/catalog/[category]/page.tsx", "../app/product/[slug]/page.tsx", "../app/picker/page.tsx", "../app/cart/page.tsx", "../app/not-found.tsx"]) await access(new URL(path, import.meta.url));
   const [category, product] = await Promise.all([source("../app/catalog/[category]/page.tsx"), source("../app/product/[slug]/page.tsx")]);
-  assert.match(category, /categoryBySlug/);
+  assert.match(category, /products\.some\(\(product\) => product\.categorySlug === category\)/);
   assert.match(category, /notFound\(\)/);
   assert.match(product, /item\.slug === slug/);
   assert.match(product, /notFound\(\)/);

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { type CostPreset, DEFAULT_PRESETS, savePresets } from "../lib/presets";
+import { type CostPreset, DEFAULT_PRESETS, savePresets, savePresetsRemote } from "../lib/presets";
 
 type PresetManagerModalProps = {
   isOpen: boolean;
@@ -30,6 +30,7 @@ export function PresetManagerModal({
       id: `preset-${Date.now()}`,
       name: "Новый шаблон расходов",
       description: "",
+      categoryHint: "Другое",
       purchaseCurrency: currentCalculatorValues?.purchaseCurrency || "CNY",
       chinaDeliveryKzt: currentCalculatorValues?.chinaDeliveryKzt ?? 1200,
       cargoKzt: currentCalculatorValues?.cargoKzt ?? 2800,
@@ -60,6 +61,7 @@ export function PresetManagerModal({
     }
     setPresets(updated);
     savePresets(updated);
+    void savePresetsRemote(updated).catch(() => {});
     setEditingPreset(null);
     setIsCreating(false);
   };
@@ -72,6 +74,7 @@ export function PresetManagerModal({
     const updated = presets.filter((p) => p.id !== id);
     setPresets(updated);
     savePresets(updated);
+    void savePresetsRemote(updated).catch(() => {});
     if (editingPreset?.id === id) {
       setEditingPreset(null);
     }
@@ -81,6 +84,7 @@ export function PresetManagerModal({
     if (confirm("Сбросить все шаблоны к исходным заводским настройкам?")) {
       setPresets(DEFAULT_PRESETS);
       savePresets(DEFAULT_PRESETS);
+      void savePresetsRemote(DEFAULT_PRESETS).catch(() => {});
       setEditingPreset(null);
     }
   };
@@ -126,7 +130,15 @@ export function PresetManagerModal({
                   required
                   value={editingPreset.name}
                   onChange={(e) => setEditingPreset({ ...editingPreset, name: e.target.value })}
-                  placeholder="Например: Электрогитары HSS с доводкой"
+                  placeholder="Например: Аксессуары мелким оптом"
+                />
+              </label>
+              <label className="full-width">
+                Категория применения
+                <input
+                  value={editingPreset.categoryHint || ""}
+                  onChange={(e) => setEditingPreset({ ...editingPreset, categoryHint: e.target.value })}
+                  placeholder="Например: Аксессуары"
                 />
               </label>
               <label className="full-width">
@@ -134,7 +146,7 @@ export function PresetManagerModal({
                 <input
                   value={editingPreset.description || ""}
                   onChange={(e) => setEditingPreset({ ...editingPreset, description: e.target.value })}
-                  placeholder="Особенности упаковки, доводки мастера или карго"
+                  placeholder="Особенности упаковки, проверки, доставки или карго"
                 />
               </label>
               <label>
@@ -194,7 +206,7 @@ export function PresetManagerModal({
                 />
               </label>
               <label>
-                Доводка мастера / чек, ₸
+                Предпродажная подготовка / проверка, ₸
                 <input
                   type="number"
                   placeholder="0"
@@ -294,7 +306,7 @@ export function PresetManagerModal({
         ) : (
           <div className="preset-list-view">
             <p className="preset-note">
-              💡 <strong>Шаблоны расходов</strong> позволяют в один клик подставлять логистику, отстройку мастера, карго и наценку под разные категории инструментов.
+              💡 <strong>Шаблоны расходов</strong> подставляют логистику, предпродажную подготовку, карго и наценку для разных категорий товаров.
             </p>
 
             <div className="preset-cards-grid">
@@ -320,7 +332,7 @@ export function PresetManagerModal({
                       <span className="tag-pill overhead" title="Суммарные прямые накладные расходы">
                         📦 Накладные: <strong>{totalDirectExpenses.toLocaleString("ru-RU")} ₸</strong>
                       </span>
-                      <span className="tag-pill setup" title="Стоимость предпродажной отстройки мастером">
+                      <span className="tag-pill setup" title="Стоимость предпродажной подготовки и проверки">
                         🔧 Доводка: <strong>{preset.setupKzt.toLocaleString("ru-RU")} ₸</strong>
                       </span>
                       <span className="tag-pill margin" title="Целевая маржинальность">

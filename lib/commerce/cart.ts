@@ -100,23 +100,87 @@ function resolveLine(
     });
   }
 
-  const stockErrors: CommerceErrorShape[] = [];
-  if (variant.availableQuantity <= 0) {
-    stockErrors.push({
-      code: "VARIANT_OUT_OF_STOCK",
-      message: "Этот вариант закончился.",
-      recoverable: true,
-      lineId: line.lineId,
-      details: { availableQuantity: 0 },
+  const inventoryComponents = [...new Set([
+    ...bundle.componentSkus,
+    ...line.componentSkus,
+  ])]
+    .map((sku) => product.componentDefinitions.find((component) => component.sku === sku))
+    .filter((component) => component?.inventoryTracked === true);
+  const unresolvedInventoryComponents = inventoryComponents.filter(
+    (component) => !component?.linkedVariantId || !component.linkedVariantSku,
+  );
+  const requirementMap = new Map<string, {
+    variantId: string;
+    variantSku: string;
+    title: string;
+    quantityPerUnit: number;
+    availableQuantity: number;
+  }>();
+  const addRequirement = (requirement: {
+    variantId: string;
+    variantSku: string;
+    title: string;
+    quantityPerUnit: number;
+    availableQuantity: number;
+  }) => {
+    const current = requirementMap.get(requirement.variantId);
+    if (current) current.quantityPerUnit += requirement.quantityPerUnit;
+    else requirementMap.set(requirement.variantId, requirement);
+  };
+  addRequirement({
+    variantId: variant.id,
+    variantSku: variant.sku,
+    title: product.name,
+    quantityPerUnit: 1,
+    availableQuantity: variant.availableQuantity,
+  });
+  for (const component of inventoryComponents) {
+    if (!component?.linkedVariantId || !component.linkedVariantSku) continue;
+    addRequirement({
+      variantId: component.linkedVariantId,
+      variantSku: component.linkedVariantSku,
+      title: component.title,
+      quantityPerUnit: Math.max(1, Math.floor(component.quantity || 1)),
+      availableQuantity: Math.max(0, component.availableQuantity ?? 0),
     });
-  } else if (line.quantity > variant.availableQuantity) {
+  }
+  const inventoryRequirements = [...requirementMap.values()];
+
+  const stockErrors: CommerceErrorShape[] = [];
+  for (const component of unresolvedInventoryComponents) {
     stockErrors.push({
       code: "INSUFFICIENT_STOCK",
-      message: `Доступно только ${variant.availableQuantity} шт.`,
+      message: `Комплектующая «${component?.title || "товар"}» больше не связана со складом.`,
       recoverable: true,
       lineId: line.lineId,
-      details: { availableQuantity: variant.availableQuantity },
+      details: { componentSku: component?.sku, availableQuantity: 0 },
     });
+  }
+  for (const requirement of inventoryRequirements) {
+    const requested = line.quantity * requirement.quantityPerUnit;
+    if (requirement.availableQuantity <= 0) {
+      stockErrors.push({
+        code: requirement.variantSku === variant.sku ? "VARIANT_OUT_OF_STOCK" : "INSUFFICIENT_STOCK",
+        message: requirement.variantSku === variant.sku
+          ? "Этот вариант закончился."
+          : `Комплектующая «${requirement.title}» закончилась.`,
+        recoverable: true,
+        lineId: line.lineId,
+        details: { variantSku: requirement.variantSku, availableQuantity: 0 },
+      });
+    } else if (requested > requirement.availableQuantity) {
+      stockErrors.push({
+        code: "INSUFFICIENT_STOCK",
+        message: `Для «${requirement.title}» доступно только ${requirement.availableQuantity} шт.`,
+        recoverable: true,
+        lineId: line.lineId,
+        details: {
+          variantSku: requirement.variantSku,
+          availableQuantity: requirement.availableQuantity,
+          requested,
+        },
+      });
+    }
   }
   const priceChanged = Boolean(
     (line.observedPricingVersion &&
@@ -155,8 +219,15 @@ function resolveLine(
     bundleTitle: bundle.title,
     componentSkus: [...new Set(line.componentSkus)].sort(),
     componentSnapshot: quote.components,
+    inventoryRequirements,
     quantity: line.quantity,
-    availableQuantity: variant.availableQuantity,
+    availableQuantity: inventoryRequirements.reduce(
+      (limit, requirement) => Math.min(
+        limit,
+        Math.floor(requirement.availableQuantity / requirement.quantityPerUnit),
+      ),
+      variant.availableQuantity,
+    ),
     pricing: quote,
     ...(typeof line.observedFinal === "number"
       ? { previousFinal: line.observedFinal }

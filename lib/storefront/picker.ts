@@ -1,4 +1,5 @@
 import type { ProductReadModel } from "../commerce/types";
+import { productPriceSummary } from "../product-variants.ts";
 
 export type PickerAnswers = {
   person?: "self" | "child";
@@ -20,8 +21,9 @@ export function recommendProducts(products: ProductReadModel[], answers: PickerA
     .filter((product) => product.availability.status === "in_stock")
     .map((product) => {
       let score = 0;
+      const price = productPriceSummary(product).minimum;
       const haystack = product.searchableAttributes.join(" ").toLowerCase();
-      if (withinBudget(product.defaultPrice.final, answers.budget)) score += 6;
+      if (withinBudget(price, answers.budget)) score += 6;
       else score -= 5;
       if (answers.use === "electric" && product.categorySlug === "electric-guitars") score += 9;
       if (answers.use === "acoustic" && ["acoustic-guitars", "classical-guitars"].includes(product.categorySlug)) score += 9;
@@ -31,12 +33,11 @@ export function recommendProducts(products: ProductReadModel[], answers: PickerA
       if (answers.size === "small" && /21|23|38|компакт|дет/.test(haystack)) score += 4;
       if (answers.size === "adult" && /39|40|41|полноразмер/.test(haystack)) score += 3;
       if (answers.priority === "comfort" && /мягк|нейлон|удоб|начина/.test(haystack)) score += 4;
-      if (answers.priority === "price") score += Math.max(0, 5 - product.defaultPrice.final / 20_000);
+      if (answers.priority === "price") score += Math.max(0, 5 - price / 20_000);
       if (answers.priority === "sound" && /звук|hss|sss|полноразмер/.test(haystack)) score += 4;
       return { product, score };
     })
-    .sort((left, right) => right.score - left.score || left.product.defaultPrice.final - right.product.defaultPrice.final)
+    .sort((left, right) => right.score - left.score || productPriceSummary(left.product).minimum - productPriceSummary(right.product).minimum)
     .slice(0, Math.max(0, limit))
     .map(({ product }) => product);
 }
-

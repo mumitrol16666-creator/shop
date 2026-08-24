@@ -1,5 +1,6 @@
 import type { CartItem, Product } from "../catalog-data";
 import type { ProductReadModel, PublicOrder, ReconciledCartLine } from "./types";
+import { productPriceSummary } from "../product-variants";
 
 export function toStorefrontProduct(model: ProductReadModel): Product {
   return {
@@ -21,7 +22,7 @@ export function toStorefrontProduct(model: ProductReadModel): Product {
     proPackTitle: model.bundleDefinitions.find((bundle) => bundle.id === "pro_pack")?.description,
     proPackPrice: model.bundleDefinitions.find((bundle) => bundle.id === "pro_pack")?.priceDelta,
     allowStringsUpsell: model.componentDefinitions.some((component) => component.sku.startsWith("COMP-STRINGS-")),
-    price: model.defaultPrice.final,
+    price: productPriceSummary(model).minimum,
     originalPrice: model.defaultPrice.subtotal > model.defaultPrice.final ? model.defaultPrice.subtotal : undefined,
     discountPercent: model.defaultPrice.discount > 0 && model.defaultPrice.subtotal > 0
       ? Math.round((model.defaultPrice.discount / model.defaultPrice.subtotal) * 100)
@@ -39,6 +40,8 @@ export function toStorefrontProduct(model: ProductReadModel): Product {
       barcode: variant.barcode,
       colorName: variant.colorName,
       size: variant.size,
+      attributes: variant.attributes,
+      priceMode: variant.priceMode,
       sku: variant.sku,
       image: variant.image,
       price: variant.currentPrice,

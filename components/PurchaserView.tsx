@@ -22,6 +22,15 @@ import {
   type ComponentDefinition,
 } from "../lib/commerce/types";
 
+
+function getAdminHeaders(): Record<string, string> {
+  const token = typeof window !== "undefined" ? localStorage.getItem("maestro_admin_token") || "" : "";
+  return {
+    "Content-Type": "application/json",
+    ...(token ? { "x-admin-token": token } : {}),
+  };
+}
+
 const legacyStringComponents = (): ComponentDefinition[] => [
   {
     sku: "COMP-STRINGS-ELIXIR",

@@ -25,13 +25,14 @@ test("P0: Stage 0 is enabled by default and product changes start unconfigured",
   assert.equal(initialVariantSelection(second, null), null);
 });
 
-test("P0: canonical unit price is shared by product and selected variant", () => {
+test("P0: variant price is explicit and otherwise inherits the product price", () => {
   const product = products[0];
   assert.ok(product);
   const variant = variantsFor(product)[0];
   assert.ok(variant);
   assert.equal(productUnitPrice(product), product.price);
-  assert.equal(productUnitPrice(product, variant), variant.price);
+  assert.equal(productUnitPrice(product, variant), product.price);
+  assert.equal(productUnitPrice(product, { ...variant, priceMode: "override" }), variant.price);
   assert.equal(productUnitPrice({ price: 0 }, { price: 0 }), 0);
 });
 

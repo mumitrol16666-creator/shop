@@ -211,6 +211,7 @@ function AdminOrdersContent() {
           <Link className="is-active" href="/admin/orders">Заказы</Link>
           <Link href="/admin/pricing">Товары и цены</Link>
           <Link href="/admin/analytics">Аналитика</Link>
+          <Link href="/admin/settings">Настройки магазина</Link>
           <Link href="/">Витрина</Link>
           <button type="button" className="admin-logout-btn" onClick={() => void logout()}>Выйти</button>
         </nav>

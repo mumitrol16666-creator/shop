@@ -5,6 +5,7 @@ import {
   variantsFor,
 } from "../catalog-data";
 import { stableHash } from "./pricing";
+import { normalizeVariantAttributes, resolveVariantUnitPrice } from "../product-variants";
 import { categoryFromSource } from "./categories";
 import {
   BUNDLE_SKUS,
@@ -22,6 +23,13 @@ type CatalogBuildOptions = {
   includeDrafts?: boolean;
   reservedByVariantSku?: Record<string, number>;
   confirmedByVariantSku?: Record<string, number>;
+};
+
+type LinkedInventory = {
+  variantId: string;
+  variantSku: string;
+  productSku: string;
+  availableQuantity: number;
 };
 
 const slugify = (value: string) =>
@@ -55,16 +63,68 @@ const variantsForProduct = (product: LegacyProduct): LegacyVariant[] => {
   ];
 };
 
-function bundleDefinitions(product: LegacyProduct): {
+function bundleDefinitions(
+  product: LegacyProduct,
+  inventoryByVariantSku: Map<string, LinkedInventory>,
+): {
   bundles: BundleDefinition[];
   components: ComponentDefinition[];
 } {
+  if (product.bundleDefinitions?.length || product.componentDefinitions?.length) {
+    const components = (product.componentDefinitions ?? []).map((component) => {
+      const linked = component.linkedVariantSku
+        ? inventoryByVariantSku.get(component.linkedVariantSku)
+        : undefined;
+      return {
+        ...component,
+        price: asMoney(component.price),
+        quantity: Math.max(1, Math.floor(component.quantity || 1)),
+        inventoryTracked: component.inventoryTracked === true,
+        ...(linked
+          ? {
+              linkedVariantId: linked.variantId,
+              linkedVariantSku: linked.variantSku,
+              linkedProductSku: component.linkedProductSku || linked.productSku,
+              availableQuantity: linked.availableQuantity,
+            }
+          : component.inventoryTracked
+            ? { availableQuantity: 0 }
+            : {}),
+      };
+    });
+    const componentBySku = new Map(components.map((component) => [component.sku, component]));
+    const configuredBundles = (product.bundleDefinitions ?? []).map((bundle) => ({
+      ...bundle,
+      componentSkus: [...new Set(bundle.componentSkus ?? [])],
+      priceDelta: asMoney(bundle.priceDelta),
+      eligible: bundle.eligible !== false && (bundle.componentSkus ?? []).every((sku) => {
+        const component = componentBySku.get(sku);
+        return !component?.inventoryTracked || (component.availableQuantity ?? 0) >= (component.quantity || 1);
+      }),
+    }));
+    const bundles = configuredBundles.some((bundle) => bundle.sku === BUNDLE_SKUS.base)
+      ? configuredBundles
+      : [
+          {
+            id: "base",
+            sku: BUNDLE_SKUS.base,
+            title: "Базовая комплектация",
+            description: "Заводская комплектация",
+            componentSkus: [],
+            priceDelta: 0,
+            eligible: true,
+          },
+          ...configuredBundles,
+        ];
+    return { bundles, components };
+  }
+
   const components: ComponentDefinition[] = [];
   const bundles: BundleDefinition[] = [
     {
       id: "base",
       sku: BUNDLE_SKUS.base,
-      title: "Только инструмент",
+      title: "Базовая комплектация",
       description: "Заводская комплектация",
       componentSkus: [],
       priceDelta: 0,
@@ -84,7 +144,7 @@ function bundleDefinitions(product: LegacyProduct): {
     bundles.push({
       id: "gift_course",
       sku: BUNDLE_SKUS.giftCourse,
-      title: "Гитара + курс",
+      title: "Товар + курс",
       description: "Онлайн-курс в подарок",
       componentSkus: [courseSku],
       priceDelta: 0,
@@ -139,8 +199,25 @@ export function buildCatalogReadModels(
 ): ProductReadModel[] {
   const reserved = options.reservedByVariantSku ?? {};
   const confirmed = options.confirmedByVariantSku ?? {};
+  const sourceProducts = mergeCatalogSources(storedProducts);
+  const inventoryByVariantSku = new Map<string, LinkedInventory>();
+  for (const sourceProduct of sourceProducts) {
+    variantsForProduct(sourceProduct).forEach((variant, index) => {
+      const stockQuantity = Math.max(0, Math.floor(variant.stock || 0));
+      const availableQuantity = Math.max(
+        0,
+        stockQuantity - Math.max(0, reserved[variant.sku] ?? 0) - Math.max(0, confirmed[variant.sku] ?? 0),
+      );
+      inventoryByVariantSku.set(variant.sku, {
+        variantId: String(variant.id || `${sourceProduct.sku}-variant-${index + 1}`),
+        variantSku: variant.sku,
+        productSku: sourceProduct.sku,
+        availableQuantity,
+      });
+    });
+  }
 
-  return mergeCatalogSources(storedProducts)
+  return sourceProducts
     .filter((product) =>
       options.includeDrafts
         ? true
@@ -153,7 +230,7 @@ export function buildCatalogReadModels(
         product.isDiscountActive && product.originalPrice
           ? Math.max(currentBasePrice, asMoney(product.originalPrice))
           : currentBasePrice;
-      const definitions = bundleDefinitions(product);
+      const definitions = bundleDefinitions(product, inventoryByVariantSku);
       const variants = variantsForProduct(product).map((variant, index) => {
         const stockQuantity = Math.max(0, Math.floor(variant.stock || 0));
         const held = Math.max(0, reserved[variant.sku] ?? 0);
@@ -170,16 +247,13 @@ export function buildCatalogReadModels(
           barcode: variant.barcode,
           colorName: variant.colorName,
           size: variant.size,
+          attributes: normalizeVariantAttributes(variant),
+          priceMode: variant.priceMode === "override" ? "override" as const : "inherit" as const,
           stockQuantity,
           reservedQuantity: held,
           availableQuantity,
           status: availableQuantity > 0 ? ("active" as const) : ("out_of_stock" as const),
-          currentPrice: asMoney(
-            product.variantItems && typeof variant.price === "number" && variant.price > 0
-              ? variant.price
-              : currentBasePrice,
-            currentBasePrice,
-          ),
+          currentPrice: asMoney(resolveVariantUnitPrice(currentBasePrice, variant), currentBasePrice),
         };
       });
 
@@ -241,7 +315,11 @@ export function buildCatalogReadModels(
           category.slug,
           product.description,
           ...(product.features || []),
-          ...variants.flatMap((variant) => [variant.title, variant.sku]),
+          ...variants.flatMap((variant) => [
+            variant.title,
+            variant.sku,
+            ...variant.attributes.flatMap((attribute) => [attribute.name, attribute.value]),
+          ]),
         ].filter(Boolean),
       };
       return model;
@@ -280,6 +358,8 @@ export const stage1SmokeProduct = (): ProductReadModel => ({
       title: "Тестовый вариант",
       image: "/products/01_st20_electric.png",
       color: "#111111",
+      attributes: [],
+      priceMode: "inherit",
       stockQuantity: 1_000_000,
       reservedQuantity: 0,
       availableQuantity: 1_000_000,
