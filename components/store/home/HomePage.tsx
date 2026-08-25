@@ -249,16 +249,6 @@ export function HomePage({
           </div>
         </section>
 
-        {/* Assistant Entry Banner */}
-        <section className="store-assistant-entry store-section">
-          <div>
-            <p className="store-eyebrow">ПОМОЩЬ С ВЫБОРОМ</p>
-            <h2>Не знаете, какая гитара подойдёт?</h2>
-            <p>Ответьте на пять коротких вопросов. Подбор покажет только реальные доступные модели.</p>
-          </div>
-          <Link href="/picker" className="store-primary-action">Начать подбор</Link>
-        </section>
-
         {/* Reviews */}
         <section className="store-reviews store-section">
           <p className="store-eyebrow">ОТЗЫВЫ</p>
