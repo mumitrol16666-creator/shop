@@ -1,13 +1,23 @@
-const CACHE_NAME = "maestro-store-v" + Date.now();
+const CACHE_NAME = "maestro-store-v19";
+const CORE_ASSETS = [
+  "/offline.html",
+  "/manifest.json",
+  "/favicon.svg",
+  "/pwa-icon-192.png",
+  "/pwa-icon-512.png",
+  "/bundle.css?v=19",
+  "/bundle.js?v=19",
+];
 
 self.addEventListener("install", (event) => {
-  self.skipWaiting();
+  event.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll(CORE_ASSETS)));
 });
 
 self.addEventListener("activate", (event) => {
   event.waitUntil(
-    caches.keys().then((keys) => Promise.all(keys.map((key) => caches.delete(key))))
-      .then(() => self.clients.claim())
+    caches.keys()
+      .then((keys) => Promise.all(keys.filter((key) => key.startsWith("maestro-store-") && key !== CACHE_NAME).map((key) => caches.delete(key))))
+      .then(() => self.clients.claim()),
   );
 });
 
@@ -26,16 +36,27 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  // Network-first for all styles, scripts, and images to prevent stale UI
+  // Network-first for bundle.js and bundle.css so changes appear immediately
+  if (url.pathname.includes("bundle.js") || url.pathname.includes("bundle.css")) {
+    event.respondWith(
+      fetch(request)
+        .then((response) => {
+          if (response.ok) {
+            const clone = response.clone();
+            caches.open(CACHE_NAME).then((cache) => cache.put(request, clone));
+          }
+          return response;
+        })
+        .catch(() => caches.match(request))
+    );
+    return;
+  }
+
+  if (!["style", "script", "image", "font"].includes(request.destination)) return;
   event.respondWith(
-    fetch(request)
-      .then((response) => {
-        if (response.ok && ["style", "script", "image", "font"].includes(request.destination)) {
-          const clone = response.clone();
-          caches.open(CACHE_NAME).then((cache) => cache.put(request, clone));
-        }
-        return response;
-      })
-      .catch(() => caches.match(request))
+    caches.match(request).then((cached) => cached || fetch(request).then((response) => {
+      if (response.ok) void caches.open(CACHE_NAME).then((cache) => cache.put(request, response.clone()));
+      return response;
+    })),
   );
 });
