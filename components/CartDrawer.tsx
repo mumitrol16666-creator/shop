@@ -33,12 +33,18 @@ export function CartDrawer({
 }: CartDrawerProps) {
   const closeDrawer = useCallback(() => setCartOpen(false), [setCartOpen]);
   const drawerRef = useOverlayLifecycle(cartOpen, closeDrawer);
+  const displayedTotal = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const itemLabel = cartCount % 10 === 1 && cartCount % 100 !== 11
+    ? "товар"
+    : [2, 3, 4].includes(cartCount % 10) && ![12, 13, 14].includes(cartCount % 100)
+      ? "товара"
+      : "товаров";
   if (!cartOpen) return null;
 
   return (
     <div className="cart-drawer-backdrop" role="presentation" onMouseDown={closeDrawer}>
       <aside ref={drawerRef} className="cart-drawer" role="dialog" aria-modal="true" aria-label="Корзина" onMouseDown={(event) => event.stopPropagation()}>
-        <div className="cart-head"><div><p className="eyebrow">КОРЗИНА</p><h2>{cartCount ? `${cartCount} товара` : "Пока пусто"}</h2></div><button onClick={closeDrawer} aria-label="Закрыть корзину">×</button></div>
+        <div className="cart-head"><div><p className="eyebrow">КОРЗИНА</p><h2>{cartCount ? `${cartCount} ${itemLabel}` : "Пока пусто"}</h2></div><button type="button" onClick={closeDrawer} aria-label="Закрыть корзину">×</button></div>
         {!cartItems.length ? (
           <div className="cart-empty"><strong>Добавьте инструмент из каталога</strong><p>Здесь появятся выбранные товары и итоговая стоимость.</p><Link href="/catalog" onClick={closeDrawer}>Перейти в каталог</Link></div>
         ) : (
@@ -54,9 +60,11 @@ export function CartDrawer({
             </div>
             {reconciliationMessage && <p className="checkout-inline-message" role={hasPriceChanges ? "alert" : "status"}>{reconciliationMessage}</p>}
             {hasPriceChanges && onAcceptPriceChanges && <button className="store-secondary-action" type="button" onClick={onAcceptPriceChanges}>Принять новую цену</button>}
-            <div className="cart-total"><span>Итого</span><strong>{money(totalPrice)} ₸</strong></div>
-            <Link className="store-primary-action cart-checkout-link" href="/checkout" onClick={closeDrawer}>Перейти к оформлению</Link>
-            <Link className="store-text-link" href="/cart" onClick={closeDrawer}>Открыть корзину целиком</Link>
+            <div className="cart-drawer-summary">
+              <div className="cart-total"><span>Итого</span><strong>{money(displayedTotal || totalPrice)} ₸</strong></div>
+              <Link className="store-primary-action cart-checkout-link" href="/checkout" onClick={closeDrawer}>Перейти к оформлению</Link>
+              <Link className="store-text-link cart-full-link" href="/cart" onClick={closeDrawer}>Открыть корзину целиком</Link>
+            </div>
           </>
         )}
       </aside>
