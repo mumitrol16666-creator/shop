@@ -34,10 +34,23 @@ const formatOptions: Array<{ id: TagType; title: string; size: string; descripti
   { id: "compact", title: "Компактный", size: "58 × 36 мм", description: "Для аксессуаров" },
 ];
 
+const pageCapacity: Record<TagType, number> = {
+  showroom: 8,
+  shelf: 10,
+  compact: 21,
+};
+
+function paginate<T>(items: T[], pageSize: number): T[][] {
+  if (!items.length) return [];
+  return Array.from({ length: Math.ceil(items.length / pageSize) }, (_, index) =>
+    items.slice(index * pageSize, (index + 1) * pageSize),
+  );
+}
+
 const cleanCode = (value: string) => value.trim().replace(/[^\x20-\x7E]/g, "").slice(0, 48);
 
 function itemCode(product: Product, variant: Variant | null) {
-  return cleanCode(variant?.barcode || variant?.sku || product.sku || `MAESTRO-${product.id}`);
+  return cleanCode(variant?.barcode || variant?.sku || product.sku || "") || `MAESTRO-${product.id}`;
 }
 
 function itemOriginalPrice(product: Product, variant: Variant | null, price: number) {
@@ -87,6 +100,10 @@ export function PriceTagPrintModal({ isOpen, onClose, products }: PriceTagPrintM
       };
     });
   }), [products, separateVariants]);
+  const printPages = useMemo(
+    () => paginate(printItems, pageCapacity[tagType]),
+    [printItems, tagType],
+  );
 
   useEffect(() => () => {
     document.body.classList.remove("price-tag-printing");
@@ -121,7 +138,7 @@ export function PriceTagPrintModal({ isOpen, onClose, products }: PriceTagPrintM
           <div>
             <p className="print-modal-eyebrow">MAESTRO MUSIC STORE</p>
             <h2 id="price-tag-title">Печать ценников</h2>
-            <p>{printItems.length} ценников из {products.length} выбранных товаров</p>
+            <p>{printItems.length} ценников · {printPages.length} стр. A4 · {products.length} выбранных товаров</p>
           </div>
           <button type="button" className="modal-close" onClick={onClose} aria-label="Закрыть">×</button>
         </div>
@@ -169,8 +186,14 @@ export function PriceTagPrintModal({ isOpen, onClose, products }: PriceTagPrintM
           </button>
         </div>
 
-        <div className={`printable-sheet format-${tagType}`}>
-          {printItems.map(({ key, product, variant, price, originalPrice, code }) => {
+        <div className={`price-tag-pages format-${tagType}`}>
+          {printPages.map((page, pageIndex) => (
+            <section className={`price-tag-page format-${tagType}`} key={`${tagType}-page-${pageIndex}`}>
+              <div className="price-tag-page__meta no-print">
+                Лист {pageIndex + 1} из {printPages.length} · {page.length} ценников
+              </div>
+              <div className={`printable-sheet format-${tagType}`}>
+          {page.map(({ key, product, variant, price, originalPrice, code }) => {
             const monthlyPayment = installment(price, 12);
             const discountPercent = originalPrice
               ? Math.round(((originalPrice - price) / originalPrice) * 100)
@@ -197,14 +220,18 @@ export function PriceTagPrintModal({ isOpen, onClose, products }: PriceTagPrintM
                   </div>
 
                   <div className="tag-price-area">
-                    <div className="tag-price-copy">
-                      <span className="tag-price-label">Цена</span>
-                      <div className="tag-price-block">
-                        <strong className="tag-main-price">{money(price)} <small>₸</small></strong>
-                        {originalPrice && <span className="tag-old-price">{money(originalPrice)} ₸</span>}
-                      </div>
+                    <div className="tag-price-meta">
+                      <span className="tag-price-label">{originalPrice ? "Цена по акции" : "Цена магазина"}</span>
+                      {originalPrice ? (
+                        <div className="tag-price-promo">
+                          <span className="tag-old-price">{money(originalPrice)} ₸</span>
+                          <span className="tag-discount-badge">−{discountPercent}%</span>
+                        </div>
+                      ) : (
+                        <span className="tag-price-note">за 1 шт. · с гарантией</span>
+                      )}
                     </div>
-                    {discountPercent > 0 && <span className="tag-discount-badge">−{discountPercent}%</span>}
+                    <strong className="tag-main-price">{money(price)} <small>₸</small></strong>
                   </div>
 
                   {includeKaspi && price > 0 && (
@@ -261,6 +288,9 @@ export function PriceTagPrintModal({ isOpen, onClose, products }: PriceTagPrintM
               </article>
             );
           })}
+              </div>
+            </section>
+          ))}
         </div>
       </div>
     </div>
