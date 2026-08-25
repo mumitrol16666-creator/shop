@@ -8,7 +8,7 @@ import { installment, money } from "../../../lib/catalog-data";
 import { productPriceSummary } from "../../../lib/product-variants";
 import type { ProductReadModel } from "../../../lib/commerce/types";
 import { ProductConfigurator } from "./ProductConfigurator";
-import type { StoreSettings } from "../../../lib/store-settings";
+import { whatsappHref, type StoreSettings } from "../../../lib/store-settings";
 
 export function ProductPage({
   settings,
@@ -40,6 +40,9 @@ export function ProductPage({
     "classical-guitars",
     "ukuleles",
   ].includes(product.categorySlug);
+  const consultationHref = `${whatsappHref(settings)}?text=${encodeURIComponent(
+    `Здравствуйте! Нужна консультация по товару «${product.name}».`,
+  )}`;
 
   // Build unique gallery items (master photo + variants photos)
   const galleryItems = useMemo(() => {
@@ -69,6 +72,7 @@ export function ProductPage({
 
       <div className="store-product-layout">
         {/* DYNAMIC INTERACTIVE GALLERY */}
+        <div className="store-product-visual-column">
         <section className="store-product-gallery" aria-label={`Изображения: ${product.name}`}>
           <div className="store-product-main-image">
             <Image
@@ -126,6 +130,16 @@ export function ProductPage({
           </p>
         </section>
 
+        <section className="store-product-details">
+          <h2>Характеристики</h2>
+          <ul>
+            {product.features.map((feature) => (
+              <li key={feature}>{feature}</li>
+            ))}
+          </ul>
+        </section>
+        </div>
+
         {/* PURCHASE & CONFIGURATION PANEL */}
         <section className="store-purchase-panel">
           <p className="store-eyebrow">{product.categoryDisplayName}</p>
@@ -153,6 +167,18 @@ export function ProductPage({
             onAdded={() => onNotice("Товар добавлен в корзину.")}
           />
 
+          <a
+            className="store-whatsapp-consultation"
+            href={consultationHref}
+            target="_blank"
+            rel="noreferrer"
+          >
+            <svg aria-hidden="true" viewBox="0 0 24 24">
+              <path d="M12 2a9.74 9.74 0 0 0-8.43 14.62L2.3 21.7l5.2-1.24A9.71 9.71 0 1 0 12 2Zm0 17.67a7.67 7.67 0 0 1-3.91-1.07l-.37-.22-3.08.74.76-3-.24-.39A7.72 7.72 0 1 1 12 19.67Zm4.24-5.78c-.23-.12-1.37-.68-1.58-.75-.21-.08-.36-.12-.52.11-.15.24-.59.75-.73.9-.13.16-.27.18-.5.06-.23-.11-.98-.36-1.86-1.15a6.9 6.9 0 0 1-1.29-1.6c-.13-.23-.01-.36.1-.47.1-.1.23-.27.35-.4.11-.14.15-.24.23-.4.08-.15.04-.29-.02-.4-.06-.12-.52-1.25-.71-1.71-.18-.45-.37-.39-.51-.4h-.44c-.15 0-.4.06-.61.29-.21.23-.81.79-.81 1.93s.83 2.24.94 2.4c.12.15 1.63 2.49 3.95 3.49.55.24.98.38 1.32.48.55.18 1.05.15 1.45.09.44-.07 1.37-.56 1.56-1.1.19-.55.19-1.02.13-1.11-.05-.1-.21-.16-.44-.28Z" />
+            </svg>
+            Получить консультацию
+          </a>
+
           <div className="store-delivery-summary">
             <span>{requiresInstrumentSetup ? "✓ Бесплатная отстройка мастером перед выдачей" : "✓ Проверка товара и комплектации перед выдачей"}</span>
             <span>✓ {settings.pickupEnabled && settings.deliveryEnabled ? `Самовывоз и доставка по ${settings.city}` : settings.deliveryEnabled ? `Доставка по ${settings.city}` : `Самовывоз в ${settings.city}`}</span>
@@ -161,14 +187,6 @@ export function ProductPage({
         </section>
       </div>
 
-      <section className="store-product-details">
-        <h2>Характеристики</h2>
-        <ul>
-          {product.features.map((feature) => (
-            <li key={feature}>{feature}</li>
-          ))}
-        </ul>
-      </section>
     </div>
   );
 }
