@@ -61,9 +61,19 @@ export function CartDrawer({
             {reconciliationMessage && <p className="checkout-inline-message" role={hasPriceChanges ? "alert" : "status"}>{reconciliationMessage}</p>}
             {hasPriceChanges && onAcceptPriceChanges && <button className="store-secondary-action" type="button" onClick={onAcceptPriceChanges}>Принять новую цену</button>}
             <div className="cart-drawer-summary">
-              <div className="cart-total"><span>Итого</span><strong>{money(displayedTotal || totalPrice)} ₸</strong></div>
-              <Link className="store-primary-action cart-checkout-link" href="/checkout" onClick={closeDrawer}>Перейти к оформлению</Link>
-              <Link className="store-text-link cart-full-link" href="/cart" onClick={closeDrawer}>Открыть корзину целиком</Link>
+              <div className="cart-total"><span>Итого к оплате</span><strong>{money(displayedTotal || totalPrice)} ₸</strong></div>
+              <div className="cart-drawer-actions">
+                <Link className="store-primary-action cart-checkout-link" href="/checkout" onClick={closeDrawer}>
+                  <span>Перейти к оформлению</span>
+                  <span className="cart-action-arrow" aria-hidden="true">→</span>
+                </Link>
+                <Link className="cart-full-link" href="/cart" onClick={closeDrawer}>
+                  <svg className="cart-action-icon" aria-hidden="true" viewBox="0 0 24 24">
+                    <path d="M3 4h2l1.7 9.1a2 2 0 0 0 2 1.7h7.8a2 2 0 0 0 1.9-1.4L20 8H6.1M9 19.2h.01M17 19.2h.01" />
+                  </svg>
+                  Открыть корзину целиком
+                </Link>
+              </div>
             </div>
           </>
         )}
