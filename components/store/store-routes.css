@@ -2073,8 +2073,6 @@ html, body {
 .checkout-consent { display: block; margin-top: 12px; color: var(--store-muted); line-height: 1.45; text-align: center; }
 .checkout-error { color: #ff7d75; font-weight: 700; }
 .checkout-inline-message { padding: 10px 0; color: var(--store-muted); }
-.cart-checkout-link { display: block; margin-top: 16px; text-align: center; }
-
 .order-success { display: flex; gap: 20px; align-items: center; margin-bottom: 24px; padding: 28px; border: 1px solid color-mix(in srgb, #35c67a 45%, var(--store-border)); border-radius: 22px; background: color-mix(in srgb, #35c67a 8%, var(--store-surface)); }
 .order-success > span { display: grid; place-items: center; flex: 0 0 54px; height: 54px; border-radius: 50%; background: #35c67a; color: #061a0e; font-size: 1.6rem; font-weight: 900; }
 .order-success h1 { margin: 4px 0 6px; font: 700 clamp(1.8rem, 4vw, 2.8rem)/1.05 var(--font-playfair), serif; }
