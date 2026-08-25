@@ -1,23 +1,13 @@
-const CACHE_NAME = "maestro-store-v19";
-const CORE_ASSETS = [
-  "/offline.html",
-  "/manifest.json",
-  "/favicon.svg",
-  "/pwa-icon-192.png",
-  "/pwa-icon-512.png",
-  "/bundle.css?v=19",
-  "/bundle.js?v=19",
-];
+const CACHE_NAME = "maestro-store-v" + Date.now();
 
 self.addEventListener("install", (event) => {
-  event.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll(CORE_ASSETS)));
+  self.skipWaiting();
 });
 
 self.addEventListener("activate", (event) => {
   event.waitUntil(
-    caches.keys()
-      .then((keys) => Promise.all(keys.filter((key) => key.startsWith("maestro-store-") && key !== CACHE_NAME).map((key) => caches.delete(key))))
-      .then(() => self.clients.claim()),
+    caches.keys().then((keys) => Promise.all(keys.map((key) => caches.delete(key))))
+      .then(() => self.clients.claim())
   );
 });
 
@@ -36,11 +26,16 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  if (!["style", "script", "image", "font"].includes(request.destination)) return;
+  // Network-first for all styles, scripts, and images to prevent stale UI
   event.respondWith(
-    caches.match(request).then((cached) => cached || fetch(request).then((response) => {
-      if (response.ok) void caches.open(CACHE_NAME).then((cache) => cache.put(request, response.clone()));
-      return response;
-    })),
+    fetch(request)
+      .then((response) => {
+        if (response.ok && ["style", "script", "image", "font"].includes(request.destination)) {
+          const clone = response.clone();
+          caches.open(CACHE_NAME).then((cache) => cache.put(request, clone));
+        }
+        return response;
+      })
+      .catch(() => caches.match(request))
   );
 });

@@ -32,9 +32,7 @@ export function ProductCard({
   const discount = usesBasePrice ? product.defaultPrice.discount : 0;
   const open = () => saveCatalogReturn(product.id);
   const badge = resolveProductBadge(product);
-  const cardImage = (product.variants && product.variants[0] && product.variants[0].image)
-    ? product.variants[0].image
-    : product.image;
+  const cardImage = product.image || (product.variants && product.variants[0] && product.variants[0].image) || "";
 
   const toggleFavorite = (e: React.MouseEvent) => {
     e.preventDefault();

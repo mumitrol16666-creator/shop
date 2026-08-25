@@ -11,22 +11,22 @@ const visualCategoryRail = [
   {
     slug: "acoustic-guitars",
     title: "Акустические гитары",
-    image: "/product-variants/ag-41gl-nat.webp",
+    image: "/products/04_41_acoustic.webp",
   },
   {
     slug: "classical-guitars",
     title: "Классические гитары",
-    image: "/product-variants/cg-39-nat.webp",
+    image: "/products/05_classical_38_39.webp",
   },
   {
     slug: "electric-guitars",
     title: "Электрогитары",
-    image: "/product-variants/eg-st20-blk.webp",
+    image: "/products/01_st20_electric.webp",
   },
   {
     slug: "ukuleles",
     title: "Укулеле",
-    image: "/product-variants/uk-klh23-blk.webp",
+    image: "/products/03_23_ukulele.webp",
   },
   {
     slug: "strings",
@@ -107,7 +107,7 @@ export function HomePage({
       </section>
 
       {/* 2. Light Luxurious Store Body (Categories, Products, Trust, School) */}
-      <div className="store-home-light-wrapper">
+      <div className="store-home-body-wrap">
         {/* Category Cards Rail */}
         <section className="store-category-rail-section">
           <div className="store-category-rail-grid">
