@@ -2466,6 +2466,10 @@ html, body {
   flex-wrap: wrap;
 }
 
+.store-hero-pill-wrap {
+  position: relative;
+}
+
 .store-hero-pill {
   display: inline-flex;
   align-items: center;
@@ -2477,6 +2481,71 @@ html, body {
   font-size: 0.85rem;
   color: rgba(255, 255, 255, 0.88);
   font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background 180ms ease, border-color 180ms ease, transform 180ms ease;
+}
+
+.store-hero-pill:hover,
+.store-hero-pill.is-open {
+  background: rgba(255, 255, 255, 0.13);
+  border-color: rgba(226, 185, 104, 0.55);
+  transform: translateY(-1px);
+}
+
+.store-hero-pill:focus-visible {
+  outline: 2px solid #e2b968;
+  outline-offset: 3px;
+}
+
+.store-hero-pill-popover {
+  position: absolute;
+  bottom: calc(100% + 12px);
+  left: 50%;
+  z-index: 5;
+  width: min(300px, calc(100vw - 32px));
+  padding: 14px 16px;
+  color: rgba(255, 255, 255, 0.78);
+  background: rgba(24, 22, 19, 0.97);
+  border: 1px solid rgba(226, 185, 104, 0.38);
+  border-radius: 14px;
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.45);
+  transform: translateX(-50%);
+  animation: heroPillPopoverIn 160ms ease-out;
+}
+
+.store-hero-pill-popover::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  width: 10px;
+  height: 10px;
+  background: rgba(24, 22, 19, 0.97);
+  border-right: 1px solid rgba(226, 185, 104, 0.38);
+  border-bottom: 1px solid rgba(226, 185, 104, 0.38);
+  transform: translate(-50%, -5px) rotate(45deg);
+}
+
+.store-hero-pill-popover strong,
+.store-hero-pill-popover span {
+  display: block;
+}
+
+.store-hero-pill-popover strong {
+  margin-bottom: 5px;
+  color: #fff;
+  font-size: 0.9rem;
+}
+
+.store-hero-pill-popover span {
+  font-size: 0.8rem;
+  line-height: 1.45;
+}
+
+@keyframes heroPillPopoverIn {
+  from { opacity: 0; transform: translate(-50%, 5px) scale(0.97); }
+  to { opacity: 1; transform: translate(-50%, 0) scale(1); }
 }
 
 /* 2. VISUAL CATEGORY CARDS RAIL */

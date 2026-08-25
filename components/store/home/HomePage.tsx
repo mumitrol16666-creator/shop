@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useEffect, useRef, useState } from "react";
 import type { ProductReadModel } from "../../../lib/commerce/types";
 import type { CatalogCategory } from "../../../lib/commerce/categories";
 import { whatsappHref, type StoreSettings } from "../../../lib/store-settings";
@@ -11,29 +12,50 @@ const visualCategoryRail = [
   {
     slug: "acoustic-guitars",
     title: "Акустические гитары",
-    image: "/products/04_41_acoustic.webp",
+    image: "/products-harmonized/04_41_acoustic.webp",
   },
   {
     slug: "classical-guitars",
     title: "Классические гитары",
-    image: "/products/05_classical_38_39.webp",
+    image: "/products-harmonized/05_classical_38_39.webp",
   },
   {
     slug: "electric-guitars",
     title: "Электрогитары",
-    image: "/products/01_st20_electric.webp",
+    image: "/products-harmonized/01_st20_electric.webp",
   },
   {
     slug: "ukuleles",
     title: "Укулеле",
-    image: "/products/03_23_ukulele.webp",
+    image: "/products-harmonized/03_23_ukulele.webp",
   },
   {
     slug: "strings",
     title: "Аксессуары",
-    image: "/products/10_capos.webp",
+    image: "/products-harmonized/10_capos.webp",
   },
 ];
+
+const heroBenefits = [
+  {
+    id: "setup",
+    icon: "⭐",
+    title: "Настроено мастером",
+    description: "Перед продажей мастер проверяет инструмент и настраивает его для комфортной игры.",
+  },
+  {
+    id: "delivery",
+    icon: "🚚",
+    title: "Быстрая доставка",
+    description: "Бережно доставим заказ по городу или подготовим его к удобному самовывозу.",
+  },
+  {
+    id: "quality",
+    icon: "🛡️",
+    title: "Гарантия качества",
+    description: "Проверяем состояние и комплектацию каждого инструмента перед передачей покупателю.",
+  },
+] as const;
 
 export function HomePage({
   settings,
@@ -46,11 +68,29 @@ export function HomePage({
   products: ProductReadModel[];
   onNotice: (message: string) => void;
 }) {
+  const [openBenefit, setOpenBenefit] = useState<string | null>(null);
+  const benefitsRef = useRef<HTMLDivElement>(null);
   const inStock = products.filter((product) => product.availability.status === "in_stock");
   const preview = inStock.slice(0, 8);
   const fulfilmentSummary = settings.pickupEnabled && settings.deliveryEnabled
     ? "самовывоз и доставка"
     : settings.deliveryEnabled ? "доставка по городу" : "самовывоз";
+
+  useEffect(() => {
+    const closeOnOutsideClick = (event: PointerEvent) => {
+      if (!benefitsRef.current?.contains(event.target as Node)) setOpenBenefit(null);
+    };
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setOpenBenefit(null);
+    };
+
+    document.addEventListener("pointerdown", closeOnOutsideClick);
+    document.addEventListener("keydown", closeOnEscape);
+    return () => {
+      document.removeEventListener("pointerdown", closeOnOutsideClick);
+      document.removeEventListener("keydown", closeOnEscape);
+    };
+  }, []);
 
   return (
     <div className="store-home-page-container">
@@ -88,19 +128,32 @@ export function HomePage({
               </Link>
             </div>
 
-            <div className="store-hero-cinematic__pills">
-              <div className="store-hero-pill">
-                <span className="store-hero-pill__icon">⭐</span>
-                <span>Настроено мастером</span>
-              </div>
-              <div className="store-hero-pill">
-                <span className="store-hero-pill__icon">🚚</span>
-                <span>Быстрая доставка</span>
-              </div>
-              <div className="store-hero-pill">
-                <span className="store-hero-pill__icon">🛡️</span>
-                <span>Гарантия качества</span>
-              </div>
+            <div className="store-hero-cinematic__pills" ref={benefitsRef}>
+              {heroBenefits.map((benefit) => {
+                const isOpen = openBenefit === benefit.id;
+                const popoverId = `hero-benefit-${benefit.id}`;
+
+                return (
+                  <div className="store-hero-pill-wrap" key={benefit.id}>
+                    <button
+                      type="button"
+                      className={`store-hero-pill${isOpen ? " is-open" : ""}`}
+                      aria-expanded={isOpen}
+                      aria-controls={popoverId}
+                      onClick={() => setOpenBenefit(isOpen ? null : benefit.id)}
+                    >
+                      <span className="store-hero-pill__icon" aria-hidden="true">{benefit.icon}</span>
+                      <span>{benefit.title}</span>
+                    </button>
+                    {isOpen && (
+                      <div className="store-hero-pill-popover" id={popoverId} role="status">
+                        <strong>{benefit.title}</strong>
+                        <span>{benefit.description}</span>
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
             </div>
           </div>
         </div>

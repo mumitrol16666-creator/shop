@@ -38,6 +38,20 @@ const slugify = (value: string) =>
     .replace(/[^a-z0-9а-яё]+/gi, "-")
     .replace(/^-+|-+$/g, "");
 
+/**
+ * Keeps the original catalog URLs intact in storage while serving the
+ * harmonized storefront set. Remove these two rewrites to roll back images.
+ */
+const storefrontImage = (image: string) => {
+  if (image.startsWith("/product-variants/")) {
+    return image.replace("/product-variants/", "/product-variants-harmonized/").replace(/\.(?:jpe?g|png|webp)$/i, ".webp");
+  }
+  if (image.startsWith("/products/")) {
+    return image.replace("/products/", "/products-harmonized/").replace(/\.(?:jpe?g|png|webp)$/i, ".webp");
+  }
+  return image;
+};
+
 const asMoney = (value: unknown, fallback = 0) => {
   const number = typeof value === "number" && Number.isFinite(value) ? value : fallback;
   return Math.max(0, Math.round(number));
@@ -240,7 +254,7 @@ export function buildCatalogReadModels(
           id: String(variant.id || `${product.sku}-variant-${index + 1}`),
           sku: variant.sku,
           title: variant.name,
-          image: variant.image || product.image,
+          image: storefrontImage(variant.image || product.image),
           color: variant.color,
           secondaryColor: variant.secondary,
           note: variant.note,
@@ -282,7 +296,7 @@ export function buildCatalogReadModels(
         categoryDisplayName: category.displayName,
         category: category.displayName,
         description: product.description,
-        image: product.image,
+        image: storefrontImage(product.image),
         features: product.features || [],
         badge: product.badge,
         audioUrl: product.audioUrl,
