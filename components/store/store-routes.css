@@ -663,7 +663,7 @@ html, body {
 
 /* Assistant entry */
 .store-assistant-entry {
-  display: flex;
+  display: none !important;
   align-items: center;
   justify-content: space-between;
   gap: 24px;

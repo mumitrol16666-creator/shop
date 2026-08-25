@@ -5,8 +5,8 @@ const CORE_ASSETS = [
   "/favicon.svg",
   "/pwa-icon-192.png",
   "/pwa-icon-512.png",
-  "/bundle.css?v=19",
-  "/bundle.js?v=19",
+  "/bundle.css?v=20",
+  "/bundle.js?v=20",
 ];
 
 self.addEventListener("install", (event) => {
