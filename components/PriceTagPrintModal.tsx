@@ -35,9 +35,9 @@ const formatOptions: Array<{ id: TagType; title: string; size: string; descripti
 ];
 
 const pageCapacity: Record<TagType, number> = {
-  showroom: 8,
-  shelf: 10,
-  compact: 21,
+  showroom: 6,
+  shelf: 8,
+  compact: 18,
 };
 
 function paginate<T>(items: T[], pageSize: number): T[][] {
